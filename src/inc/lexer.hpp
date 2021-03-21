@@ -1,6 +1,8 @@
 #ifndef LEXER_H
 #define LEXER_H
 
+#define MAXIDENT 50
+
 #include <iostream>
 #include <fstream>
 
@@ -10,7 +12,7 @@
 class Lexer {
     std::ifstream code;
     Cursor c;
-    IdentTable idTable;
+    IdentTable IdTable;
 public:
     Lexer() {
         c.line = 1;
@@ -23,12 +25,16 @@ public:
     void parse(void);
     void defs(void);
     void type(void);
-    void operations(void);
+    void variable(void);
     void identificator(void);
     void constVal(void);
+    void constInt(void);
+    void constString(void);
+
+    void operations(void);
 
     // Вспомогательные функции
-
+    bool readWord(char * word);
 
     ~Lexer() {};
 };

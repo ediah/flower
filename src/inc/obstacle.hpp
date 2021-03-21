@@ -7,7 +7,10 @@ enum reason {
     PROG_OPENBR,
     PROG_CLOSEBR,
     TYPE_UNKNOWN,
-    EXPR_BAD_TYPE
+    EXPR_BAD_TYPE,
+    DEF_END,
+    BAD_NUM,
+    BAD_STRING
 };
 
 class Obstacle {

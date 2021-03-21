@@ -9,6 +9,13 @@ void Obstacle::describe(void) {
         case PROG_START: expected("program"); break;
         case PROG_OPENBR: expected("{"); break;
         case PROG_CLOSEBR: expected("}"); break;
+        case DEF_END: expected(";"); break;
+        case BAD_NUM:
+            std::cout << "Плохое число." << std::endl;
+            break;
+        case BAD_STRING:
+            std::cout << "Плохая строка." << std::endl;
+            break;
         case TYPE_UNKNOWN:
         case EXPR_BAD_TYPE:
             std::cout << "Несовпадение типов выражения." << std::endl;

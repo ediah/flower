@@ -1,35 +1,19 @@
 #ifndef TABLES_H
 #define TABLES_H
 
-enum type_t {
-    _NONE_,
-    _INT_,
-    _REAL_,
-    _STRING_,
-    _BOOLEAN_
-};
-
-enum operation_t {
-    NONE,
-    PLUS,
-    MINUS,
-    MUL,
-    DIV,
-    MOD
-};
+#include <cstddef>
+#include "exprtype.hpp"
 
 class Table {
-    bool determined;
     type_t valType;
 public:
-    Table(bool d = true, type_t t = NONE): determined(d), valType(t) {};
-    void setDet(bool d): determined(d) {};
-    void setType(type_t t): valType(t) {};
-    bool getDet(void) { return determined; };
+    Table(type_t t = _NONE_): valType(t) {};
+    void setType(type_t t) { valType = t; };
     type_t getType(void) { return valType; };
 };
 
-class ExprTable: public Table {
+/*
+class ConstTable: public Table {
     operation_t operation;
     ExprTable *expr1;
     ExprTable *expr2;
@@ -42,15 +26,22 @@ public:
     ExprTable * newExpr(ExprTable *e1, ExprTable *e2, operation_t o);
     ExprTable * newConst(void * value, type_t t);
 
+    void push(ExprTable * e);
+
     ~ExprTable(void);
 };
+*/
 
 class IdentTable: public Table {
     char * name;
-    ExprTable *value;
+    //ExprTable *value;
 
     IdentTable *next;
-
+public:
+    IdentTable(char * n = NULL): name(n), next(nullptr) {};
+    void pushId(char * ident);
+    void pushType(type_t t);
+    void confirm(void);
 };
 
 #endif

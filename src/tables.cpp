@@ -1,36 +1,50 @@
 #include "tables.hpp"
 #include "obstacle.hpp"
-type_t expressionType(type_t t1, type_t t2, operation_t o) {
-    type_t r = _NONE_;
-    if (o == PLUS) {
-            if (t1 == _INT_) {
-                if (t2 == _INT_) r = _INT_;
-                else if (t2 == _REAL_) r = _REAL_;
-                else throw Obstacle(EXPR_BAD_TYPE);
-            } else if (t1 == _REAL_) {
-                if ((t2 == _INT_) || (t2 == _REAL_)) r = _REAL_;
-                else throw Obstacle(EXPR_BAD_TYPE);
-            } else if (t1 == _STRING_) {
-                if (t2 == _STRING_) r = _STRING_;
-                else throw Obstacle(EXPR_BAD_TYPE);
-            } else throw Obstacle(EXPR_BAD_TYPE);
-    }
-    return r;
+#include "exprtype.hpp"
+
+void IdentTable::pushId(char* ident) {
+    IdentTable * p = this;
+    while (p->next != nullptr) p = p->next;
+    name = ident;
 }
 
+void IdentTable::pushType(type_t t) {
+    IdentTable * p = this;
+    while (p->next != nullptr) p = p->next;
+    setType(t);
+}
+
+void IdentTable::confirm(void) {
+    IdentTable * newIdent = new IdentTable;
+    IdentTable *p = this;
+    while (p->next != nullptr) p = p->next;
+    p->next = newIdent;
+}
+
+/*
 ExprTable * ExprTable::newExpr(ExprTable * e1, ExprTable * e2, operation_t o) {
     ExprTable * e = new ExprTable(e1, e2, o), *p = this;
-    e.setType = expressionType(e1->getType, e2->getType, o);
-    e.setDet = e1->getDet() && e2->getDet();
-    while (p->next != nullptr) p = p->next;
-    p->next = e;
+    e->setType = expressionType(e1->getType, e2->getType, o);
+    e->setDet = e1->getDet() && e2->getDet();
+    push(e);
     return e;
 }
 
 ExprTable * ExprTable::newConst(void * value, type_t t) {
-    return newExpr(value, nullptr, NONE, t);
+    ExprTable * e = new ExprTable(value, nullptr, NONE), *p = this;
+    e->setType = t;
+    e->setDet = true;
+    push(e);
+    return e;
+}
+
+void ExprTable::push(ExprTable * e) {
+    ExprTable *p = this;
+    while (p->next != nullptr) p = p->next;
+    p->next = e;
 }
 
 ExprTable::~ExprTable(void) {
     if (next != nullptr) delete next;
 }
+*/

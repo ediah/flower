@@ -5,7 +5,7 @@
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
     char nextChar;
     while (true) {
-        s >> nextChar;
+        s.get(nextChar);
         x.pos++;
 
         if (nextChar == '\n') {
@@ -20,6 +20,7 @@ std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
 
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
     s >> x.c;
+    x.pos++;
     return s;
 }
 
@@ -29,6 +30,14 @@ bool Cursor::operator==(char x) {
 
 bool Cursor::operator!=(char x) {
     return c != x;
+}
+
+bool Cursor::operator<=(char x) {
+    return c <= x;
+}
+
+bool Cursor::operator>=(char x) {
+    return c >= x;
 }
 
 void Cursor::where(void) {
