@@ -1,50 +1,83 @@
+#include <iostream>
 #include "tables.hpp"
 #include "obstacle.hpp"
 #include "exprtype.hpp"
 
+// Получаем последний объект списка
+IdentTable * IdentTable::last(void) {
+    IdentTable * p = this;
+    while (p->next != nullptr) p = p->next;
+    return p;
+}
+
+// Сохраняем идентификатор переменной
 void IdentTable::pushId(char* ident) {
-    IdentTable * p = this;
-    while (p->next != nullptr) p = p->next;
-    name = ident;
+    last()->name = ident;
 }
 
+// Сохраняем тип переменной
 void IdentTable::pushType(type_t t) {
-    IdentTable * p = this;
-    while (p->next != nullptr) p = p->next;
-    setType(t);
+    last()->valType = t;
 }
 
+// Сохраняем значение переменной
+void IdentTable::pushVal(void* v) {
+    IdentTable * l = last();
+    l->val = v;
+    l->def = true;
+}
+
+// Всё, что могло быть известно, мы узнали. Переключаемся на новый объект.
 void IdentTable::confirm(void) {
+    IdentTable * l = last();
+
+    #ifdef DEBUG
+    std::cout << "Создан новый объект: " << typetostr(l->valType);
+    std::cout << ' ' << l->name << " = ";
+    if (l->def) {
+        switch (l->valType) {
+            case _INT_:
+                std::cout << * (int*) l->val; break;
+            case _REAL_:
+                std::cout << * (float*) l->val; break;
+            case _STRING_:
+                std::cout << (char*) l->val; break;
+            case _BOOLEAN_:
+                std::cout << * (bool*) l->val; break;
+        }
+    }
+    std::cout << std::endl;
+    #endif
+
     IdentTable * newIdent = new IdentTable;
-    IdentTable *p = this;
-    while (p->next != nullptr) p = p->next;
-    p->next = newIdent;
+    l->next = newIdent;
 }
 
-/*
-ExprTable * ExprTable::newExpr(ExprTable * e1, ExprTable * e2, operation_t o) {
-    ExprTable * e = new ExprTable(e1, e2, o), *p = this;
-    e->setType = expressionType(e1->getType, e2->getType, o);
-    e->setDet = e1->getDet() && e2->getDet();
-    push(e);
-    return e;
+// Дублирование типа для выражений вида:
+// int a, b, c;
+void IdentTable::dupType(void) {
+    IdentTable * p = this;
+    if (last()->valType == _NONE_) {
+        while (p->next->next != nullptr) p = p->next;
+        p->next->valType = p->valType;
+    }
 }
 
-ExprTable * ExprTable::newConst(void * value, type_t t) {
-    ExprTable * e = new ExprTable(value, nullptr, NONE), *p = this;
-    e->setType = t;
-    e->setDet = true;
-    push(e);
-    return e;
-}
+IdentTable::~IdentTable() {
+    delete name;
 
-void ExprTable::push(ExprTable * e) {
-    ExprTable *p = this;
-    while (p->next != nullptr) p = p->next;
-    p->next = e;
-}
+    if (def) {
+        switch (valType) {
+            case _INT_:
+                delete (int*) val;
+            case _REAL_:
+                delete (float*) val;
+            case _STRING_:
+                delete (char*) val;
+            case _BOOLEAN_:
+                delete (bool*) val;
+        }
+    }
 
-ExprTable::~ExprTable(void) {
     if (next != nullptr) delete next;
 }
-*/

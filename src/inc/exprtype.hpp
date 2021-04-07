@@ -24,4 +24,6 @@ enum operation_t {
     NEQ
 };
 
+char * typetostr(type_t t);
+
 #endif

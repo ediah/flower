@@ -49,8 +49,6 @@ void Lexer::defs(void) {
 }
 
 void Lexer::type(void) {
-    char wordString[6] = "tring";
-
     code >> c;
 
     switch(c.symbol()) {
@@ -79,18 +77,23 @@ bool Lexer::readWord(char * word) {
 }
 
 void Lexer::variable(void) {
+    IdTable.dupType();
     identificator();
     if (c == '=') constVal();
+    IdTable.confirm();
 }
 
 void Lexer::identificator(void) {
-    char ident[MAXIDENT];
+    char * ident = new char[MAXIDENT];
     int i = 0;
-    code >>= c;
+    code >> c;
     while (C_IS_ALPHA) {
         ident[i++] = c.symbol();
         code >>= c;
     }
+    ident[i] = '\0';
+    std::cout << ident << std::endl;
+    if (c.symbol() == ' ') code >> c;
     IdTable.pushId(ident);
 }
 
@@ -122,15 +125,14 @@ void Lexer::constInt(void) {
     } while (C_IS_NUM);
     x = x * sign;
 
-    //TODO: сохранить константу в таблице
+    int * v = new int; *v = x;
+    IdTable.pushVal(v);
+
     std::cout << "Прочитано число " << x << std::endl;
 }
 
 void Lexer::constString(void) {
-    code >> c;
     if (c != '\"') throw Obstacle(BAD_STRING);
-
-    code >>= c;
 
     int len = 0, start = code.tellg();
     while (code.peek() != '\"') {
@@ -146,7 +148,12 @@ void Lexer::constString(void) {
         x[i] = c.symbol();
     }
 
-    //TODO: сохранить строку в таблице
+    x[len] = '\0';
+
+    code >>= c;
+    code >> c;
+
+    IdTable.pushVal(x);
     std::cout << "Прочитана строка \"" << x << '\"'<< std::endl;
 }
 

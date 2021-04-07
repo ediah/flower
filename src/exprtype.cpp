@@ -56,3 +56,14 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
     }
     return r;
 }
+
+char * typetostr(type_t t) {
+    switch(t) {
+        case _NONE_: return "NONE"; break;
+        case _INT_:  return "INT";  break;
+        case _REAL_: return "REAL"; break;
+        case _STRING_: return "STRING"; break;
+        case _BOOLEAN_: return "BOOLEAN"; break;
+    }
+    throw Obstacle(PANIC);
+}

@@ -3,23 +3,21 @@
 #include "cursor.hpp"
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
-    char nextChar;
-    while (true) {
-        s.get(nextChar);
-        x.pos++;
+    do {
+        s >>= x;
 
-        if (nextChar == '\n') {
+        if (x.c == '\n') {
             x.line++;
             x.pos = 1;
         }
-        if ((nextChar != ' ') && (nextChar != '\n')) break;
-    }
-    x.c = nextChar;
+    } while ((x.c == ' ') || (x.c == '\n'));
+
     return s;
 }
 
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
-    s >> x.c;
+    s.get(x.c);
+    std::cout << "прочитан \"" << x.c << "\"" << std::endl;
     x.pos++;
     return s;
 }

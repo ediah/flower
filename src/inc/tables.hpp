@@ -1,47 +1,29 @@
 #ifndef TABLES_H
 #define TABLES_H
 
+#define DEBUG
+
 #include <cstddef>
 #include "exprtype.hpp"
 
-class Table {
+class IdentTable {
     type_t valType;
-public:
-    Table(type_t t = _NONE_): valType(t) {};
-    void setType(type_t t) { valType = t; };
-    type_t getType(void) { return valType; };
-};
-
-/*
-class ConstTable: public Table {
-    operation_t operation;
-    ExprTable *expr1;
-    ExprTable *expr2;
-
-    ExprTable *next;
-
-public:
-    ExprTable(ExprTable * e1, ExprTable * e2, operation_t o):
-        operation(o), expr1(e1), expr2(e2), next(nullptr) {};
-    ExprTable * newExpr(ExprTable *e1, ExprTable *e2, operation_t o);
-    ExprTable * newConst(void * value, type_t t);
-
-    void push(ExprTable * e);
-
-    ~ExprTable(void);
-};
-*/
-
-class IdentTable: public Table {
     char * name;
-    //ExprTable *value;
+    bool def;
+    void * val;
 
     IdentTable *next;
 public:
-    IdentTable(char * n = NULL): name(n), next(nullptr) {};
+    IdentTable(type_t t = _NONE_, char * n = NULL): valType(t),
+        name(n), next(nullptr), def(false), val(nullptr) {};
     void pushId(char * ident);
     void pushType(type_t t);
+    void pushVal(void* v);
     void confirm(void);
+    void dupType(void);
+    IdentTable * last(void);
+
+    ~IdentTable();
 };
 
 #endif
