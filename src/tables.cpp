@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "tables.hpp"
 #include "obstacle.hpp"
 #include "exprtype.hpp"
@@ -28,29 +29,19 @@ void IdentTable::pushVal(void* v) {
 }
 
 // Всё, что могло быть известно, мы узнали. Переключаемся на новый объект.
-void IdentTable::confirm(void) {
+IdentTable * IdentTable::confirm(void) {
     IdentTable * l = last();
 
     #ifdef DEBUG
-    std::cout << "Создан новый объект: " << typetostr(l->valType);
-    std::cout << ' ' << l->name << " = ";
-    if (l->def) {
-        switch (l->valType) {
-            case _INT_:
-                std::cout << * (int*) l->val; break;
-            case _REAL_:
-                std::cout << * (float*) l->val; break;
-            case _STRING_:
-                std::cout << (char*) l->val; break;
-            case _BOOLEAN_:
-                std::cout << * (bool*) l->val; break;
-        }
-    }
+    std::cout << "Создан новый объект: ";
+    l->whoami();
     std::cout << std::endl;
     #endif
 
     IdentTable * newIdent = new IdentTable;
     l->next = newIdent;
+
+    return l;
 }
 
 // Дублирование типа для выражений вида:
@@ -63,19 +54,66 @@ void IdentTable::dupType(void) {
     }
 }
 
+type_t IdentTable::getType(void) {
+    return valType;
+}
+
+IdentTable * IdentTable::getIT(char * name) {
+    IdentTable * p = this;
+
+    while (!strcmp(p->name, name)){
+        if (p->next != nullptr) p = p->next;
+        else throw Obstacle(IDENT_NOT_DEF);
+    }
+
+    return p;
+}
+
+void IdentTable::whoami(void) {
+
+    std::cout << '{' << typetostr(valType) << ' ';
+    if (name != nullptr)
+        std::cout << name << " = ";
+    if (def) {
+        switch (valType) {
+            case _INT_:
+                std::cout << * (int*) val; break;
+            case _REAL_:
+                std::cout << * (float*) val; break;
+            case _STRING_:
+                std::cout << (char*) val; break;
+            case _BOOLEAN_:
+                std::cout << * (bool*) val; break;
+        }
+    } else std::cout << "(не определён)";
+    std::cout << '}';
+
+}
+
+void IdentTable::repr(void) {
+    IdentTable * p = this;
+    std::cout << "IdentTable:" << std::endl;
+    while (p->next != nullptr) {
+        std::cout << p << " ";
+        p->whoami();
+        std::cout << std::endl;
+        p = p->next;
+    }
+}
+
 IdentTable::~IdentTable() {
-    delete name;
+    if (name != nullptr) delete name;
 
     if (def) {
         switch (valType) {
             case _INT_:
-                delete (int*) val;
+                delete (int*) val; break;
             case _REAL_:
-                delete (float*) val;
+                delete (float*) val; break;
             case _STRING_:
-                delete (char*) val;
+                delete [] (char*) val; break;
             case _BOOLEAN_:
-                delete (bool*) val;
+                delete (bool*) val; break;
         }
     }
 

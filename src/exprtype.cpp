@@ -53,7 +53,22 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         if (((t1 == _INT_) || (t1 == _REAL_)) &&
             ((t2 == _INT_) || (t2 == _REAL_))) r = _BOOLEAN_;
         else throw Obstacle(EXPR_BAD_TYPE);
-    }
+    } else if ((o == LOR) || (o == LAND)) {
+        if ((t1 == _BOOLEAN_) && (t2 == _BOOLEAN_)) r = _BOOLEAN_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == LNOT) {
+        if ((t1 == _NONE_) && (t2 == _BOOLEAN_)) r = _BOOLEAN_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == ASSIGN) {
+        if ((t1 == _INT_) || (t1 == _REAL_)) {
+            if ((t2 == _INT_) || (t2 == _REAL_)) r = t1;
+            else throw Obstacle(EXPR_BAD_TYPE);
+        } else if ((t1 == _BOOLEAN_) && (t2 == _BOOLEAN_))
+            r = _BOOLEAN_;
+        else if ((t1 == _STRING_) && (t2 == _STRING_))
+            r = _STRING_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else throw Obstacle(PANIC);
     return r;
 }
 

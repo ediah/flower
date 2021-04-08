@@ -2,7 +2,7 @@ vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
 CC= g++
-CFLAGS = --std=c++11 -g -O0
+CFLAGS = --std=c++11 -g -O0 -Wno-write-strings
 
 VPATH = ./src ./src/inc ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}
@@ -16,7 +16,7 @@ mlc: $(OBJ)
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -I ./src/inc -c $< -o ./bin/$@
-	
+
 .PHONY: clean
 
 clean:

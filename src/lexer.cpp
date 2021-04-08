@@ -4,6 +4,17 @@
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 
+// Быстрый алгоритм возведения x в степень n
+int Lexer::fastPow(int x, int n) {
+    int r = 1;
+    while (n != 0) {
+        if (n & 1 == 1) r *= x;
+        x *= x;
+        n >>= 1;
+    }
+    return r;
+}
+
 void Lexer::load(const char * name) {
     code.open(name);
 }
@@ -62,6 +73,11 @@ void Lexer::type(void) {
                 IdTable.pushType(_STRING_);
             else throw Obstacle(TYPE_UNKNOWN);
             break;
+        case 'r':
+            if (readWord("eal"))
+                IdTable.pushType(_REAL_);
+            else throw Obstacle(TYPE_UNKNOWN);
+            break;
         default:
             throw Obstacle(TYPE_UNKNOWN);
     }
@@ -69,47 +85,63 @@ void Lexer::type(void) {
 
 bool Lexer::readWord(char * word) {
     bool r = true;
-    for (int i = 0; word[i] != '\0'; i++) {
+    int i;
+    for (i = 0; (word[i] != '\0') && r; i++) {
         code >>= c;
         if (c != word[i]) r = false;
     }
+    if (!r) revert(i);
     return r;
 }
 
 void Lexer::variable(void) {
     IdTable.dupType();
-    identificator();
+    char * name = identificator();
+    IdTable.pushId(name);
     if (c == '=') constVal();
     IdTable.confirm();
 }
 
-void Lexer::identificator(void) {
+char * Lexer::identificator(void) {
     char * ident = new char[MAXIDENT];
     int i = 0;
     code >> c;
-    while (C_IS_ALPHA) {
+    //std::cout << c.symbol() << std::endl;
+    if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
+    do {
         ident[i++] = c.symbol();
         code >>= c;
-    }
+    } while (C_IS_ALPHA);
     ident[i] = '\0';
-    std::cout << ident << std::endl;
+    //std::cout << "IDENT " << ident << std::endl;
     if (c.symbol() == ' ') code >> c;
-    IdTable.pushId(ident);
+    return ident;
 }
 
 void Lexer::constVal(void) {
-    try { constInt(); }
-    catch(...) {
-        try { constString(); }
-        catch (Obstacle & o) {
-            c.where();
-            o.describe();
-            exit(-1);
+    type_t tval = IdTable.last()->getType();
+
+    try {
+        switch(tval) {
+            case _INT_:
+                IdTable.pushVal( new int (constInt()) );
+                break;
+            case _STRING_:
+                IdTable.pushVal( constString() );
+                break;
+            case _REAL_:
+                IdTable.pushVal( new float (constReal()) );
+                break;
         }
+    }
+    catch (Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
     }
 }
 
-void Lexer::constInt(void) {
+int Lexer::constInt(void) {
     int x = 0, sign = 1;
     code >> c;
     if (c == '-') {
@@ -125,20 +157,22 @@ void Lexer::constInt(void) {
     } while (C_IS_NUM);
     x = x * sign;
 
-    int * v = new int; *v = x;
-    IdTable.pushVal(v);
+    //std::cout << "Прочитано число " << x << std::endl;
 
-    std::cout << "Прочитано число " << x << std::endl;
+    return x;
 }
 
-void Lexer::constString(void) {
+char * Lexer::constString(void) {
+    code >> c;
     if (c != '\"') throw Obstacle(BAD_STRING);
 
-    int len = 0, start = code.tellg();
-    while (code.peek() != '\"') {
-        code.seekg(++len + start);
-        if (code.eof()) throw Obstacle(BAD_STRING);
-    }
+    int start = code.tellg();
+    do { code >>= c; }
+    while ((!code.eof()) && (c != '\"'));
+
+    if (code.eof()) throw Obstacle(BAD_STRING);
+
+    int len = (int)code.tellg() - start - 1;
     code.seekg(start);
 
     char *x = new char[len + 1];
@@ -153,10 +187,275 @@ void Lexer::constString(void) {
     code >>= c;
     code >> c;
 
-    IdTable.pushVal(x);
-    std::cout << "Прочитана строка \"" << x << '\"'<< std::endl;
+    //std::cout << "Прочитана строка \"" << x << '\"'<< std::endl;
+
+    return x;
+}
+
+float Lexer::constReal(void) {
+    int intPart = constInt();
+
+    if (c != '.') throw Obstacle(BAD_NUM);
+    code >>= c;
+
+    if (!C_IS_NUM) throw Obstacle(BAD_NUM);
+
+    int x = 1;
+    float floatPart = 0;
+    do {
+        floatPart += (float)( c.symbol() - '0') / fastPow(10, x++);
+        code >>= c;
+    } while (C_IS_NUM);
+
+    if (intPart < 0) floatPart *= -1;
+
+    return intPart + floatPart;
 }
 
 void Lexer::operations(void) {
+    /*
+    if (<выражение>) <оператор> else <оператор>
+    | for ([выражение]; [выражение]; [выражение]) <оператор>
+    | while (<выражение>) <оператор>
+    | break;
+    | goto <идентификатор> ;
+    | read (<идентификатор>);
+    | write (
+    */
 
+    while (true) {
+        try { operation(); }
+        catch(Obstacle o) { break; }
+    }
+}
+
+void Lexer::operation(void) {
+
+    code.putback(c.symbol());
+
+    if (readWord("if")) condOp();
+    else if (readWord("for")) forOp();
+    else if (readWord("while")) whileOp();
+    else if (readWord("break")) breakOp();
+    else if (readWord("write")) writeOp();
+    else if (readWord("goto")) gotoOp();
+    else if (readWord("read")) readOp();
+    else if (readWord("{")) {
+        operations();
+        code >> c;
+        if (c != '}')
+            throw Obstacle(OP_CLOSEBR);
+    } else {
+        char * name = identificator();
+        if (c == ':') {
+            // Помеченный оператор
+            saveLabel(name); // TODO: сохранить метку
+            operation();
+        } else if (c == '=') {
+            IdentTable * lval = IdTable.getIT(name);
+            type_t lvtype = lval->getType();
+            poliz.pushVal(lval);
+            type_t exop = expr();
+            expressionType(lvtype, exop, ASSIGN);
+            poliz.pushOp(ASSIGN);
+            code >> c;
+        } else throw Obstacle(BAD_OPERATOR);
+    }
+}
+
+void Lexer::saveLabel(char * label) {
+
+}
+
+type_t Lexer::expr(void) {
+    type_t r = add();
+
+    code >> c;
+    if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
+        type_t rval = add();
+        operation_t op;
+        char p = c.symbol();
+        code >>= c;
+        if (c == '=') {
+            switch(p) {
+                case '<': op = LESSEQ; break;
+                case '>': op = GRTREQ; break;
+                case '!': op = NEQ;    break;
+            }
+        } else {
+            switch(p) {
+                case '<': op = LESS; break;
+                case '>': op = GRTR; break;
+                case '=': op = EQ;   break;
+            }
+        }
+        r = expressionType(r, rval, op);
+        poliz.pushOp(op);
+    }
+
+    return r;
+}
+
+type_t Lexer::add(void) {
+    bool exit = false;
+    type_t r = mul();
+    operation_t op;
+
+    while (true) {
+        code >> c;
+
+        switch (c.symbol()) {
+            case '+': op = PLUS; break;
+            case '-': op = MINUS; break;
+            case 'o':
+                code >>= c;
+                if (c == 'r') {
+                    op = LOR;
+                } else {
+                    revert(2);
+                    exit = true;
+                }
+                break;
+            default:
+                revert(1);
+                exit = true;
+        }
+        if (exit) break;
+        type_t rval = mul();
+        r = expressionType(r, rval, op);
+        poliz.pushOp(op);
+    }
+
+    return r;
+}
+
+type_t Lexer::mul(void) {
+    bool exit = false;
+    type_t r = constExpr();
+    operation_t op;
+
+    while (true) {
+        switch (c.symbol()) {
+            case '*': op = MUL; break;
+            case '/': op = DIV; break;
+            case 'a':
+                if (readWord("nd")) {
+                    op = LAND;
+                    break;
+                }
+            default:
+                revert(1);
+                exit = true;
+        }
+        if (exit) break;
+        type_t rval = constExpr();
+        r = expressionType(r, rval, op);
+        poliz.pushOp(op);
+    }
+
+    return r;
+}
+
+type_t Lexer::constExpr(void) {
+    // TODO: Нужно сохранять в стек всё это.
+    type_t r;
+
+    if (readWord("true")) {
+        r = _BOOLEAN_;
+        IdTable.pushId(nullptr);
+        IdTable.pushType(_BOOLEAN_);
+        IdTable.pushVal(new bool (true));
+        IdentTable * val = IdTable.confirm();
+        poliz.pushVal(val);
+    } else if (readWord("false")) {
+        r = _BOOLEAN_;
+        IdTable.pushId(nullptr);
+        IdTable.pushType(_BOOLEAN_);
+        IdTable.pushVal(new bool (false));
+        IdentTable * val = IdTable.confirm();
+        poliz.pushVal(val);
+    } else if (readWord("not")) {
+        type_t val = constExpr();
+        r = expressionType(_NONE_, val, LNOT);
+        poliz.pushOp(LNOT);
+    } else if (readWord("(")) {
+        r = expr();
+        code >> c;
+        if (c != ')') throw Obstacle(EXPR_CLOSEBR);
+    } else {
+        int start = code.tellg();
+        try {
+            r = _INT_;
+            int x = constInt();
+            IdTable.pushId(nullptr);
+            IdTable.pushType(_INT_);
+            IdTable.pushVal(new int (x));
+            IdentTable * val = IdTable.confirm();
+            poliz.pushVal(val);
+        } catch(...) {
+            code.seekg(start);
+            try {
+                char * name = identificator();
+                IdentTable * val = IdTable.getIT(name);
+                r = val->getType();
+                poliz.pushVal(val);
+            } catch (Obstacle & o) {
+                c.where();
+                o.describe();
+                exit(-1);
+            }
+        }
+    }
+    return r;
+}
+
+void Lexer::condOp(void) {
+
+}
+void Lexer::forOp(void) {
+
+}
+void Lexer::whileOp(void) {
+
+}
+void Lexer::breakOp(void) {
+
+}
+void Lexer::writeOp(void) {
+
+}
+void Lexer::gotoOp(void) {
+
+}
+
+void Lexer::readOp(void) {
+    code >> c;
+
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
+
+    char * operand = identificator();
+
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
+
+    code >> c;
+
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
+
+    code >> c;
+
+    // TODO: запись в ПОЛИЗ -- ЧТЕНИЕ
+    std::cout << "READ " << operand << std::endl;
+}
+
+void Lexer::finalize(void) {
+    IdTable.repr();
+    poliz.repr();
+}
+
+void Lexer::revert(int x) {
+    code.seekg((int)code.tellg() - x);
+    c.pos -= x;
 }

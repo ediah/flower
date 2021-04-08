@@ -8,10 +8,15 @@ void Obstacle::describe(void) {
             break;
         case PROG_START: expected("program"); break;
         case PROG_OPENBR: expected("{"); break;
+        case OP_CLOSEBR:
         case PROG_CLOSEBR: expected("}"); break;
         case DEF_END: expected(";"); break;
+        case EXPR_CLOSEBR: expected(")"); break;
         case BAD_NUM:
             std::cout << "Плохое число." << std::endl;
+            break;
+        case BAD_IDENT:
+            std::cout << "Плохой идентификатор." << std::endl;
             break;
         case BAD_STRING:
             std::cout << "Плохая строка." << std::endl;
@@ -20,6 +25,14 @@ void Obstacle::describe(void) {
         case EXPR_BAD_TYPE:
             std::cout << "Несовпадение типов выражения." << std::endl;
             break;
+        case BAD_OPERATOR:
+            std::cout << "Плохой оператор." << std::endl;
+            break;
+        case CLOSED_BOOK:
+            std::cout << "Невозможно открыть книгу: на 100-й странице пропущена точка с запятой!" << std::endl;
+            break;
+        case IDENT_NOT_DEF:
+            std::cout << "Идентификатор не описан." << std::endl;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

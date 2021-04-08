@@ -19,9 +19,13 @@ public:
     void pushId(char * ident);
     void pushType(type_t t);
     void pushVal(void* v);
-    void confirm(void);
+    IdentTable * confirm(void);
     void dupType(void);
+    type_t getType(void);
+    IdentTable * getIT(char * name);
     IdentTable * last(void);
+    void whoami(void);
+    void repr(void);
 
     ~IdentTable();
 };

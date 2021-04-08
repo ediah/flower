@@ -8,9 +8,17 @@ enum reason {
     PROG_CLOSEBR,
     TYPE_UNKNOWN,
     EXPR_BAD_TYPE,
+    EXPR_CLOSEBR,
     DEF_END,
     BAD_NUM,
-    BAD_STRING
+    BAD_IDENT,
+    BAD_STRING,
+    BAD_OPERATOR,
+    OP_CLOSEBR,
+    BAD_PARAMS_OPBR,
+    BAD_PARAMS_CLBR,
+    CLOSED_BOOK,
+    IDENT_NOT_DEF
 };
 
 class Obstacle {

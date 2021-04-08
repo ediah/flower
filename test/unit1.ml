@@ -1,7 +1,8 @@
 program {
-    int a = 10, b = -34;
+    int a = 10;
+    real b = -34.12;
     string c= "Hello,     world!";
-    read(a);
-    b = a * 2;
-    write(b);
+
+    b = c * 2;
+
 }
