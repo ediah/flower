@@ -12,6 +12,7 @@
 
 class Lexer {
     std::ifstream code;
+    std::ofstream bin;
     Cursor c;
     IdentTable IdTable;
     POLIZ poliz;
@@ -23,7 +24,6 @@ class Lexer {
 public:
     Lexer() {
         c.line = 1;
-        c.pos = 1;
     };
 
     // Загрузка исходного кода
@@ -56,6 +56,7 @@ public:
     void readOp(void);
 
     void finalize(void);
+    void giveBIN(char * filename);
 
     ~Lexer() {};
 };

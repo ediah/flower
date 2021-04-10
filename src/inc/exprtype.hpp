@@ -26,8 +26,8 @@ enum operation_t {
     EQ,
     NEQ,
     ASSIGN,
-    GET,
-    STOP
+    WRITE,
+    STOP,
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

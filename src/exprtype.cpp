@@ -68,7 +68,8 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         else if ((t1 == _STRING_) && (t2 == _STRING_))
             r = _STRING_;
         else throw Obstacle(EXPR_BAD_TYPE);
-    } else throw Obstacle(PANIC);
+    } else if ((o != STOP) && (o != WRITE))
+        throw Obstacle(PANIC);
     return r;
 }
 

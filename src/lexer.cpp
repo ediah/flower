@@ -37,6 +37,7 @@ void Lexer::parse(void) {
         operations();
 
         if (c != '}') throw Obstacle(PROG_CLOSEBR);
+        poliz.pushOp(_NONE_, _NONE_, STOP);
     }
     catch (Obstacle & o) {
         c.where();
@@ -252,12 +253,13 @@ void Lexer::operation(void) {
             saveLabel(name); // TODO: сохранить метку
             operation();
         } else if (c == '=') {
+            std::cout << name << std::endl;
             IdentTable * lval = IdTable.getIT(name);
             type_t lvtype = lval->getType();
             poliz.pushVal(lval);
             type_t exop = expr();
             expressionType(lvtype, exop, ASSIGN);
-            poliz.pushOp(ASSIGN);
+            poliz.pushOp(lvtype, exop, ASSIGN);
             code >> c;
         } else throw Obstacle(BAD_OPERATOR);
     }
@@ -268,31 +270,39 @@ void Lexer::saveLabel(char * label) {
 }
 
 type_t Lexer::expr(void) {
-    type_t r = add();
+    type_t r = _NONE_;
+    try {
+        r = add();
 
-    code >> c;
-    if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
-        type_t rval = add();
-        operation_t op;
-        char p = c.symbol();
-        code >>= c;
-        if (c == '=') {
-            switch(p) {
-                case '<': op = LESSEQ; break;
-                case '>': op = GRTREQ; break;
-                case '!': op = NEQ;    break;
+        code >> c;
+        if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
+            type_t rval = add();
+            operation_t op;
+            char p = c.symbol();
+            code >>= c;
+            if (c == '=') {
+                switch(p) {
+                    case '<': op = LESSEQ; break;
+                    case '>': op = GRTREQ; break;
+                    case '!': op = NEQ;    break;
+                }
+            } else {
+                switch(p) {
+                    case '<': op = LESS; break;
+                    case '>': op = GRTR; break;
+                    case '=': op = EQ;   break;
+                }
             }
-        } else {
-            switch(p) {
-                case '<': op = LESS; break;
-                case '>': op = GRTR; break;
-                case '=': op = EQ;   break;
-            }
+            poliz.pushOp(r, rval, op);
+            r = expressionType(r, rval, op);
+
         }
-        r = expressionType(r, rval, op);
-        poliz.pushOp(op);
     }
-
+    catch(Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
     return r;
 }
 
@@ -322,8 +332,8 @@ type_t Lexer::add(void) {
         }
         if (exit) break;
         type_t rval = mul();
+        poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
-        poliz.pushOp(op);
     }
 
     return r;
@@ -349,16 +359,19 @@ type_t Lexer::mul(void) {
         }
         if (exit) break;
         type_t rval = constExpr();
+        poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
-        poliz.pushOp(op);
+
     }
 
     return r;
 }
 
 type_t Lexer::constExpr(void) {
-    // TODO: Нужно сохранять в стек всё это.
     type_t r;
+
+    code >> c;
+    code.putback(c.symbol());
 
     if (readWord("true")) {
         r = _BOOLEAN_;
@@ -377,11 +390,11 @@ type_t Lexer::constExpr(void) {
     } else if (readWord("not")) {
         type_t val = constExpr();
         r = expressionType(_NONE_, val, LNOT);
-        poliz.pushOp(LNOT);
+        poliz.pushOp(_NONE_, val, LNOT);
     } else if (readWord("(")) {
         r = expr();
-        code >> c;
         if (c != ')') throw Obstacle(EXPR_CLOSEBR);
+        code >> c;
     } else {
         int start = code.tellg();
         try {
@@ -421,9 +434,7 @@ void Lexer::whileOp(void) {
 void Lexer::breakOp(void) {
 
 }
-void Lexer::writeOp(void) {
 
-}
 void Lexer::gotoOp(void) {
 
 }
@@ -450,12 +461,74 @@ void Lexer::readOp(void) {
     std::cout << "READ " << operand << std::endl;
 }
 
+void Lexer::writeOp(void) {
+    try {
+        code >> c;
+
+        if (c != '(')
+            throw Obstacle(BAD_PARAMS_OPBR);
+
+        do {
+            type_t exop = expr();
+            poliz.pushOp(_NONE_, exop, WRITE);
+        } while (c == ',');
+
+        if (c != ')')
+            throw Obstacle(BAD_PARAMS_CLBR);
+
+        code >> c;
+
+        if (c != ';')
+            throw Obstacle(CLOSED_BOOK);
+
+        code >> c;
+    }
+    catch (Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
+}
+
 void Lexer::finalize(void) {
     IdTable.repr();
     poliz.repr();
+    std::cout << std::endl;
+}
+
+void Lexer::giveBIN(char * filename) {
+    bin.open(filename, std::ios_base::binary | std::ios_base::out);
+    int x = 0;
+    bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
+
+    IdentTable * ITp = &IdTable;
+    while (ITp->next != nullptr) {
+        ITp->setOffset((int)bin.tellp());
+        //std::cout << ITp->getOffset();
+        ITp->writeValToStream(bin);
+        ITp = ITp->next;
+    }
+
+    int progStart = bin.tellp();
+    int b = poliz.getSize();
+    op_t * prog = poliz.getProg();
+    bool * execBit = poliz.getEB();
+    for (int i = 0; i < b; i++) {
+        if (execBit[i]) {
+            int tempint1 = (int)prog[i];
+            bin.write((char*)&tempint1, sizeof(int));
+        } else {
+            int tempint2 = ((IdentTable *)prog[i])->getOffset();
+            bin.write((char*)&tempint2, sizeof(int));
+        }
+        bin.write((char*)&execBit[i], sizeof(bool));
+    }
+    bin.seekp(0, std::ios_base::beg);
+    bin.write((char*)&progStart, sizeof(int));
+
+    bin.close();
 }
 
 void Lexer::revert(int x) {
     code.seekg((int)code.tellg() - x);
-    c.pos -= x;
 }

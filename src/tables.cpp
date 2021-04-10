@@ -40,6 +40,7 @@ IdentTable * IdentTable::confirm(void) {
 
     IdentTable * newIdent = new IdentTable;
     l->next = newIdent;
+    l->next->ord = l->ord + 1;
 
     return l;
 }
@@ -61,7 +62,7 @@ type_t IdentTable::getType(void) {
 IdentTable * IdentTable::getIT(char * name) {
     IdentTable * p = this;
 
-    while (!strcmp(p->name, name)){
+    while (strcmp(p->name, name) != 0){
         if (p->next != nullptr) p = p->next;
         else throw Obstacle(IDENT_NOT_DEF);
     }
@@ -84,6 +85,8 @@ void IdentTable::whoami(void) {
                 std::cout << (char*) val; break;
             case _BOOLEAN_:
                 std::cout << * (bool*) val; break;
+            default:
+                std::cout << "[неизвестен]"; break;
         }
     } else std::cout << "(не определён)";
     std::cout << '}';
@@ -101,21 +104,44 @@ void IdentTable::repr(void) {
     }
 }
 
-IdentTable::~IdentTable() {
-    if (name != nullptr) delete name;
+void * IdentTable::getVal(void) {
+    return val;
+}
 
-    if (def) {
-        switch (valType) {
-            case _INT_:
-                delete (int*) val; break;
-            case _REAL_:
-                delete (float*) val; break;
-            case _STRING_:
-                delete [] (char*) val; break;
-            case _BOOLEAN_:
-                delete (bool*) val; break;
-        }
+int IdentTable::ordNum(void) {
+    return ord;
+}
+
+void IdentTable::setOffset(int x) {
+    offset = x;
+}
+
+int IdentTable::getOffset(void) {
+    return offset;
+}
+
+void IdentTable::writeValToStream(std::ostream & s) {
+    switch (valType) {
+        case _INT_:
+            s.write((char*)val, sizeof(int)); break;
+        case _REAL_:
+            s.write((char*)val, sizeof(float)); break;
+        case _STRING_:
+            s.write((char*)val, sizeof(char) * (strlen((char*)val) + 1)); break;
+        case _BOOLEAN_:
+            s.write((char*)val, sizeof(bool)); break;
+        default:
+            throw Obstacle(PANIC);
     }
+}
 
+IdentTable::~IdentTable() {
+    if (name != nullptr) delete [] name;
+
+    /*
+    if (def) {
+        writeToStream(std::cout);
+    }
+    */
     if (next != nullptr) delete next;
 }

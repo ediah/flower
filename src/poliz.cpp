@@ -30,19 +30,19 @@ void POLIZ::pushVal(IdentTable * val) {
     iter++;
 }
 
-void POLIZ::pushOp(operation_t op){
+void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     #ifdef DEBUG
     std::cout << "POLIZ pushOp ";
     interpretAsOp(op);
     std::cout << std::endl;
     #endif
-    prog[iter] = (op_t) op;
+    prog[iter] = (char) lval << 16 | (char) rval << 8 | (char) op;
     execBit[iter] = true;
     iter++;
 }
 
 void POLIZ::interpretAsOp(op_t op) {
-    switch (op) {
+    switch (op & 0xFF) {
         case PLUS: std::cout << "PLUS "; break;
         case MINUS: std::cout << "MINUS "; break;
         case MUL: std::cout << "MUL "; break;
@@ -58,12 +58,24 @@ void POLIZ::interpretAsOp(op_t op) {
         case EQ: std::cout << "EQ "; break;
         case NEQ: std::cout << "NEQ "; break;
         case ASSIGN: std::cout << "ASSIGN "; break;
-        case GET: std::cout << "GET "; break;
         case STOP: std::cout << "STOP "; break;
+        case WRITE: std::cout << "WRITE "; break;
         default: throw Obstacle(PANIC);
     }
 }
 
 void POLIZ::interpretAsVal(op_t val) {
     ((IdentTable *) val)->whoami();
+}
+
+op_t * POLIZ::getProg(void) {
+    return prog;
+}
+
+bool * POLIZ::getEB(void) {
+    return execBit;
+}
+
+int POLIZ::getSize(void) {
+    return iter;
 }
