@@ -41,6 +41,9 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
             if (t2 == _INT_) r = _INT_;
             else throw Obstacle(EXPR_BAD_TYPE);
         } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == INV) {
+        if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
+        else throw Obstacle(EXPR_BAD_TYPE);
     } else if ((o == LESS) || (o == GRTR) || (o == EQ) || (o == NEQ)) {
         if ((t1 == _INT_) || (t1 == _REAL_)) {
             if ((t2 == _INT_) || (t2 == _REAL_)) r = _BOOLEAN_;
@@ -68,8 +71,17 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         else if ((t1 == _STRING_) && (t2 == _STRING_))
             r = _STRING_;
         else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o != STOP) && (o != WRITE))
-        throw Obstacle(PANIC);
+    } else if (o == JIT) {
+        if ((t1 == _BOOLEAN_) && (t2 == _INT_)) {
+            r = _NONE_;
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == STOP) {
+        r = _NONE_;
+    } else if (o == WRITE) {
+        r = _NONE_;
+    } else if (o == READ) {
+        if (t2 == _BOOLEAN_) throw Obstacle(READ_BOOL);
+    } else throw Obstacle(PANIC);
     return r;
 }
 
@@ -80,6 +92,7 @@ char * typetostr(type_t t) {
         case _REAL_: return "REAL"; break;
         case _STRING_: return "STRING"; break;
         case _BOOLEAN_: return "BOOLEAN"; break;
+        case _LABEL_: return "LABEL"; break;
     }
     throw Obstacle(PANIC);
 }

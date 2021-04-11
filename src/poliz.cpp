@@ -43,6 +43,7 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
 
 void POLIZ::interpretAsOp(op_t op) {
     switch (op & 0xFF) {
+        case INV: std::cout << "INV "; break;
         case PLUS: std::cout << "PLUS "; break;
         case MINUS: std::cout << "MINUS "; break;
         case MUL: std::cout << "MUL "; break;
@@ -60,6 +61,7 @@ void POLIZ::interpretAsOp(op_t op) {
         case ASSIGN: std::cout << "ASSIGN "; break;
         case STOP: std::cout << "STOP "; break;
         case WRITE: std::cout << "WRITE "; break;
+        case JIT: std::cout << "JIT "; break;
         default: throw Obstacle(PANIC);
     }
 }

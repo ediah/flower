@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include "cursor.hpp"
-//#define DEBUG
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
     do {

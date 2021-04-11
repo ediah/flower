@@ -1,7 +1,8 @@
 program {
     int a = 10;
-    int b = 5;
 
-    b = (a + b) * 2;
-    write(b);
+    goto exit;
+    a = a * 2 - 5;
+exit:
+    write(a);
 }

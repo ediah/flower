@@ -2,7 +2,7 @@ vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
 CC= g++
-CFLAGS = --std=c++11 -g -O0 -Wno-write-strings
+CFLAGS = --std=c++11 -g -O0 -Wno-write-strings -DDEBUG
 
 VPATH = ./src ./src/inc ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}

@@ -6,11 +6,13 @@ enum type_t {
     _INT_,
     _REAL_,
     _STRING_,
-    _BOOLEAN_
+    _BOOLEAN_,
+    _LABEL_
 };
 
 enum operation_t {
     NONE,
+    INV,
     PLUS,
     MINUS,
     LOR,
@@ -26,7 +28,9 @@ enum operation_t {
     EQ,
     NEQ,
     ASSIGN,
+    READ,
     WRITE,
+    JIT,
     STOP,
 };
 

@@ -62,8 +62,8 @@ type_t IdentTable::getType(void) {
 IdentTable * IdentTable::getIT(char * name) {
     IdentTable * p = this;
 
-    while (strcmp(p->name, name) != 0){
-        if (p->next != nullptr) p = p->next;
+    while (strcmp(p->name, name) != 0) {
+        if (p->next->name != nullptr) p = p->next;
         else throw Obstacle(IDENT_NOT_DEF);
     }
 
@@ -77,7 +77,7 @@ void IdentTable::whoami(void) {
         std::cout << name << " = ";
     if (def) {
         switch (valType) {
-            case _INT_:
+            case _INT_: case _LABEL_:
                 std::cout << * (int*) val; break;
             case _REAL_:
                 std::cout << * (float*) val; break;
@@ -108,6 +108,10 @@ void * IdentTable::getVal(void) {
     return val;
 }
 
+void IdentTable::setVal(void * val) {
+    this->val = val;
+}
+
 int IdentTable::ordNum(void) {
     return ord;
 }
@@ -121,8 +125,22 @@ int IdentTable::getOffset(void) {
 }
 
 void IdentTable::writeValToStream(std::ostream & s) {
+    if (!def) {
+        switch (valType) {
+            case _INT_:
+                val = new int (0); break;
+            case _REAL_:
+                val = new float (0); break;
+            case _STRING_:
+                val = new char ('\0'); break;
+            case _BOOLEAN_:
+                val = new bool (false); break;
+            default:
+                throw Obstacle(PANIC);
+        }
+    }
     switch (valType) {
-        case _INT_:
+        case _INT_: case _LABEL_:
             s.write((char*)val, sizeof(int)); break;
         case _REAL_:
             s.write((char*)val, sizeof(float)); break;

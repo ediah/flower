@@ -79,6 +79,11 @@ void Lexer::type(void) {
                 IdTable.pushType(_REAL_);
             else throw Obstacle(TYPE_UNKNOWN);
             break;
+        case 'b':
+            if (readWord("ool"))
+                IdTable.pushType(_BOOLEAN_);
+            else throw Obstacle(TYPE_UNKNOWN);
+            break;
         default:
             throw Obstacle(TYPE_UNKNOWN);
     }
@@ -133,6 +138,11 @@ void Lexer::constVal(void) {
             case _REAL_:
                 IdTable.pushVal( new float (constReal()) );
                 break;
+            case _BOOLEAN_:
+                IdTable.pushVal( new bool (constBool()) );
+                break;
+            default:
+                throw Obstacle(PANIC);
         }
     }
     catch (Obstacle & o) {
@@ -213,6 +223,18 @@ float Lexer::constReal(void) {
     return intPart + floatPart;
 }
 
+bool Lexer::constBool(void) {
+    code >> c;
+    code.putback(c.symbol());
+
+    bool r;
+    if (readWord("true")) r = true;
+    else if (readWord("false")) r = false;
+    else throw Obstacle(BAD_BOOL);
+
+    return r;
+}
+
 void Lexer::operations(void) {
     /*
     if (<выражение>) <оператор> else <оператор>
@@ -249,8 +271,8 @@ void Lexer::operation(void) {
     } else {
         char * name = identificator();
         if (c == ':') {
-            // Помеченный оператор
-            saveLabel(name); // TODO: сохранить метку
+            code >> c;
+            saveLabel(name, poliz.getSize());
             operation();
         } else if (c == '=') {
             std::cout << name << std::endl;
@@ -265,8 +287,20 @@ void Lexer::operation(void) {
     }
 }
 
-void Lexer::saveLabel(char * label) {
-
+IdentTable * Lexer::saveLabel(char * label, int addr) {
+    IdentTable * existinglab;
+    try {
+        existinglab = IdTable.getIT(label);
+        delete (int *) existinglab->getVal();
+        existinglab->setVal(new int (addr));
+    }
+    catch(...) {
+        IdTable.pushType(_LABEL_);
+        IdTable.pushVal( new int (addr) );
+        IdTable.pushId(label);
+        existinglab = IdTable.confirm();
+    }
+    return existinglab;
 }
 
 type_t Lexer::expr(void) {
@@ -313,6 +347,7 @@ type_t Lexer::add(void) {
 
     while (true) {
         code >> c;
+        //code.putback(c.symbol());
 
         switch (c.symbol()) {
             case '+': op = PLUS; break;
@@ -345,9 +380,12 @@ type_t Lexer::mul(void) {
     operation_t op;
 
     while (true) {
+        if (c == ' ') code >> c;
+
         switch (c.symbol()) {
             case '*': op = MUL; break;
             case '/': op = DIV; break;
+            case '%': op = MOD; break;
             case 'a':
                 if (readWord("nd")) {
                     op = LAND;
@@ -373,6 +411,13 @@ type_t Lexer::constExpr(void) {
     code >> c;
     code.putback(c.symbol());
 
+    bool inverse = false;
+    if (c == '+') code >> c;
+    if (c == '-') {
+        inverse = true;
+        code >> c;
+    }
+
     if (readWord("true")) {
         r = _BOOLEAN_;
         IdTable.pushId(nullptr);
@@ -397,6 +442,7 @@ type_t Lexer::constExpr(void) {
         code >> c;
     } else {
         int start = code.tellg();
+
         try {
             r = _INT_;
             int x = constInt();
@@ -406,23 +452,79 @@ type_t Lexer::constExpr(void) {
             IdentTable * val = IdTable.confirm();
             poliz.pushVal(val);
         } catch(...) {
-            code.seekg(start);
-            try {
-                char * name = identificator();
-                IdentTable * val = IdTable.getIT(name);
-                r = val->getType();
-                poliz.pushVal(val);
-            } catch (Obstacle & o) {
-                c.where();
-                o.describe();
-                exit(-1);
-            }
-        }
+        code.seekg(start);
+        try {
+            r = _REAL_;
+            float x = constReal();
+            IdTable.pushId(nullptr);
+            IdTable.pushType(_REAL_);
+            IdTable.pushVal(new float (x));
+            IdentTable * val = IdTable.confirm();
+            poliz.pushVal(val);
+        } catch(...) {
+        code.seekg(start);
+        try {
+            r = _STRING_;
+            char * x = constString();
+            IdTable.pushId(nullptr);
+            IdTable.pushType(_STRING_);
+            IdTable.pushVal(x);
+            IdentTable * val = IdTable.confirm();
+            poliz.pushVal(val);
+        } catch(...) {
+        code.seekg(start);
+        try {
+            r = _BOOLEAN_;
+            bool x = constBool();
+            IdTable.pushId(nullptr);
+            IdTable.pushType(_BOOLEAN_);
+            IdTable.pushVal(new bool (x));
+            IdentTable * val = IdTable.confirm();
+            poliz.pushVal(val);
+        } catch(...) {
+        code.seekg(start);
+        try {
+            char * name = identificator();
+            IdentTable * val = IdTable.getIT(name);
+            r = val->getType();
+            poliz.pushVal(val);
+        } catch (Obstacle & o) {
+            c.where();
+            o.describe();
+            exit(-1);
+        }}}}}
+
     }
+
+    if (inverse) {
+        poliz.pushOp(_NONE_, r, INV);
+        r = expressionType(_NONE_, r, INV);
+    }
+
     return r;
 }
 
 void Lexer::condOp(void) {
+    code >> c;
+
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
+
+    type_t r = expr();
+
+    if (r != _BOOLEAN_)
+        throw Obstacle(BAD_IF);
+
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
+
+    code >> c;
+
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
+
+        // TODO: адрес в программе
+    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
 
 }
 void Lexer::forOp(void) {
@@ -436,7 +538,34 @@ void Lexer::breakOp(void) {
 }
 
 void Lexer::gotoOp(void) {
+    code >> c;
+    code.putback(c.symbol());
+    char * label = identificator();
+    IdentTable * labval;
+    try {
+        labval = IdTable.getIT(label);
+    }
+    catch(Obstacle & o) {
+        // До метки ещё не дошли, но это не повод расстраиваться!
+        labval = saveLabel(label, 0);
+    }
+    try{
+    if (labval->getType() != _LABEL_)
+        throw Obstacle(BAD_LABEL);
+    }
+    catch (Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
+    code >> c;
 
+    IdTable.pushType(_BOOLEAN_);
+    IdTable.pushVal(new bool (true));
+    IdentTable * trueval = IdTable.confirm();
+    poliz.pushVal(trueval);
+    poliz.pushVal(labval);
+    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
 }
 
 void Lexer::readOp(void) {
@@ -457,8 +586,9 @@ void Lexer::readOp(void) {
 
     code >> c;
 
-    // TODO: запись в ПОЛИЗ -- ЧТЕНИЕ
-    std::cout << "READ " << operand << std::endl;
+    IdentTable * it = IdTable.getIT(operand);
+    poliz.pushVal(it);
+    poliz.pushOp(_NONE_, it->getType(), READ);
 }
 
 void Lexer::writeOp(void) {

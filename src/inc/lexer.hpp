@@ -38,10 +38,11 @@ public:
     int constInt(void);
     char * constString(void);
     float constReal(void);
+    bool constBool(void);
 
     void operations(void);
     void operation(void);
-    void saveLabel(char * label);
+    IdentTable * saveLabel(char * label, int addr);
     type_t expr(void);
     type_t add(void);
     type_t mul(void);

@@ -15,6 +15,7 @@ void Obstacle::describe(void) {
         case BAD_NUM:
             std::cout << "Плохое число." << std::endl;
             break;
+        case BAD_BOOL: expected("true или false"); break;
         case BAD_IDENT:
             std::cout << "Плохой идентификатор." << std::endl;
             break;
@@ -33,6 +34,16 @@ void Obstacle::describe(void) {
             break;
         case IDENT_NOT_DEF:
             std::cout << "Идентификатор не описан." << std::endl;
+            break;
+        case BAD_IF:
+            std::cout << "Выражение должно быть условным." << std::endl;
+            break;
+        case BAD_LABEL:
+            std::cout << "Перемещаться можно только по метке." << std::endl;
+            break;
+        case READ_BOOL:
+            std::cout << "Ввод булевского типа запрещён." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

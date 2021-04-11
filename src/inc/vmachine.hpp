@@ -13,27 +13,8 @@ class Stack {
 public:
     Stack(): elem(nullptr), next(nullptr) {};
 
-    void push(void * x) {
-        Stack * p = this;
-        while (p->next != nullptr) p = p->next;
-        p->next = new Stack;
-        p->next->elem = x;
-    }
-
-    void * pop(void) {
-        void * r;
-        Stack * p = this;
-        if (p->next != nullptr) {
-            while (p->next->next != nullptr) p = p->next;
-            r = p->next->elem;
-            p->next->~Stack();
-            p->next = nullptr;
-        } else {
-            r = p->elem;
-            elem = nullptr;
-        }
-        return r;
-    }
+    void push(void * x);
+    void * pop(void);
 };
 
 class VirtualMachine {
@@ -49,7 +30,7 @@ public:
 
     void run(void);
 
-    bool exec(op_t op);
+    bool exec(op_t op, int * eip);
 
 };
 
