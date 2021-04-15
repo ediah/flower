@@ -16,9 +16,7 @@ public:
     IdentTable *next;
 
     IdentTable(type_t t = _NONE_, char * n = NULL): valType(t),
-        name(n), next(nullptr), def(false), val(nullptr), ord(0), offset(0) {
-            std::cout << "AOOA" << std::endl;
-        };
+        name(n), next(nullptr), def(false), val(nullptr), ord(0), offset(0) {};
     void pushId(char * ident);
     void pushType(type_t t);
     void pushVal(void* v);
@@ -27,6 +25,7 @@ public:
     type_t getType(void);
     void * getVal(void);
     void setVal(void * val);
+    void setId(char * name);
     IdentTable * getIT(char * name);
     IdentTable * last(void);
     void whoami(void);

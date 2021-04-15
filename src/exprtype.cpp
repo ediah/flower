@@ -81,6 +81,8 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         r = _NONE_;
     } else if (o == READ) {
         if (t2 == _BOOLEAN_) throw Obstacle(READ_BOOL);
+    } else if (o == JMP) {
+        r = _NONE_;
     } else throw Obstacle(PANIC);
     return r;
 }

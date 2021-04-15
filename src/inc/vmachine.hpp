@@ -31,7 +31,13 @@ public:
     void run(void);
 
     bool exec(op_t op, int * eip);
+    /*
+    template <typename lval_t, typename rval_t, typename res_t>
+    void tempOp(res_t (*f) (lval_t, rval_t));
 
+    template <typename lval_t, typename rval_t, typename res_t>
+    res_t plusOp(lval_t a, rval_t b);
+    */
 };
 
 #endif

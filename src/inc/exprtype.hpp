@@ -31,7 +31,8 @@ enum operation_t {
     READ,
     WRITE,
     JIT,
-    STOP,
+    JMP,
+    STOP
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

@@ -62,8 +62,8 @@ type_t IdentTable::getType(void) {
 IdentTable * IdentTable::getIT(char * name) {
     IdentTable * p = this;
 
-    while (strcmp(p->name, name) != 0) {
-        if (p->next->name != nullptr) p = p->next;
+    while ((p->name == nullptr) || (strcmp(p->name, name) != 0)) {
+        if (p->next->valType != _NONE_) p = p->next;
         else throw Obstacle(IDENT_NOT_DEF);
     }
 
@@ -104,12 +104,17 @@ void IdentTable::repr(void) {
     }
 }
 
+void IdentTable::setId(char * name) {
+    this->name = name;
+}
+
 void * IdentTable::getVal(void) {
     return val;
 }
 
 void IdentTable::setVal(void * val) {
     this->val = val;
+    def = true;
 }
 
 int IdentTable::ordNum(void) {
@@ -127,7 +132,7 @@ int IdentTable::getOffset(void) {
 void IdentTable::writeValToStream(std::ostream & s) {
     if (!def) {
         switch (valType) {
-            case _INT_:
+            case _INT_: case _LABEL_:
                 val = new int (0); break;
             case _REAL_:
                 val = new float (0); break;

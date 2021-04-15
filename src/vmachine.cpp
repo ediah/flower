@@ -57,6 +57,29 @@ void VirtualMachine::run(void) {
     //std::cout << * (int *) (base + cmd[10]) << std::endl;
 }
 
+/*
+template <typename lval_t, typename rval_t, typename res_t>
+res_t VirtualMachine::plusOp(lval_t a, rval_t b) {
+    return a + b;
+}
+
+template <class lval_t, class rval_t, class res_t>
+res_t minusOp(lval_t a, rval_t b) {
+    return a - b;
+}
+
+template <class lval_t, class rval_t, class res_t>
+res_t mulOp(lval_t a, rval_t b) {
+    return a * b;
+}
+
+template <class lval_t, class rval_t, class res_t>
+void VirtualMachine::tempOp(res_t (*f) (lval_t, rval_t)) {
+    rval_t b = * (rval_t *) stackVM.pop();
+    lval_t a = * (lval_t *) stackVM.pop();
+    stackVM.push(new res_t ( f(a, b) ));
+}
+*/
 bool VirtualMachine::exec(op_t op, int * eip) {
     bool exitStatus = false;
     type_t lval = (type_t) ((op >> 16) & 0xFF);
@@ -69,6 +92,10 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 int b = * (int *) stackVM.pop();
                 int a = * (int *) stackVM.pop();
                 stackVM.push(new int (a + b));
+                /*
+                int (*f) (int, int) = plusOp;
+                tempOp<int, int, int>(f);
+                */
             } else if (rest == _REAL_) {
                 float * r = new float (0);
 
@@ -207,6 +234,38 @@ bool VirtualMachine::exec(op_t op, int * eip) {
 
                 if (condition) *eip = offset - 1;
             } else throw Obstacle(PANIC);
+            break;
+        case JMP:
+            if ((lval == _NONE_) && (rval == _NONE_)) {
+                int offset = * (int *) stackVM.pop();
+                *eip = offset - 1;
+            } else throw Obstacle(PANIC);
+            break;
+        case LESSEQ:
+            if ((rval == _INT_) && (lval == _INT_)) {
+                int b = * (int *) stackVM.pop();
+                int a = * (int *) stackVM.pop();
+                stackVM.push(new bool (a <= b));
+            }
+
+            if ((rval == _INT_) && (lval == _REAL_)) {
+                int b = * (int *) stackVM.pop();
+                float a = * (float *) stackVM.pop();
+                stackVM.push(new bool (a <= b));
+            }
+
+            if ((rval == _REAL_) && (lval == _INT_)) {
+                float b = * (float *) stackVM.pop();
+                int a = * (int *) stackVM.pop();
+                stackVM.push(new bool (a <= b));
+            }
+
+            if ((rval == _REAL_) && (lval == _REAL_)) {
+                float b = * (float *) stackVM.pop();
+                float a = * (float *) stackVM.pop();
+                stackVM.push(new bool (a <= b));
+            }
+
             break;
         default:
             std::cout << "Неизвестная команда." << std::endl;

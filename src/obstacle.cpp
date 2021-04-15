@@ -11,6 +11,8 @@ void Obstacle::describe(void) {
         case OP_CLOSEBR:
         case PROG_CLOSEBR: expected("}"); break;
         case DEF_END: expected(";"); break;
+        case BAD_PARAMS_OPBR: expected("("); break;
+        case BAD_PARAMS_CLBR:
         case EXPR_CLOSEBR: expected(")"); break;
         case BAD_NUM:
             std::cout << "Плохое число." << std::endl;
@@ -43,6 +45,9 @@ void Obstacle::describe(void) {
             break;
         case READ_BOOL:
             std::cout << "Ввод булевского типа запрещён." << std::endl;
+            break;
+        case BAD_EXPR:
+            std::cout << "Неверное выражение." << std::endl;
             break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;

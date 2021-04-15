@@ -2,7 +2,7 @@
 #define OBSTACLE_H
 
 enum reason {
-    PANIC,
+    PANIC, 
     PROG_START,
     PROG_OPENBR,
     PROG_CLOSEBR,
@@ -11,6 +11,7 @@ enum reason {
     EXPR_CLOSEBR,
     READ_BOOL,
     DEF_END,
+    BAD_EXPR,
     BAD_NUM,
     BAD_BOOL,
     BAD_IF,

@@ -47,6 +47,7 @@ public:
     type_t add(void);
     type_t mul(void);
     type_t constExpr(void);
+    IdentTable * cycleparam(void);
 
     void condOp(void);
     void forOp(void);

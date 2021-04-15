@@ -1,8 +1,11 @@
 program {
-    int a = 10;
+    int a = 1, b=12;
 
-    goto exit;
-    a = a * 2 - 5;
-exit:
-    write(a);
+    for (int i = 1; i <= b; i+1) {
+            a = a + i;
+            write(a);
+    }
+
+    write(a * 10);
+
 }
