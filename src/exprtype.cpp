@@ -42,7 +42,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
             else throw Obstacle(EXPR_BAD_TYPE);
         } else throw Obstacle(EXPR_BAD_TYPE);
     } else if (o == INV) {
-        if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
+        if ((t2 == _INT_) || (t2 == _REAL_) || (t2 == _BOOLEAN_)) r = t2;
         else throw Obstacle(EXPR_BAD_TYPE);
     } else if ((o == LESS) || (o == GRTR) || (o == EQ) || (o == NEQ)) {
         if ((t1 == _INT_) || (t1 == _REAL_)) {
@@ -82,6 +82,8 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
     } else if (o == READ) {
         if (t2 == _BOOLEAN_) throw Obstacle(READ_BOOL);
     } else if (o == JMP) {
+        r = _NONE_;
+    } else if (o == ENDL) {
         r = _NONE_;
     } else throw Obstacle(PANIC);
     return r;

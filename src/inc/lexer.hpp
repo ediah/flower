@@ -27,11 +27,11 @@ public:
     };
 
     // Загрузка исходного кода
-    void load(const char * name);
+    void load(std::string name);
     // Основная функция разбора, "program"
     void parse(void);
     void defs(void);
-    void type(void);
+    bool type(void);
     void variable(void);
     char * identificator(void);
     void constVal(void);
@@ -60,7 +60,7 @@ public:
     void finalize(void);
     void giveBIN(char * filename);
 
-    ~Lexer() {};
+    ~Lexer(void);
 };
 
 #endif

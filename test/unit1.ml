@@ -1,11 +1,12 @@
 program {
-    int a = 1, b=12;
+    int a;
+    read(a);
 
-    for (int i = 1; i <= b; i+1) {
-            a = a + i;
-            write(a);
-    }
+    if (a % 2 == 0)
+        write("Чётное число!");
+    else
+        write("Нечётное число!");
 
-    write(a * 10);
+    write("Конец!");
 
 }

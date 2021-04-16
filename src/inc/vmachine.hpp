@@ -15,6 +15,7 @@ public:
 
     void push(void * x);
     void * pop(void);
+    void replace(void* from, void* to);
 };
 
 class VirtualMachine {
@@ -31,13 +32,17 @@ public:
     void run(void);
 
     bool exec(op_t op, int * eip);
-    /*
+
+    char * getString(void * x);
+
+    void numberOp(type_t lval, type_t rval, void* f);
+
     template <typename lval_t, typename rval_t, typename res_t>
     void tempOp(res_t (*f) (lval_t, rval_t));
 
-    template <typename lval_t, typename rval_t, typename res_t>
-    res_t plusOp(lval_t a, rval_t b);
-    */
+    template <class lval_t, class rval_t>
+    void assign(void);
+
 };
 
 #endif

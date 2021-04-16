@@ -61,8 +61,11 @@ void POLIZ::interpretAsOp(op_t op) {
         case ASSIGN: std::cout << "ASSIGN "; break;
         case STOP: std::cout << "STOP "; break;
         case WRITE: std::cout << "WRITE "; break;
+        case ENDL: std::cout << "ENDL "; break;
+        case READ: std::cout << "READ "; break;
         case JIT: std::cout << "JIT "; break;
         case JMP: std::cout << "JMP "; break;
+        case NONE: std::cout << "NONE "; break;
         default: throw Obstacle(PANIC);
     }
 }

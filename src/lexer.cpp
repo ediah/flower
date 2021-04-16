@@ -15,8 +15,16 @@ int Lexer::fastPow(int x, int n) {
     return r;
 }
 
-void Lexer::load(const char * name) {
+void Lexer::load(std::string name) {
     code.open(name);
+    if (!code.is_open()) {
+        std::cout << "Такого файла нет!";
+        exit(-1);
+    }
+}
+
+Lexer::~Lexer(void) {
+    code.close();
 }
 
 void Lexer::parse(void) {
@@ -49,8 +57,11 @@ void Lexer::parse(void) {
 
 void Lexer::defs(void) {
     while (true) {
-        try { type(); }
-        catch(Obstacle & o) { break; }
+        if (!type()) {
+            revert(1);
+            code >>= c;
+            break;
+        }
 
         do {
             variable();
@@ -58,36 +69,39 @@ void Lexer::defs(void) {
 
         if (c != ';') throw Obstacle(DEF_END);
     }
-    //code >> c;
 }
 
-void Lexer::type(void) {
+bool Lexer::type(void) {
+    bool r = false;
     code >> c;
 
     switch(c.symbol()) {
         case 'i':
-            if (readWord("nt"))
+            if (readWord("nt")) {
                 IdTable.pushType(_INT_);
-            else throw Obstacle(TYPE_UNKNOWN);
+                r = true;
+            }
             break;
         case 's':
-            if (readWord("tring"))
+            if (readWord("tring")) {
                 IdTable.pushType(_STRING_);
-            else throw Obstacle(TYPE_UNKNOWN);
+                r = true;
+            }
             break;
         case 'r':
-            if (readWord("eal"))
+            if (readWord("eal")) {
                 IdTable.pushType(_REAL_);
-            else throw Obstacle(TYPE_UNKNOWN);
+                r = true;
+            }
             break;
         case 'b':
-            if (readWord("ool"))
+            if (readWord("ool")) {
                 IdTable.pushType(_BOOLEAN_);
-            else throw Obstacle(TYPE_UNKNOWN);
+                r = true;
+            }
             break;
-        default:
-            throw Obstacle(TYPE_UNKNOWN);
     }
+    return r;
 }
 
 bool Lexer::readWord(char * word) {
@@ -312,7 +326,7 @@ type_t Lexer::expr(void) {
 
         code >> c;
         if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
-            operation_t op;
+            operation_t op = NONE;
             char p = c.symbol();
             code >>= c;
             if (c == '=') {
@@ -320,12 +334,12 @@ type_t Lexer::expr(void) {
                     case '<': op = LESSEQ; break;
                     case '>': op = GRTREQ; break;
                     case '!': op = NEQ;    break;
+                    case '=': op = EQ;     break;
                 }
             } else {
                 switch(p) {
                     case '<': op = LESS; break;
                     case '>': op = GRTR; break;
-                    case '=': op = EQ;   break;
                 }
             }
             //code >> c;
@@ -508,23 +522,52 @@ type_t Lexer::constExpr(void) {
 }
 
 void Lexer::condOp(void) {
-    code >> c;
+    try {
+        code >> c;
 
-    if (c != '(')
-        throw Obstacle(BAD_PARAMS_OPBR);
+        if (c != '(')
+            throw Obstacle(BAD_PARAMS_OPBR);
 
-    type_t r = expr();
+        type_t r = expr();
 
-    if (r != _BOOLEAN_)
-        throw Obstacle(BAD_IF);
+        if (r != _BOOLEAN_)
+            throw Obstacle(BAD_IF);
 
-    if (c != ')')
-        throw Obstacle(BAD_PARAMS_CLBR);
+        if (c != ')')
+            throw Obstacle(BAD_PARAMS_CLBR);
+        code >> c; code >> c;
 
-    code >> c;
-    poliz.pushOp(_NONE_, _BOOLEAN_, INV);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+        IdTable.pushType(_LABEL_);
+        IdentTable * elsecase = IdTable.confirm();
+        IdTable.pushType(_LABEL_);
+        IdentTable * endif = IdTable.confirm();
 
+        poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
+        poliz.pushVal(elsecase);
+        poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+
+        std::cout << c.symbol() << std::endl;
+
+        operation();
+
+        poliz.pushVal(endif);
+        poliz.pushOp(_NONE_, _NONE_, JMP);
+
+        elsecase->setVal( new int (poliz.getSize()) );
+
+        code.putback(c.symbol());
+        if (readWord("else")) {
+            code >> c;
+            operation();
+        }
+
+        endif->setVal( new int (poliz.getSize()) );
+    }
+    catch (Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
 }
 
 IdentTable * Lexer::cycleparam(void) {
@@ -687,6 +730,8 @@ void Lexer::writeOp(void) {
             type_t exop = expr();
             poliz.pushOp(_NONE_, exop, WRITE);
         } while (c == ',');
+
+        poliz.pushOp(_NONE_, _NONE_, ENDL);
 
         if (c != ')')
             throw Obstacle(BAD_PARAMS_CLBR);

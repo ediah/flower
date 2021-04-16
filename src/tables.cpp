@@ -150,7 +150,9 @@ void IdentTable::writeValToStream(std::ostream & s) {
         case _REAL_:
             s.write((char*)val, sizeof(float)); break;
         case _STRING_:
-            s.write((char*)val, sizeof(char) * (strlen((char*)val) + 1)); break;
+            s.write("\0\0\0\0\0\0\0\0", sizeof(void*));
+            s.write((char*)val, sizeof(char) * (strlen((char*)val) + 1));
+            break;
         case _BOOLEAN_:
             s.write((char*)val, sizeof(bool)); break;
         default:

@@ -30,6 +30,7 @@ enum operation_t {
     ASSIGN,
     READ,
     WRITE,
+    ENDL,
     JIT,
     JMP,
     STOP

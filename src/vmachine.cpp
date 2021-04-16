@@ -48,29 +48,12 @@ void VirtualMachine::run(void) {
             op = (op_t) *(int*)(cmd + *eip * 5);
             if (exec(op, eip)) break;
         } else { // ExecBit = 0
-            //std::cout << "Значение " << * (int *) (base + *(int*)(cmd + i * 5)) << std::endl;
+            //std::cout << "Значение " << * (int *) (base + *(int*)(cmd + *eip * 5)) << std::endl;
             stackVM.push((void *) (base + *(int*)(cmd + *eip * 5)));
         }
         *eip += 1;
     }
-    //* (int *) (base + cmd[i * 5])
-    //std::cout << * (int *) (base + cmd[10]) << std::endl;
-}
-
-/*
-template <typename lval_t, typename rval_t, typename res_t>
-res_t VirtualMachine::plusOp(lval_t a, rval_t b) {
-    return a + b;
-}
-
-template <class lval_t, class rval_t, class res_t>
-res_t minusOp(lval_t a, rval_t b) {
-    return a - b;
-}
-
-template <class lval_t, class rval_t, class res_t>
-res_t mulOp(lval_t a, rval_t b) {
-    return a * b;
+    delete eip;
 }
 
 template <class lval_t, class rval_t, class res_t>
@@ -79,7 +62,39 @@ void VirtualMachine::tempOp(res_t (*f) (lval_t, rval_t)) {
     lval_t a = * (lval_t *) stackVM.pop();
     stackVM.push(new res_t ( f(a, b) ));
 }
-*/
+
+template <class lval_t, class rval_t>
+void VirtualMachine::assign(void) {
+    rval_t x = * (rval_t *) stackVM.pop();
+    * (lval_t *) stackVM.pop() = x;
+}
+
+inline char * VirtualMachine::getString(void * x) {
+    return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char **) x;
+}
+
+#define ARITH_OPERATION(OP) { \
+    if ((lval == _INT_) && (rval == _INT_)) \
+        tempOp<int, int, int>( [] (int x, int y) { return x OP y; } ); \
+    if ((lval == _INT_) && (rval == _REAL_)) \
+        tempOp<int, float, float>( [] (int x, float y) { return x OP y; } ); \
+    if ((lval == _REAL_) && (rval == _INT_)) \
+        tempOp<float, int, float>( [] (float x, int y) { return x OP y; } ); \
+    if ((lval == _REAL_) && (rval == _REAL_)) \
+        tempOp<float, float, float>( [] (float x, float y) { return x OP y; } ); \
+}
+
+#define LOGIC_OPERATION(OP) { \
+    if ((lval == _INT_) && (rval == _INT_)) \
+        tempOp<int, int, bool>( [] (int x, int y) { return x OP y; } ); \
+    if ((lval == _INT_) && (rval == _REAL_)) \
+        tempOp<int, float, bool>( [] (int x, float y) { return x OP y; } ); \
+    if ((lval == _REAL_) && (rval == _INT_)) \
+        tempOp<float, int, bool>( [] (float x, int y) { return x OP y; } ); \
+    if ((lval == _REAL_) && (rval == _REAL_)) \
+        tempOp<float, float, bool>( [] (float x, float y) { return x OP y; } ); \
+}
+
 bool VirtualMachine::exec(op_t op, int * eip) {
     bool exitStatus = false;
     type_t lval = (type_t) ((op >> 16) & 0xFF);
@@ -88,32 +103,18 @@ bool VirtualMachine::exec(op_t op, int * eip) {
 
     switch(op & 0xFF) {
         case PLUS:
-            if (rest == _INT_) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a + b));
-                /*
-                int (*f) (int, int) = plusOp;
-                tempOp<int, int, int>(f);
-                */
-            } else if (rest == _REAL_) {
-                float * r = new float (0);
+            if ((rest == _INT_) || (rest == _REAL_)) {
+                ARITH_OPERATION(+)
+            }
 
-                if (rval == _INT_) *r += * (int *) stackVM.pop();
-                else *r += * (float *) stackVM.pop();
-
-                if (lval == _INT_) *r += * (int *) stackVM.pop();
-                else *r += * (float *) stackVM.pop();
-
-                stackVM.push(r);
-            } else if (rest == _STRING_){
-                char * b = (char *) stackVM.pop();
-                char * a = (char *) stackVM.pop();
+            if (rest == _STRING_){
+                char * b = getString(stackVM.pop());
+                char * a = getString(stackVM.pop());
 
                 int alen = 0;
                 int blen = 0;
                 for (; a[alen] != '\0'; ++alen);
-                for (; b[alen] != '\0'; ++blen);
+                for (; b[blen] != '\0'; ++blen);
 
                 char * c = new char [alen + blen + 1];
                 for (int i = 0; i < alen; ++i)
@@ -122,95 +123,38 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                     c[alen + i] = b[i];
 
                 c[alen + blen] = '\0';
-
                 stackVM.push(c);
-            } else throw Obstacle(PANIC);
+            }
             break;
-        case MINUS:
-            if (rest == _INT_) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a - b));
-            } else if (rest == _REAL_) {
-                float * r = new float (0);
-
-                if (rval == _INT_) *r -= * (int *) stackVM.pop();
-                else *r -= * (float *) stackVM.pop();
-
-                if (lval == _INT_) *r -= * (int *) stackVM.pop();
-                else *r -= * (float *) stackVM.pop();
-
-                stackVM.push(r);
-            } else throw Obstacle(PANIC);
-            break;
-        case MUL:
-            if (rest == _INT_) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a * b));
-            } else if (rest == _REAL_) {
-                float * r = new float (1);
-
-                if (rval == _INT_) *r *= * (int *) stackVM.pop();
-                else *r *= * (float *) stackVM.pop();
-
-                if (lval == _INT_) *r *= * (int *) stackVM.pop();
-                else *r *= * (float *) stackVM.pop();
-
-                stackVM.push(r);
-            } else throw Obstacle(PANIC);
-            break;
-        case DIV:
-            if (rest == _INT_) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a / b));
-            } else if (rest == _REAL_) {
-                float * r = new float (1);
-
-                if (rval == _INT_) *r /= * (int *) stackVM.pop();
-                else *r /= * (float *) stackVM.pop();
-
-                if (lval == _INT_) *r /= * (int *) stackVM.pop();
-                else *r /= * (float *) stackVM.pop();
-
-                stackVM.push(r);
-            } else throw Obstacle(PANIC);
-            break;
+        case MINUS: ARITH_OPERATION(-) break;
+        case MUL:   ARITH_OPERATION(*) break;
+        case DIV:   ARITH_OPERATION(/) break;
         case MOD:
             if (rest == _INT_) {
                 int b = * (int *) stackVM.pop();
                 int a = * (int *) stackVM.pop();
                 stackVM.push(new int (a % b));
-            } else throw Obstacle(PANIC);
+            }
             break;
         case INV:
             if (rest == _INT_) {
                 int a = * (int *) stackVM.pop();
                 stackVM.push(new int (-a));
-            } else if (rest == _REAL_) {
+            } else {
                 float a = * (float *) stackVM.pop();
                 stackVM.push(new float (-a));
-            } else throw Obstacle(PANIC);
+            }
         case ASSIGN:
             if (lval == _INT_) {
-                if (rval == _INT_) {
-                    int x = * (int *) stackVM.pop();
-                    * (int *) stackVM.pop() = x;
-                } else if (rval == _REAL_) {
-                    float x = * (float *) stackVM.pop();
-                    * (int *) stackVM.pop() = x;
-                }
+                if (rval == _INT_) assign<int, int>();
+                else assign<int, float>();
             } else if (lval == _REAL_) {
-                if (rval == _INT_) {
-                    int x = * (int *) stackVM.pop();
-                    * (float *) stackVM.pop() = x;
-                } else if (rval == _REAL_) {
-                    float x = * (float *) stackVM.pop();
-                    * (float *) stackVM.pop() = x;
-                }
-            } else {
-
+                if (rval == _INT_) assign<float, int>();
+                else assign<float, float>();
+            } else if (lval == _STRING_){
+                char * b = (char *) stackVM.pop();
+                char * a = (char *) stackVM.pop();
+                memcpy(a, &b, sizeof(void*));
             }
             break;
         case STOP:
@@ -219,13 +163,17 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case WRITE:
             if (rval == _INT_) {
                 int x = * (int *) stackVM.pop();
-                std::cout << x << std::endl;
+                std::cout << x;
             } else if (rval == _REAL_) {
                 float x = * (float *) stackVM.pop();
-                std::cout << x << std::endl;
-            } else {
-
+                std::cout << x;
+            } else if (rval == _STRING_) {
+                char * x = getString(stackVM.pop());
+                std::cout << x;
             }
+            break;
+        case ENDL:
+            std::cout << std::endl;
             break;
         case JIT:
             if ((lval == _BOOLEAN_) && (rval == _INT_)) {
@@ -241,32 +189,46 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 *eip = offset - 1;
             } else throw Obstacle(PANIC);
             break;
-        case LESSEQ:
-            if ((rval == _INT_) && (lval == _INT_)) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new bool (a <= b));
-            }
+        case LESS:
+            if ((lval == _STRING_) && (rval == _STRING_)) {
 
-            if ((rval == _INT_) && (lval == _REAL_)) {
-                int b = * (int *) stackVM.pop();
-                float a = * (float *) stackVM.pop();
-                stackVM.push(new bool (a <= b));
+            } else {
+                LOGIC_OPERATION(<)
             }
-
-            if ((rval == _REAL_) && (lval == _INT_)) {
-                float b = * (float *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new bool (a <= b));
-            }
-
-            if ((rval == _REAL_) && (lval == _REAL_)) {
-                float b = * (float *) stackVM.pop();
-                float a = * (float *) stackVM.pop();
-                stackVM.push(new bool (a <= b));
-            }
-
             break;
+        case GRTR:
+            if ((lval == _STRING_) && (rval == _STRING_)) {
+
+            } else {
+                LOGIC_OPERATION(>)
+            }
+            break;
+        case LESSEQ: LOGIC_OPERATION(<=) break;
+        case GRTREQ: LOGIC_OPERATION(>=) break;
+        case EQ: LOGIC_OPERATION(==) break;
+        case NEQ: LOGIC_OPERATION(!=) break;
+
+        case READ:
+            if (rval == _INT_) {
+                std::cin >> * (int *) stackVM.pop();
+            } else if (rval == _REAL_) {
+                float x = * (float *) stackVM.pop();
+                std::cout << x << std::endl;
+            } else if (rval == _STRING_) {
+                char * x = getString(stackVM.pop());
+                std::cout << x << std::endl;
+            }
+            break;
+
+        case LAND:
+        case LNOT:
+            if (rest == _BOOLEAN_) {
+                bool a = * (bool *) stackVM.pop();
+                stackVM.push(new bool (!a));
+            }
+            break;
+        case LOR:
+
         default:
             std::cout << "Неизвестная команда." << std::endl;
             exit(-1);
