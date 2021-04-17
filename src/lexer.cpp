@@ -535,6 +535,7 @@ void Lexer::condOp(void) {
 
         if (c != ')')
             throw Obstacle(BAD_PARAMS_CLBR);
+
         code >> c; code >> c;
 
         IdTable.pushType(_LABEL_);
@@ -571,12 +572,17 @@ void Lexer::condOp(void) {
 }
 
 IdentTable * Lexer::cycleparam(void) {
-    type();
+    if (!type()) throw Obstacle(TYPE_UNKNOWN);
     char * name = identificator();
     IdTable.pushId(name);
     if (c != '=') throw Obstacle(BAD_EXPR);
-    constVal();
-    return IdTable.confirm();
+    IdentTable * lval = IdTable.confirm();
+    type_t lvtype = lval->getType();
+    poliz.pushVal(lval);
+    type_t exop = expr();
+    expressionType(lvtype, exop, ASSIGN);
+    poliz.pushOp(lvtype, exop, ASSIGN);
+    return lval;
 }
 
 void Lexer::forOp(void) {
@@ -586,12 +592,16 @@ void Lexer::forOp(void) {
 
         IdTable.pushType(_LABEL_);
         IdentTable * exit = IdTable.confirm();
+        exits.push(exit);
         IdTable.pushType(_LABEL_);
         IdentTable * body = IdTable.confirm();
 
         if (c != '(')
             throw Obstacle(BAD_PARAMS_OPBR);
-        IdentTable * cp = cycleparam();  // начальное выражение
+
+        IdentTable * cp = nullptr;
+        try{ cp = cycleparam(); } // начальное выражение
+        catch(...){}
 
         if (c != ';')
             throw Obstacle(CLOSED_BOOK);
@@ -600,7 +610,7 @@ void Lexer::forOp(void) {
         IdTable.pushVal( new int (poliz.getSize()) );
         IdentTable * condexpr = IdTable.confirm();
         //code >> c;
-        type_t e2 = expr();  // условие продолжения
+        type_t e2 = expr(); // условие продолжения
 
         if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
         poliz.pushVal(body);
@@ -612,16 +622,23 @@ void Lexer::forOp(void) {
         if (c != ';')
             throw Obstacle(CLOSED_BOOK);
 
-        code >> c;
         IdTable.pushType(_LABEL_);
         IdTable.pushVal( new int (poliz.getSize()) );
         IdentTable * cyclexpr = IdTable.confirm();
-        poliz.pushVal(cp);
-        type_t e3 = expr();  // циклическое выражение
-        poliz.pushOp(cp->getType(), e3, ASSIGN);
 
-        if (e3 != cp->getType())
-            throw Obstacle(EXPR_BAD_TYPE);
+        type_t e3;
+        code >> c;
+        try {
+            char * name = identificator();
+            IdentTable * cycleLval = IdTable.getIT(name);
+            poliz.pushVal(cycleLval);
+            if (c != '=') throw Obstacle(BAD_EXPR);
+            e3 = expr();  // циклическое выражение
+            poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
+        }
+        catch (Obstacle & o) {
+            if (o.r != BAD_IDENT) throw o;
+        }
 
         if (c != ')')
             throw Obstacle(BAD_PARAMS_CLBR);
@@ -639,7 +656,10 @@ void Lexer::forOp(void) {
         poliz.pushOp(_NONE_, _NONE_, JMP);
 
         exit->setVal(new int (poliz.getSize()) );
-        cp->setId(nullptr); // Эта переменная вне цикла не определена.
+
+        exits.pop();
+        if (cp != nullptr)
+            cp->setId(nullptr); // Эта переменная вне цикла не определена.
     }
     catch (Obstacle & o) {
         c.where();
@@ -648,10 +668,57 @@ void Lexer::forOp(void) {
     }
 }
 void Lexer::whileOp(void) {
+    try {
+        code >> c;
+        //code.putback(c.symbol());
 
+        IdTable.pushType(_LABEL_);
+        IdentTable * exit = IdTable.confirm();
+        exits.push(exit);
+
+        if (c != '(')
+            throw Obstacle(BAD_PARAMS_OPBR);
+
+        IdTable.pushType(_LABEL_);
+        IdTable.pushVal( new int (poliz.getSize()) );
+        IdentTable * condexpr = IdTable.confirm();
+        //code >> c;
+        type_t e2 = expr(); // условие продолжения
+
+        if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
+        poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
+        poliz.pushVal(exit);
+        poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+        code >> c;
+
+        if (c != ')')
+            throw Obstacle(BAD_PARAMS_CLBR);
+
+        code >> c;
+        operation();  // тело цикла
+
+        poliz.pushVal(condexpr);
+        poliz.pushOp(_NONE_, _NONE_, JMP);
+
+        exit->setVal(new int (poliz.getSize()) );
+        exits.pop();
+    }
+    catch (Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
 }
 void Lexer::breakOp(void) {
+    poliz.pushVal((IdentTable *) exits.top());
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+    code >> c;
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
+    code >> c;
 
+    //std::cout << c.symbol();
+    //exit(-1);
 }
 
 void Lexer::gotoOp(void) {

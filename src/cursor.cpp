@@ -4,8 +4,9 @@
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
     do {
-        s.get(x.c);
+        s.read( &(x.c), sizeof(char));
         if (x.c == '\n') ++(x.line);
+
         #ifdef DEBUG
         std::cout << "прочитан \"" << x.c << "\"" << std::endl;
         #endif
@@ -16,7 +17,7 @@ std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
 }
 
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
-    s.get(x.c);
+    s.read( &(x.c), sizeof(char));
     #ifdef DEBUG
     std::cout << "прочитан \"" << x.c << "\"" << std::endl;
     #endif

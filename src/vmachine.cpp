@@ -4,28 +4,6 @@
 #include "exprtype.hpp"
 #include "obstacle.hpp"
 
-void Stack::push(void * x) {
-    Stack * p = this;
-    while (p->next != nullptr) p = p->next;
-    p->next = new Stack;
-    p->next->elem = x;
-}
-
-void * Stack::pop(void) {
-    void * r;
-    Stack * p = this;
-    if (p->next != nullptr) {
-        while (p->next->next != nullptr) p = p->next;
-        r = p->next->elem;
-        p->next->~Stack();
-        p->next = nullptr;
-    } else {
-        r = p->elem;
-        elem = nullptr;
-    }
-    return r;
-}
-
 void VirtualMachine::loadBIN(char * filename) {
     std::ifstream bin;
     bin.open(filename, std::ios_base::binary | std::ios_base::in);
@@ -36,8 +14,8 @@ void VirtualMachine::loadBIN(char * filename) {
     bin.seekg(0, std::ios::beg);
     bin.read(base, size * sizeof(char));
 
-    cmd = base + base[0];
-    cmdNum = (size - base[0]) / (sizeof(int) + sizeof(bool));
+    cmd = base + *(int*)base;
+    cmdNum = (size - *(int*)base) / (sizeof(int) + sizeof(bool));
 }
 
 void VirtualMachine::run(void) {
@@ -97,9 +75,10 @@ inline char * VirtualMachine::getString(void * x) {
 
 bool VirtualMachine::exec(op_t op, int * eip) {
     bool exitStatus = false;
+    type_t rest = (type_t) ((op >> 24) & 0xFF);
     type_t lval = (type_t) ((op >> 16) & 0xFF);
     type_t rval = (type_t) ((op >>  8) & 0xFF);
-    type_t rest = expressionType(lval, rval, (operation_t) (op & 0xFF));
+    //type_t rest = expressionType(lval, rval, (operation_t) (op & 0xFF));
 
     switch(op & 0xFF) {
         case PLUS:
@@ -144,6 +123,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 float a = * (float *) stackVM.pop();
                 stackVM.push(new float (-a));
             }
+            break;
         case ASSIGN:
             if (lval == _INT_) {
                 if (rval == _INT_) assign<int, int>();
@@ -191,44 +171,98 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         case LESS:
             if ((lval == _STRING_) && (rval == _STRING_)) {
-
+                char * b = getString(stackVM.pop());
+                char * a = getString(stackVM.pop());
+                int i = 0;
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++);
+                stackVM.push(new bool (a[i] == '\0'));
             } else {
                 LOGIC_OPERATION(<)
             }
             break;
         case GRTR:
             if ((lval == _STRING_) && (rval == _STRING_)) {
-
+                char * b = getString(stackVM.pop());
+                char * a = getString(stackVM.pop());
+                int i = 0;
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++);
+                stackVM.push(new bool (b[i] == '\0'));
             } else {
                 LOGIC_OPERATION(>)
             }
             break;
         case LESSEQ: LOGIC_OPERATION(<=) break;
         case GRTREQ: LOGIC_OPERATION(>=) break;
-        case EQ: LOGIC_OPERATION(==) break;
-        case NEQ: LOGIC_OPERATION(!=) break;
-
+        case EQ:
+            if ((lval == _STRING_) && (rval == _STRING_)) {
+                char * b = getString(stackVM.pop());
+                char * a = getString(stackVM.pop());
+                bool r = true;
+                int i = 0;
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++) {
+                    if (a[i] != b[i]) {
+                        r = false;
+                        break;
+                    }
+                }
+                r = r && (a[i] == '\0') && (b[i] == '\0');
+                stackVM.push(new bool (r));
+            } else {
+                LOGIC_OPERATION(==)
+            }
+            break;
+        case NEQ:
+            if ((lval == _STRING_) && (rval == _STRING_)) {
+                char * b = getString(stackVM.pop());
+                char * a = getString(stackVM.pop());
+                bool r = true;
+                int i = 0;
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++) {
+                    if (a[i] != b[i]) {
+                        r = false;
+                        break;
+                    }
+                }
+                r = r && (a[i] == '\0') && (b[i] == '\0');
+                stackVM.push(new bool (!r));
+            } else {
+                LOGIC_OPERATION(!=)
+            }
+            break;
         case READ:
             if (rval == _INT_) {
                 std::cin >> * (int *) stackVM.pop();
             } else if (rval == _REAL_) {
-                float x = * (float *) stackVM.pop();
-                std::cout << x << std::endl;
+                std::cin >> * (float *) stackVM.pop();
             } else if (rval == _STRING_) {
-                char * x = getString(stackVM.pop());
-                std::cout << x << std::endl;
+                std::string x;
+                std::cin >> x;
+                char * a = (char *) stackVM.pop();
+                const char * b = x.data();
+                memcpy(a, &b, sizeof(void*));
             }
             break;
 
         case LAND:
+            if (rest == _BOOLEAN_) {
+                bool b = * (bool *) stackVM.pop();
+                bool a = * (bool *) stackVM.pop();
+                stackVM.push(new bool (a && b));
+            }
+            break;
+        case LOR:
+            if (rest == _BOOLEAN_) {
+                bool b = * (bool *) stackVM.pop();
+                bool a = * (bool *) stackVM.pop();
+                stackVM.push(new bool (a || b));
+            }
+            break;
         case LNOT:
             if (rest == _BOOLEAN_) {
                 bool a = * (bool *) stackVM.pop();
                 stackVM.push(new bool (!a));
             }
             break;
-        case LOR:
-
         default:
             std::cout << "Неизвестная команда." << std::endl;
             exit(-1);

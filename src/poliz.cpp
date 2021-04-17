@@ -14,8 +14,10 @@ POLIZ::POLIZ(void) {
 
 void POLIZ::repr(void) {
     for (int i = 0; i < iter; i++) {
+        std::cout << i << ") ";
         if (execBit[i]) interpretAsOp(prog[i]);
         else interpretAsVal(prog[i]);
+        std::cout << std::endl;
     }
 }
 
@@ -36,7 +38,8 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     interpretAsOp(op);
     std::cout << std::endl;
     #endif
-    prog[iter] = (char) lval << 16 | (char) rval << 8 | (char) op;
+    type_t rest = expressionType(lval, rval, op);
+    prog[iter] = (char) rest << 24 | (char) lval << 16 | (char) rval << 8 | (char) op;
     execBit[iter] = true;
     iter++;
 }

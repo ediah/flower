@@ -5,18 +5,7 @@
 #include "tables.hpp"
 #include "poliz.hpp"
 #include "lexer.hpp"
-
-class Stack {
-    void * elem;
-    Stack * next;
-
-public:
-    Stack(): elem(nullptr), next(nullptr) {};
-
-    void push(void * x);
-    void * pop(void);
-    void replace(void* from, void* to);
-};
+#include "stack.hpp"
 
 class VirtualMachine {
     char * base;

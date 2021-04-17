@@ -9,6 +9,7 @@
 #include "cursor.hpp"
 #include "tables.hpp"
 #include "poliz.hpp"
+#include "stack.hpp"
 
 class Lexer {
     std::ifstream code;
@@ -16,6 +17,8 @@ class Lexer {
     Cursor c;
     IdentTable IdTable;
     POLIZ poliz;
+
+    Stack exits;
 
     // Вспомогательные функции
     int fastPow(int x, int n);

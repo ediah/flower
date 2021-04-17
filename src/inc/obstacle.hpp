@@ -2,7 +2,7 @@
 #define OBSTACLE_H
 
 enum reason {
-    PANIC, 
+    PANIC,
     PROG_START,
     PROG_OPENBR,
     PROG_CLOSEBR,
@@ -27,8 +27,8 @@ enum reason {
 };
 
 class Obstacle {
-    reason r;
 public:
+    reason r;
     Obstacle(reason x): r(x) {};
 
     void describe(void);

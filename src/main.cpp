@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "lexer.hpp"
 #include "vmachine.hpp"
 
@@ -7,20 +8,36 @@ int main(int argc, char** argv) {
 
     if (argc == 2) {
         filename = argv[1];
+
+        auto start = std::chrono::steady_clock::now();
+
+        Lexer l;
+        l.load("./test/" + filename);
+
+        l.parse();
+        l.finalize();
+        l.giveBIN("out.bin");
+
+        auto end = std::chrono::steady_clock::now();
+        auto diff = end-start;
+        int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
+        std::cout << "КОМПИЛЯЦИЯ: " << time << " мс"<< std::endl;
+    } else {
+        auto start = std::chrono::steady_clock::now();
+
+        VirtualMachine vm;
+
+        vm.loadBIN("out.bin");
+
+        vm.run();
+
+        auto end = std::chrono::steady_clock::now();
+        auto diff = end-start;
+        int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
+        std::cout << "\nВРЕМЯ РАБОТЫ: " << time << " мс"<< std::endl;
     }
 
-    Lexer l;
-    l.load("./test/" + filename);
 
-    l.parse();
-    l.finalize();
-    l.giveBIN("out.bin");
-
-    VirtualMachine vm;
-
-    vm.loadBIN("out.bin");
-
-    vm.run();
 
     return 0;
 }
