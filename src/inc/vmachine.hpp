@@ -4,7 +4,7 @@
 #include <fstream>
 #include "tables.hpp"
 #include "poliz.hpp"
-#include "lexer.hpp"
+#include "parser.hpp"
 #include "stack.hpp"
 
 class VirtualMachine {

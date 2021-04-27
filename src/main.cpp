@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include "lexer.hpp"
+#include "parser.hpp"
 #include "vmachine.hpp"
 
 int main(int argc, char** argv) {
@@ -11,12 +11,12 @@ int main(int argc, char** argv) {
 
         auto start = std::chrono::steady_clock::now();
 
-        Lexer l;
-        l.load("./test/" + filename);
+        Parser pworker;
+        pworker.load("./test/" + filename);
 
-        l.parse();
-        l.finalize();
-        l.giveBIN("out.bin");
+        pworker.parse();
+        pworker.finalize();
+        pworker.giveBIN("out.bin");
 
         auto end = std::chrono::steady_clock::now();
         auto diff = end-start;

@@ -1,5 +1,5 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #define MAXIDENT 50
 
@@ -11,7 +11,7 @@
 #include "poliz.hpp"
 #include "stack.hpp"
 
-class Lexer {
+class Parser {
     std::ifstream code;
     std::ofstream bin;
     Cursor c;
@@ -25,7 +25,7 @@ class Lexer {
     bool readWord(char * word);
     void revert(int x);
 public:
-    Lexer() {
+    Parser() {
         c.line = 1;
     };
 
@@ -47,6 +47,8 @@ public:
     void operation(void);
     IdentTable * saveLabel(char * label, int addr);
     type_t expr(void);
+    type_t andExpr(void);
+    type_t boolExpr(void);
     type_t add(void);
     type_t mul(void);
     type_t constExpr(void);
@@ -63,7 +65,7 @@ public:
     void finalize(void);
     void giveBIN(char * filename);
 
-    ~Lexer(void);
+    ~Parser(void);
 };
 
 #endif

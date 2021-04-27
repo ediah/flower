@@ -1,11 +1,11 @@
 #include <iostream>
-#include "lexer.hpp"
+#include "parser.hpp"
 #include "obstacle.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 
 // Быстрый алгоритм возведения x в степень n
-int Lexer::fastPow(int x, int n) {
+int Parser::fastPow(int x, int n) {
     int r = 1;
     while (n != 0) {
         if (n & 1 == 1) r *= x;
@@ -15,7 +15,7 @@ int Lexer::fastPow(int x, int n) {
     return r;
 }
 
-void Lexer::load(std::string name) {
+void Parser::load(std::string name) {
     code.open(name);
     if (!code.is_open()) {
         std::cout << "Такого файла нет!";
@@ -23,11 +23,11 @@ void Lexer::load(std::string name) {
     }
 }
 
-Lexer::~Lexer(void) {
+Parser::~Parser(void) {
     code.close();
 }
 
-void Lexer::parse(void) {
+void Parser::parse(void) {
     char word[8] = "program";
     code >> c;
 
@@ -55,7 +55,7 @@ void Lexer::parse(void) {
 
 }
 
-void Lexer::defs(void) {
+void Parser::defs(void) {
     while (true) {
         if (!type()) {
             revert(1);
@@ -71,7 +71,7 @@ void Lexer::defs(void) {
     }
 }
 
-bool Lexer::type(void) {
+bool Parser::type(void) {
     bool r = false;
     code >> c;
 
@@ -104,7 +104,7 @@ bool Lexer::type(void) {
     return r;
 }
 
-bool Lexer::readWord(char * word) {
+bool Parser::readWord(char * word) {
     bool r = true;
     int i;
     for (i = 0; (word[i] != '\0') && r; i++) {
@@ -115,7 +115,7 @@ bool Lexer::readWord(char * word) {
     return r;
 }
 
-void Lexer::variable(void) {
+void Parser::variable(void) {
     IdTable.dupType();
     char * name = identificator();
     IdTable.pushId(name);
@@ -123,23 +123,23 @@ void Lexer::variable(void) {
     IdTable.confirm();
 }
 
-char * Lexer::identificator(void) {
+char * Parser::identificator(void) {
     char * ident = new char[MAXIDENT];
     int i = 0;
     code >> c;
-    //std::cout << c.symbol() << std::endl;
+    std::cout << c.symbol() << std::endl;
     if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
     do {
         ident[i++] = c.symbol();
         code >>= c;
     } while (C_IS_ALPHA);
     ident[i] = '\0';
-    //std::cout << "IDENT " << ident << std::endl;
+    std::cout << "IDENT " << ident << std::endl;
     if (c.symbol() == ' ') code >> c;
     return ident;
 }
 
-void Lexer::constVal(void) {
+void Parser::constVal(void) {
     type_t tval = IdTable.last()->getType();
 
     try {
@@ -167,7 +167,7 @@ void Lexer::constVal(void) {
     }
 }
 
-int Lexer::constInt(void) {
+int Parser::constInt(void) {
     int x = 0, sign = 1;
     code >> c;
     if (c == '-') {
@@ -175,7 +175,7 @@ int Lexer::constInt(void) {
         code >> c;
     } else if (c == '+') code >> c;
 
-    if (!C_IS_NUM) throw Obstacle(BAD_NUM);
+    if (!C_IS_NUM) throw Obstacle(BAD_INT);
 
     do {
         x = 10 * x + ( c.symbol() - '0');
@@ -188,7 +188,7 @@ int Lexer::constInt(void) {
     return x;
 }
 
-char * Lexer::constString(void) {
+char * Parser::constString(void) {
     code >> c;
     if (c != '\"') throw Obstacle(BAD_STRING);
 
@@ -218,13 +218,13 @@ char * Lexer::constString(void) {
     return x;
 }
 
-float Lexer::constReal(void) {
+float Parser::constReal(void) {
     int intPart = constInt();
 
-    if (c != '.') throw Obstacle(BAD_NUM);
+    if (c != '.') throw Obstacle(BAD_REAL);
     code >>= c;
 
-    if (!C_IS_NUM) throw Obstacle(BAD_NUM);
+    if (!C_IS_NUM) throw Obstacle(BAD_REAL);
 
     int x = 1;
     float floatPart = 0;
@@ -238,9 +238,8 @@ float Lexer::constReal(void) {
     return intPart + floatPart;
 }
 
-bool Lexer::constBool(void) {
-    code >> c;
-    code.putback(c.symbol());
+bool Parser::constBool(void) {
+    if (c == ' ') code >> c;
 
     bool r;
     if (readWord("true")) r = true;
@@ -250,7 +249,7 @@ bool Lexer::constBool(void) {
     return r;
 }
 
-void Lexer::operations(void) {
+void Parser::operations(void) {
     /*
     if (<выражение>) <оператор> else <оператор>
     | for ([выражение]; [выражение]; [выражение]) <оператор>
@@ -267,7 +266,7 @@ void Lexer::operations(void) {
     }
 }
 
-void Lexer::operation(void) {
+void Parser::operation(void) {
 
     code.putback(c.symbol());
 
@@ -303,7 +302,7 @@ void Lexer::operation(void) {
     }
 }
 
-IdentTable * Lexer::saveLabel(char * label, int addr) {
+IdentTable * Parser::saveLabel(char * label, int addr) {
     IdentTable * existinglab;
     try {
         existinglab = IdTable.getIT(label);
@@ -319,12 +318,63 @@ IdentTable * Lexer::saveLabel(char * label, int addr) {
     return existinglab;
 }
 
-type_t Lexer::expr(void) {
+type_t Parser::expr(void) {
+    type_t r = _NONE_;
+    operation_t op = NONE;
+    try {
+        r = andExpr();
+
+        while (true) {
+            //code >> c;
+            //revert(1);
+
+            if (readWord("or")) {
+                op = LOR;
+                type_t rval = andExpr();
+                poliz.pushOp(r, rval, op);
+                r = expressionType(r, rval, op);
+            } else break;
+        }
+        code >> c;
+    }
+    catch(Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
+    return r;
+}
+type_t Parser::andExpr(void) {
+    type_t r = _NONE_;
+    operation_t op = NONE;
+    try {
+        r = boolExpr();
+
+        while (true) {
+            //code >> c;
+            //revert(1);
+
+            if (readWord("and")) {
+                op = LAND;
+                type_t rval = boolExpr();
+                poliz.pushOp(r, rval, op);
+                r = expressionType(r, rval, op);
+            } else break;
+        }
+    }
+    catch(Obstacle & o) {
+        c.where();
+        o.describe();
+        exit(-1);
+    }
+    return r;
+}
+
+type_t Parser::boolExpr(void) {
     type_t r = _NONE_;
     try {
         r = add();
-
-        code >> c;
+        //code >> c;
         if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
             operation_t op = NONE;
             char p = c.symbol();
@@ -340,6 +390,7 @@ type_t Lexer::expr(void) {
                 switch(p) {
                     case '<': op = LESS; break;
                     case '>': op = GRTR; break;
+                    default: throw Obstacle(BAD_EXPR);
                 }
             }
             //code >> c;
@@ -348,6 +399,7 @@ type_t Lexer::expr(void) {
             r = expressionType(r, rval, op);
 
         }
+        revert(1);
     }
     catch(Obstacle & o) {
         c.where();
@@ -357,29 +409,20 @@ type_t Lexer::expr(void) {
     return r;
 }
 
-type_t Lexer::add(void) {
+type_t Parser::add(void) {
     bool exit = false;
     type_t r = mul();
     operation_t op;
 
     while (true) {
-        code >> c;
+        //if (c == ' ') code >> c;
         //code.putback(c.symbol());
 
         switch (c.symbol()) {
             case '+': op = PLUS; break;
             case '-': op = MINUS; break;
-            case 'o':
-                code >>= c;
-                if (c == 'r') {
-                    op = LOR;
-                } else {
-                    revert(2);
-                    exit = true;
-                }
-                break;
             default:
-                revert(1);
+                //revert(1);
                 exit = true;
         }
         if (exit) break;
@@ -391,7 +434,7 @@ type_t Lexer::add(void) {
     return r;
 }
 
-type_t Lexer::mul(void) {
+type_t Parser::mul(void) {
     bool exit = false;
     type_t r = constExpr();
     operation_t op;
@@ -403,13 +446,8 @@ type_t Lexer::mul(void) {
             case '*': op = MUL; break;
             case '/': op = DIV; break;
             case '%': op = MOD; break;
-            case 'a':
-                if (readWord("nd")) {
-                    op = LAND;
-                    break;
-                }
             default:
-                revert(1);
+                //revert(1);
                 exit = true;
         }
         if (exit) break;
@@ -422,11 +460,10 @@ type_t Lexer::mul(void) {
     return r;
 }
 
-type_t Lexer::constExpr(void) {
+type_t Parser::constExpr(void) {
     type_t r;
 
-    code >> c;
-    code.putback(c.symbol());
+    if (c == ' ') code >> c;
 
     bool inverse = false;
     if (c == '+') code >> c;
@@ -458,18 +495,18 @@ type_t Lexer::constExpr(void) {
         if (c != ')') throw Obstacle(EXPR_CLOSEBR);
         code >> c;
     } else {
-        int start = code.tellg();
-
-        try {
-            r = _INT_;
-            int x = constInt();
+        
+        if (c == '\"') {
+            r = _STRING_;
+            char * x = constString();
             IdTable.pushId(nullptr);
-            IdTable.pushType(_INT_);
-            IdTable.pushVal(new int (x));
+            IdTable.pushType(_STRING_);
+            IdTable.pushVal(x);
             IdentTable * val = IdTable.confirm();
             poliz.pushVal(val);
-        } catch(...) {
-        code.seekg(start);
+        }
+
+        int start = code.tellg();
         try {
             r = _REAL_;
             float x = constReal();
@@ -478,38 +515,23 @@ type_t Lexer::constExpr(void) {
             IdTable.pushVal(new float (x));
             IdentTable * val = IdTable.confirm();
             poliz.pushVal(val);
-        } catch(...) {
-        code.seekg(start);
-        try {
-            r = _STRING_;
-            char * x = constString();
-            IdTable.pushId(nullptr);
-            IdTable.pushType(_STRING_);
-            IdTable.pushVal(x);
-            IdentTable * val = IdTable.confirm();
-            poliz.pushVal(val);
-        } catch(...) {
-        code.seekg(start);
-        try {
-            r = _BOOLEAN_;
-            bool x = constBool();
-            IdTable.pushId(nullptr);
-            IdTable.pushType(_BOOLEAN_);
-            IdTable.pushVal(new bool (x));
-            IdentTable * val = IdTable.confirm();
-            poliz.pushVal(val);
-        } catch(...) {
-        code.seekg(start);
-        try {
-            char * name = identificator();
-            IdentTable * val = IdTable.getIT(name);
-            r = val->getType();
-            poliz.pushVal(val);
         } catch (Obstacle & o) {
-            c.where();
-            o.describe();
-            exit(-1);
-        }}}}}
+            code.seekg(start);
+            if (o.r != BAD_INT) {
+                r = _INT_;
+                int x = constInt();
+                IdTable.pushId(nullptr);
+                IdTable.pushType(_INT_);
+                IdTable.pushVal(new int (x));
+                IdentTable * val = IdTable.confirm();
+                poliz.pushVal(val);
+            } else {
+                char * name = identificator();
+                IdentTable * val = IdTable.getIT(name);
+                r = val->getType();
+                poliz.pushVal(val);
+            }
+        }
 
     }
 
@@ -521,7 +543,7 @@ type_t Lexer::constExpr(void) {
     return r;
 }
 
-void Lexer::condOp(void) {
+void Parser::condOp(void) {
     try {
         code >> c;
 
@@ -536,7 +558,7 @@ void Lexer::condOp(void) {
         if (c != ')')
             throw Obstacle(BAD_PARAMS_CLBR);
 
-        code >> c; code >> c;
+        code >> c;
 
         IdTable.pushType(_LABEL_);
         IdentTable * elsecase = IdTable.confirm();
@@ -571,7 +593,7 @@ void Lexer::condOp(void) {
     }
 }
 
-IdentTable * Lexer::cycleparam(void) {
+IdentTable * Parser::cycleparam(void) {
     if (!type()) throw Obstacle(TYPE_UNKNOWN);
     char * name = identificator();
     IdTable.pushId(name);
@@ -585,7 +607,7 @@ IdentTable * Lexer::cycleparam(void) {
     return lval;
 }
 
-void Lexer::forOp(void) {
+void Parser::forOp(void) {
     try {
         code >> c;
         //code.putback(c.symbol());
@@ -627,12 +649,13 @@ void Lexer::forOp(void) {
         IdentTable * cyclexpr = IdTable.confirm();
 
         type_t e3;
-        code >> c;
+        //code >> c;
         try {
             char * name = identificator();
             IdentTable * cycleLval = IdTable.getIT(name);
             poliz.pushVal(cycleLval);
             if (c != '=') throw Obstacle(BAD_EXPR);
+            code >>= c;
             e3 = expr();  // циклическое выражение
             poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
         }
@@ -667,7 +690,7 @@ void Lexer::forOp(void) {
         exit(-1);
     }
 }
-void Lexer::whileOp(void) {
+void Parser::whileOp(void) {
     try {
         code >> c;
         //code.putback(c.symbol());
@@ -709,7 +732,7 @@ void Lexer::whileOp(void) {
         exit(-1);
     }
 }
-void Lexer::breakOp(void) {
+void Parser::breakOp(void) {
     poliz.pushVal((IdentTable *) exits.top());
     poliz.pushOp(_NONE_, _NONE_, JMP);
     code >> c;
@@ -721,7 +744,7 @@ void Lexer::breakOp(void) {
     //exit(-1);
 }
 
-void Lexer::gotoOp(void) {
+void Parser::gotoOp(void) {
     try {
         code >> c;
         code.putback(c.symbol());
@@ -756,7 +779,7 @@ void Lexer::gotoOp(void) {
     }
 }
 
-void Lexer::readOp(void) {
+void Parser::readOp(void) {
     try {
         code >> c;
 
@@ -786,7 +809,7 @@ void Lexer::readOp(void) {
     }
 }
 
-void Lexer::writeOp(void) {
+void Parser::writeOp(void) {
     try {
         code >> c;
 
@@ -817,13 +840,13 @@ void Lexer::writeOp(void) {
     }
 }
 
-void Lexer::finalize(void) {
+void Parser::finalize(void) {
     IdTable.repr();
     poliz.repr();
     std::cout << std::endl;
 }
 
-void Lexer::giveBIN(char * filename) {
+void Parser::giveBIN(char * filename) {
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
@@ -856,6 +879,6 @@ void Lexer::giveBIN(char * filename) {
     bin.close();
 }
 
-void Lexer::revert(int x) {
+void Parser::revert(int x) {
     code.seekg((int)code.tellg() - x);
 }

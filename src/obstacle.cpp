@@ -14,8 +14,11 @@ void Obstacle::describe(void) {
         case BAD_PARAMS_OPBR: expected("("); break;
         case BAD_PARAMS_CLBR:
         case EXPR_CLOSEBR: expected(")"); break;
-        case BAD_NUM:
-            std::cout << "Плохое число." << std::endl;
+        case BAD_INT:
+            std::cout << "Плохое целое число." << std::endl;
+            break;
+        case BAD_REAL:
+            std::cout << "Плохое вещественное число." << std::endl;
             break;
         case BAD_BOOL: expected("true или false"); break;
         case BAD_IDENT:

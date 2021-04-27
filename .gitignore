@@ -1,5 +1,6 @@
 mlc
 out.bin
+cppcheck/
 # Prerequisites
 *.d
 
