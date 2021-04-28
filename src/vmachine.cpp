@@ -48,7 +48,7 @@ void VirtualMachine::assign(void) {
 }
 
 inline char * VirtualMachine::getString(void * x) {
-    return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char **) x;
+    return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char**) x + sizeof(char*);
 }
 
 #define ARITH_OPERATION(OP) { \
@@ -95,13 +95,11 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 for (; a[alen] != '\0'; ++alen);
                 for (; b[blen] != '\0'; ++blen);
 
-                char * c = new char [alen + blen + 1];
-                for (int i = 0; i < alen; ++i)
-                    c[i] = a[i];
-                for (int i = 0; i < blen; ++i)
-                    c[alen + i] = b[i];
-
-                c[alen + blen] = '\0';
+                char * c = new char [alen + blen + 1 + sizeof(char*)];
+                memcpy(c, "\0\0\0\0\0\0\0\0", sizeof(char*));
+                memcpy(c + sizeof(char*), a, alen);
+                memcpy(c + alen + sizeof(char*), b, blen);
+                c[alen + blen + sizeof(char*)] = '\0';
                 stackVM.push(c);
             }
             break;
@@ -237,6 +235,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             } else if (rval == _STRING_) {
                 std::string x;
                 std::cin >> x;
+                for (int i = 0; i < sizeof(char*); i++)
+                    x = "0" + x;
                 char * a = (char *) stackVM.pop();
                 const char * b = x.data();
                 memcpy(a, &b, sizeof(void*));

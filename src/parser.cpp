@@ -28,18 +28,14 @@ Parser::~Parser(void) {
 }
 
 void Parser::parse(void) {
-    char word[8] = "program";
     code >> c;
 
     try {
-        for (int i = 0; i < 6; i++) {
-            if (c != word[i]) throw Obstacle(PROG_START);
-            code >>= c;
-        }
-        if (c != word[6]) throw Obstacle(PROG_START);
+        if (!readWord("program")) throw Obstacle(PROG_START);
 
-        code >> c;
+        if (c == ' ') code >> c;
         if (c != '{') throw Obstacle(PROG_OPENBR);
+        code >> c;
 
         defs();
         operations();
@@ -57,60 +53,54 @@ void Parser::parse(void) {
 
 void Parser::defs(void) {
     while (true) {
-        if (!type()) {
-            revert(1);
-            code >>= c;
-            break;
-        }
+        if (!type()) break;
 
         do {
+            code >> c;
             variable();
+            if (c == ' ') code >> c;
         } while (c == ',');
 
         if (c != ';') throw Obstacle(DEF_END);
+        code >> c;
     }
 }
 
 bool Parser::type(void) {
-    bool r = false;
-    code >> c;
+    bool r = true;
 
-    switch(c.symbol()) {
-        case 'i':
-            if (readWord("nt")) {
-                IdTable.pushType(_INT_);
-                r = true;
-            }
-            break;
-        case 's':
-            if (readWord("tring")) {
-                IdTable.pushType(_STRING_);
-                r = true;
-            }
-            break;
-        case 'r':
-            if (readWord("eal")) {
-                IdTable.pushType(_REAL_);
-                r = true;
-            }
-            break;
-        case 'b':
-            if (readWord("ool")) {
-                IdTable.pushType(_BOOLEAN_);
-                r = true;
-            }
-            break;
-    }
+    if (readWord("int"))
+        IdTable.pushType(_INT_);
+    else if (readWord("string"))
+        IdTable.pushType(_STRING_);
+    else if (readWord("real"))
+        IdTable.pushType(_REAL_);
+    else if (readWord("bool"))
+        IdTable.pushType(_BOOLEAN_);
+    else r = false;
+
+    r = c == ' ';
+
     return r;
 }
 
+/* Перед выполнением:
+ * aab bba aca
+ *     ^~~ <= курсор на первой букве слова
+ * После выполнения:
+ * aab bba aca
+ *        ^ <= курсор на последней букве слова (если true)
+ * Если false, курсор на начальной позиции
+ */ 
 bool Parser::readWord(char * word) {
     bool r = true;
     int i;
-    for (i = 0; (word[i] != '\0') && r; i++) {
+    for (i = 0; word[i] != '\0'; i++) {
+        if (c != word[i]) { r = false; break; }
         code >>= c;
-        if (c != word[i]) r = false;
     }
+    // Каждое слово должно отделяться пробелом или знаком препинания
+    if (C_IS_NUM || C_IS_ALPHA) r = false;
     if (!r) revert(i);
     return r;
 }
@@ -119,57 +109,48 @@ void Parser::variable(void) {
     IdTable.dupType();
     char * name = identificator();
     IdTable.pushId(name);
+    if (c == ' ') code >> c;
     if (c == '=') constVal();
     IdTable.confirm();
 }
 
 char * Parser::identificator(void) {
     char * ident = new char[MAXIDENT];
-    int i = 0;
-    code >> c;
-    std::cout << c.symbol() << std::endl;
     if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
+    int i = 0;
     do {
         ident[i++] = c.symbol();
         code >>= c;
     } while (C_IS_ALPHA);
     ident[i] = '\0';
-    std::cout << "IDENT " << ident << std::endl;
-    if (c.symbol() == ' ') code >> c;
     return ident;
 }
 
 void Parser::constVal(void) {
     type_t tval = IdTable.last()->getType();
 
-    try {
-        switch(tval) {
-            case _INT_:
-                IdTable.pushVal( new int (constInt()) );
-                break;
-            case _STRING_:
-                IdTable.pushVal( constString() );
-                break;
-            case _REAL_:
-                IdTable.pushVal( new float (constReal()) );
-                break;
-            case _BOOLEAN_:
-                IdTable.pushVal( new bool (constBool()) );
-                break;
-            default:
-                throw Obstacle(PANIC);
-        }
-    }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
+    code >> c;
+
+    switch(tval) {
+        case _INT_:
+            IdTable.pushVal( new int (constInt()) );
+            break;
+        case _STRING_:
+            IdTable.pushVal( constString() );
+            break;
+        case _REAL_:
+            IdTable.pushVal( new float (constReal()) );
+            break;
+        case _BOOLEAN_:
+            IdTable.pushVal( new bool (constBool()) );
+            break;
+        default:
+            throw Obstacle(PANIC);
     }
 }
 
 int Parser::constInt(void) {
     int x = 0, sign = 1;
-    code >> c;
     if (c == '-') {
         sign = -1;
         code >> c;
@@ -183,13 +164,10 @@ int Parser::constInt(void) {
     } while (C_IS_NUM);
     x = x * sign;
 
-    //std::cout << "Прочитано число " << x << std::endl;
-
     return x;
 }
 
 char * Parser::constString(void) {
-    code >> c;
     if (c != '\"') throw Obstacle(BAD_STRING);
 
     int start = code.tellg();
@@ -210,10 +188,8 @@ char * Parser::constString(void) {
 
     x[len] = '\0';
 
+    code >>= c; // кавычка
     code >>= c;
-    code >> c;
-
-    //std::cout << "Прочитана строка \"" << x << '\"'<< std::endl;
 
     return x;
 }
@@ -239,8 +215,6 @@ float Parser::constReal(void) {
 }
 
 bool Parser::constBool(void) {
-    if (c == ' ') code >> c;
-
     bool r;
     if (readWord("true")) r = true;
     else if (readWord("false")) r = false;
@@ -250,25 +224,10 @@ bool Parser::constBool(void) {
 }
 
 void Parser::operations(void) {
-    /*
-    if (<выражение>) <оператор> else <оператор>
-    | for ([выражение]; [выражение]; [выражение]) <оператор>
-    | while (<выражение>) <оператор>
-    | break;
-    | goto <идентификатор> ;
-    | read (<идентификатор>);
-    | write (
-    */
-
-    while (true) {
-        try { operation(); }
-        catch(Obstacle & o) { break; }
-    }
+    while (c != '}') operation(); 
 }
 
 void Parser::operation(void) {
-
-    code.putback(c.symbol());
 
     if (readWord("if")) condOp();
     else if (readWord("for")) forOp();
@@ -285,21 +244,25 @@ void Parser::operation(void) {
         code >> c;
     } else {
         char * name = identificator();
+        if (c == ' ') code >> c;
         if (c == ':') {
             code >> c;
             saveLabel(name, poliz.getSize());
             operation();
         } else if (c == '=') {
-            std::cout << name << std::endl;
+            code >> c;
             IdentTable * lval = IdTable.getIT(name);
             type_t lvtype = lval->getType();
             poliz.pushVal(lval);
             type_t exop = expr();
             expressionType(lvtype, exop, ASSIGN);
             poliz.pushOp(lvtype, exop, ASSIGN);
+            if (c == ' ') code >> c;
+            if (c != ';') throw Obstacle(CLOSED_BOOK);
             code >> c;
         } else throw Obstacle(BAD_OPERATOR);
     }
+
 }
 
 IdentTable * Parser::saveLabel(char * label, int addr) {
@@ -321,114 +284,107 @@ IdentTable * Parser::saveLabel(char * label, int addr) {
 type_t Parser::expr(void) {
     type_t r = _NONE_;
     operation_t op = NONE;
-    try {
-        r = andExpr();
 
-        while (true) {
-            //code >> c;
-            //revert(1);
+    r = andExpr();
 
-            if (readWord("or")) {
-                op = LOR;
-                type_t rval = andExpr();
-                poliz.pushOp(r, rval, op);
-                r = expressionType(r, rval, op);
-            } else break;
-        }
-        code >> c;
+    while (true) {
+        //code >> c;
+        //revert(1);
+
+        if (readWord("or")) {
+            op = LOR;
+            code >> c;
+            type_t rval = andExpr();
+            poliz.pushOp(r, rval, op);
+            r = expressionType(r, rval, op);
+        } else break;
     }
-    catch(Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+
     return r;
 }
+
 type_t Parser::andExpr(void) {
     type_t r = _NONE_;
     operation_t op = NONE;
-    try {
-        r = boolExpr();
+    
+    r = boolExpr();
 
-        while (true) {
-            //code >> c;
-            //revert(1);
+    while (true) {
+        //code >> c;
+        //revert(1);
 
-            if (readWord("and")) {
-                op = LAND;
-                type_t rval = boolExpr();
-                poliz.pushOp(r, rval, op);
-                r = expressionType(r, rval, op);
-            } else break;
-        }
-    }
-    catch(Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
+        if (readWord("and")) {
+            op = LAND;
+            code >> c;
+            type_t rval = boolExpr();
+            poliz.pushOp(r, rval, op);
+            r = expressionType(r, rval, op);
+        } else break;
     }
     return r;
 }
 
 type_t Parser::boolExpr(void) {
     type_t r = _NONE_;
-    try {
-        r = add();
-        //code >> c;
-        if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
-            operation_t op = NONE;
-            char p = c.symbol();
-            code >>= c;
-            if (c == '=') {
-                switch(p) {
-                    case '<': op = LESSEQ; break;
-                    case '>': op = GRTREQ; break;
-                    case '!': op = NEQ;    break;
-                    case '=': op = EQ;     break;
-                }
-            } else {
-                switch(p) {
-                    case '<': op = LESS; break;
-                    case '>': op = GRTR; break;
-                    default: throw Obstacle(BAD_EXPR);
-                }
-            }
-            //code >> c;
-            type_t rval = add();
-            poliz.pushOp(r, rval, op);
-            r = expressionType(r, rval, op);
 
+    r = add();
+    //code >>= c;
+    if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
+        operation_t op = NONE;
+        char p = c.symbol();
+        code >>= c;
+        if (c == '=') {
+            switch(p) {
+                case '<': op = LESSEQ; break;
+                case '>': op = GRTREQ; break;
+                case '!': op = NEQ;    break;
+                case '=': op = EQ;     break;
+            }
+            code >>= c;
+        } else {
+            switch(p) {
+                case '<': op = LESS; break;
+                case '>': op = GRTR; break;
+                default: throw Obstacle(BAD_EXPR);
+            }
         }
-        revert(1);
+        if (c == ' ') code >> c;
+        type_t rval = add();
+        poliz.pushOp(r, rval, op);
+        r = expressionType(r, rval, op);
     }
-    catch(Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+
     return r;
 }
 
 type_t Parser::add(void) {
     bool exit = false;
+    bool inverse = false;
+    if (c == '+') code >> c;
+    if (c == '-') {
+        inverse = true;
+        code >> c;
+    }
     type_t r = mul();
     operation_t op;
 
     while (true) {
-        //if (c == ' ') code >> c;
-        //code.putback(c.symbol());
 
         switch (c.symbol()) {
             case '+': op = PLUS; break;
             case '-': op = MINUS; break;
-            default:
-                //revert(1);
-                exit = true;
+            default: exit = true;
         }
         if (exit) break;
+        code >> c;
         type_t rval = mul();
         poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
+    }
+
+    if (inverse) {
+        poliz.pushOp(_NONE_, r, INV);
+        r = expressionType(_NONE_, r, INV);
     }
 
     return r;
@@ -440,17 +396,15 @@ type_t Parser::mul(void) {
     operation_t op;
 
     while (true) {
-        if (c == ' ') code >> c;
 
         switch (c.symbol()) {
             case '*': op = MUL; break;
             case '/': op = DIV; break;
             case '%': op = MOD; break;
-            default:
-                //revert(1);
-                exit = true;
+            default: exit = true;
         }
         if (exit) break;
+        code >> c;
         type_t rval = constExpr();
         poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
@@ -462,15 +416,6 @@ type_t Parser::mul(void) {
 
 type_t Parser::constExpr(void) {
     type_t r;
-
-    if (c == ' ') code >> c;
-
-    bool inverse = false;
-    if (c == '+') code >> c;
-    if (c == '-') {
-        inverse = true;
-        code >> c;
-    }
 
     if (readWord("true")) {
         r = _BOOLEAN_;
@@ -490,10 +435,11 @@ type_t Parser::constExpr(void) {
         type_t val = constExpr();
         r = expressionType(_NONE_, val, LNOT);
         poliz.pushOp(_NONE_, val, LNOT);
-    } else if (readWord("(")) {
+    } else if (c == '(') {
+        code >> c;
         r = expr();
         if (c != ')') throw Obstacle(EXPR_CLOSEBR);
-        code >> c;
+        code >>= c;
     } else {
         
         if (c == '\"') {
@@ -504,340 +450,290 @@ type_t Parser::constExpr(void) {
             IdTable.pushVal(x);
             IdentTable * val = IdTable.confirm();
             poliz.pushVal(val);
-        }
-
-        int start = code.tellg();
-        try {
-            r = _REAL_;
-            float x = constReal();
-            IdTable.pushId(nullptr);
-            IdTable.pushType(_REAL_);
-            IdTable.pushVal(new float (x));
-            IdentTable * val = IdTable.confirm();
-            poliz.pushVal(val);
-        } catch (Obstacle & o) {
-            code.seekg(start);
-            if (o.r != BAD_INT) {
-                r = _INT_;
-                int x = constInt();
+        } else {
+            int start = code.tellg();
+            try {
+                r = _REAL_;
+                float x = constReal();
                 IdTable.pushId(nullptr);
-                IdTable.pushType(_INT_);
-                IdTable.pushVal(new int (x));
+                IdTable.pushType(_REAL_);
+                IdTable.pushVal(new float (x));
                 IdentTable * val = IdTable.confirm();
                 poliz.pushVal(val);
-            } else {
-                char * name = identificator();
-                IdentTable * val = IdTable.getIT(name);
-                r = val->getType();
-                poliz.pushVal(val);
+            } catch (Obstacle & o) {
+                code.seekg(start - 1);
+                code >>= c;
+                if (o.r != BAD_INT) {
+                    r = _INT_;
+                    int x = constInt();
+                    IdTable.pushId(nullptr);
+                    IdTable.pushType(_INT_);
+                    IdTable.pushVal(new int (x));
+                    IdentTable * val = IdTable.confirm();
+                    poliz.pushVal(val);
+                } else {
+                    char * name = identificator();
+                    IdentTable * val = IdTable.getIT(name);
+                    r = val->getType();
+                    poliz.pushVal(val);
+                }
             }
         }
-
     }
 
-    if (inverse) {
-        poliz.pushOp(_NONE_, r, INV);
-        r = expressionType(_NONE_, r, INV);
-    }
+    if (c == ' ') code >> c;
 
     return r;
 }
 
 void Parser::condOp(void) {
-    try {
+    if (c == ' ') code >> c;
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
+    code >> c;
+
+    type_t r = expr();
+
+    if (r != _BOOLEAN_)
+        throw Obstacle(BAD_IF);
+
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
+
+    code >> c;
+
+    IdTable.pushType(_LABEL_);
+    IdentTable * elsecase = IdTable.confirm();
+    IdTable.pushType(_LABEL_);
+    IdentTable * endif = IdTable.confirm();
+
+    poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
+    poliz.pushVal(elsecase);
+    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+
+    operation();
+
+    poliz.pushVal(endif);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+
+    elsecase->setVal( new int (poliz.getSize()) );
+
+    if (readWord("else")) {
         code >> c;
-
-        if (c != '(')
-            throw Obstacle(BAD_PARAMS_OPBR);
-
-        type_t r = expr();
-
-        if (r != _BOOLEAN_)
-            throw Obstacle(BAD_IF);
-
-        if (c != ')')
-            throw Obstacle(BAD_PARAMS_CLBR);
-
-        code >> c;
-
-        IdTable.pushType(_LABEL_);
-        IdentTable * elsecase = IdTable.confirm();
-        IdTable.pushType(_LABEL_);
-        IdentTable * endif = IdTable.confirm();
-
-        poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
-        poliz.pushVal(elsecase);
-        poliz.pushOp(_BOOLEAN_, _INT_, JIT);
-
-        std::cout << c.symbol() << std::endl;
-
         operation();
-
-        poliz.pushVal(endif);
-        poliz.pushOp(_NONE_, _NONE_, JMP);
-
-        elsecase->setVal( new int (poliz.getSize()) );
-
-        code.putback(c.symbol());
-        if (readWord("else")) {
-            code >> c;
-            operation();
-        }
-
-        endif->setVal( new int (poliz.getSize()) );
     }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+
+    endif->setVal( new int (poliz.getSize()) );
 }
 
 IdentTable * Parser::cycleparam(void) {
     if (!type()) throw Obstacle(TYPE_UNKNOWN);
+    code >> c;
     char * name = identificator();
     IdTable.pushId(name);
-    if (c != '=') throw Obstacle(BAD_EXPR);
     IdentTable * lval = IdTable.confirm();
     type_t lvtype = lval->getType();
     poliz.pushVal(lval);
+    if (c == ' ') code >> c;
+    if (c != '=') throw Obstacle(BAD_EXPR);
+    code >> c;
     type_t exop = expr();
     expressionType(lvtype, exop, ASSIGN);
     poliz.pushOp(lvtype, exop, ASSIGN);
+    //code >> c;
     return lval;
 }
 
 void Parser::forOp(void) {
+    IdTable.pushType(_LABEL_);
+    IdentTable * exit = IdTable.confirm();
+    exits.push(exit);
+    IdTable.pushType(_LABEL_);
+    IdentTable * body = IdTable.confirm();
+
+    if (c == ' ') code >> c;
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
+    code >> c;
+
+    IdentTable * cp = nullptr;
+    try{ cp = cycleparam(); } // начальное выражение
+    catch(...){}
+
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
+
+    IdTable.pushType(_LABEL_);
+    IdTable.pushVal( new int (poliz.getSize()) );
+    IdentTable * condexpr = IdTable.confirm();
+    code >> c;
+    type_t e2 = expr(); // условие продолжения
+
+    if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
+    poliz.pushVal(body);
+    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    // Здесь машина будет в случае невыполнения условия
+    poliz.pushVal(exit);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
+
+    IdTable.pushType(_LABEL_);
+    IdTable.pushVal( new int (poliz.getSize()) );
+    IdentTable * cyclexpr = IdTable.confirm();
+
+    type_t e3;
+    code >> c;
     try {
+        char * name = identificator();
+        IdentTable * cycleLval = IdTable.getIT(name);
+        poliz.pushVal(cycleLval);
+        if (c == ' ') code >> c;
+        if (c != '=') throw Obstacle(BAD_EXPR);
         code >> c;
-        //code.putback(c.symbol());
-
-        IdTable.pushType(_LABEL_);
-        IdentTable * exit = IdTable.confirm();
-        exits.push(exit);
-        IdTable.pushType(_LABEL_);
-        IdentTable * body = IdTable.confirm();
-
-        if (c != '(')
-            throw Obstacle(BAD_PARAMS_OPBR);
-
-        IdentTable * cp = nullptr;
-        try{ cp = cycleparam(); } // начальное выражение
-        catch(...){}
-
-        if (c != ';')
-            throw Obstacle(CLOSED_BOOK);
-
-        IdTable.pushType(_LABEL_);
-        IdTable.pushVal( new int (poliz.getSize()) );
-        IdentTable * condexpr = IdTable.confirm();
-        //code >> c;
-        type_t e2 = expr(); // условие продолжения
-
-        if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
-        poliz.pushVal(body);
-        poliz.pushOp(_BOOLEAN_, _INT_, JIT);
-        // Здесь машина будет в случае невыполнения условия
-        poliz.pushVal(exit);
-        poliz.pushOp(_NONE_, _NONE_, JMP);
-
-        if (c != ';')
-            throw Obstacle(CLOSED_BOOK);
-
-        IdTable.pushType(_LABEL_);
-        IdTable.pushVal( new int (poliz.getSize()) );
-        IdentTable * cyclexpr = IdTable.confirm();
-
-        type_t e3;
-        //code >> c;
-        try {
-            char * name = identificator();
-            IdentTable * cycleLval = IdTable.getIT(name);
-            poliz.pushVal(cycleLval);
-            if (c != '=') throw Obstacle(BAD_EXPR);
-            code >>= c;
-            e3 = expr();  // циклическое выражение
-            poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
-        }
-        catch (Obstacle & o) {
-            if (o.r != BAD_IDENT) throw o;
-        }
-
-        if (c != ')')
-            throw Obstacle(BAD_PARAMS_CLBR);
-
-        poliz.pushVal(condexpr);
-        poliz.pushOp(_NONE_, _NONE_, JMP);
-
-        code >> c;
-        body->setVal(new int (poliz.getSize()) );
-        operation();  // тело цикла
-
-        // Проверяем условие, если правда, то проходим через цикл. выражение
-        // и возвражаемся в тело. Иначе выходим из него.
-        poliz.pushVal(cyclexpr);
-        poliz.pushOp(_NONE_, _NONE_, JMP);
-
-        exit->setVal(new int (poliz.getSize()) );
-
-        exits.pop();
-        if (cp != nullptr)
-            cp->setId(nullptr); // Эта переменная вне цикла не определена.
+        e3 = expr();  // циклическое выражение
+        poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
     }
     catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
+        if (o.r != BAD_IDENT) throw o;
     }
+
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
+
+    poliz.pushVal(condexpr);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+
+    code >> c;
+    body->setVal(new int (poliz.getSize()) );
+    operation();  // тело цикла
+
+    // Проверяем условие, если правда, то проходим через цикл. выражение
+    // и возвражаемся в тело. Иначе выходим из него.
+    poliz.pushVal(cyclexpr);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+
+    exit->setVal(new int (poliz.getSize()) );
+
+    exits.pop();
+    if (cp != nullptr)
+        cp->setId(nullptr); // Эта переменная вне цикла не определена.
 }
 void Parser::whileOp(void) {
-    try {
-        code >> c;
-        //code.putback(c.symbol());
+    IdTable.pushType(_LABEL_);
+    IdentTable * exit = IdTable.confirm();
+    exits.push(exit);
 
-        IdTable.pushType(_LABEL_);
-        IdentTable * exit = IdTable.confirm();
-        exits.push(exit);
+    if (c == ' ') code >> c;
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
 
-        if (c != '(')
-            throw Obstacle(BAD_PARAMS_OPBR);
+    IdTable.pushType(_LABEL_);
+    IdTable.pushVal( new int (poliz.getSize()) );
+    IdentTable * condexpr = IdTable.confirm();
+    code >> c;
+    type_t e2 = expr(); // условие продолжения
 
-        IdTable.pushType(_LABEL_);
-        IdTable.pushVal( new int (poliz.getSize()) );
-        IdentTable * condexpr = IdTable.confirm();
-        //code >> c;
-        type_t e2 = expr(); // условие продолжения
+    if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
+    poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
+    poliz.pushVal(exit);
+    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    
+    if (c == ' ') code >> c;
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
 
-        if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
-        poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
-        poliz.pushVal(exit);
-        poliz.pushOp(_BOOLEAN_, _INT_, JIT);
-        code >> c;
+    code >> c;
+    operation();  // тело цикла
 
-        if (c != ')')
-            throw Obstacle(BAD_PARAMS_CLBR);
+    poliz.pushVal(condexpr);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
 
-        code >> c;
-        operation();  // тело цикла
+    exit->setVal(new int (poliz.getSize()) );
+    exits.pop();
 
-        poliz.pushVal(condexpr);
-        poliz.pushOp(_NONE_, _NONE_, JMP);
-
-        exit->setVal(new int (poliz.getSize()) );
-        exits.pop();
-    }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
 }
 void Parser::breakOp(void) {
     poliz.pushVal((IdentTable *) exits.top());
     poliz.pushOp(_NONE_, _NONE_, JMP);
-    code >> c;
     if (c != ';')
         throw Obstacle(CLOSED_BOOK);
     code >> c;
-
-    //std::cout << c.symbol();
-    //exit(-1);
 }
 
 void Parser::gotoOp(void) {
+    code >> c;
+    char * label = identificator();
+    IdentTable * labval;
     try {
-        code >> c;
-        code.putback(c.symbol());
-        char * label = identificator();
-        IdentTable * labval;
-        try {
-            labval = IdTable.getIT(label);
-        }
-        catch(Obstacle & o) {
-            // До метки ещё не дошли, но это не повод расстраиваться!
-            labval = saveLabel(label, 0);
-        }
-        try{
-        if (labval->getType() != _LABEL_)
-            throw Obstacle(BAD_LABEL);
-        }
-        catch (Obstacle & o) {
-            c.where();
-            o.describe();
-            exit(-1);
-        }
-        code >> c;
-
-        poliz.pushVal(labval);
-        poliz.pushOp(_BOOLEAN_, _INT_, JMP);
-
+        labval = IdTable.getIT(label);
+    }
+    catch(Obstacle & o) {
+        // До метки ещё не дошли, но это не повод расстраиваться!
+        labval = saveLabel(label, 0);
+    }
+    try{
+    if (labval->getType() != _LABEL_)
+        throw Obstacle(BAD_LABEL);
     }
     catch (Obstacle & o) {
         c.where();
         o.describe();
         exit(-1);
     }
+    code >> c;
+
+    poliz.pushVal(labval);
+    poliz.pushOp(_BOOLEAN_, _INT_, JMP);
 }
 
+// Исправлено
 void Parser::readOp(void) {
-    try {
-        code >> c;
+    if (c == ' ') code >> c;
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
 
-        if (c != '(')
-            throw Obstacle(BAD_PARAMS_OPBR);
+    code >> c;
+    char * operand = identificator();
+    if (c == ' ') code >> c;
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
 
-        char * operand = identificator();
+    code >> c;
 
-        if (c != ')')
-            throw Obstacle(BAD_PARAMS_CLBR);
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
 
-        code >> c;
+    code >> c;
 
-        if (c != ';')
-            throw Obstacle(CLOSED_BOOK);
-
-        code >> c;
-
-        IdentTable * it = IdTable.getIT(operand);
-        poliz.pushVal(it);
-        poliz.pushOp(_NONE_, it->getType(), READ);
-    }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+    IdentTable * it = IdTable.getIT(operand);
+    poliz.pushVal(it);
+    poliz.pushOp(_NONE_, it->getType(), READ);
 }
 
 void Parser::writeOp(void) {
-    try {
+    if (c == ' ') code >> c;
+    if (c != '(')
+        throw Obstacle(BAD_PARAMS_OPBR);
+
+    do {
         code >> c;
+        type_t exop = expr();
+        poliz.pushOp(_NONE_, exop, WRITE);
+    } while (c == ',');
 
-        if (c != '(')
-            throw Obstacle(BAD_PARAMS_OPBR);
+    poliz.pushOp(_NONE_, _NONE_, ENDL);
 
-        do {
-            type_t exop = expr();
-            poliz.pushOp(_NONE_, exop, WRITE);
-        } while (c == ',');
+    if (c != ')')
+        throw Obstacle(BAD_PARAMS_CLBR);
 
-        poliz.pushOp(_NONE_, _NONE_, ENDL);
+    code >> c;
 
-        if (c != ')')
-            throw Obstacle(BAD_PARAMS_CLBR);
+    if (c != ';')
+        throw Obstacle(CLOSED_BOOK);
 
-        code >> c;
-
-        if (c != ';')
-            throw Obstacle(CLOSED_BOOK);
-
-        code >> c;
-    }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+    code >> c;
 }
 
 void Parser::finalize(void) {
@@ -880,5 +776,6 @@ void Parser::giveBIN(char * filename) {
 }
 
 void Parser::revert(int x) {
-    code.seekg((int)code.tellg() - x);
+    code.seekg((int)code.tellg() - x - 1);
+    code >>= c;
 }

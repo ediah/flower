@@ -8,10 +8,10 @@ program {
         write (x + y + z, c);
     }
     else
-        c = a = 21;
+        c = 21;
     while (c > 100)
     {
-        c = c − 5;
+        c = c - 5;
         write (c);
         x = x + "step";
     }
