@@ -18,7 +18,7 @@ else
 endif
 
 CC= g++
-CFLAGS = --std=c++11 -g -O0 -Wno-write-strings -DDEBUG
+CFLAGS = --std=c++11 -O2 -Wno-write-strings
 CHFLAGS=-I./src/inc --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
         --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
 		--output-file=${REPORT}

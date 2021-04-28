@@ -1,12 +1,15 @@
 program {
     int a;
+    bool b;
     read(a);
 
-    if (a % 2 == 0)
+    b = a % 2 == 0;
+
+    if (b)
         write("Чётное число!");
     else
         write("Нечётное число!");
 
-    write("Конец!");
+    write("a % 2 == 0 = ", b);
 
 }

@@ -18,6 +18,7 @@ public:
     bool operator>=(char x);
 
     void where(void);
+    void cite(std::ifstream & s);
     char symbol(void);
 };
 

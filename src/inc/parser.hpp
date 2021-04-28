@@ -19,13 +19,14 @@ class Parser {
     POLIZ poliz;
 
     Stack exits;
+    bool ok;
 
     // Вспомогательные функции
     int fastPow(int x, int n);
     bool readWord(char * word);
     void revert(int x);
 public:
-    Parser() {
+    Parser(): ok(true) {
         c.line = 1;
     };
 

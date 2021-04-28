@@ -21,6 +21,8 @@ void VirtualMachine::loadBIN(char * filename) {
 void VirtualMachine::run(void) {
     op_t op;
     int * eip = new int (0);
+    std::cout << std::boolalpha;
+
     while (*eip < cmdNum) {
         if (*(bool*)(cmd + 4 + *eip * 5)) { // ExecBit = 1
             op = (op_t) *(int*)(cmd + *eip * 5);
@@ -133,6 +135,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * b = (char *) stackVM.pop();
                 char * a = (char *) stackVM.pop();
                 memcpy(a, &b, sizeof(void*));
+            } else {
+                assign<bool, bool>();
             }
             break;
         case STOP:
@@ -147,6 +151,9 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 std::cout << x;
             } else if (rval == _STRING_) {
                 char * x = getString(stackVM.pop());
+                std::cout << x;
+            } else {
+                bool x = * (bool *) stackVM.pop();
                 std::cout << x;
             }
             break;

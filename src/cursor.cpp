@@ -47,3 +47,16 @@ void Cursor::where(void) {
 char Cursor::symbol(void) {
     return c;
 }
+
+void Cursor::cite(std::ifstream & s) {
+    int bp = (int)s.tellg();
+    while (*this != '\n') {
+        s.seekg((int)s.tellg() - 2);
+        s >>= *this;
+    }
+    do {
+        s >>= *this;
+        std::cout << this->c;
+    } while ((*this != '\n') && (!s.eof()));
+    std::cout << std::endl;
+}

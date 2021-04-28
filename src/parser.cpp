@@ -43,10 +43,13 @@ void Parser::parse(void) {
         if (c != '}') throw Obstacle(PROG_CLOSEBR);
         poliz.pushOp(_NONE_, _NONE_, STOP);
     }
-    catch (Obstacle & o) {
+    catch(Obstacle & o) { 
+        ok = false;
         c.where();
         o.describe();
-        exit(-1);
+        c.cite(code);
+        c.line++;
+        code >> c;
     }
 
 }
@@ -55,13 +58,21 @@ void Parser::defs(void) {
     while (true) {
         if (!type()) break;
 
-        do {
-            code >> c;
-            variable();
-            if (c == ' ') code >> c;
-        } while (c == ',');
+        try {
+            do {
+                code >> c;
+                variable();
+                if (c == ' ') code >> c;
+            } while (c == ',');
 
-        if (c != ';') throw Obstacle(DEF_END);
+            if (c != ';') throw Obstacle(DEF_END);
+        } catch(Obstacle & o) { 
+            ok = false;
+            c.where();
+            o.describe();
+            c.cite(code);
+            c.line++;
+        }
         code >> c;
     }
 }
@@ -224,7 +235,17 @@ bool Parser::constBool(void) {
 }
 
 void Parser::operations(void) {
-    while (c != '}') operation(); 
+    while (c != '}') {
+        try { operation(); }
+        catch(Obstacle & o) { 
+            ok = false;
+            c.where();
+            o.describe();
+            c.cite(code);
+            c.line++;
+            code >> c;
+        }
+    }
 }
 
 void Parser::operation(void) {
@@ -673,15 +694,10 @@ void Parser::gotoOp(void) {
         // До метки ещё не дошли, но это не повод расстраиваться!
         labval = saveLabel(label, 0);
     }
-    try{
+    
     if (labval->getType() != _LABEL_)
         throw Obstacle(BAD_LABEL);
-    }
-    catch (Obstacle & o) {
-        c.where();
-        o.describe();
-        exit(-1);
-    }
+
     code >> c;
 
     poliz.pushVal(labval);
@@ -696,6 +712,10 @@ void Parser::readOp(void) {
 
     code >> c;
     char * operand = identificator();
+    IdentTable * it = IdTable.getIT(operand);
+    poliz.pushVal(it);
+    poliz.pushOp(_NONE_, it->getType(), READ);
+
     if (c == ' ') code >> c;
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
@@ -706,10 +726,6 @@ void Parser::readOp(void) {
         throw Obstacle(CLOSED_BOOK);
 
     code >> c;
-
-    IdentTable * it = IdTable.getIT(operand);
-    poliz.pushVal(it);
-    poliz.pushOp(_NONE_, it->getType(), READ);
 }
 
 void Parser::writeOp(void) {
@@ -737,12 +753,18 @@ void Parser::writeOp(void) {
 }
 
 void Parser::finalize(void) {
-    IdTable.repr();
-    poliz.repr();
-    std::cout << std::endl;
+    if (ok) {
+        IdTable.repr();
+        poliz.repr();
+        std::cout << std::endl;
+    }
 }
 
 void Parser::giveBIN(char * filename) {
+    if (!ok) {
+        std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
+        exit(-1);
+    }
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
