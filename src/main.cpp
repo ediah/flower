@@ -4,7 +4,7 @@
 #include "vmachine.hpp"
 
 int main(int argc, char** argv) {
-    std::string filename = "unit1.ml";
+    std::string filename;
 
     if (argc == 2) {
         filename = argv[1];

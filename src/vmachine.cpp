@@ -247,6 +247,11 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * a = (char *) stackVM.pop();
                 const char * b = x.data();
                 memcpy(a, &b, sizeof(void*));
+            } else {
+                std::string x;
+                do { std::cin >> x; } 
+                while ((x != "True") && (x != "true") && (x != "False") && (x != "false"));
+                * (bool *) stackVM.pop() = (x == "True") || (x == "true");
             }
             break;
 

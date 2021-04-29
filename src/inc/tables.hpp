@@ -22,7 +22,7 @@ public:
     void pushVal(void* v);
     IdentTable * confirm(void);
     void dupType(void);
-    type_t getType(void);
+    type_t getType(void) const;
     void * getVal(void);
     void setVal(void * val);
     void setId(char * name);
@@ -30,9 +30,8 @@ public:
     IdentTable * last(void);
     void whoami(void);
     void repr(void);
-    int ordNum(void);
     void setOffset(int x);
-    int getOffset(void);
+    int getOffset(void) const;
     void writeValToStream(std::ostream & s);
 
     ~IdentTable();

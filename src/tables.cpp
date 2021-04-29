@@ -13,7 +13,13 @@ IdentTable * IdentTable::last(void) {
 
 // Сохраняем идентификатор переменной
 void IdentTable::pushId(char* ident) {
-    last()->name = ident;
+    IdentTable * p = this;
+    while (p->next != nullptr) {
+        if ((p->name != nullptr) && (ident != nullptr) && (strcmp(p->name, ident) == 0))
+            throw Obstacle(IDENT_DUP);
+        p = p->next;
+    }
+    p->name = ident;
 }
 
 // Сохраняем тип переменной
@@ -55,7 +61,7 @@ void IdentTable::dupType(void) {
     }
 }
 
-type_t IdentTable::getType(void) {
+type_t IdentTable::getType(void) const {
     return valType;
 }
 
@@ -117,15 +123,11 @@ void IdentTable::setVal(void * val) {
     def = true;
 }
 
-int IdentTable::ordNum(void) {
-    return ord;
-}
-
 void IdentTable::setOffset(int x) {
     offset = x;
 }
 
-int IdentTable::getOffset(void) {
+int IdentTable::getOffset(void) const {
     return offset;
 }
 

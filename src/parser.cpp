@@ -8,7 +8,7 @@
 int Parser::fastPow(int x, int n) {
     int r = 1;
     while (n != 0) {
-        if (n & 1 == 1) r *= x;
+        if ( (n & 1) == 1) r *= x;
         x *= x;
         n >>= 1;
     }
@@ -90,9 +90,7 @@ bool Parser::type(void) {
         IdTable.pushType(_BOOLEAN_);
     else r = false;
 
-    r = c == ' ';
-
-    return r;
+    return r && (c == ' ');
 }
 
 /* Перед выполнением:
@@ -279,7 +277,7 @@ void Parser::operation(void) {
             expressionType(lvtype, exop, ASSIGN);
             poliz.pushOp(lvtype, exop, ASSIGN);
             if (c == ' ') code >> c;
-            if (c != ';') throw Obstacle(CLOSED_BOOK);
+            if (c != ';') throw Obstacle(SEMICOLON);
             code >> c;
         } else throw Obstacle(BAD_OPERATOR);
     }
@@ -304,20 +302,15 @@ IdentTable * Parser::saveLabel(char * label, int addr) {
 
 type_t Parser::expr(void) {
     type_t r = _NONE_;
-    operation_t op = NONE;
 
     r = andExpr();
 
     while (true) {
-        //code >> c;
-        //revert(1);
-
         if (readWord("or")) {
-            op = LOR;
             code >> c;
             type_t rval = andExpr();
-            poliz.pushOp(r, rval, op);
-            r = expressionType(r, rval, op);
+            poliz.pushOp(r, rval, LOR);
+            r = expressionType(r, rval, LOR);
         } else break;
     }
 
@@ -326,20 +319,15 @@ type_t Parser::expr(void) {
 
 type_t Parser::andExpr(void) {
     type_t r = _NONE_;
-    operation_t op = NONE;
     
     r = boolExpr();
 
     while (true) {
-        //code >> c;
-        //revert(1);
-
         if (readWord("and")) {
-            op = LAND;
             code >> c;
             type_t rval = boolExpr();
-            poliz.pushOp(r, rval, op);
-            r = expressionType(r, rval, op);
+            poliz.pushOp(r, rval, LAND);
+            r = expressionType(r, rval, LAND);
         } else break;
     }
     return r;
@@ -582,7 +570,7 @@ void Parser::forOp(void) {
     catch(...){}
 
     if (c != ';')
-        throw Obstacle(CLOSED_BOOK);
+        throw Obstacle(SEMICOLON);
 
     IdTable.pushType(_LABEL_);
     IdTable.pushVal( new int (poliz.getSize()) );
@@ -598,7 +586,7 @@ void Parser::forOp(void) {
     poliz.pushOp(_NONE_, _NONE_, JMP);
 
     if (c != ';')
-        throw Obstacle(CLOSED_BOOK);
+        throw Obstacle(SEMICOLON);
 
     IdTable.pushType(_LABEL_);
     IdTable.pushVal( new int (poliz.getSize()) );
@@ -606,19 +594,15 @@ void Parser::forOp(void) {
 
     type_t e3;
     code >> c;
-    try {
-        char * name = identificator();
-        IdentTable * cycleLval = IdTable.getIT(name);
-        poliz.pushVal(cycleLval);
-        if (c == ' ') code >> c;
-        if (c != '=') throw Obstacle(BAD_EXPR);
-        code >> c;
-        e3 = expr();  // циклическое выражение
-        poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
-    }
-    catch (Obstacle & o) {
-        if (o.r != BAD_IDENT) throw o;
-    }
+
+    char * name = identificator();
+    IdentTable * cycleLval = IdTable.getIT(name);
+    poliz.pushVal(cycleLval);
+    if (c == ' ') code >> c;
+    if (c != '=') throw Obstacle(BAD_EXPR);
+    code >> c;
+    e3 = expr();  // циклическое выражение
+    poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
 
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
@@ -676,10 +660,12 @@ void Parser::whileOp(void) {
 
 }
 void Parser::breakOp(void) {
+    if (exits.isEmpty())
+        throw Obstacle(BREAK_OUTSIDE_CYCLE);
     poliz.pushVal((IdentTable *) exits.top());
     poliz.pushOp(_NONE_, _NONE_, JMP);
     if (c != ';')
-        throw Obstacle(CLOSED_BOOK);
+        throw Obstacle(SEMICOLON);
     code >> c;
 }
 
@@ -723,7 +709,7 @@ void Parser::readOp(void) {
     code >> c;
 
     if (c != ';')
-        throw Obstacle(CLOSED_BOOK);
+        throw Obstacle(SEMICOLON);
 
     code >> c;
 }
@@ -747,7 +733,7 @@ void Parser::writeOp(void) {
     code >> c;
 
     if (c != ';')
-        throw Obstacle(CLOSED_BOOK);
+        throw Obstacle(SEMICOLON);
 
     code >> c;
 }

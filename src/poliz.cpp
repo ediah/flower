@@ -85,6 +85,6 @@ bool * POLIZ::getEB(void) {
     return execBit;
 }
 
-int POLIZ::getSize(void) {
+int POLIZ::getSize(void) const {
     return iter;
 }

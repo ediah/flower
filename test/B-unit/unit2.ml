@@ -1,5 +1,6 @@
 program {
-    int a = "Hello!";
-
-    if(a) write("ERROR");
+    int a = true;
+    real b = 3;
+    string c = 1.8;
+    bool d = 5;
 }

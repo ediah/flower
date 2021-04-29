@@ -14,12 +14,8 @@ void Obstacle::describe(void) {
         case BAD_PARAMS_OPBR: expected("("); break;
         case BAD_PARAMS_CLBR:
         case EXPR_CLOSEBR: expected(")"); break;
-        case BAD_INT:
-            std::cout << "Плохое целое число." << std::endl;
-            break;
-        case BAD_REAL:
-            std::cout << "Плохое вещественное число." << std::endl;
-            break;
+        case BAD_INT: expected("целое число"); break;
+        case BAD_REAL: expected("вещественное число"); break;
         case BAD_BOOL: expected("true или false"); break;
         case BAD_IDENT:
             std::cout << "Плохой идентификатор." << std::endl;
@@ -34,11 +30,12 @@ void Obstacle::describe(void) {
         case BAD_OPERATOR:
             std::cout << "Плохой оператор." << std::endl;
             break;
-        case CLOSED_BOOK:
-            std::cout << "Невозможно открыть книгу: на 100-й странице пропущена точка с запятой!" << std::endl;
-            break;
+        case SEMICOLON: expected(";"); break;
         case IDENT_NOT_DEF:
             std::cout << "Идентификатор не описан." << std::endl;
+            break;
+        case IDENT_DUP:
+            std::cout << "Повторное описание идентификатора." << std::endl;
             break;
         case BAD_IF:
             std::cout << "Выражение должно быть условным." << std::endl;
@@ -51,6 +48,9 @@ void Obstacle::describe(void) {
             break;
         case BAD_EXPR:
             std::cout << "Неверное выражение." << std::endl;
+            break;
+        case BREAK_OUTSIDE_CYCLE: 
+            std::cout << "Break вне цикла." << std::endl;
             break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;

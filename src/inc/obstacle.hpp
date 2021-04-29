@@ -23,14 +23,16 @@ enum reason {
     OP_CLOSEBR,
     BAD_PARAMS_OPBR,
     BAD_PARAMS_CLBR,
-    CLOSED_BOOK,
-    IDENT_NOT_DEF
+    SEMICOLON,
+    IDENT_NOT_DEF,
+    IDENT_DUP,
+    BREAK_OUTSIDE_CYCLE
 };
 
 class Obstacle {
 public:
     reason r;
-    Obstacle(reason x): r(x) {};
+    explicit Obstacle(reason x): r(x) {};
 
     void describe(void);
     void expected(const char * msg);
