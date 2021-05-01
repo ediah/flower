@@ -6,6 +6,7 @@
 
 class IdentTable {
     type_t valType;
+    char * structName;
     char * name;
     bool def;
     void * val;
@@ -15,13 +16,16 @@ class IdentTable {
 public:
     IdentTable *next;
 
-    IdentTable(type_t t = _NONE_, char * n = NULL): valType(t),
+    IdentTable(type_t t = _NONE_, char * n = NULL): valType(t), structName(nullptr),
         name(n), next(nullptr), def(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(IdentTable & templateIT);
     void pushId(char * ident);
     void pushType(type_t t);
+    void pushStruct(char * name);
     void pushVal(void* v);
     IdentTable * confirm(void);
     void dupType(void);
+    char * getStruct(void) const;
     type_t getType(void) const;
     void * getVal(void);
     void setVal(void * val);
@@ -35,6 +39,23 @@ public:
     void writeValToStream(std::ostream & s);
 
     ~IdentTable();
+};
+
+class StructTable {
+    char * name;
+    IdentTable fields;
+    StructTable * next;
+public:
+    StructTable(void): name(nullptr), next(nullptr) {};
+
+    void pushName(char * name);
+    void pushField(type_t type, char * name, char * structName);
+    StructTable * confirm(void);
+    StructTable * last(void);
+
+    StructTable * getStruct(char * name);
+    IdentTable * getField(char * name);
+    IdentTable & getFields(void);
 };
 
 #endif

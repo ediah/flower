@@ -19,6 +19,7 @@ class Parser {
     POLIZ poliz;
 
     Stack exits;
+    StructTable StTable;
     bool ok;
 
     // Вспомогательные функции
@@ -35,6 +36,9 @@ public:
     // Основная функция разбора, "program"
     void parse(void);
     void defs(void);
+    void defStruct(void);
+    void defInput(void);
+    void defOutput(void);
     bool type(void);
     void variable(void);
     char * identificator(void);
@@ -43,6 +47,11 @@ public:
     char * constString(void);
     float constReal(void);
     bool constBool(void);
+    void constStruct(IdentTable * fields);
+    void assign(IdentTable * lval);
+    void assignStruct(IdentTable * lval, IdentTable * rval);
+
+    void program(void);
 
     void operations(void);
     void operation(void);

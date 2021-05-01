@@ -89,6 +89,7 @@ char * typetostr(type_t t) {
         case _STRING_: return "STRING"; break;
         case _BOOLEAN_: return "BOOLEAN"; break;
         case _LABEL_: return "LABEL"; break;
+        case _STRUCT_: return "STRUCT"; break;
     }
     throw Obstacle(PANIC);
 }

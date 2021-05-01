@@ -4,6 +4,24 @@
 #include "obstacle.hpp"
 #include "exprtype.hpp"
 
+IdentTable::IdentTable(IdentTable & templateIT) {
+    valType = templateIT.valType;
+    structName = templateIT.structName;
+    if (templateIT.name != nullptr) {
+        name = new char[strlen(templateIT.name)];
+        memcpy(name, templateIT.name, strlen(templateIT.name));
+    }
+    def = templateIT.def;
+    if (valType == _STRUCT_)
+        val = new IdentTable( * (IdentTable *)templateIT.val);
+    else val = templateIT.val;
+    ord = templateIT.ord;
+    offset = templateIT.offset;
+    if (templateIT.next != nullptr)
+        next = new IdentTable(*templateIT.next);
+    else next = nullptr;
+}
+
 // Получаем последний объект списка
 IdentTable * IdentTable::last(void) {
     IdentTable * p = this;
@@ -25,6 +43,10 @@ void IdentTable::pushId(char* ident) {
 // Сохраняем тип переменной
 void IdentTable::pushType(type_t t) {
     last()->valType = t;
+}
+
+void IdentTable::pushStruct(char * name) {
+    last()->structName = name;
 }
 
 // Сохраняем значение переменной
@@ -58,11 +80,17 @@ void IdentTable::dupType(void) {
     if (last()->valType == _NONE_) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
+        p->next->structName = p->structName;
+        p->next->val = new IdentTable(* (IdentTable *) p->val);
     }
 }
 
 type_t IdentTable::getType(void) const {
     return valType;
+}
+
+char * IdentTable::getStruct(void) const {
+    return structName;
 }
 
 IdentTable * IdentTable::getIT(char * name) {
@@ -79,22 +107,32 @@ IdentTable * IdentTable::getIT(char * name) {
 void IdentTable::whoami(void) {
 
     std::cout << '{' << typetostr(valType) << ' ';
-    if (name != nullptr)
-        std::cout << name << " = ";
-    if (def) {
-        switch (valType) {
-            case _INT_: case _LABEL_:
-                std::cout << * (int*) val; break;
-            case _REAL_:
-                std::cout << * (float*) val; break;
-            case _STRING_:
-                std::cout << (char*) val; break;
-            case _BOOLEAN_:
-                std::cout << * (bool*) val; break;
-            default:
-                std::cout << "[неизвестен]"; break;
+    if (valType == _STRUCT_) {
+        std::cout << structName << ' ' << name << " = {";
+        IdentTable * fields = (IdentTable *) val;
+        while (fields->next != nullptr) {
+            fields->whoami();
+            fields = fields->next;
         }
-    } else std::cout << "(не определён)";
+        std::cout << " }";
+    } else {
+        if (name != nullptr)
+            std::cout << name << " = ";
+        if (def) {
+            switch (valType) {
+                case _INT_: case _LABEL_:
+                    std::cout << * (int*) val; break;
+                case _REAL_:
+                    std::cout << * (float*) val; break;
+                case _STRING_:
+                    std::cout << (char*) val; break;
+                case _BOOLEAN_:
+                    std::cout << * (bool*) val; break;
+                default: 
+                    std::cout << "[неизвестен]"; break;
+            }
+        } else std::cout << "(не определён)";
+    }
     std::cout << '}';
 
 }
@@ -142,10 +180,12 @@ void IdentTable::writeValToStream(std::ostream & s) {
                 val = new char ('\0'); break;
             case _BOOLEAN_:
                 val = new bool (false); break;
+            case _STRUCT_: break;
             default:
                 throw Obstacle(PANIC);
         }
     }
+    IdentTable * ITp;
     switch (valType) {
         case _INT_: case _LABEL_:
             s.write((char*)val, sizeof(int)); break;
@@ -157,6 +197,15 @@ void IdentTable::writeValToStream(std::ostream & s) {
             break;
         case _BOOLEAN_:
             s.write((char*)val, sizeof(bool)); break;
+        case _STRUCT_:
+            ITp = (IdentTable*)val;
+            while (ITp->next != nullptr) {
+                ITp->setOffset((int)s.tellp());
+                //std::cout << ITp->getOffset();
+                ITp->writeValToStream(s);
+                ITp = ITp->next;
+            }
+            break;
         default:
             throw Obstacle(PANIC);
     }
@@ -171,4 +220,68 @@ IdentTable::~IdentTable() {
     }
     */
     if (next != nullptr) delete next;
+}
+
+StructTable * StructTable::last(void) {
+    StructTable * p = this;
+    while (p->next != nullptr) p = p->next;
+    return p;
+}
+
+void StructTable::pushName(char * name) {
+    last()->name = name;
+}
+
+void StructTable::pushField(type_t type, char * name, char * structName) {
+    StructTable * l = last();
+    l->fields.pushType(type);
+    l->fields.pushId(name);
+    if (structName != nullptr) {
+        l->fields.pushStruct(structName);
+        IdentTable & templateIT = getStruct(structName)->getFields();
+        l->fields.pushVal(new IdentTable(templateIT));
+    }
+    l->fields.confirm();
+}
+
+StructTable * StructTable::confirm(void) {
+    StructTable * p = last();
+
+    #ifdef DEBUG
+    std::cout << "Описана новая структура: " << p->name << '{';
+    IdentTable * fields = & p->fields;
+    fields->whoami();
+    while (fields->next->next != nullptr) {
+        std::cout << ", ";
+        fields = fields->next;
+        fields->whoami();
+    }
+    std::cout << '}' << std::endl;
+    #endif
+
+    p->next = new StructTable;
+
+    return p;
+}
+
+StructTable * StructTable::getStruct(char * name) {
+    StructTable * p = this;
+
+    while (p != nullptr) {
+        if (strcmp(p->name, name) == 0) break;
+        p = p->next;
+    }
+
+    if (p == nullptr)
+        throw Obstacle(STRUCT_UNDEF);
+
+    return p;
+}
+
+IdentTable * StructTable::getField(char * name) {
+    return fields.getIT(name);
+}
+
+IdentTable & StructTable::getFields(void) {
+    return fields;
 }

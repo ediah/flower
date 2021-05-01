@@ -7,7 +7,8 @@ enum type_t {
     _REAL_,
     _STRING_,
     _BOOLEAN_,
-    _LABEL_
+    _LABEL_,
+    _STRUCT_
 };
 
 enum operation_t {

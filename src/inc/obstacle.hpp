@@ -9,8 +9,7 @@ enum reason {
     TYPE_UNKNOWN,
     EXPR_BAD_TYPE,
     EXPR_CLOSEBR,
-    READ_BOOL,
-    DEF_END,
+    WRONG_SCOPE,
     BAD_EXPR,
     BAD_INT,
     BAD_REAL,
@@ -20,13 +19,16 @@ enum reason {
     BAD_IDENT,
     BAD_STRING,
     BAD_OPERATOR,
+    BAD_STRUCT,
     OP_CLOSEBR,
     BAD_PARAMS_OPBR,
     BAD_PARAMS_CLBR,
     SEMICOLON,
     IDENT_NOT_DEF,
     IDENT_DUP,
-    BREAK_OUTSIDE_CYCLE
+    BREAK_OUTSIDE_CYCLE,
+    STRUCT_UNDEF,
+    LABEL_OR_IDENT
 };
 
 class Obstacle {

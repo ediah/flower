@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "cursor.hpp"
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
@@ -43,14 +44,15 @@ char Cursor::symbol(void) const {
 }
 
 void Cursor::cite(std::ifstream & s) {
+    std::ostringstream os;
     while (*this != '\n') {
         s.seekg((int)s.tellg() - 2);
         s >>= *this;
     }
     do {
         s >>= *this;
-        std::cout << this->c;
+        os << this->c;
     } while ((*this != '\n') && (!s.eof()));
-    std::cout << std::endl;
+    std::cout << os.str() << std::endl;
     line -= 2;
 }
