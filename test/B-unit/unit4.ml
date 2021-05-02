@@ -1,9 +1,14 @@
 program {
-    int x = 10;
+    int a = 1;
+    real a = 2.0;
+    real b = 3;
 
-    if (x) write("ERROR");
+    for (int i = 0; i >= 0; i=i+1) {
+        if (i == 5) break;
+    }
+    
+    break;
 
-    for (int i = 0; i; i = i + x) x = i;
-
-    while(x) write("ERROR");
+    if(10);
+    break;
 }

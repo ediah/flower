@@ -1,6 +1,7 @@
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
+RELEASE=NO
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report
@@ -17,8 +18,14 @@ else
 	ENABLE= --enable=warning
 endif
 
+ifeq (${RELEASE},YES)
+	OPTIFLAGS= -O2
+else
+	OPTIFLAGS= -O0 -g -DDEBUG
+endif
+
 CC= g++
-CFLAGS = --std=c++11 -g -O0 -Wno-write-strings -DDEBUG
+CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS}
 CHFLAGS=-I./src/inc --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
         --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
 		--output-file=${REPORT}

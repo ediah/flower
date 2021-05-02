@@ -54,7 +54,6 @@ public:
     StructTable * last(void);
 
     StructTable * getStruct(char * name);
-    IdentTable * getField(char * name);
     IdentTable & getFields(void);
 };
 

@@ -14,7 +14,7 @@ class VirtualMachine {
 
     Stack stackVM;
 public:
-    //VirtualMachine();
+    VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0) {};
 
     void loadBIN(char * filename);
 

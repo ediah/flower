@@ -81,7 +81,8 @@ void IdentTable::dupType(void) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
         p->next->structName = p->structName;
-        p->next->val = new IdentTable(* (IdentTable *) p->val);
+        if (p->valType == _STRUCT_)
+            p->next->val = new IdentTable(* (IdentTable *) p->val);
     }
 }
 
@@ -100,6 +101,8 @@ IdentTable * IdentTable::getIT(char * name) {
         if (p->next->valType != _NONE_) p = p->next;
         else throw Obstacle(IDENT_NOT_DEF);
     }
+
+    delete [] name;
 
     return p;
 }
@@ -149,6 +152,7 @@ void IdentTable::repr(void) {
 }
 
 void IdentTable::setId(char * name) {
+    if (this->name != nullptr) delete [] name;
     this->name = name;
 }
 
@@ -184,6 +188,7 @@ void IdentTable::writeValToStream(std::ostream & s) {
             default:
                 throw Obstacle(PANIC);
         }
+        def = true;
     }
     IdentTable * ITp;
     switch (valType) {
@@ -214,11 +219,20 @@ void IdentTable::writeValToStream(std::ostream & s) {
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;
 
-    /*
-    if (def) {
-        writeToStream(std::cout);
+    if (val != nullptr) {
+        switch (valType) {
+            case _INT_: case _LABEL_:
+                delete (int*) val; break;
+            case _REAL_:
+                delete (float*) val; break;
+            case _BOOLEAN_:
+                delete (bool*) val; break;
+            case _STRING_: delete [] (char*)val; break;
+            case _STRUCT_: break;
+            default: break;
+        }
     }
-    */
+
     if (next != nullptr) delete next;
 }
 
@@ -276,10 +290,6 @@ StructTable * StructTable::getStruct(char * name) {
         throw Obstacle(STRUCT_UNDEF);
 
     return p;
-}
-
-IdentTable * StructTable::getField(char * name) {
-    return fields.getIT(name);
 }
 
 IdentTable & StructTable::getFields(void) {

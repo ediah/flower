@@ -39,10 +39,12 @@ void Parser::parse(void) {
                 program();
             else if (readWord("struct"))
                 defStruct();
+            /*
             else if (readWord("input"))
                 defInput();
             else if (readWord("output"))
                 defOutput();
+            */
             else throw Obstacle(WRONG_SCOPE);
             code >> c;
         }
@@ -57,7 +59,7 @@ void Parser::parse(void) {
 }
 
 void Parser::program(void) {
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '{') throw Obstacle(PROG_OPENBR);
     code >> c;
 
@@ -69,10 +71,10 @@ void Parser::program(void) {
 }
 
 void Parser::defStruct(void) {
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     char * name = identificator();
     StTable.pushName(name);
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '{')
         throw Obstacle(BAD_STRUCT);
     code >> c;
@@ -101,7 +103,7 @@ void Parser::defStruct(void) {
             code >> c;
             field_name = identificator();
             StTable.pushField(field_type, field_name, struct_name);
-            if (c == ' ') code >> c;
+            if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
 
         if (c != ';') throw Obstacle(SEMICOLON);
@@ -110,6 +112,9 @@ void Parser::defStruct(void) {
     StTable.confirm();
 }
 
+/*
+ * Опции тестирования программ.
+ * Оставлено до лучших времён.
 void Parser::defInput(void) {
 
 }
@@ -117,6 +122,7 @@ void Parser::defInput(void) {
 void Parser::defOutput(void) {
     
 }
+*/
 
 void Parser::defs(void) {
     while (true) {
@@ -126,7 +132,7 @@ void Parser::defs(void) {
             do {
                 code >> c;
                 variable();
-                if (c == ' ') code >> c;
+                if ((c == ' ') || (c == '\n')) code >> c;
             } while (c == ',');
 
             if (c != ';') throw Obstacle(SEMICOLON);
@@ -154,11 +160,11 @@ bool Parser::type(void) {
         IdTable.pushType(_BOOLEAN_);
     else if (readWord("struct")) {
         code >> c;
-        char * st_name = identificator();
-        IdTable.pushStruct(st_name);
+        char * stName = identificator();
+        IdTable.pushStruct(stName);
         IdTable.pushType(_STRUCT_);
-        IdentTable & template_fields = StTable.getStruct(st_name)->getFields();
-        IdTable.pushVal(new IdentTable(template_fields));
+        IdentTable & templateFields = StTable.getStruct(stName)->getFields();
+        IdTable.pushVal(new IdentTable(templateFields));
     } else r = false;
 
     return r && (c == ' ');
@@ -169,7 +175,7 @@ bool Parser::type(void) {
  *     ^~~ <= курсор на первой букве слова
  * После выполнения:
  * aab bba aca
- *        ^ <= курсор на последней букве слова (если true)
+ *        ^ <= курсор за последней буквой слова (если true)
  * Если false, курсор на начальной позиции
  */ 
 bool Parser::readWord(char * word) {
@@ -210,14 +216,14 @@ void Parser::assign(IdentTable * lval) {
                 char * fieldName = identificator();
                 IdentTable * val = fields->getIT(fieldName);
 
-                if (c == ' ') code >> c;
+                if ((c == ' ') || (c == '\n')) code >> c;
 
                 while (c == '.') {
                     code >> c;
                     fieldName = identificator();
                     IdentTable * innerFields = (IdentTable *) val->getVal();
                     val = innerFields->getIT(fieldName);
-                    if (c == ' ') code >> c;
+                    if ((c == ' ') || (c == '\n')) code >> c;
                 }
 
                 if (c != '=') throw Obstacle(BAD_EXPR);
@@ -230,18 +236,18 @@ void Parser::assign(IdentTable * lval) {
             char * rvalName = identificator();
             IdentTable * rval = IdTable.getIT(rvalName);
             type_t rvtype = rval->getType();
-            if ((rvtype == _STRUCT_) && (strcmp(rval->getStruct(), rval->getStruct()) == 0)) {
+            if ((rvtype == _STRUCT_) && (strcmp(lval->getStruct(), rval->getStruct()) == 0)) {
                 // структуры идентичны, можно приравнивать 
                 assignStruct((IdentTable *) lval->getVal(), (IdentTable *) rval->getVal());
                 
-            } else throw Obstacle(BAD_EXPR);
+            } else throw Obstacle(EXPR_BAD_TYPE);
         }
     } else {
         poliz.pushVal(lval);
         type_t exop = expr();
         expressionType(lvtype, exop, ASSIGN);
         poliz.pushOp(lvtype, exop, ASSIGN);
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
     }
 }
 
@@ -249,7 +255,7 @@ void Parser::variable(void) {
     IdTable.dupType();
     char * name = identificator();
     IdTable.pushId(name);
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c == '=') constVal();
     IdTable.confirm();
 }
@@ -275,7 +281,7 @@ void Parser::constStruct(IdentTable * fields) {
         char * fieldName = identificator();
         IdentTable * val = fields->getIT(fieldName);
         type_t tval = val->getType();
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
         if (c != '=') throw Obstacle(BAD_EXPR);
         code >> c;
 
@@ -438,7 +444,7 @@ void Parser::operation(void) {
         bool isStruct = false;
         char * name = identificator();
         IdentTable * lval = IdTable.getIT(name);
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
 
         while (c == '.') {
             isStruct = true;
@@ -446,7 +452,7 @@ void Parser::operation(void) {
             name = identificator();
             IdentTable * fields = (IdentTable *) lval->getVal();
             lval = fields->getIT(name);
-            if (c == ' ') code >> c;
+            if ((c == ' ') || (c == '\n')) code >> c;
         } 
 
         if (c == ':') {
@@ -548,7 +554,7 @@ type_t Parser::boolExpr(void) {
                 default: throw Obstacle(BAD_EXPR);
             }
         }
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
         type_t rval = add();
         poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
@@ -674,14 +680,14 @@ type_t Parser::constExpr(void) {
                 } else {
                     char * name = identificator();
                     IdentTable * val = IdTable.getIT(name);
-                    if (c == ' ') code >> c;
+                    if ((c == ' ') || (c == '\n')) code >> c;
 
                     while (c == '.') {
                         code >> c;
                         name = identificator();
                         IdentTable * fields = (IdentTable *) val->getVal();
                         val = fields->getIT(name);
-                        if (c == ' ') code >> c;
+                        if ((c == ' ') || (c == '\n')) code >> c;
                     }
                     r = val->getType();
                     poliz.pushVal(val);
@@ -690,13 +696,13 @@ type_t Parser::constExpr(void) {
         }
     }
 
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
 
     return r;
 }
 
 void Parser::condOp(void) {
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(BAD_PARAMS_OPBR);
     code >> c;
@@ -743,20 +749,20 @@ IdentTable * Parser::cycleparam(void) {
         char * name = identificator();
         IdTable.pushId(name);
         lval = IdTable.confirm();
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
     } else {
         // переменная описана
         char * name = identificator();
         lval = IdTable.getIT(name);
 
-        if (c == ' ') code >> c;
+        if ((c == ' ') || (c == '\n')) code >> c;
 
         while (c == '.') {
             code >> c;
             name = identificator();
             IdentTable * fields = (IdentTable *) lval->getVal();
             lval = fields->getIT(name);
-            if (c == ' ') code >> c;
+            if ((c == ' ') || (c == '\n')) code >> c;
         }
     }
 
@@ -774,7 +780,7 @@ void Parser::forOp(void) {
     IdTable.pushType(_LABEL_);
     IdentTable * body = IdTable.confirm();
 
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(BAD_PARAMS_OPBR);
     code >> c;
@@ -812,7 +818,7 @@ void Parser::forOp(void) {
     char * name = identificator();
     IdentTable * cycleLval = IdTable.getIT(name);
     poliz.pushVal(cycleLval);
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '=') throw Obstacle(BAD_EXPR);
     code >> c;
     e3 = expr();  // циклическое выражение
@@ -844,7 +850,7 @@ void Parser::whileOp(void) {
     IdentTable * exit = IdTable.confirm();
     exits.push(exit);
 
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(BAD_PARAMS_OPBR);
 
@@ -859,7 +865,7 @@ void Parser::whileOp(void) {
     poliz.pushVal(exit);
     poliz.pushOp(_BOOLEAN_, _INT_, JIT);
     
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
 
@@ -906,7 +912,7 @@ void Parser::gotoOp(void) {
 
 // Исправлено
 void Parser::readOp(void) {
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(BAD_PARAMS_OPBR);
 
@@ -916,7 +922,7 @@ void Parser::readOp(void) {
     poliz.pushVal(it);
     poliz.pushOp(_NONE_, it->getType(), READ);
 
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
 
@@ -929,7 +935,7 @@ void Parser::readOp(void) {
 }
 
 void Parser::writeOp(void) {
-    if (c == ' ') code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(BAD_PARAMS_OPBR);
 

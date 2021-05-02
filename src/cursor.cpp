@@ -4,8 +4,31 @@
 #include "cursor.hpp"
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
-    do { s >>= x; } 
-    while ((x.c == ' ') || (x.c == '\n'));
+    do { 
+        s >>= x; 
+        // открывающие скобки комментариев
+        if (x == '/') {
+            s >>= x;
+            if (x == '*') {
+                // комментарий
+                while (true) {
+                    s >>= x;
+                    // закрывающие скобки комментариев
+                    if (x == '*') {
+                        s >>= x;
+                        if (x == '/') {
+                            s >> x;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                s.seekg((int)s.tellg() - 2);
+                s >>= x;
+            }
+        }
+
+    } while (((x.c == ' ') || (x.c == '\n')) && (!s.eof()));
 
     return s;
 }

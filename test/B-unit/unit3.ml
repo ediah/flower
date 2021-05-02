@@ -1,11 +1,9 @@
 program {
-    int i;
-    real r;
-    string s;
-    bool b;
+    int x = 10;
 
-    read(i);
-    read(r);
-    read(s);
-    read(b);
+    if (x) write("ERROR");
+
+    for (int i = 0; i; i = i + x) x = i;
+
+    while(x) write("ERROR");
 }
