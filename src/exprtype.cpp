@@ -81,8 +81,6 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
     return r;
 }
 
-#include <iostream>
-
 char * typetostr(type_t t) {
     switch(t) {
         case _NONE_: return "NONE"; break;
@@ -92,7 +90,6 @@ char * typetostr(type_t t) {
         case _BOOLEAN_: return "BOOLEAN"; break;
         case _LABEL_: return "LABEL"; break;
         case _STRUCT_: return "STRUCT"; break;
-        default: return "UNKNOWN"; break;
     }
     throw Obstacle(PANIC);
 }
