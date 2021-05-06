@@ -92,6 +92,7 @@ void Parser::defStruct(void) {
         else if (readWord("bool"))
             field_type = _BOOLEAN_;
         else if (readWord("struct")) {
+            if (c != ' ') throw Obstacle(TYPE_UNKNOWN);
             code >> c;
             struct_name = identificator();
             field_type = _STRUCT_;
@@ -266,8 +267,8 @@ IdentTable * Parser::variable(void) {
 }
 
 char * Parser::identificator(void) {
-    char * ident = new char[MAXIDENT];
     if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
+    char * ident = new char[MAXIDENT];
     int i = 0;
     do {
         ident[i++] = c.symbol();
@@ -754,6 +755,7 @@ IdentTable * Parser::cycleparam(void) {
         char * name = identificator();
         lval = IdTable.getIT(name);
         assign(lval);
+        lval = nullptr;
     }
 
     return lval;
@@ -826,7 +828,7 @@ void Parser::forOp(void) {
     exit->setVal(new int (poliz.getSize()) );
 
     exits.pop();
-    while ((cp != nullptr) && (cp->getType() != _NONE_)){
+    while ((cp != nullptr) && (cp->getId() != nullptr)) {
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
         cp = cp->next;
     }

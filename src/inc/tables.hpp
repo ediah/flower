@@ -16,8 +16,8 @@ class IdentTable {
 public:
     IdentTable *next;
 
-    IdentTable(type_t t = _NONE_, char * n = NULL): valType(t), structName(nullptr),
-        name(n), next(nullptr), def(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
+        next(nullptr), def(false), val(nullptr), ord(0), offset(0) {};
     IdentTable(IdentTable & templateIT);
     void pushId(char * ident);
     void pushType(type_t t);
@@ -30,6 +30,7 @@ public:
     void * getVal(void);
     void setVal(void * val);
     void setId(char * name);
+    char * getId(void) const;
     IdentTable * getIT(char * name);
     IdentTable * last(void);
     void whoami(void);
@@ -55,6 +56,8 @@ public:
 
     StructTable * getStruct(char * name);
     IdentTable & getFields(void);
+
+    ~StructTable();
 };
 
 #endif

@@ -6,20 +6,27 @@
 
 IdentTable::IdentTable(IdentTable & templateIT) {
     valType = templateIT.valType;
-    structName = templateIT.structName;
-    if (templateIT.name != nullptr) {
-        name = new char[strlen(templateIT.name)];
-        memcpy(name, templateIT.name, strlen(templateIT.name));
-    }
     def = templateIT.def;
-    if (valType == _STRUCT_)
-        val = new IdentTable( * (IdentTable *)templateIT.val);
-    else val = templateIT.val;
     ord = templateIT.ord;
     offset = templateIT.offset;
-    if (templateIT.next != nullptr)
+
+    if (templateIT.structName != nullptr) {
+        structName = new char[strlen(templateIT.structName) + 1];
+        memcpy(structName, templateIT.structName, strlen(templateIT.structName) + 1);
+    } else structName = nullptr;
+
+    if (templateIT.name != nullptr) {
+        name = new char[strlen(templateIT.name) + 1];
+        memcpy(name, templateIT.name, strlen(templateIT.name) + 1);
+    } else name = nullptr;
+    
+    if (templateIT.valType == _STRUCT_)
+        val = new IdentTable( * (IdentTable *)templateIT.val);
+    else val = templateIT.val;
+
+    if (templateIT.next->getType() != _NONE_)
         next = new IdentTable(*templateIT.next);
-    else next = nullptr;
+    else next = new IdentTable;
 }
 
 // Получаем последний объект списка
@@ -80,9 +87,19 @@ void IdentTable::dupType(void) {
     if (last()->valType == _NONE_) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
-        p->next->structName = p->structName;
-        if (p->valType == _STRUCT_)
+        if (p->structName != nullptr) {
+            p->next->structName = new char[strlen(p->structName) + 1];
+            memcpy(p->next->structName, p->structName, strlen(p->structName) + 1);
+        }
+        if (p->valType == _STRUCT_) {
             p->next->val = new IdentTable(* (IdentTable *) p->val);
+            p = (IdentTable *) p->next->val;
+            while (p->next != nullptr) {
+                p->val = nullptr;
+                p->def = false;
+                p = p->next;
+            }
+        }
     }
 }
 
@@ -154,8 +171,12 @@ void IdentTable::repr(void) {
 }
 
 void IdentTable::setId(char * name) {
-    if (this->name != nullptr) delete [] name;
+    if (this->name != nullptr) delete [] this->name;
     this->name = name;
+}
+
+char * IdentTable::getId(void) const {
+    return this->name;
 }
 
 void * IdentTable::getVal(void) {
@@ -183,7 +204,9 @@ void IdentTable::writeValToStream(std::ostream & s) {
             case _REAL_:
                 val = new float (0); break;
             case _STRING_:
-                val = new char ('\0'); break;
+                val = new char[1];
+                ( (char*)val )[0] = '\0'; 
+                break;
             case _BOOLEAN_:
                 val = new bool (false); break;
             case _STRUCT_: break;
@@ -229,11 +252,14 @@ IdentTable::~IdentTable() {
                 delete (float*) val; break;
             case _BOOLEAN_:
                 delete (bool*) val; break;
-            case _STRING_: delete [] (char*)val; break;
-            case _STRUCT_: break;
+            case _STRING_: 
+                delete [] (char*)val; break;
+            case _STRUCT_: 
+                delete (IdentTable*)val; break;
             default: break;
         }
     }
+    if (structName != nullptr) delete [] structName;
 
     if (next != nullptr) delete next;
 }
@@ -256,6 +282,11 @@ void StructTable::pushField(type_t type, char * name, char * structName) {
         l->fields.pushStruct(structName);
         IdentTable & templateIT = getStruct(structName)->getFields();
         l->fields.pushVal(new IdentTable(templateIT));
+    } else {
+        if (l->fields.getStruct() != nullptr) {
+            std::cout << "Структура не равна нулю\n" << l->fields.getStruct();
+            std::cout << std::endl;
+        }
     }
     l->fields.confirm();
 }
@@ -296,4 +327,9 @@ StructTable * StructTable::getStruct(char * name) {
 
 IdentTable & StructTable::getFields(void) {
     return fields;
+}
+
+StructTable::~StructTable(void) {
+    if (name != nullptr) delete [] name;
+    if (next != nullptr) delete next;
 }

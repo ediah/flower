@@ -1,7 +1,7 @@
 #include <cassert>
 #include "stack.hpp"
 
-void Stack::push(void * x) {
+void Stack::push(void * x, bool del) {
     assert(pos < MAXSTACK);
     elem[pos++] = x;
 }
