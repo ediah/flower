@@ -34,6 +34,7 @@ public:
     void load(std::string name); // Загрузка исходного кода
     void parse(void);            // Разбор программы
     void defs(void);             // Определения
+    IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
     /*
     void defInput(void);
@@ -41,7 +42,7 @@ public:
     */
     
     bool type(void);            // Тип
-    void variable(void);        // Переменная
+    IdentTable * variable(void);// Переменная
     char * identificator(void); // Идентификатор
     void constVal(void);        // Инициализатор (константа)
     int constInt(void);         // Целое число

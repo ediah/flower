@@ -111,7 +111,9 @@ void IdentTable::whoami(void) {
 
     std::cout << '{' << typetostr(valType) << ' ';
     if (valType == _STRUCT_) {
-        std::cout << structName << ' ' << name << " = {";
+        std::cout << structName << ' ';
+        if (name != nullptr) std::cout << name;
+        else std::cout << "? = {";
         IdentTable * fields = (IdentTable *) val;
         while (fields->next != nullptr) {
             fields->whoami();

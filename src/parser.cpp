@@ -125,26 +125,31 @@ void Parser::defOutput(void) {
 */
 
 void Parser::defs(void) {
-    while (true) {
-        if (!type()) break;
-
-        try {
-            do {
-                code >> c;
-                variable();
-                if ((c == ' ') || (c == '\n')) code >> c;
-            } while (c == ',');
-
-            if (c != ';') throw Obstacle(SEMICOLON);
-        } catch(Obstacle & o) { 
-            ok = false;
-            c.where();
-            o.describe();
-            c.cite(code);
-            c.line++;
-        }
+    while (type()) {
+        def();
         code >> c;
     }
+}
+
+IdentTable * Parser::def(void) {
+    IdentTable * r = nullptr;
+    try {
+        do {
+            code >> c;
+            if (r == nullptr) r = variable();
+            else variable();
+            if ((c == ' ') || (c == '\n')) code >> c;
+        } while (c == ',');
+
+        if (c != ';') throw Obstacle(SEMICOLON);
+    } catch(Obstacle & o) { 
+        ok = false;
+        c.where();
+        o.describe();
+        c.cite(code);
+        c.line++;
+    }
+    return r;
 }
 
 bool Parser::type(void) {
@@ -251,13 +256,13 @@ void Parser::assign(IdentTable * lval) {
     }
 }
 
-void Parser::variable(void) {
+IdentTable * Parser::variable(void) {
     IdTable.dupType();
     char * name = identificator();
     IdTable.pushId(name);
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c == '=') constVal();
-    IdTable.confirm();
+    return IdTable.confirm();
 }
 
 char * Parser::identificator(void) {
@@ -434,6 +439,7 @@ void Parser::operation(void) {
     else if (readWord("write")) writeOp();
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
+    else if (readWord("pass")) code >> c;
     else if (readWord("{")) {
         code >> c;
         operations();
@@ -441,31 +447,28 @@ void Parser::operation(void) {
             throw Obstacle(OP_CLOSEBR);
         code >> c;
     } else {
-        bool isStruct = false;
         char * name = identificator();
-        IdentTable * lval = IdTable.getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;
 
-        while (c == '.') {
-            isStruct = true;
-            code >> c;
-            name = identificator();
-            IdentTable * fields = (IdentTable *) lval->getVal();
-            lval = fields->getIT(name);
-            if ((c == ' ') || (c == '\n')) code >> c;
-        } 
-
         if (c == ':') {
-            if (isStruct) throw Obstacle(LABEL_OR_IDENT);
             code >> c;
             saveLabel(name, poliz.getSize());
             operation();
-        } else if (c == '=') {
+        } else {
+            IdentTable * lval = IdTable.getIT(name);
+            while (c == '.') {
+                code >> c;
+                name = identificator();
+                IdentTable * fields = (IdentTable *) lval->getVal();
+                lval = fields->getIT(name);
+                if ((c == ' ') || (c == '\n')) code >> c;
+            }
+            if (c != '=') throw Obstacle(BAD_OPERATOR);
             code >> c;
             assign(lval);
             if (c != ';') throw Obstacle(SEMICOLON);
             code >> c;
-        } else throw Obstacle(BAD_OPERATOR);
+        }
     }
 
 }
@@ -745,30 +748,13 @@ IdentTable * Parser::cycleparam(void) {
     IdentTable * lval;
     if (type()) {
         // переменная не описана
-        code >> c;
-        char * name = identificator();
-        IdTable.pushId(name);
-        lval = IdTable.confirm();
-        if ((c == ' ') || (c == '\n')) code >> c;
+        lval = def();
     } else {
         // переменная описана
         char * name = identificator();
         lval = IdTable.getIT(name);
-
-        if ((c == ' ') || (c == '\n')) code >> c;
-
-        while (c == '.') {
-            code >> c;
-            name = identificator();
-            IdentTable * fields = (IdentTable *) lval->getVal();
-            lval = fields->getIT(name);
-            if ((c == ' ') || (c == '\n')) code >> c;
-        }
+        assign(lval);
     }
-
-    if (c != '=') throw Obstacle(BAD_EXPR);
-    code >> c;
-    assign(lval);
 
     return lval;
 }
@@ -817,12 +803,10 @@ void Parser::forOp(void) {
 
     char * name = identificator();
     IdentTable * cycleLval = IdTable.getIT(name);
-    poliz.pushVal(cycleLval);
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '=') throw Obstacle(BAD_EXPR);
     code >> c;
-    e3 = expr();  // циклическое выражение
-    poliz.pushOp(cycleLval->getType(), e3, ASSIGN);
+    assign(cycleLval);
 
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
@@ -842,8 +826,10 @@ void Parser::forOp(void) {
     exit->setVal(new int (poliz.getSize()) );
 
     exits.pop();
-    if (cp != nullptr)
+    while ((cp != nullptr) && (cp->getType() != _NONE_)){
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
+        cp = cp->next;
+    }
 }
 void Parser::whileOp(void) {
     IdTable.pushType(_LABEL_);
@@ -907,7 +893,7 @@ void Parser::gotoOp(void) {
     code >> c;
 
     poliz.pushVal(labval);
-    poliz.pushOp(_BOOLEAN_, _INT_, JMP);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
 }
 
 // Исправлено
