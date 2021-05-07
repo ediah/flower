@@ -15,6 +15,7 @@ void VirtualMachine::loadBIN(char * filename) {
     bin.read(base, size * sizeof(char));
 
     cmd = base + *(int*)base;
+    bin.close();
     cmdNum = (size - *(int*)base) / (sizeof(int) + sizeof(bool));
 }
 
@@ -23,12 +24,11 @@ void VirtualMachine::run(void) {
     int * eip = new int (0);
     std::cout << std::boolalpha;
 
-    while (*eip < cmdNum) {
+    while (true) {
         if (*(bool*)(cmd + 4 + *eip * 5)) { // ExecBit = 1
             op = (op_t) *(int*)(cmd + *eip * 5);
             if (exec(op, eip)) break;
         } else { // ExecBit = 0
-            //std::cout << "Значение " << * (int *) (base + *(int*)(cmd + *eip * 5)) << std::endl;
             stackVM.push((void *) (base + *(int*)(cmd + *eip * 5)));
         }
         *eip += 1;
@@ -37,10 +37,10 @@ void VirtualMachine::run(void) {
 }
 
 template <class lval_t, class rval_t, class res_t>
-void VirtualMachine::tempOp(res_t (*f) (lval_t, rval_t)) {
+void VirtualMachine::tempOp(res_t (*f) (lval_t, rval_t), type_t TYPE) {
     rval_t b = * (rval_t *) stackVM.pop();
     lval_t a = * (lval_t *) stackVM.pop();
-    stackVM.push(new res_t ( f(a, b) ));
+    stackVM.push(new res_t ( f(a, b) ), TYPE);
 }
 
 template <class lval_t, class rval_t>
@@ -50,29 +50,29 @@ void VirtualMachine::assign(void) {
 }
 
 inline char * VirtualMachine::getString(void * x) {
-    return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char**) x + sizeof(char*);
+    return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char**) x;
 }
 
 #define ARITH_OPERATION(OP) { \
     if ((lval == _INT_) && (rval == _INT_)) \
-        tempOp<int, int, int>( [] (int x, int y) { return x OP y; } ); \
+        tempOp<int, int, int>( [] (int x, int y) { return x OP y; }, _INT_); \
     if ((lval == _INT_) && (rval == _REAL_)) \
-        tempOp<int, float, float>( [] (int x, float y) { return x OP y; } ); \
+        tempOp<int, float, float>( [] (int x, float y) { return x OP y; }, _REAL_); \
     if ((lval == _REAL_) && (rval == _INT_)) \
-        tempOp<float, int, float>( [] (float x, int y) { return x OP y; } ); \
+        tempOp<float, int, float>( [] (float x, int y) { return x OP y; }, _REAL_); \
     if ((lval == _REAL_) && (rval == _REAL_)) \
-        tempOp<float, float, float>( [] (float x, float y) { return x OP y; } ); \
+        tempOp<float, float, float>( [] (float x, float y) { return x OP y; }, _REAL_); \
 }
 
 #define LOGIC_OPERATION(OP) { \
     if ((lval == _INT_) && (rval == _INT_)) \
-        tempOp<int, int, bool>( [] (int x, int y) { return x OP y; } ); \
+        tempOp<int, int, bool>( [] (int x, int y) { return x OP y; }, _BOOLEAN_); \
     if ((lval == _INT_) && (rval == _REAL_)) \
-        tempOp<int, float, bool>( [] (int x, float y) { return x OP y; } ); \
+        tempOp<int, float, bool>( [] (int x, float y) { return x OP y; }, _BOOLEAN_); \
     if ((lval == _REAL_) && (rval == _INT_)) \
-        tempOp<float, int, bool>( [] (float x, int y) { return x OP y; } ); \
+        tempOp<float, int, bool>( [] (float x, int y) { return x OP y; }, _BOOLEAN_); \
     if ((lval == _REAL_) && (rval == _REAL_)) \
-        tempOp<float, float, bool>( [] (float x, float y) { return x OP y; } ); \
+        tempOp<float, float, bool>( [] (float x, float y) { return x OP y; }, _BOOLEAN_); \
 }
 
 bool VirtualMachine::exec(op_t op, int * eip) {
@@ -80,7 +80,6 @@ bool VirtualMachine::exec(op_t op, int * eip) {
     type_t rest = (type_t) ((op >> 24) & 0xFF);
     type_t lval = (type_t) ((op >> 16) & 0xFF);
     type_t rval = (type_t) ((op >>  8) & 0xFF);
-    //type_t rest = expressionType(lval, rval, (operation_t) (op & 0xFF));
 
     switch(op & 0xFF) {
         case PLUS:
@@ -103,6 +102,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 memcpy(c + alen + sizeof(char*), b, blen);
                 c[alen + blen + sizeof(char*)] = '\0';
                 stackVM.push(c);
+                dynamicStrings.push(c, _STRING_);
             }
             break;
         case MINUS: ARITH_OPERATION(-) break;
@@ -112,16 +112,16 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rest == _INT_) {
                 int b = * (int *) stackVM.pop();
                 int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a % b));
+                stackVM.push(new int (a % b), _INT_);
             }
             break;
         case INV:
             if (rest == _INT_) {
                 int a = * (int *) stackVM.pop();
-                stackVM.push(new int (-a));
+                stackVM.push(new int (-a), _INT_);
             } else {
                 float a = * (float *) stackVM.pop();
-                stackVM.push(new float (-a));
+                stackVM.push(new float (-a), _REAL_);
             }
             break;
         case ASSIGN:
@@ -132,7 +132,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 if (rval == _INT_) assign<float, int>();
                 else assign<float, float>();
             } else if (lval == _STRING_){
-                char * b = (char *) stackVM.pop();
+                char * b = getString(stackVM.pop());
                 char * a = (char *) stackVM.pop();
                 memcpy(a, &b, sizeof(void*));
             } else {
@@ -180,7 +180,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * a = getString(stackVM.pop());
                 int i = 0;
                 for (; (a[i] != '\0') && (b[i] != '\0'); i++);
-                stackVM.push(new bool (a[i] == '\0'));
+                stackVM.push(new bool (a[i] == '\0'), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(<)
             }
@@ -191,7 +191,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * a = getString(stackVM.pop());
                 int i = 0;
                 for (; (a[i] != '\0') && (b[i] != '\0'); i++);
-                stackVM.push(new bool (b[i] == '\0'));
+                stackVM.push(new bool (b[i] == '\0'), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(>)
             }
@@ -211,7 +211,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                     }
                 }
                 r = r && (a[i] == '\0') && (b[i] == '\0');
-                stackVM.push(new bool (r));
+                stackVM.push(new bool (r), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(==)
             }
@@ -229,7 +229,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                     }
                 }
                 r = r && (a[i] == '\0') && (b[i] == '\0');
-                stackVM.push(new bool (!r));
+                stackVM.push(new bool (!r), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(!=)
             }
@@ -242,11 +242,12 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             } else if (rval == _STRING_) {
                 std::string x;
                 std::cin >> x;
-                for (int i = 0; i < sizeof(char*); i++)
-                    x = "0" + x;
+                char * newString = new char[x.length() + 1];
+                memcpy(newString, x.data(), x.length() + 1);
                 char * a = (char *) stackVM.pop();
-                const char * b = x.data();
+                const char * b = newString;
                 memcpy(a, &b, sizeof(void*));
+                dynamicStrings.push(newString, _STRING_);
             } else {
                 std::string x;
                 do { std::cin >> x; } 
@@ -259,20 +260,20 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rest == _BOOLEAN_) {
                 bool b = * (bool *) stackVM.pop();
                 bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (a && b));
+                stackVM.push(new bool (a && b), _BOOLEAN_);
             }
             break;
         case LOR:
             if (rest == _BOOLEAN_) {
                 bool b = * (bool *) stackVM.pop();
                 bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (a || b));
+                stackVM.push(new bool (a || b), _BOOLEAN_);
             }
             break;
         case LNOT:
             if (rest == _BOOLEAN_) {
                 bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (!a));
+                stackVM.push(new bool (!a), _BOOLEAN_);
             }
             break;
         default:
@@ -281,4 +282,9 @@ bool VirtualMachine::exec(op_t op, int * eip) {
     }
 
     return exitStatus;
+}
+
+VirtualMachine::~VirtualMachine(void) {
+    delete [] base;
+    dynamicStrings.burn();
 }

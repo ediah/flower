@@ -40,8 +40,10 @@ IdentTable * IdentTable::last(void) {
 void IdentTable::pushId(char* ident) {
     IdentTable * p = this;
     while (p->next != nullptr) {
-        if ((p->name != nullptr) && (ident != nullptr) && (strcmp(p->name, ident) == 0))
+        if ((p->name != nullptr) && (ident != nullptr) && (strcmp(p->name, ident) == 0)) {
+            delete [] ident;
             throw Obstacle(IDENT_DUP);
+        }
         p = p->next;
     }
     p->name = ident;
@@ -111,12 +113,15 @@ char * IdentTable::getStruct(void) const {
     return structName;
 }
 
-IdentTable * IdentTable::getIT(char * name) {
+IdentTable * IdentTable::getIT(char * name, bool autodel) {
     IdentTable * p = this;
 
     while ((p->name == nullptr) || (strcmp(p->name, name) != 0)) {
         if (p->next->valType != _NONE_) p = p->next;
-        else throw Obstacle(IDENT_NOT_DEF);
+        else {
+            if (autodel) delete [] name;
+            throw Obstacle(IDENT_NOT_DEF);
+        }
     }
 
     delete [] name;

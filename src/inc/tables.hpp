@@ -31,7 +31,7 @@ public:
     void setVal(void * val);
     void setId(char * name);
     char * getId(void) const;
-    IdentTable * getIT(char * name);
+    IdentTable * getIT(char * name, bool autodel = true);
     IdentTable * last(void);
     void whoami(void);
     void repr(void);

@@ -6,7 +6,7 @@
 #include "tables.hpp"
 #include "exprtype.hpp"
 
-typedef long long int op_t;
+typedef long long op_t;
 
 class POLIZ {
     op_t prog[MAXCMD];

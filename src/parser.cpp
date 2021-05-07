@@ -143,7 +143,8 @@ IdentTable * Parser::def(void) {
         } while (c == ',');
 
         if (c != ';') throw Obstacle(SEMICOLON);
-    } catch(Obstacle & o) { 
+    } catch(Obstacle & o) {
+        IdTable.last()->setId(nullptr);
         ok = false;
         c.where();
         o.describe();
@@ -477,7 +478,7 @@ void Parser::operation(void) {
 IdentTable * Parser::saveLabel(char * label, int addr) {
     IdentTable * existinglab;
     try {
-        existinglab = IdTable.getIT(label);
+        existinglab = IdTable.getIT(label, false);
         if (existinglab->getType() != _LABEL_)
             throw Obstacle(LABEL_OR_IDENT);
         delete (int *) existinglab->getVal();
@@ -749,14 +750,30 @@ IdentTable * Parser::cycleparam(void) {
     IdentTable * lval;
     if (type()) {
         // переменная не описана
-        lval = def();
+        code >> c;
+        char * name = identificator();
+        IdTable.pushId(name);
+        lval = IdTable.confirm();
+        if ((c == ' ') || (c == '\n')) code >> c;
     } else {
         // переменная описана
         char * name = identificator();
         lval = IdTable.getIT(name);
-        assign(lval);
-        lval = nullptr;
+
+        if ((c == ' ') || (c == '\n')) code >> c;
+
+        while (c == '.') {
+            code >> c;
+            name = identificator();
+            IdentTable * fields = (IdentTable *) lval->getVal();
+            lval = fields->getIT(name);
+            if ((c == ' ') || (c == '\n')) code >> c;
+        }
     }
+
+    if (c != '=') throw Obstacle(BAD_EXPR);
+    code >> c;
+    assign(lval);
 
     return lval;
 }
@@ -882,7 +899,7 @@ void Parser::gotoOp(void) {
     char * label = identificator();
     IdentTable * labval;
     try {
-        labval = IdTable.getIT(label);
+        labval = IdTable.getIT(label, false);
     }
     catch(Obstacle & o) {
         // До метки ещё не дошли, но это не повод расстраиваться!
@@ -955,40 +972,40 @@ void Parser::finalize(void) {
 }
 
 void Parser::giveBIN(char * filename) {
-    if (!ok) {
-        std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
-        exit(-1);
-    }
-    bin.open(filename, std::ios_base::binary | std::ios_base::out);
-    int x = 0;
-    bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
+    if (ok) {
+        bin.open(filename, std::ios_base::binary | std::ios_base::out);
+        int x = 0;
+        bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
 
-    IdentTable * ITp = &IdTable;
-    while (ITp->next != nullptr) {
-        ITp->setOffset((int)bin.tellp());
-        //std::cout << ITp->getOffset();
-        ITp->writeValToStream(bin);
-        ITp = ITp->next;
-    }
-
-    int progStart = bin.tellp();
-    int b = poliz.getSize();
-    op_t * prog = poliz.getProg();
-    bool * execBit = poliz.getEB();
-    for (int i = 0; i < b; i++) {
-        if (execBit[i]) {
-            int tempint1 = (int)prog[i];
-            bin.write((char*)&tempint1, sizeof(int));
-        } else {
-            int tempint2 = ((IdentTable *)prog[i])->getOffset();
-            bin.write((char*)&tempint2, sizeof(int));
+        IdentTable * ITp = &IdTable;
+        while (ITp->next != nullptr) {
+            ITp->setOffset((int)bin.tellp());
+            //std::cout << ITp->getOffset();
+            ITp->writeValToStream(bin);
+            ITp = ITp->next;
         }
-        bin.write((char*)&execBit[i], sizeof(bool));
-    }
-    bin.seekp(0, std::ios_base::beg);
-    bin.write((char*)&progStart, sizeof(int));
 
-    bin.close();
+        int progStart = bin.tellp();
+        int b = poliz.getSize();
+        op_t * prog = poliz.getProg();
+        bool * execBit = poliz.getEB();
+        for (int i = 0; i < b; i++) {
+            if (execBit[i]) {
+                int tempint1 = (int)prog[i];
+                bin.write((char*)&tempint1, sizeof(int));
+            } else {
+                int tempint2 = ((IdentTable *)prog[i])->getOffset();
+                bin.write((char*)&tempint2, sizeof(int));
+            }
+            bin.write((char*)&execBit[i], sizeof(bool));
+        }
+        bin.seekp(0, std::ios_base::beg);
+        bin.write((char*)&progStart, sizeof(int));
+
+        bin.close();
+    } else {
+        std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
+    }
 }
 
 void Parser::revert(int x) {
