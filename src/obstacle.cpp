@@ -52,6 +52,9 @@ void Obstacle::describe(void) {
         case BREAK_OUTSIDE_CYCLE: 
             std::cout << "Break вне цикла." << std::endl;
             break;
+        case CONTINUE_OUTSIDE_CYCLE:
+            std::cout << "Continue вне цикла" << std::endl;
+            break;
         case BAD_STRUCT:
             std::cout << "Плохое описание структуры." << std::endl;
             break;

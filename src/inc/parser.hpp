@@ -19,6 +19,7 @@ class Parser {
     POLIZ poliz;        // ПОЛИЗ
 
     Stack exits;         // Стек выходов из циклов
+    Stack steps;         // Стек входов в циклы
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
 
@@ -73,6 +74,7 @@ public:
     void writeOp(void); // write
     void gotoOp(void);  // goto
     void readOp(void);  // read
+    void continueOp(void); // continue
 
     void finalize(void); // Вывод результата парсера в читаемом виде
     void giveBIN(char * filename); // Запись бинарника

@@ -8,7 +8,5 @@ program {
     }
     
     break;
-
-    if(10);
-    break;
+    continue;
 }

@@ -438,6 +438,7 @@ void Parser::operation(void) {
     else if (readWord("for")) forOp();
     else if (readWord("while")) whileOp();
     else if (readWord("break")) breakOp();
+    else if (readWord("continue")) continueOp();
     else if (readWord("write")) writeOp();
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
@@ -816,6 +817,7 @@ void Parser::forOp(void) {
     IdTable.pushType(_LABEL_);
     IdTable.pushVal( new int (poliz.getSize()) );
     IdentTable * cyclexpr = IdTable.confirm();
+    steps.push(cyclexpr);
 
     type_t e3;
     code >> c;
@@ -838,18 +840,20 @@ void Parser::forOp(void) {
     operation();  // тело цикла
 
     // Проверяем условие, если правда, то проходим через цикл. выражение
-    // и возвражаемся в тело. Иначе выходим из него.
+    // и возвращаемся в тело. Иначе выходим из него.
     poliz.pushVal(cyclexpr);
     poliz.pushOp(_NONE_, _NONE_, JMP);
 
     exit->setVal(new int (poliz.getSize()) );
 
     exits.pop();
+    steps.pop();
     while ((cp != nullptr) && (cp->getId() != nullptr)) {
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
         cp = cp->next;
     }
 }
+
 void Parser::whileOp(void) {
     IdTable.pushType(_LABEL_);
     IdentTable * exit = IdTable.confirm();
@@ -862,6 +866,7 @@ void Parser::whileOp(void) {
     IdTable.pushType(_LABEL_);
     IdTable.pushVal( new int (poliz.getSize()) );
     IdentTable * condexpr = IdTable.confirm();
+    steps.push(condexpr);
     code >> c;
     type_t e2 = expr(); // условие продолжения
 
@@ -882,12 +887,22 @@ void Parser::whileOp(void) {
 
     exit->setVal(new int (poliz.getSize()) );
     exits.pop();
-
+    steps.pop();
 }
 void Parser::breakOp(void) {
     if (exits.isEmpty())
         throw Obstacle(BREAK_OUTSIDE_CYCLE);
     poliz.pushVal((IdentTable *) exits.top());
+    poliz.pushOp(_NONE_, _NONE_, JMP);
+    if (c != ';')
+        throw Obstacle(SEMICOLON);
+    code >> c;
+}
+
+void Parser::continueOp(void) {
+    if (exits.isEmpty())
+        throw Obstacle(CONTINUE_OUTSIDE_CYCLE);
+    poliz.pushVal((IdentTable *) steps.top());
     poliz.pushOp(_NONE_, _NONE_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
