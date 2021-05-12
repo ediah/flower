@@ -11,6 +11,7 @@ class VirtualMachine {
     char * base;
     char * cmd;
     int cmdNum;
+    void * registers[MAXREGISTERS];
 
     Stack stackVM;
     Gendarme dynamicStrings;

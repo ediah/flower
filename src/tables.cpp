@@ -113,6 +113,10 @@ char * IdentTable::getStruct(void) const {
     return structName;
 }
 
+void IdentTable::setFunc(void) {
+    func = true;
+}
+
 IdentTable * IdentTable::getIT(char * name, bool autodel) {
     IdentTable * p = this;
 
@@ -199,6 +203,10 @@ void IdentTable::setOffset(int x) {
 
 int IdentTable::getOffset(void) const {
     return offset;
+}
+
+int IdentTable::getOrd(void) const {
+    return ord;
 }
 
 void IdentTable::writeValToStream(std::ostream & s) {

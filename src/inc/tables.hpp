@@ -9,6 +9,7 @@ class IdentTable {
     char * structName;
     char * name;
     bool def;
+    bool func;
     void * val;
     int ord;
     int offset; // для бинарки
@@ -17,7 +18,7 @@ public:
     IdentTable *next;
 
     IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
-        next(nullptr), def(false), val(nullptr), ord(0), offset(0) {};
+        next(nullptr), def(false), func(false), val(nullptr), ord(0), offset(0) {};
     IdentTable(IdentTable & templateIT);
     void pushId(char * ident);
     void pushType(type_t t);
@@ -28,9 +29,11 @@ public:
     char * getStruct(void) const;
     type_t getType(void) const;
     void * getVal(void);
+    void setFunc(void);
     void setVal(void * val);
     void setId(char * name);
     char * getId(void) const;
+    int getOrd(void) const;
     IdentTable * getIT(char * name, bool autodel = true);
     IdentTable * last(void);
     void whoami(void);

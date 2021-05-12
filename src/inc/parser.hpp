@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #define MAXIDENT 50
+#define MAXREGISTERS 4
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +38,7 @@ public:
     void defs(void);             // Определения
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
+    void defFunction(void);      // Определение функции
     /*
     void defInput(void);
     void defOutput(void);
@@ -56,7 +58,7 @@ public:
 
     void program(void);    // Программа
 
-    void operations(void); // Операции
+    void operations(IdentTable * localVars = nullptr); // Операции
     void operation(void);  // Операция
     IdentTable * saveLabel(char * label, int addr); // Сохранение метки
     type_t expr(void);     // Выражение ( a or b )

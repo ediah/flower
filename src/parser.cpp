@@ -39,6 +39,8 @@ void Parser::parse(void) {
                 program();
             else if (readWord("struct"))
                 defStruct();
+            else if (readWord("def"))
+                defFunction();
             /*
             else if (readWord("input"))
                 defInput();
@@ -56,6 +58,65 @@ void Parser::parse(void) {
         exit(-1);
     }
 
+}
+
+void Parser::defFunction(void) {
+    IdentTable * thisFunc = IdTable.last();
+    thisFunc->setFunc();
+    thisFunc->setVal( new int (poliz.getSize()) );
+    if ((c == ' ') || (c == '\n')) code >> c;
+    char * name = identificator();
+    thisFunc->setId(name);
+    if (c != '(') throw Obstacle(FUNC_OPENBR);
+    code >> c;
+
+    IdentTable * formalParams = nullptr;
+    if (c != ')') {
+        type();
+        formalParams = def();
+
+        while (c == ';') {
+            code >> c;
+            type();
+            def();
+        }
+
+        if (c != ')') throw Obstacle(FUNC_CLOSEBR);
+    }
+    int paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
+    if (paramsNum > MAXREGISTERS)
+        throw Obstacle(TOO_MUCH_PARAMS);
+
+    code >> c;
+    
+    if (c == ':') {
+        code >> c;
+        if (readWord("int"))
+            thisFunc->setType(_INT_);
+        else if (readWord("string"))
+            thisFunc->setType(_STRING_);
+        else if (readWord("real"))
+            thisFunc->setType(_REAL_);
+        else if (readWord("bool"))
+            thisFunc->setType(_BOOLEAN_);
+        else if (readWord("struct")) {
+            thisFunc->setType(_STRUCT_);
+            code >> c;
+            char * stName = identificator();
+            IdTable.pushStruct(stName);
+        }
+        if ((c == ' ') || (c == '\n')) code >> c;
+    }
+
+    if (c != '{') throw Obstacle(PROG_OPENBR);
+
+    operations(formalParams);
+
+    if (c != '}') throw Obstacle(PROG_CLOSEBR);
+
+    poliz.pushOp(_NONE_, _NONE_, RET);
+
+    delete formalParams;
 }
 
 void Parser::program(void) {
@@ -128,6 +189,7 @@ void Parser::defOutput(void) {
 void Parser::defs(void) {
     while (type()) {
         def();
+        if (c != ';') throw Obstacle(SEMICOLON);
         code >> c;
     }
 }
@@ -141,8 +203,6 @@ IdentTable * Parser::def(void) {
             else variable();
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
-
-        if (c != ';') throw Obstacle(SEMICOLON);
     } catch(Obstacle & o) {
         IdTable.last()->setId(nullptr);
         ok = false;
@@ -418,7 +478,12 @@ bool Parser::constBool(void) {
     return r;
 }
 
-void Parser::operations(void) {
+void Parser::operations(IdentTable * localVars) {
+    IdentTable globalVars;
+    if (localVars != nullptr) {
+        globalVars = IdTable;
+        IdTable = *localVars;
+    }
     while (c != '}') {
         try { operation(); }
         catch(Obstacle & o) { 

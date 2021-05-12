@@ -34,6 +34,7 @@ enum operation_t {
     ENDL,
     JIT,
     JMP,
+    RET,
     STOP
 };
 

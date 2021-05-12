@@ -8,6 +8,8 @@ void Obstacle::describe(void) {
             break;
         case PROG_START: expected("program"); break;
         case PROG_OPENBR: expected("{"); break;
+        case FUNC_OPENBR: expected("("); break;
+        case FUNC_CLOSEBR: expected(")"); break;
         case OP_CLOSEBR:
         case PROG_CLOSEBR: expected("}"); break;
         case SEMICOLON: expected(";"); break;
@@ -63,6 +65,9 @@ void Obstacle::describe(void) {
             break;
         case LABEL_OR_IDENT: 
             std::cout << "Этот идентификатор описан не как метка." << std::endl;
+            break;
+        case TOO_MUCH_PARAMS:
+            std::cout << "Слишком много формальных параметров." << std::endl;
             break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
