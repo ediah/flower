@@ -97,7 +97,8 @@ void IdentTable::dupType(void) {
             p->next->val = new IdentTable(* (IdentTable *) p->val);
             p = (IdentTable *) p->next->val;
             while (p->next != nullptr) {
-                p->val = nullptr;
+                if (p->valType != _STRUCT_)
+                    p->val = nullptr;
                 p->def = false;
                 p = p->next;
             }
