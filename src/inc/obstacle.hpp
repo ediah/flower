@@ -39,7 +39,8 @@ enum reason {
     PROCEDURE,
     BAD_PARAMS_COUNT,
     NO_RETURN,
-    NO_TYPE
+    NO_TYPE,
+    STRUCT_IN_EXPR
 };
 
 class Obstacle {

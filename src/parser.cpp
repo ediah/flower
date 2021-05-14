@@ -787,6 +787,7 @@ type_t Parser::constExpr(void) {
                     }
                     r = val->getType();
                     
+                    if (r == _STRUCT_) throw Obstacle(STRUCT_IN_EXPR);
 
                     if (c == '(') {
                         if (! val->isFunc())

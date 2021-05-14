@@ -72,9 +72,10 @@ void Cursor::cite(std::ifstream & s) {
         s.seekg((int)s.tellg() - 2);
         s >>= *this;
     }
+    if ((int)s.tellg() <= 1) os << this->c;
     do {
-        os << this->c;
         s >>= *this;
+        os << this->c;
     } while ((*this != '\n') && (!s.eof()));
     std::cout << os.str() << std::endl;
     line -= 2;

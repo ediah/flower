@@ -21,6 +21,7 @@ void Obstacle::describe(void) {
         case BAD_BOOL: expected("true или false"); break;
         case WRONG_SCOPE: 
             std::cout << "Неизвестная область программы." << std::endl;
+            break;
         case BAD_IDENT:
             std::cout << "Плохой идентификатор." << std::endl;
             break;
@@ -88,6 +89,9 @@ void Obstacle::describe(void) {
             std::cout << "Нет выхода из функции." << std::endl;
             break;
         case NO_TYPE: expected("тип функции"); break;
+        case STRUCT_IN_EXPR:
+            std::cout << "Структуры не могут участвовать в выражениях." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;
