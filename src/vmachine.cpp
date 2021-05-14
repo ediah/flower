@@ -124,6 +124,19 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 stackVM.push(new float (-a), _REAL_);
             }
             break;
+        case REGR:
+            if (rest == _NONE_) {
+                void * a = stackVM.pop();
+                registerVM.push(a);
+            }
+            break;
+        case LOAD:
+            if (rest == _NONE_) {
+                int x = * (int *) stackVM.pop();
+                void * a = registerVM.get(x);
+                stackVM.push(a);
+            }
+            break;
         case ASSIGN:
             if (lval == _INT_) {
                 if (rval == _INT_) assign<int, int>();
@@ -274,6 +287,27 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rest == _BOOLEAN_) {
                 bool a = * (bool *) stackVM.pop();
                 stackVM.push(new bool (!a), _BOOLEAN_);
+            }
+            break;
+        case CALL:
+            if (rest == _NONE_) {
+                int offset = * (int *) stackVM.pop();
+                int params = * (int *) stackVM.pop();
+                for (int i = 0; i < params; i++) 
+                    registerVM.push( stackVM.pop() );
+                stackVM.push(new int (params), _INT_);
+                stackVM.push(new int (*eip + 1));
+                *eip = offset - 1;
+            }
+            break;
+        case RET:
+            if (rest == _NONE_) {
+                void * t = stackVM.pop();
+                int offset = * (int *) stackVM.pop();
+                int params = * (int *) stackVM.pop();
+                while (params--) registerVM.pop();
+                stackVM.push(t);
+                *eip = offset - 1;
             }
             break;
         default:

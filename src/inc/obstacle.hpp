@@ -32,7 +32,12 @@ enum reason {
     CONTINUE_OUTSIDE_CYCLE,
     STRUCT_UNDEF,
     LABEL_OR_IDENT,
-    TOO_MUCH_PARAMS
+    TOO_MUCH_PARAMS,
+    NOT_CALLABLE,
+    CALLABLE,
+    LACK_PARAMS,
+    PROCEDURE,
+    BAD_PARAMS_COUNT
 };
 
 class Obstacle {

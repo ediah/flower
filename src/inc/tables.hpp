@@ -10,15 +10,17 @@ class IdentTable {
     char * name;
     bool def;
     bool func;
+    bool reg;
     void * val;
     int ord;
+    int params;
     int offset; // для бинарки
 
 public:
     IdentTable *next;
 
-    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
-        next(nullptr), def(false), func(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), params(0),
+        next(nullptr), def(false), func(false), reg(false), val(nullptr), ord(0), offset(0) {};
     IdentTable(IdentTable & templateIT);
     void pushId(char * ident);
     void pushType(type_t t);
@@ -28,12 +30,19 @@ public:
     void dupType(void);
     char * getStruct(void) const;
     type_t getType(void) const;
+    void setType(type_t newType);
     void * getVal(void);
     void setFunc(void);
+    bool isFunc(void) const;
     void setVal(void * val);
     void setId(char * name);
     char * getId(void) const;
     int getOrd(void) const;
+    void setOrd(int x);
+    void onReg(void);
+    bool isReg(void) const;
+    void setParams(int x);
+    int getParams(void) const;
     IdentTable * getIT(char * name, bool autodel = true);
     IdentTable * last(void);
     void whoami(void);

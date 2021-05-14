@@ -2,7 +2,6 @@
 #define PARSER_H
 
 #define MAXIDENT 50
-#define MAXREGISTERS 4
 
 #include <iostream>
 #include <fstream>
@@ -58,7 +57,7 @@ public:
 
     void program(void);    // Программа
 
-    void operations(IdentTable * localVars = nullptr); // Операции
+    void operations(void); // Операции
     void operation(void);  // Операция
     IdentTable * saveLabel(char * label, int addr); // Сохранение метки
     type_t expr(void);     // Выражение ( a or b )
@@ -77,6 +76,7 @@ public:
     void gotoOp(void);  // goto
     void readOp(void);  // read
     void continueOp(void); // continue
+    void returnOp(void);
 
     void finalize(void); // Вывод результата парсера в читаемом виде
     void giveBIN(char * filename); // Запись бинарника

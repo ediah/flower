@@ -4,3 +4,7 @@ def factorial(int n): int {
     else
         return 1;
 }
+
+program {
+    write( factorial(5) ); /* 120 */
+}

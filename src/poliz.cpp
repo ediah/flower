@@ -25,8 +25,15 @@ void POLIZ::pushVal(IdentTable * val) {
     #ifdef DEBUG
     std::cout << "POLIZ pushVal";
     val->whoami();
+    if (val->isReg())
+        std::cout << " REGISTER";
     std::cout << std::endl;
     #endif
+    if (val->isReg()) {
+        val->pushVal(new int (val->getOrd()));
+        pushVal(val->confirm());
+        pushOp(_NONE_, _NONE_, LOAD);
+    }
     prog[iter] = (op_t) val;
     execBit[iter] = false;
     iter++;
@@ -68,6 +75,10 @@ void POLIZ::interpretAsOp(op_t op) {
         case READ: std::cout << "READ "; break;
         case JIT: std::cout << "JIT "; break;
         case JMP: std::cout << "JMP "; break;
+        case RET: std::cout << "RET "; break;
+        case CALL: std::cout << "CALL "; break;
+        case REGR: std::cout << "REGR "; break;
+        case LOAD: std::cout << "LOAD "; break;
         case NONE: std::cout << "NONE "; break;
         default: throw Obstacle(PANIC);
     }

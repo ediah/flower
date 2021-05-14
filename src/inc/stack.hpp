@@ -37,7 +37,9 @@ public:
 
     void push(void * x, type_t type = _NONE_);
     void * pop(void); // удаляет
-    void * top(void); // НЕ удаляет
+    void * top(void) const; // НЕ удаляет
+    void * get(int x) const; // НЕ удаляет
+    void dump(void) const;
     bool isEmpty(void);
 };
 

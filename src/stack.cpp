@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 #include "stack.hpp"
 #include "exprtype.hpp"
 
@@ -31,6 +32,28 @@ Gendarme::~Gendarme(void) {
 }
 
 void Stack::push(void * x, type_t type) {
+    #ifdef DEBUG
+    std::cout << "PUSH " << x << '(';
+    switch (type) {
+        case _INT_:
+            std::cout << * (int *) x;
+            break;
+        case _REAL_:
+            std::cout << * (float *) x;
+            break;
+        case _BOOLEAN_:
+            std::cout << * (bool *) x;
+            break;
+        case _STRING_:
+            std::cout << (char *) x;
+            break;
+        default:
+            std::cout << "???";
+            break;
+    }
+    std::cout << ')' << std::endl;
+    #endif
+
     assert(pos < MAXSTACK);
     if (isEmpty()) memControl.burn();
     memControl.push(x, type);
@@ -42,11 +65,21 @@ void * Stack::pop(void) {
     return elem[--pos];
 }
 
-void * Stack::top(void) {
-    assert(pos > 0);
+void * Stack::top(void) const {
+    assert(pos >= 0);
     return elem[pos - 1];
+}
+
+void * Stack::get(int x) const {
+    assert(pos - x >= 0);
+    return elem[pos - x];
 }
 
 bool Stack::isEmpty(void) {
     return pos == 0;
+}
+
+void Stack::dump(void) const {
+    for (int i = 0; i < pos; i++)
+        std::cout << i << ") " << elem[i] << std::endl;
 }

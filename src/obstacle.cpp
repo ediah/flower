@@ -69,6 +69,16 @@ void Obstacle::describe(void) {
         case TOO_MUCH_PARAMS:
             std::cout << "Слишком много формальных параметров." << std::endl;
             break;
+        case NOT_CALLABLE:
+            std::cout << "Этот объект нельзя вызвать как функцию." << std::endl;
+        case CALLABLE:
+            std::cout << "Нельзя проводить арифметические операции над функцией. Возможно, Вы забыли \"()\"." << std::endl;
+        case LACK_PARAMS:
+            std::cout << "Недостаточно параметров." << std::endl;
+        case PROCEDURE:
+            std::cout << "Процедуры не поддерживаются." << std::endl;
+        case BAD_PARAMS_COUNT:
+            std::cout << "Неверное количество фактических параметров." << std::endl;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

@@ -29,12 +29,15 @@ enum operation_t {
     EQ,
     NEQ,
     ASSIGN,
+    REGR,
+    LOAD,
     READ,
     WRITE,
     ENDL,
     JIT,
     JMP,
     RET,
+    CALL,
     STOP
 };
 

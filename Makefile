@@ -1,7 +1,7 @@
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
-RELEASE=YES
+RELEASE=NO
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report

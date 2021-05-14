@@ -109,12 +109,40 @@ type_t IdentTable::getType(void) const {
     return valType;
 }
 
+void IdentTable::setType(type_t newType) {
+    valType = newType;
+}
+
 char * IdentTable::getStruct(void) const {
     return structName;
 }
 
 void IdentTable::setFunc(void) {
     func = true;
+}
+
+bool IdentTable::isFunc(void) const {
+    return func;
+}
+
+void IdentTable::setOrd(int x) {
+    ord = x;
+}
+
+void IdentTable::onReg(void) {
+    reg = true;
+}
+
+bool IdentTable::isReg(void) const {
+    return reg;
+}
+
+void IdentTable::setParams(int x) {
+    params = x;
+}
+
+int IdentTable::getParams(void) const {
+    return params;
 }
 
 IdentTable * IdentTable::getIT(char * name, bool autodel) {
@@ -139,7 +167,9 @@ void IdentTable::whoami(void) {
     if (valType == _STRUCT_) {
         std::cout << structName << ' ';
         if (name != nullptr) std::cout << name;
-        else std::cout << "? = {";
+        else std::cout << "? ";
+        if (func) std::cout << "FUNCTION ";
+        std::cout << " = {";
         IdentTable * fields = (IdentTable *) val;
         while (fields->next != nullptr) {
             fields->whoami();
@@ -147,6 +177,7 @@ void IdentTable::whoami(void) {
         }
         std::cout << " }";
     } else {
+        if (func) std::cout << "FUNCTION ";
         if (name != nullptr)
             std::cout << name << " = ";
         if (def) {
