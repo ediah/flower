@@ -302,11 +302,14 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         case RET:
             if (rest == _NONE_) {
+                type_t tType = stackVM.topType();
                 void * t = stackVM.pop();
                 int offset = * (int *) stackVM.pop();
                 int params = * (int *) stackVM.pop();
                 while (params--) registerVM.pop();
-                stackVM.push(t);
+                
+                copy(t, tType);
+
                 *eip = offset - 1;
             }
             break;
@@ -316,6 +319,25 @@ bool VirtualMachine::exec(op_t op, int * eip) {
     }
 
     return exitStatus;
+}
+
+void VirtualMachine::copy(void * x, type_t type) {
+    switch (type) {
+        case _INT_:
+            stackVM.push(new int ( * (int*) x));
+            break;
+        case _REAL_:
+            stackVM.push(new float ( * (float*) x));
+            break;
+        case _BOOLEAN_:
+            stackVM.push(new bool ( * (bool*) x));
+            break;
+        case _STRING_: case _NONE_:
+            stackVM.push(x);
+            break;
+        default:
+            throw Obstacle(PANIC);
+    }
 }
 
 VirtualMachine::~VirtualMachine(void) {

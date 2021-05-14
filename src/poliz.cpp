@@ -30,13 +30,15 @@ void POLIZ::pushVal(IdentTable * val) {
     std::cout << std::endl;
     #endif
     if (val->isReg()) {
+        val->pushType(_INT_);
         val->pushVal(new int (val->getOrd()));
         pushVal(val->confirm());
         pushOp(_NONE_, _NONE_, LOAD);
+    } else {
+        prog[iter] = (op_t) val;
+        execBit[iter] = false;
+        iter++;
     }
-    prog[iter] = (op_t) val;
-    execBit[iter] = false;
-    iter++;
 }
 
 void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){

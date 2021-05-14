@@ -21,6 +21,7 @@ public:
 
     void push(void * p, type_t type);
     void burn(void);
+    type_t topType(void) const;
 
     ~Gendarme();
 };
@@ -40,6 +41,7 @@ public:
     void * top(void) const; // НЕ удаляет
     void * get(int x) const; // НЕ удаляет
     void dump(void) const;
+    type_t topType(void) const;
     bool isEmpty(void);
 };
 

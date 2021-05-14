@@ -288,7 +288,7 @@ void IdentTable::writeValToStream(std::ostream & s) {
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;
 
-    if (val != nullptr) {
+    if ((val != nullptr) && (!func)) {
         switch (valType) {
             case _INT_: case _LABEL_:
                 delete (int*) val; break;

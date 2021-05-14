@@ -26,6 +26,8 @@ public:
 
     bool exec(op_t op, int * eip);
 
+    void copy(void * x, type_t type);
+
     char * getString(void * x);
 
     void numberOp(type_t lval, type_t rval, void* f);

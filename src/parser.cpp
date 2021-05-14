@@ -77,9 +77,9 @@ void Parser::defFunction(void) {
 
     IdentTable * formalParams;
     if (c != ')') {
+        IdTable.last()->setOrd(0);
         type();
         formalParams = def();
-        formalParams->setOrd(0);
 
         while (c == ';') {
             code >> c;
@@ -94,6 +94,12 @@ void Parser::defFunction(void) {
     thisFunc->setParams(paramsNum);
     thisFunc->setVal(formalParams);
     
+    IdentTable * p = formalParams;
+    for (int i = 0; i < paramsNum; i++) {
+        p->onReg();
+        p = p->next;
+    }
+
     code >> c;
     
     if (c == ':') {
@@ -127,7 +133,6 @@ void Parser::defFunction(void) {
         formalParams->setId(nullptr);
         formalParams = formalParams->next;
     }
-
 }
 
 void Parser::returnOp(void) {
@@ -787,6 +792,7 @@ type_t Parser::constExpr(void) {
                         while (c != ')') {
                             if (fields == nullptr)
                                 throw Obstacle(TOO_MUCH_PARAMS);
+                            if (c == ',') code >> c;
                             type_t exprType = expr();
                             if (fields->getType() != exprType)
                                 throw Obstacle(EXPR_BAD_TYPE);
@@ -1101,7 +1107,7 @@ void Parser::finalize(void) {
     }
 }
 
-void Parser::giveBIN(char * filename) {
+bool Parser::giveBIN(char * filename) {
     if (ok) {
         bin.open(filename, std::ios_base::binary | std::ios_base::out);
         int x = 0;
@@ -1133,8 +1139,10 @@ void Parser::giveBIN(char * filename) {
         bin.write((char*)&progStart, sizeof(int));
 
         bin.close();
+        return true;
     } else {
         std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
+        return false;
     }
 }
 

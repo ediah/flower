@@ -79,6 +79,7 @@ void Obstacle::describe(void) {
             std::cout << "Процедуры не поддерживаются." << std::endl;
         case BAD_PARAMS_COUNT:
             std::cout << "Неверное количество фактических параметров." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

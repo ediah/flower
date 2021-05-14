@@ -79,7 +79,7 @@ public:
     void returnOp(void);
 
     void finalize(void); // Вывод результата парсера в читаемом виде
-    void giveBIN(char * filename); // Запись бинарника
+    bool giveBIN(char * filename); // Запись бинарника
 
     ~Parser(void);
 };

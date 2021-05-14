@@ -6,5 +6,8 @@ def factorial(int n): int {
 }
 
 program {
-    write( factorial(5) ); /* 120 */
+    int a, b;
+    read(a);
+    b = factorial(a);
+    write(b); /* 120 */
 }

@@ -72,7 +72,7 @@ void * Stack::top(void) const {
 
 void * Stack::get(int x) const {
     assert(pos - x >= 0);
-    return elem[pos - x];
+    return elem[pos - x - 1];
 }
 
 bool Stack::isEmpty(void) {
@@ -82,4 +82,12 @@ bool Stack::isEmpty(void) {
 void Stack::dump(void) const {
     for (int i = 0; i < pos; i++)
         std::cout << i << ") " << elem[i] << std::endl;
+}
+
+type_t Stack::topType(void) const {
+    return memControl.topType();
+}
+
+type_t Gendarme::topType(void) const {
+    return types[pos - 1];
 }
