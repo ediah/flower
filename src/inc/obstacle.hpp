@@ -37,7 +37,9 @@ enum reason {
     CALLABLE,
     LACK_PARAMS,
     PROCEDURE,
-    BAD_PARAMS_COUNT
+    BAD_PARAMS_COUNT,
+    NO_RETURN,
+    NO_TYPE
 };
 
 class Obstacle {

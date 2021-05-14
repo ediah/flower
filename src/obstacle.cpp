@@ -71,15 +71,23 @@ void Obstacle::describe(void) {
             break;
         case NOT_CALLABLE:
             std::cout << "Этот объект нельзя вызвать как функцию." << std::endl;
+            break;
         case CALLABLE:
             std::cout << "Нельзя проводить арифметические операции над функцией. Возможно, Вы забыли \"()\"." << std::endl;
+            break;
         case LACK_PARAMS:
             std::cout << "Недостаточно параметров." << std::endl;
+            break;
         case PROCEDURE:
             std::cout << "Процедуры не поддерживаются." << std::endl;
+            break;
         case BAD_PARAMS_COUNT:
             std::cout << "Неверное количество фактических параметров." << std::endl;
             break;
+        case NO_RETURN:
+            std::cout << "Нет выхода из функции." << std::endl;
+            break;
+        case NO_TYPE: expected("тип функции"); break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

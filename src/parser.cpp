@@ -46,26 +46,23 @@ void Parser::parse(void) {
                 defStruct();
             else if (readWord("def"))
                 defFunction();
-            /*
-            else if (readWord("input"))
-                defInput();
-            else if (readWord("output"))
-                defOutput();
-            */
             else throw Obstacle(WRONG_SCOPE);
             code >> c;
         }
        
     }
     catch(Obstacle & o) {
+        ok = false;
         c.where();
         o.describe();
-        exit(-1);
+        c.cite(code);
+        c.line++;
     }
 
 }
 
 void Parser::defFunction(void) {
+    inFunc = true;
     IdentTable * thisFunc = IdTable.confirm();
     thisFunc->setFunc();
     thisFunc->setOffset( poliz.getSize() );
@@ -75,7 +72,7 @@ void Parser::defFunction(void) {
     if (c != '(') throw Obstacle(FUNC_OPENBR);
     code >> c;
 
-    IdentTable * formalParams;
+    IdentTable * formalParams = nullptr;
     if (c != ')') {
         IdTable.last()->setOrd(0);
         type();
@@ -89,10 +86,15 @@ void Parser::defFunction(void) {
 
         if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     }
-    int paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
+    int paramsNum;
+    if (formalParams != nullptr) 
+        paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
+    else paramsNum = 0;
 
     thisFunc->setParams(paramsNum);
-    thisFunc->setVal(formalParams);
+
+    if (paramsNum != 0)
+        thisFunc->setVal(formalParams);
     
     IdentTable * p = formalParams;
     for (int i = 0; i < paramsNum; i++) {
@@ -117,7 +119,7 @@ void Parser::defFunction(void) {
             code >> c;
             char * stName = identificator();
             IdTable.pushStruct(stName);
-        }
+        } else throw Obstacle(NO_TYPE);
     } else throw Obstacle(PROCEDURE);//thisFunc->setType(_NONE_);
 
     if ((c == ' ') || (c == '\n')) code >> c;
@@ -128,14 +130,17 @@ void Parser::defFunction(void) {
     operations();
 
     if (c != '}') throw Obstacle(PROG_CLOSEBR);
+    if (inFunc) throw Obstacle(NO_RETURN);
 
     while (formalParams != nullptr) {
         formalParams->setId(nullptr);
         formalParams = formalParams->next;
     }
+    inFunc = false;
 }
 
 void Parser::returnOp(void) {
+    inFunc = false;
     code >> c;
     expr();
     if (c != ';') throw Obstacle(SEMICOLON);

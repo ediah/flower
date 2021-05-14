@@ -22,13 +22,14 @@ class Parser {
     Stack steps;         // Стек входов в циклы
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
+    bool inFunc;
 
     // Вспомогательные функции
     int fastPow(int x, int n);  // Быстрое возведение в степень
     bool readWord(char * word); // Чтение непрерывной последовательности символов
     void revert(int x);         // Возврат курсора
 public:
-    Parser(): ok(true) {
+    Parser(): ok(true), inFunc(false) {
         c.line = 1;
     };
 

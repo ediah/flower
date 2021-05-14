@@ -296,7 +296,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 for (int i = 0; i < params; i++) 
                     registerVM.push( stackVM.pop() );
                 stackVM.push(new int (params), _INT_);
-                stackVM.push(new int (*eip + 1));
+                stackVM.push(new int (*eip + 1), _INT_);
                 *eip = offset - 1;
             }
             break;
@@ -324,13 +324,13 @@ bool VirtualMachine::exec(op_t op, int * eip) {
 void VirtualMachine::copy(void * x, type_t type) {
     switch (type) {
         case _INT_:
-            stackVM.push(new int ( * (int*) x));
+            stackVM.push(new int ( * (int*) x), type);
             break;
         case _REAL_:
-            stackVM.push(new float ( * (float*) x));
+            stackVM.push(new float ( * (float*) x), type);
             break;
         case _BOOLEAN_:
-            stackVM.push(new bool ( * (bool*) x));
+            stackVM.push(new bool ( * (bool*) x), type);
             break;
         case _STRING_: case _NONE_:
             stackVM.push(x);

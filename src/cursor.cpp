@@ -68,13 +68,13 @@ char Cursor::symbol(void) const {
 
 void Cursor::cite(std::ifstream & s) {
     std::ostringstream os;
-    while (*this != '\n') {
+    while ((*this != '\n') && ((int)s.tellg() > 1)) {
         s.seekg((int)s.tellg() - 2);
         s >>= *this;
     }
     do {
-        s >>= *this;
         os << this->c;
+        s >>= *this;
     } while ((*this != '\n') && (!s.eof()));
     std::cout << os.str() << std::endl;
     line -= 2;
