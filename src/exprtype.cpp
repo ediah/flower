@@ -75,7 +75,16 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         if ((t1 == _BOOLEAN_) && (t2 == _INT_)) {
             r = _NONE_;
         } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == STOP) || (o == WRITE) || (o == READ) || (o == JMP) || (o == ENDL)) {
+    } else if (o == CALL) {
+        if ((t1 == _INT_) && (t2 == _LABEL_))
+            r = _NONE_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == RET) {
+        if ((t1 == _INT_) && (t2 == _LABEL_))
+            r = _NONE_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else if ((o == STOP) || (o == WRITE) || (o == READ) || 
+               (o == JMP ) || (o == ENDL ) || (o == REGR ) || (o == LOAD)) {
         r = _NONE_;
     } else throw Obstacle(PANIC);
     return r;

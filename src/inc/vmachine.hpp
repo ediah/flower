@@ -7,12 +7,15 @@
 #include "parser.hpp"
 #include "stack.hpp"
 
+#define MAXREGS 10
+
 class VirtualMachine {
     char * base;
     char * cmd;
     int cmdNum;
 
     Stack stackVM;
+    Stack registerVM;
     Gendarme dynamicStrings;
 public:
     VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0) {};
@@ -22,6 +25,8 @@ public:
     void run(void);
 
     bool exec(op_t op, int * eip);
+
+    void copy(void * x, type_t type);
 
     char * getString(void * x);
 

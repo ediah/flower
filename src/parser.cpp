@@ -32,30 +32,120 @@ void Parser::parse(void) {
     bool programExists = false;
     code >> c;
 
+    IdTable.pushType(_LABEL_);
+    IdentTable * progOffset = IdTable.confirm();
+    poliz.pushVal(progOffset);
+    poliz.pushOp(_NONE_, _NONE_, JMP);
     try {
 
         while (!code.eof()) {
-            if (readWord("program"))
+            if (readWord("program")) {
+                progOffset->setVal(new int (poliz.getSize()));
                 program();
-            else if (readWord("struct"))
+            } else if (readWord("struct"))
                 defStruct();
-            /*
-            else if (readWord("input"))
-                defInput();
-            else if (readWord("output"))
-                defOutput();
-            */
+            else if (readWord("def"))
+                defFunction();
             else throw Obstacle(WRONG_SCOPE);
             code >> c;
         }
        
     }
     catch(Obstacle & o) {
+        ok = false;
         c.where();
         o.describe();
-        exit(-1);
+        c.cite(code);
+        c.line++;
     }
 
+}
+
+void Parser::defFunction(void) {
+    inFunc = true;
+    IdentTable * thisFunc = IdTable.confirm();
+    thisFunc->setFunc();
+    thisFunc->setOffset( poliz.getSize() );
+    if ((c == ' ') || (c == '\n')) code >> c;
+    char * name = identificator();
+    thisFunc->setId(name);
+    if (c != '(') throw Obstacle(FUNC_OPENBR);
+    code >> c;
+
+    IdentTable * formalParams = nullptr;
+    if (c != ')') {
+        IdTable.last()->setOrd(0);
+        type();
+        formalParams = def();
+
+        while (c == ';') {
+            code >> c;
+            type();
+            def();
+        }
+
+        if (c != ')') throw Obstacle(FUNC_CLOSEBR);
+    }
+    int paramsNum;
+    if (formalParams != nullptr) 
+        paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
+    else paramsNum = 0;
+
+    thisFunc->setParams(paramsNum);
+
+    if (paramsNum != 0)
+        thisFunc->setVal(formalParams);
+    
+    IdentTable * p = formalParams;
+    for (int i = 0; i < paramsNum; i++) {
+        p->onReg();
+        p = p->next;
+    }
+
+    code >> c;
+    
+    if (c == ':') {
+        code >> c;
+        if (readWord("int"))
+            thisFunc->setType(_INT_);
+        else if (readWord("string"))
+            thisFunc->setType(_STRING_);
+        else if (readWord("real"))
+            thisFunc->setType(_REAL_);
+        else if (readWord("bool"))
+            thisFunc->setType(_BOOLEAN_);
+        else if (readWord("struct")) {
+            thisFunc->setType(_STRUCT_);
+            code >> c;
+            char * stName = identificator();
+            IdTable.pushStruct(stName);
+        } else throw Obstacle(NO_TYPE);
+    } else throw Obstacle(PROCEDURE);//thisFunc->setType(_NONE_);
+
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '{') throw Obstacle(PROG_OPENBR);
+    code >> c;
+
+    defs();
+    operations();
+
+    if (c != '}') throw Obstacle(PROG_CLOSEBR);
+    if (inFunc) throw Obstacle(NO_RETURN);
+
+    while (formalParams != nullptr) {
+        formalParams->setId(nullptr);
+        formalParams = formalParams->next;
+    }
+    inFunc = false;
+}
+
+void Parser::returnOp(void) {
+    inFunc = false;
+    code >> c;
+    expr();
+    if (c != ';') throw Obstacle(SEMICOLON);
+    code >> c;
+    poliz.pushOp(_INT_, _LABEL_, RET);
 }
 
 void Parser::program(void) {
@@ -128,6 +218,7 @@ void Parser::defOutput(void) {
 void Parser::defs(void) {
     while (type()) {
         def();
+        if (c != ';') throw Obstacle(SEMICOLON);
         code >> c;
     }
 }
@@ -141,8 +232,6 @@ IdentTable * Parser::def(void) {
             else variable();
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
-
-        if (c != ';') throw Obstacle(SEMICOLON);
     } catch(Obstacle & o) {
         IdTable.last()->setId(nullptr);
         ok = false;
@@ -443,6 +532,7 @@ void Parser::operation(void) {
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
     else if (readWord("pass")) code >> c;
+    else if (readWord("return")) returnOp();
     else if (readWord("{")) {
         code >> c;
         operations();
@@ -696,7 +786,43 @@ type_t Parser::constExpr(void) {
                         if ((c == ' ') || (c == '\n')) code >> c;
                     }
                     r = val->getType();
-                    poliz.pushVal(val);
+                    
+
+                    if (c == '(') {
+                        if (! val->isFunc())
+                            throw Obstacle(NOT_CALLABLE);
+                        code >> c;
+                        IdentTable * fields = (IdentTable *) val->getVal();
+                        int paramCount = 0;
+                        while (c != ')') {
+                            if (fields == nullptr)
+                                throw Obstacle(TOO_MUCH_PARAMS);
+                            if (c == ',') code >> c;
+                            type_t exprType = expr();
+                            if (fields->getType() != exprType)
+                                throw Obstacle(EXPR_BAD_TYPE);
+                            fields = fields->next;
+                            paramCount++;
+                        }
+
+                        if (c != ')') throw Obstacle(FUNC_CLOSEBR);
+                        code >> c;
+                        if (paramCount != val->getParams())
+                            throw Obstacle(BAD_PARAMS_COUNT);
+                        IdTable.pushType(_INT_);
+                        IdTable.pushVal( new int (paramCount) );
+                        IdentTable * params = IdTable.confirm();
+                        IdTable.pushType(_LABEL_);
+                        IdTable.pushVal( new int (val->getOffset()) );
+                        IdentTable * callable = IdTable.confirm();
+                        poliz.pushVal(params);
+                        poliz.pushVal(callable);
+                        poliz.pushOp(_INT_, _LABEL_, CALL);
+                    } else {
+                        if (val->isFunc())
+                            throw Obstacle(CALLABLE);
+                        poliz.pushVal(val);
+                    }
                 }
             }
         }
@@ -986,7 +1112,7 @@ void Parser::finalize(void) {
     }
 }
 
-void Parser::giveBIN(char * filename) {
+bool Parser::giveBIN(char * filename) {
     if (ok) {
         bin.open(filename, std::ios_base::binary | std::ios_base::out);
         int x = 0;
@@ -1018,8 +1144,10 @@ void Parser::giveBIN(char * filename) {
         bin.write((char*)&progStart, sizeof(int));
 
         bin.close();
+        return true;
     } else {
         std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
+        return false;
     }
 }
 

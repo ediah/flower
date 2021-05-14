@@ -5,6 +5,8 @@ enum reason {
     PANIC,
     PROG_START,
     PROG_OPENBR,
+    FUNC_OPENBR,
+    FUNC_CLOSEBR,
     PROG_CLOSEBR,
     TYPE_UNKNOWN,
     EXPR_BAD_TYPE,
@@ -29,7 +31,15 @@ enum reason {
     BREAK_OUTSIDE_CYCLE,
     CONTINUE_OUTSIDE_CYCLE,
     STRUCT_UNDEF,
-    LABEL_OR_IDENT
+    LABEL_OR_IDENT,
+    TOO_MUCH_PARAMS,
+    NOT_CALLABLE,
+    CALLABLE,
+    LACK_PARAMS,
+    PROCEDURE,
+    BAD_PARAMS_COUNT,
+    NO_RETURN,
+    NO_TYPE
 };
 
 class Obstacle {

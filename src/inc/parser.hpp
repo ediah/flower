@@ -22,13 +22,14 @@ class Parser {
     Stack steps;         // Стек входов в циклы
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
+    bool inFunc;
 
     // Вспомогательные функции
     int fastPow(int x, int n);  // Быстрое возведение в степень
     bool readWord(char * word); // Чтение непрерывной последовательности символов
     void revert(int x);         // Возврат курсора
 public:
-    Parser(): ok(true) {
+    Parser(): ok(true), inFunc(false) {
         c.line = 1;
     };
 
@@ -37,6 +38,7 @@ public:
     void defs(void);             // Определения
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
+    void defFunction(void);      // Определение функции
     /*
     void defInput(void);
     void defOutput(void);
@@ -75,9 +77,10 @@ public:
     void gotoOp(void);  // goto
     void readOp(void);  // read
     void continueOp(void); // continue
+    void returnOp(void);
 
     void finalize(void); // Вывод результата парсера в читаемом виде
-    void giveBIN(char * filename); // Запись бинарника
+    bool giveBIN(char * filename); // Запись бинарника
 
     ~Parser(void);
 };

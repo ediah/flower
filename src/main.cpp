@@ -16,12 +16,14 @@ int main(int argc, char** argv) {
 
         pworker.parse();
         pworker.finalize();
-        pworker.giveBIN("out.bin");
+        bool ok = pworker.giveBIN("out.bin");
 
-        auto end = std::chrono::steady_clock::now();
-        auto diff = end-start;
-        int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
-        std::cout << "КОМПИЛЯЦИЯ: " << time << " мс"<< std::endl;
+        if (ok) {
+            auto end = std::chrono::steady_clock::now();
+            auto diff = end-start;
+            int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
+            std::cout << "КОМПИЛЯЦИЯ: " << time << " мс"<< std::endl;
+        }
     } else {
         auto start = std::chrono::steady_clock::now();
 

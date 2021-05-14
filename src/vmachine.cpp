@@ -124,6 +124,19 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 stackVM.push(new float (-a), _REAL_);
             }
             break;
+        case REGR:
+            if (rest == _NONE_) {
+                void * a = stackVM.pop();
+                registerVM.push(a);
+            }
+            break;
+        case LOAD:
+            if (rest == _NONE_) {
+                int x = * (int *) stackVM.pop();
+                void * a = registerVM.get(x);
+                stackVM.push(a);
+            }
+            break;
         case ASSIGN:
             if (lval == _INT_) {
                 if (rval == _INT_) assign<int, int>();
@@ -276,12 +289,55 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 stackVM.push(new bool (!a), _BOOLEAN_);
             }
             break;
+        case CALL:
+            if (rest == _NONE_) {
+                int offset = * (int *) stackVM.pop();
+                int params = * (int *) stackVM.pop();
+                for (int i = 0; i < params; i++) 
+                    registerVM.push( stackVM.pop() );
+                stackVM.push(new int (params), _INT_);
+                stackVM.push(new int (*eip + 1), _INT_);
+                *eip = offset - 1;
+            }
+            break;
+        case RET:
+            if (rest == _NONE_) {
+                type_t tType = stackVM.topType();
+                void * t = stackVM.pop();
+                int offset = * (int *) stackVM.pop();
+                int params = * (int *) stackVM.pop();
+                while (params--) registerVM.pop();
+                
+                copy(t, tType);
+
+                *eip = offset - 1;
+            }
+            break;
         default:
             std::cout << "Неизвестная команда." << std::endl;
             exit(-1);
     }
 
     return exitStatus;
+}
+
+void VirtualMachine::copy(void * x, type_t type) {
+    switch (type) {
+        case _INT_:
+            stackVM.push(new int ( * (int*) x), type);
+            break;
+        case _REAL_:
+            stackVM.push(new float ( * (float*) x), type);
+            break;
+        case _BOOLEAN_:
+            stackVM.push(new bool ( * (bool*) x), type);
+            break;
+        case _STRING_: case _NONE_:
+            stackVM.push(x);
+            break;
+        default:
+            throw Obstacle(PANIC);
+    }
 }
 
 VirtualMachine::~VirtualMachine(void) {
