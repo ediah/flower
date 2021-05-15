@@ -36,6 +36,7 @@ OBJ = ${SRC:.cpp=.o}
 DEP = ${shell ls ${VPATH} | grep \\.hpp}
 
 default:
+	@mkdir -p bin
 	@make mlc -j4
 
 mlc: $(OBJ)
