@@ -20,3 +20,4 @@ program {
 
     write(A.x, " ", A.y, " ", A.z, " ", A.t.h, " ", A.t.m);
     write(B.x, " ", B.y, " ", B.z, " ", B.t.h, " ", B.t.m);
+}
