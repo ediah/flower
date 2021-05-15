@@ -1,7 +1,7 @@
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
-RELEASE=YES
+RELEASE=NO
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report
@@ -46,6 +46,9 @@ check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
 	@cat ${REPORT} | column -t -s '|'
 
+cov:
+	@make clean
+	@cov-build --dir cov-int make
 %.o: %.cpp
 	$(CC) $(CFLAGS) -I ./src/inc -c $< -o ./bin/$@
 

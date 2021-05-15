@@ -1,4 +1,7 @@
 # Model Language Compiler
+
+![Coverity Scan](https://img.shields.io/coverity/scan/23129?style=for-the-badge)
+
 В папке `test` находятся две группы тестов:
 
 1) `A-unit` -- корректные программы

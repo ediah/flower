@@ -11,6 +11,8 @@
 #include "poliz.hpp"
 #include "stack.hpp"
 
+#include "optimizer.hpp"
+
 class Parser {
     std::ifstream code; // Код
     std::ofstream bin;  // Бинарник
@@ -34,7 +36,7 @@ public:
     };
 
     void load(std::string name); // Загрузка исходного кода
-    void parse(void);            // Разбор программы
+    bool parse(void);            // Разбор программы
     void defs(void);             // Определения
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
@@ -79,8 +81,9 @@ public:
     void continueOp(void); // continue
     void returnOp(void);
 
+    void optimize(void);
     void finalize(void); // Вывод результата парсера в читаемом виде
-    bool giveBIN(char * filename); // Запись бинарника
+    void giveBIN(const char * filename); // Запись бинарника
 
     ~Parser(void);
 };

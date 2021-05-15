@@ -1,6 +1,7 @@
 mlc
 out.bin
 cppcheck/
+cov-int/
 # Prerequisites
 *.d
 

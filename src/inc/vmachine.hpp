@@ -20,9 +20,9 @@ class VirtualMachine {
 public:
     VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0) {};
 
-    void loadBIN(char * filename);
+    void loadBIN(const char * filename);
 
-    void run(void);
+    virtual void run(void);
 
     bool exec(op_t op, int * eip);
 

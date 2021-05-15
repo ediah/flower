@@ -28,7 +28,7 @@ Parser::~Parser(void) {
     code.close();
 }
 
-void Parser::parse(void) {
+bool Parser::parse(void) {
     bool programExists = false;
     code >> c;
 
@@ -58,7 +58,7 @@ void Parser::parse(void) {
         c.cite(code);
         c.line++;
     }
-
+    return ok;
 }
 
 void Parser::defFunction(void) {
@@ -778,7 +778,7 @@ type_t Parser::constExpr(void) {
                     IdentTable * val = IdTable.getIT(name);
                     if ((c == ' ') || (c == '\n')) code >> c;
 
-                    while (c == '.') {
+                    while (c == '.') { // Добираемся до поля структуры
                         code >> c;
                         name = identificator();
                         IdentTable * fields = (IdentTable *) val->getVal();
@@ -789,7 +789,7 @@ type_t Parser::constExpr(void) {
                     
                     if (r == _STRUCT_) throw Obstacle(STRUCT_IN_EXPR);
 
-                    if (c == '(') {
+                    if (c == '(') { // Вызов функции
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
                         code >> c;
@@ -1057,7 +1057,6 @@ void Parser::gotoOp(void) {
     poliz.pushOp(_NONE_, _NONE_, JMP);
 }
 
-// Исправлено
 void Parser::readOp(void) {
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
@@ -1106,53 +1105,49 @@ void Parser::writeOp(void) {
 }
 
 void Parser::finalize(void) {
-    if (ok) {
-        IdTable.repr();
-        poliz.repr();
-        std::cout << std::endl;
-    }
+    IdTable.repr();
+    poliz.repr();
+    std::cout << std::endl;
 }
 
-bool Parser::giveBIN(char * filename) {
-    if (ok) {
-        bin.open(filename, std::ios_base::binary | std::ios_base::out);
-        int x = 0;
-        bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
+void Parser::giveBIN(const char * filename) {
+    bin.open(filename, std::ios_base::binary | std::ios_base::out);
+    int x = 0;
+    bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
 
-        IdentTable * ITp = &IdTable;
-        while (ITp->next != nullptr) {
-            ITp->setOffset((int)bin.tellp());
-            //std::cout << ITp->getOffset();
-            ITp->writeValToStream(bin);
-            ITp = ITp->next;
-        }
-
-        int progStart = bin.tellp();
-        int b = poliz.getSize();
-        op_t * prog = poliz.getProg();
-        bool * execBit = poliz.getEB();
-        for (int i = 0; i < b; i++) {
-            if (execBit[i]) {
-                int tempint1 = (int)prog[i];
-                bin.write((char*)&tempint1, sizeof(int));
-            } else {
-                int tempint2 = ((IdentTable *)prog[i])->getOffset();
-                bin.write((char*)&tempint2, sizeof(int));
-            }
-            bin.write((char*)&execBit[i], sizeof(bool));
-        }
-        bin.seekp(0, std::ios_base::beg);
-        bin.write((char*)&progStart, sizeof(int));
-
-        bin.close();
-        return true;
-    } else {
-        std::cout << "ОШИБКА КОМПИЛЯЦИИ" << std::endl;
-        return false;
+    IdentTable * ITp = &IdTable;
+    while (ITp->next != nullptr) {
+        ITp->setOffset((int)bin.tellp());
+        ITp->writeValToStream(bin);
+        ITp = ITp->next;
     }
+
+    int progStart = bin.tellp();
+    int b = poliz.getSize();
+    op_t * prog = poliz.getProg();
+    bool * execBit = poliz.getEB();
+    for (int i = 0; i < b; i++) {
+        if (execBit[i]) {
+            int tempint1 = (int)prog[i];
+            bin.write((char*)&tempint1, sizeof(int));
+        } else {
+            int tempint2 = ((IdentTable *)prog[i])->getOffset();
+            bin.write((char*)&tempint2, sizeof(int));
+        }
+        bin.write((char*)&execBit[i], sizeof(bool));
+    }
+    bin.seekp(0, std::ios_base::beg);
+    bin.write((char*)&progStart, sizeof(int));
+
+    bin.close();
 }
 
 void Parser::revert(int x) {
     code.seekg((int)code.tellg() - x - 1);
     code >>= c;
+}
+
+void Parser::optimize(void) {
+    Optimizer opt(&IdTable, &poliz);
+    opt.optimize();
 }

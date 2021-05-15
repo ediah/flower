@@ -2,6 +2,7 @@
 #define TABLES_H
 
 #include <cstddef>
+#include <ostream>
 #include "exprtype.hpp"
 
 class IdentTable {

@@ -4,7 +4,7 @@
 #include "exprtype.hpp"
 #include "obstacle.hpp"
 
-void VirtualMachine::loadBIN(char * filename) {
+void VirtualMachine::loadBIN(const char * filename) {
     std::ifstream bin;
     bin.open(filename, std::ios_base::binary | std::ios_base::in);
 
