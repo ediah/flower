@@ -1,7 +1,7 @@
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
-RELEASE=NO
+RELEASE=YES
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report
@@ -55,4 +55,4 @@ cov:
 .PHONY: clean
 
 clean:
-	rm -rf ./bin/*
+	rm -rf ./bin/* ./cov-int/*
