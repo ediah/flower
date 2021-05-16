@@ -1,6 +1,7 @@
 # Model Language Compiler
 
-![Coverity Scan](https://img.shields.io/coverity/scan/23129?style=for-the-badge)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/ediah/mlc.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ediah/mlc/alerts/)
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/ediah/mlc.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ediah/mlc/context:cpp)
 
 В папке `test` находятся две группы тестов:
 

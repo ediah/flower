@@ -4,7 +4,7 @@
 #include "obstacle.hpp"
 #include "exprtype.hpp"
 
-IdentTable::IdentTable(IdentTable & templateIT) {
+IdentTable::IdentTable(const IdentTable & templateIT) {
     valType = templateIT.valType;
     def = templateIT.def;
     ord = templateIT.ord;
@@ -27,6 +27,11 @@ IdentTable::IdentTable(IdentTable & templateIT) {
     if (templateIT.next->getType() != _NONE_)
         next = new IdentTable(*templateIT.next);
     else next = new IdentTable;
+}
+
+IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
+    IdentTable * p = new IdentTable(templateIT);
+    return *p;
 }
 
 // Получаем последний объект списка

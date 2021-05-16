@@ -38,7 +38,7 @@ public:
     template <class lval_t, class rval_t>
     void assign(void);
 
-    ~VirtualMachine(void);
+    virtual ~VirtualMachine(void);
 };
 
 #endif

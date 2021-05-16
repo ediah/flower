@@ -22,7 +22,8 @@ public:
 
     IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), params(0),
         next(nullptr), def(false), func(false), reg(false), val(nullptr), ord(0), offset(0) {};
-    IdentTable(IdentTable & templateIT);
+    IdentTable(const IdentTable & templateIT);
+    IdentTable & operator=(const IdentTable & templateIT);
     void pushId(char * ident);
     void pushType(type_t t);
     void pushStruct(char * name);
