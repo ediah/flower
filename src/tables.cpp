@@ -30,8 +30,30 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
 }
 
 IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
-    IdentTable * p = new IdentTable(templateIT);
-    return *p;
+    valType = templateIT.valType;
+    def = templateIT.def;
+    ord = templateIT.ord;
+    offset = templateIT.offset;
+
+    if (templateIT.structName != nullptr) {
+        structName = new char[strlen(templateIT.structName) + 1];
+        memcpy(structName, templateIT.structName, strlen(templateIT.structName) + 1);
+    } else structName = nullptr;
+
+    if (templateIT.name != nullptr) {
+        name = new char[strlen(templateIT.name) + 1];
+        memcpy(name, templateIT.name, strlen(templateIT.name) + 1);
+    } else name = nullptr;
+    
+    if (templateIT.valType == _STRUCT_)
+        val = new IdentTable( * (IdentTable *)templateIT.val);
+    else val = templateIT.val;
+
+    if (templateIT.next->getType() != _NONE_)
+        next = new IdentTable(*templateIT.next);
+    else next = new IdentTable;
+    
+    return *this;
 }
 
 // Получаем последний объект списка
