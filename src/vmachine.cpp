@@ -256,10 +256,10 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 std::string x;
                 std::cin >> x;
                 char * newString = new char[x.length() + 1];
-                memcpy(newString, x.data(), x.length() + 1);
+                memccpy(newString, x.data(), '\0', x.length() + 1);
                 char * a = (char *) stackVM.pop();
                 const char * b = newString;
-                memcpy(a, &b, sizeof(void*));
+                memccpy(a, &b, '\0', sizeof(void*));
                 dynamicStrings.push(newString, _STRING_);
             } else {
                 std::string x;

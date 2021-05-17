@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include "parser.hpp"
 #include "tables.hpp"
 #include "obstacle.hpp"
 #include "exprtype.hpp"
@@ -11,13 +12,13 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     offset = templateIT.offset;
 
     if (templateIT.structName != nullptr) {
-        structName = new char[strlen(templateIT.structName) + 1];
-        memcpy(structName, templateIT.structName, strlen(templateIT.structName) + 1);
+        structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
+        memccpy(structName, templateIT.structName, '\0', strnlen(templateIT.structName, MAXIDENT) + 1);
     } else structName = nullptr;
 
     if (templateIT.name != nullptr) {
-        name = new char[strlen(templateIT.name) + 1];
-        memcpy(name, templateIT.name, strlen(templateIT.name) + 1);
+        name = new char[strnlen(templateIT.name, MAXIDENT) + 1];
+        memccpy(name, templateIT.name, '\0', strnlen(templateIT.name, MAXIDENT) + 1);
     } else name = nullptr;
     
     if (templateIT.valType == _STRUCT_)
@@ -36,13 +37,13 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     offset = templateIT.offset;
 
     if (templateIT.structName != nullptr) {
-        structName = new char[strlen(templateIT.structName) + 1];
-        memcpy(structName, templateIT.structName, strlen(templateIT.structName) + 1);
+        structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
+        memccpy(structName, templateIT.structName, '\0', strnlen(templateIT.structName, MAXIDENT) + 1);
     } else structName = nullptr;
 
     if (templateIT.name != nullptr) {
-        name = new char[strlen(templateIT.name) + 1];
-        memcpy(name, templateIT.name, strlen(templateIT.name) + 1);
+        name = new char[strnlen(templateIT.name, MAXIDENT) + 1];
+        memccpy(name, templateIT.name, '\0', strnlen(templateIT.name, MAXIDENT) + 1);
     } else name = nullptr;
     
     if (templateIT.valType == _STRUCT_)
@@ -117,8 +118,8 @@ void IdentTable::dupType(void) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
         if (p->structName != nullptr) {
-            p->next->structName = new char[strlen(p->structName) + 1];
-            memcpy(p->next->structName, p->structName, strlen(p->structName) + 1);
+            p->next->structName = new char[strnlen(p->structName, MAXIDENT) + 1];
+            memccpy(p->next->structName, p->structName, '\0', strnlen(p->structName, MAXIDENT) + 1);
         }
         if (p->valType == _STRUCT_) {
             p->next->val = new IdentTable(* (IdentTable *) p->val);
@@ -303,7 +304,6 @@ void IdentTable::writeValToStream(std::ostream & s) {
             ITp = (IdentTable*)val;
             while (ITp->next != nullptr) {
                 ITp->setOffset((int)s.tellp());
-                //std::cout << ITp->getOffset();
                 ITp->writeValToStream(s);
                 ITp = ITp->next;
             }
