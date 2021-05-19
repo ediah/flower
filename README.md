@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="Icon" width="600"/>
+  <img src="logo.png" alt="Icon" width="500"/>
 </p>
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>
