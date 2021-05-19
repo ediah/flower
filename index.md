@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ediah/mlc/blob/b42af024b5c50ee507205f0f1affdcd0929b1d56/logo.png" alt="Icon" width="500"/>
+  <img src="https://raw.githubusercontent.com/ediah/mlc/b42af024b5c50ee507205f0f1affdcd0929b1d56/logo.png" alt="Icon" width="500"/>
 </p>
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>
