@@ -46,13 +46,10 @@ check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
 	@cat ${REPORT} | column -t -s '|'
 
-cov:
-	@make clean
-	@cov-build --dir cov-int make
 %.o: %.cpp
 	$(CC) $(CFLAGS) -I ./src/inc -c $< -o ./bin/$@
 
 .PHONY: clean
 
 clean:
-	rm -rf ./bin/* ./cov-int/*
+	rm -rf ./bin/*
