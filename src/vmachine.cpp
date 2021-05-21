@@ -336,7 +336,9 @@ void VirtualMachine::copy(void * x, type_t type) {
             stackVM.push(x);
             break;
         default:
-            throw Obstacle(PANIC);
+            std::cout << "Стек повреждён. Скомпилируйте с большим значением MAXSTACK.";
+            std::cout << "\nТекущее: " << MAXSTACK << std::endl;
+            exit(-1);
     }
 }
 

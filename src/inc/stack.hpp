@@ -4,7 +4,7 @@
 #include <cstddef>
 #include "exprtype.hpp"
 
-#define MAXSTACK 1024
+#define MAXSTACK 1024 * 100
 
 class Gendarme {
     void * pointers[MAXSTACK];
