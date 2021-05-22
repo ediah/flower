@@ -57,15 +57,20 @@ void run(flags_t options, std::string ifname) {
         vm.run();
     }
 
-    auto end = std::chrono::steady_clock::now();
-    auto diff = end-start;
-    int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
-    std::cout << "\nВРЕМЯ РАБОТЫ: " << time << " мс"<< std::endl;
+    if (!options.silent) {
+        auto end = std::chrono::steady_clock::now();
+        auto diff = end-start;
+        int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
+        std::cout << "\nВРЕМЯ РАБОТЫ: " << time << " мс"<< std::endl;
+    }
 }
 
 int main(int argc, char** argv) {
     struct flags_t flags = {false, false, false, false, false, false, false};
     std::string flag, inname, outname;
+
+    setbuf(stdout, NULL);
+    setbuf(stdin, NULL);
 
     if (argc > 1) {
         for (int i = 1; i < argc; i++) {

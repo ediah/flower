@@ -2,3 +2,4 @@
 def abc(int i, real j): real {}
 
 ОШИБКА КОМПИЛЯЦИИ
+[ENDCASE]

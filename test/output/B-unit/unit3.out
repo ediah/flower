@@ -8,3 +8,4 @@
     while(x) write("ERROR");
 
 ОШИБКА КОМПИЛЯЦИИ
+[ENDCASE]

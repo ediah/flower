@@ -3,10 +3,87 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <cstdio>
+
+int compare(std::ifstream & file1, std::ifstream & file2) {
+    int ret = 0;
+    std::string line1, line2;
+    while (!file1.eof()) {
+        file1 >> line1;
+        file2 >> line2;
+        if (!file1.eof()) {
+            if (line1 != line2) {ret = 1; break;}
+        } else {
+            if (line2 != "[ENDCASE]") {ret = 1; break;}
+        }
+    }
+
+
+    return ret;
+}
 
 int runA(std::string filename, std::string input, std::string output) {
-    
+    int caseIterator = 0, errorIterator = 0;
+    std::cout << "[A-unit ";
+    std::system( ("./mlc -c -i " + filename + " -s -o test.bin > a.out").data() );
+    std::ifstream log("a.out");
+    std::ifstream expected(output);
 
+    // Проверка успешной компиляции
+    std::string line;
+    log >> line;
+    log.close();
+    if (line != "КОМПИЛЯЦИЯ:") errorIterator = 1;
+    else {
+        std::ifstream cases(input);
+        cases >> line;
+        while (line == "case") {
+            cases >> line;
+            if (line != "{") {
+                std::cout << "Некорректный тест: " << input << std::endl;
+                break;
+            } else {
+                char c;
+                std::ofstream singleCase("case.in");
+                cases.read(&c, sizeof(char));
+                while ((c != '}') && !cases.eof()) {
+                    singleCase.write(&c, sizeof(char));
+                    cases.read(&c, sizeof(char));
+                }
+                singleCase.close();
+
+                std::system("./mlc -r -s -i test.bin > a.out < case.in");
+                std::system("rm ./case.in");
+                std::ifstream actual("a.out");
+                errorIterator += compare(actual, expected);
+                actual.close();
+            }
+            cases >> line;
+            caseIterator++;
+        }
+        cases.close();
+    }
+
+    if ((errorIterator != 0) || (caseIterator == 0))
+        std::cout << "ERROR ]: ";
+    else
+        std::cout << "  OK  ]: ";
+
+    std::cout << caseIterator - errorIterator << "/" << caseIterator << " ";
+    std::cout << filename;
+
+    expected.close();
+
+    std::system("rm ./a.out ./test.bin");
+    
+    if (caseIterator == 0) {
+        errorIterator = -1;
+        std::cout << " [Тесты не найдены]";
+    } else errorIterator = errorIterator != 0 ? 1 : 0;
+
+    std::cout << std::endl;
+
+    return errorIterator;
 }
 
 
@@ -16,19 +93,12 @@ int runB(std::string filename, std::string output) {
     std::system( ("./mlc -c -i " + filename + " > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
-    while (!log.eof() && !expected.eof()) {
-        std::string line1, line2;
-        log >> line1;
-        expected >> line2;
-        if (line1 != line2) {
-            ret = 1;
-            break;
-        }
-    }
-
+    
+    ret = compare(log, expected);
+    
     if (!(log.eof() && expected.eof()))
         ret = 1;
-    
+
     if (ret == 1) {
         std::cout << "ERROR ]: " << filename << std::endl;
     } else {
@@ -43,7 +113,7 @@ int runB(std::string filename, std::string output) {
 
 
 int main(int argc, char ** argv) {
-    int exitCode = 0;
+    int errors = 0, notFound = 0;
 
     for (int i = 1; i < argc; i++) {
         std::string filename = argv[i];
@@ -66,14 +136,16 @@ int main(int argc, char ** argv) {
 
         if (unitA) {
             std::string input = path + "input" + source + ".in";
-            exitCode += runA(filename, input, output);
-        } else exitCode += runB(filename, output);
+            int x = runA(filename, input, output);
+            if (x > 0) errors += x;
+            else notFound -= x;
+        } else errors += runB(filename, output);
 
     }
 
     std::cout << "\nПройдено " << argc - 1 << " тестов, из них:\n\t";
-    std::cout << argc - 1 - exitCode << " успешно\n\t" << exitCode;
-    std::cout << " с ошибкой\n";
+    std::cout << argc - 1 - errors - notFound << " успешно\n\t" << errors;
+    std::cout << " с ошибкой\n\t" << notFound << " тестов не было запущено\n";
 
-    return exitCode;
+    return errors;
 }
