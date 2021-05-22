@@ -11,13 +11,18 @@ int compare(std::ifstream & file1, std::ifstream & file2) {
     while (!file1.eof()) {
         file1 >> line1;
         file2 >> line2;
+        //std::cout << "[" << line1 << "] [" << line2 << "]\n";
         if (!file1.eof()) {
             if (line1 != line2) {ret = 1; break;}
         } else {
-            if (line2 != "[ENDCASE]") {ret = 1; break;}
+            if (line2 != "[ENDCASE]") {
+                while ((line2 != "[ENDCASE]") && (!file2.eof()))
+                    file2 >> line2;
+                    
+                ret = 1;
+            }
         }
     }
-
 
     return ret;
 }

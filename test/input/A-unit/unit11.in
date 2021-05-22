@@ -1,0 +1,13 @@
+case {
+    10
+    13.56
+    Hello!
+    true
+}
+
+case {
+    10.9
+    123
+    Wow
+    false
+}

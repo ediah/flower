@@ -1,0 +1,13 @@
+name: Run tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build
+      run: make
+    - name: Run
+      run: ./test/test ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml
