@@ -1,5 +1,3 @@
-
-
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
@@ -40,9 +38,13 @@ DEP = ${shell ls ${VPATH} | grep \\.hpp}
 default:
 	@mkdir -p bin
 	@make mlc -j4
+	@make test
 
 mlc: $(OBJ)
 	$(CC) ${addprefix ./bin/,${OBJ}} -o $@
+
+test: ./test/test.cpp
+	$(CC) $(CFLAGS) $< -o ./test/test
 
 check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %

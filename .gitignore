@@ -1,4 +1,5 @@
 mlc
+test/test
 mlc.tgz
 out.bin
 cppcheck/
@@ -33,5 +34,4 @@ cov-int/
 
 # Executables
 *.exe
-*.out
 *.app
