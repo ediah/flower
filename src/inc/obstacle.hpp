@@ -40,7 +40,8 @@ enum reason {
     BAD_PARAMS_COUNT,
     NO_RETURN,
     NO_TYPE,
-    STRUCT_IN_EXPR
+    STRUCT_IN_EXPR,
+    RETURN_TYPE_MISMATCH
 };
 
 class Obstacle {

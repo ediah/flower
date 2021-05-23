@@ -25,6 +25,7 @@ class Parser {
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
     bool inFunc;
+    Stack retTypes;      // Тип возвращаемых параметров из функций
 
     // Вспомогательные функции
     int fastPow(int x, int n);  // Быстрое возведение в степень

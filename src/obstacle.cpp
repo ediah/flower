@@ -92,6 +92,9 @@ void Obstacle::describe(void) {
         case STRUCT_IN_EXPR:
             std::cout << "Структуры не могут участвовать в выражениях." << std::endl;
             break;
+        case RETURN_TYPE_MISMATCH:
+            std::cout << "Неверный тип возвращаемого параметра." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;
