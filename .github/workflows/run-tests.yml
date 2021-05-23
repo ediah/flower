@@ -1,0 +1,39 @@
+name: Run tests
+
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master, test, optimize ]
+  pull_request:
+    branches: [ master, test, optimize ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  A-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: make
+    - name: Run A-units
+      run: ./mlc-test ./test/A-unit/unit*.ml
+  B-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: make
+    - name: Run B-units
+      run: ./mlc-test ./test/B-unit/unit*.ml
+  Valgrind:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Valgrind
+      run: sudo apt install valgrind
+    - name: Build
+      run: make
+    - name: Run Checks
+      run: ./mlc-test -m ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml

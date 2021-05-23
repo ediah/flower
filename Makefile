@@ -1,9 +1,7 @@
-
-
 vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
-RELEASE=NO
+RELEASE=YES
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report
@@ -40,9 +38,13 @@ DEP = ${shell ls ${VPATH} | grep \\.hpp}
 default:
 	@mkdir -p bin
 	@make mlc -j4
+	@make mlc-test
 
 mlc: $(OBJ)
 	$(CC) ${addprefix ./bin/,${OBJ}} -o $@
+
+mlc-test: ./test/test.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
@@ -54,4 +56,4 @@ check:
 .PHONY: clean
 
 clean:
-	rm -rf ./bin/*
+	rm -rf ./bin/* mlc mlc-test
