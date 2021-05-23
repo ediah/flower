@@ -11,11 +11,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  A-unit:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build
       run: make
-    - name: Run
-      run: ./test/test ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml
+    - name: Run A-units
+      run: ./mlc-test ./test/A-unit/unit*.ml
+  B-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: make
+    - name: Run B-units
+      run: ./mlc-test ./test/B-unit/unit*.ml
+  Valgrind:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Valgrind
+      run: sudo apt install valgrind
+    - name: Build
+      run: make
+    - name: Run Checks
+      run: ./mlc-test -m ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml

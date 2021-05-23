@@ -1,5 +1,5 @@
 mlc
-test/test
+mlc-test
 mlc.tgz
 out.bin
 cppcheck/

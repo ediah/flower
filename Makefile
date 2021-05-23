@@ -38,13 +38,13 @@ DEP = ${shell ls ${VPATH} | grep \\.hpp}
 default:
 	@mkdir -p bin
 	@make mlc -j4
-	@make ./test/test
+	@make mlc-test
 
 mlc: $(OBJ)
 	$(CC) ${addprefix ./bin/,${OBJ}} -o $@
 
-./test/test: ./test/test.cpp
-	$(CC) $(CFLAGS) $< -o ./test/test
+mlc-test: ./test/test.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
@@ -56,4 +56,4 @@ check:
 .PHONY: clean
 
 clean:
-	rm -rf ./bin/* ./test/test
+	rm -rf ./bin/* mlc mlc-test

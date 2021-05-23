@@ -27,6 +27,87 @@ int compare(std::ifstream & file1, std::ifstream & file2) {
     return ret;
 }
 
+int checkMem(std::string cmd) {
+    std::system( ("valgrind --log-file=\"a.out\" " + cmd).data() );
+    std::ifstream log("a.out");
+    std::string line;
+    std::string checkLeak("All heap blocks were freed");
+    std::string checkError("ERROR SUMMARY: 0 errors");
+    bool memLeak = true, memError = true;
+    while (! log.eof()) {
+        log >> line;
+        if (line == "All") {
+            char * tempbuf = new char[24];
+            log.readsome(tempbuf, 23);
+            tempbuf[23] = '\0';
+            std::string temp(tempbuf);
+            if (temp.find(" heap blocks were freed") != std::string::npos)
+                memLeak = false;
+            delete [] tempbuf;
+        }
+        
+        if (line == "ERROR") {
+            char * tempbuf = new char[24];
+            log.readsome(tempbuf, 23);
+            tempbuf[23] = '\0';
+            std::string temp(tempbuf);
+            if (temp.find(" SUMMARY: 0 errors") != std::string::npos)
+                memError = false;
+            delete [] tempbuf;
+        }
+    }
+    std::cout << "[ " << (memLeak ? "УТЕЧКА" : "  ОК  ") << "; ";
+    std::cout << (memError ? "ОШИБКА" : "  ОК  " ) << " ] ";
+
+    log.close();
+    return (int)memLeak + (int)memError;
+}
+
+int genCaseIn(std::ifstream & cases) {
+    int ret = 0;
+    std::string line;
+    cases >> line;
+    if (line != "{")  ret = 1;
+    else {
+        char c;
+        std::ofstream singleCase("case.in");
+        cases.read(&c, sizeof(char));
+        while ((c != '}') && !cases.eof()) {
+            singleCase.write(&c, sizeof(char));
+            cases.read(&c, sizeof(char));
+        }
+        singleCase.close();
+    }
+    return ret;
+}
+
+int runValgrind(std::string filename, std::string input = "") {
+    int caseIterator = 0, errorIterator = 0;
+    int ret = 0;
+
+    ret += checkMem("./mlc -c -i " + filename + " -s -o test.bin > /dev/null");
+    std::cout << filename << std::endl;
+
+    if (input != "") {
+        std::ifstream cases(input);
+        std::string line;
+        cases >> line;
+        while (line == "case") {
+            if (genCaseIn(cases) != 0)
+                break;
+            ret += checkMem("./mlc -r -s -i test.bin > /dev/null < case.in");
+            std::system("rm ./case.in");
+            std::cout << "Case #" << caseIterator + 1 << std::endl;
+            cases >> line;
+            caseIterator++;
+        }
+        cases.close();
+    }
+    std::system("rm -f ./a.out ./test.bin");
+
+    return (ret != 0) ? 1 : 0;
+}
+
 int runA(std::string filename, std::string input, std::string output) {
     int caseIterator = 0, errorIterator = 0;
     std::cout << "[A-unit ";
@@ -43,26 +124,14 @@ int runA(std::string filename, std::string input, std::string output) {
         std::ifstream cases(input);
         cases >> line;
         while (line == "case") {
-            cases >> line;
-            if (line != "{") {
-                std::cout << "Некорректный тест: " << input << std::endl;
+            if (genCaseIn(cases) != 0)
                 break;
-            } else {
-                char c;
-                std::ofstream singleCase("case.in");
-                cases.read(&c, sizeof(char));
-                while ((c != '}') && !cases.eof()) {
-                    singleCase.write(&c, sizeof(char));
-                    cases.read(&c, sizeof(char));
-                }
-                singleCase.close();
+            std::system("./mlc -r -s -i test.bin > a.out < case.in");
+            std::system("rm ./case.in");
+            std::ifstream actual("a.out");
+            errorIterator += compare(actual, expected);
+            actual.close();
 
-                std::system("./mlc -r -s -i test.bin > a.out < case.in");
-                std::system("rm ./case.in");
-                std::ifstream actual("a.out");
-                errorIterator += compare(actual, expected);
-                actual.close();
-            }
             cases >> line;
             caseIterator++;
         }
@@ -112,15 +181,22 @@ int runB(std::string filename, std::string output) {
 
     log.close();
     expected.close();
-    std::system("rm ./a.out");
+    std::system("rm -f ./out.bin ./a.out");
     return ret;
 }
 
 
 int main(int argc, char ** argv) {
     int errors = 0, notFound = 0;
+    bool mem = false;
+    // Один флаг -- режим теста
 
-    for (int i = 1; i < argc; i++) {
+    if (argc > 1) {
+        if ((argv[1][0] == '-') && (argv[1][1] == 'm'))
+            mem = true;
+    }
+
+    for (int i = (mem) ? 2 : 1; i < argc; i++) {
         std::string filename = argv[i];
         bool unitA = filename.find("/A-unit/") != std::string::npos;
         bool unitB = filename.find("/B-unit/") != std::string::npos;
@@ -141,10 +217,14 @@ int main(int argc, char ** argv) {
 
         if (unitA) {
             std::string input = path + "input" + source + ".in";
-            int x = runA(filename, input, output);
-            if (x > 0) errors += x;
-            else notFound -= x;
-        } else errors += runB(filename, output);
+            if (mem) errors += runValgrind(filename, input);
+            else {
+                int x = runA(filename, input, output);
+                if (x > 0) errors += x;
+                else notFound -= x;
+            }
+        } else if (mem) errors += runValgrind(filename); 
+        else errors += runB(filename, output);
 
     }
 
