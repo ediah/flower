@@ -193,7 +193,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * a = getString(stackVM.pop());
                 int i = 0;
                 for (; (a[i] != '\0') && (b[i] != '\0'); i++);
-                stackVM.push(new bool (a[i] == '\0'), _BOOLEAN_);
+                stackVM.push(new bool ((a[i] == '\0') && (b[i] != '\0')), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(<)
             }
