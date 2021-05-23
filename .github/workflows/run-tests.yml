@@ -3,9 +3,9 @@ name: Run tests
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, test, optimize ]
+    branches: [ master, optimize, debug ]
   pull_request:
-    branches: [ master, test, optimize ]
+    branches: [ master, optimize, debug ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

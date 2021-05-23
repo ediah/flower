@@ -249,17 +249,19 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         case READ:
             if (rval == _INT_) {
-                std::cin >> * (int *) stackVM.pop();
+                float temp;
+                std::cin >> temp;
+                * (int *) stackVM.pop() = (int)temp;
             } else if (rval == _REAL_) {
                 std::cin >> * (float *) stackVM.pop();
             } else if (rval == _STRING_) {
                 std::string x;
                 std::cin >> x;
                 char * newString = new char[x.length() + 1];
-                memccpy(newString, x.data(), '\0', x.length() + 1);
+                memcpy(newString, x.data(), x.length() + 1);
                 char * a = (char *) stackVM.pop();
                 const char * b = newString;
-                memccpy(a, &b, '\0', sizeof(void*));
+                memcpy(a, &b, sizeof(void*));
                 dynamicStrings.push(newString, _STRING_);
             } else {
                 std::string x;

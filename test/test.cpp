@@ -119,24 +119,36 @@ int runA(std::string filename, std::string input, std::string output) {
     std::string line;
     log >> line;
     log.close();
+    #ifndef DEBUG
     if (line != "КОМПИЛЯЦИЯ:") errorIterator = 1;
     else {
+    #endif
         std::ifstream cases(input);
         cases >> line;
         while (line == "case") {
             if (genCaseIn(cases) != 0)
                 break;
+            #ifdef DEBUG
+            std::system("gdb --args ./mlc -r -s -i test.bin");
+            #else
             std::system("./mlc -r -s -i test.bin > a.out < case.in");
+            #endif
             std::system("rm ./case.in");
             std::ifstream actual("a.out");
-            errorIterator += compare(actual, expected);
+            int err = compare(actual, expected);
+            if (err != 0) {
+                std::system("cat ./a.out");
+                errorIterator += err;
+            }
             actual.close();
 
             cases >> line;
             caseIterator++;
         }
         cases.close();
+    #ifndef DEBUG
     }
+    #endif
 
     if ((errorIterator != 0) || (caseIterator == 0))
         std::cout << "ОШИБКА ]: ";
