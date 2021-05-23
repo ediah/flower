@@ -56,7 +56,7 @@ int checkMem(std::string cmd) {
             delete [] tempbuf;
         }
     }
-    std::cout << "[ " << (memLeak ? "УТЕЧКА" : "  ОК  ") << "; ";
+    std::cout << "[ " << (memLeak ? "УТЕЧКА" : "  ОК  ") << " ; ";
     std::cout << (memError ? "ОШИБКА" : "  ОК  " ) << " ] ";
 
     log.close();
@@ -139,7 +139,7 @@ int runA(std::string filename, std::string input, std::string output) {
     }
 
     if ((errorIterator != 0) || (caseIterator == 0))
-        std::cout << "ERROR ]: ";
+        std::cout << "ОШИБКА ]: ";
     else
         std::cout << "  OK  ]: ";
 
@@ -174,7 +174,7 @@ int runB(std::string filename, std::string output) {
         ret = 1;
 
     if (ret == 1) {
-        std::cout << "ERROR ]: " << filename << std::endl;
+        std::cout << "ОШИБКА ]: " << filename << std::endl;
     } else {
         std::cout << "  OK  ]: " << filename << std::endl;
     }
