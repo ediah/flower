@@ -4,7 +4,7 @@ def func(int a; real b): real {
 
 def root(int x): real {
     real r, last = 0.0;
-    r = x / 2;
+    r = x;
 
     while ( (r - last) != 0 ) {
         last = r;
