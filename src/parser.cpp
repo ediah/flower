@@ -131,6 +131,8 @@ void Parser::defFunction(void) {
     defs();
     operations();
 
+    delete (type_t*) retTypes.pop();
+    
     if (c != '}') throw Obstacle(PROG_CLOSEBR);
     if (inFunc) throw Obstacle(NO_RETURN);
 
@@ -139,7 +141,6 @@ void Parser::defFunction(void) {
         formalParams = formalParams->next;
     }
     inFunc = false;
-    retTypes.pop();
 }
 
 void Parser::returnOp(void) {

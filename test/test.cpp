@@ -5,6 +5,13 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 int compare(std::ifstream & file1, std::ifstream & file2) {
     int ret = 0;
     std::string line1, line2;
@@ -28,12 +35,12 @@ int compare(std::ifstream & file1, std::ifstream & file2) {
 }
 
 int checkMem(std::string cmd) {
+    bool memLeak = true, memError = true;
     std::system( ("valgrind --log-file=\"a.out\" " + cmd).data() );
     std::ifstream log("a.out");
     std::string line;
     std::string checkLeak("All heap blocks were freed");
     std::string checkError("ERROR SUMMARY: 0 errors");
-    bool memLeak = true, memError = true;
     while (! log.eof()) {
         log >> line;
         if (line == "All") {
@@ -60,6 +67,7 @@ int checkMem(std::string cmd) {
     std::cout << (memError ? "ОШИБКА" : "  ОК  " ) << " ] ";
 
     log.close();
+
     return (int)memLeak + (int)memError;
 }
 
