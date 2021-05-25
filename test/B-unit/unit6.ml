@@ -1,4 +1,4 @@
-def do_something(int x, y): real {
+def do_something(int x, y): int {
     int a = 1, b = 2;
     return a / b;
 }

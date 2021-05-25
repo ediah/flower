@@ -10,6 +10,8 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     def = templateIT.def;
     ord = templateIT.ord;
     offset = templateIT.offset;
+    func = templateIT.func;
+    reg = templateIT.reg;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];

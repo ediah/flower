@@ -38,21 +38,22 @@ DEP = ${shell ls ${VPATH} | grep \\.hpp}
 default:
 	@mkdir -p bin
 	@make mlc -j4
+	@make mlc-test
 
 mlc: $(OBJ)
 	$(CC) ${addprefix ./bin/,${OBJ}} -o $@
+
+mlc-test: ./test/test.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
 	@cat ${REPORT} | column -t -s '|'
 
-cov:
-	@make clean
-	@cov-build --dir cov-int make
 %.o: %.cpp
 	$(CC) $(CFLAGS) -I ./src/inc -c $< -o ./bin/$@
 
 .PHONY: clean
 
 clean:
-	rm -rf ./bin/* ./cov-int/*
+	rm -rf ./bin/* mlc mlc-test

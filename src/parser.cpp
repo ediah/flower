@@ -122,6 +122,8 @@ void Parser::defFunction(void) {
         } else throw Obstacle(NO_TYPE);
     } else throw Obstacle(PROCEDURE);//thisFunc->setType(_NONE_);
 
+    retTypes.push(new type_t (thisFunc->getType()));
+
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '{') throw Obstacle(PROG_OPENBR);
     code >> c;
@@ -129,6 +131,8 @@ void Parser::defFunction(void) {
     defs();
     operations();
 
+    delete (type_t*) retTypes.pop();
+    
     if (c != '}') throw Obstacle(PROG_CLOSEBR);
     if (inFunc) throw Obstacle(NO_RETURN);
 
@@ -142,7 +146,9 @@ void Parser::defFunction(void) {
 void Parser::returnOp(void) {
     inFunc = false;
     code >> c;
-    expr();
+    type_t retFact = expr();
+    if (retFact != * (type_t *) retTypes.top()) 
+        throw Obstacle(RETURN_TYPE_MISMATCH);
     if (c != ';') throw Obstacle(SEMICOLON);
     code >> c;
     poliz.pushOp(_INT_, _LABEL_, RET);
