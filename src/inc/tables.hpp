@@ -6,16 +6,16 @@
 #include "exprtype.hpp"
 
 class IdentTable {
-    type_t valType;
-    char * structName;
-    char * name;
-    bool def;
-    bool func;
-    bool reg;
-    void * val;
-    int ord;
-    int params;
-    int offset; // для бинарки
+    type_t valType;    // Тип идентификатора
+    char * structName; // Имя структуры (если valType == _STRUCT_)
+    char * name;       // Имя идентификатора
+    bool def;          // Определён ли
+    bool func;         // Является ли функцией
+    bool reg;          // Лежит ли на регистрах
+    void * val;        // Данные
+    int ord;           // Номер элемента
+    int params;        // Количество переменных (если функция)
+    int offset;        // Позиция в байткоде
 
 public:
     IdentTable *next;

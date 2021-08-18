@@ -89,11 +89,12 @@ int genCaseIn(std::ifstream & cases) {
     return ret;
 }
 
-int runValgrind(std::string filename, std::string input = "") {
+int runValgrind(std::string filename, bool optimize, std::string input = "") {
     int caseIterator = 0, errorIterator = 0;
     int ret = 0;
 
-    ret += checkMem("./mlc -c -i " + filename + " -s -o test.bin > /dev/null");
+    ret += checkMem("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " + 
+                    filename + " -s -o test.bin > /dev/null");
     std::cout << filename << std::endl;
 
     if (input != "") {
@@ -116,10 +117,11 @@ int runValgrind(std::string filename, std::string input = "") {
     return (ret != 0) ? 1 : 0;
 }
 
-int runA(std::string filename, std::string input, std::string output) {
+int runA(std::string filename, std::string input, std::string output, bool optimize) {
     int caseIterator = 0, errorIterator = 0;
     std::cout << "[A-unit ";
-    std::system( ("./mlc -c -i " + filename + " -s -o test.bin > a.out").data() );
+    std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
+                  filename + " -s -o test.bin > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
 
@@ -181,10 +183,11 @@ int runA(std::string filename, std::string input, std::string output) {
 }
 
 
-int runB(std::string filename, std::string output) {
+int runB(std::string filename, std::string output, bool optimize) {
     int ret = 0;
     std::cout << "[B-unit ";
-    std::system( ("./mlc -c -i " + filename + " > a.out").data() );
+    std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
+                  filename + " > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
     
@@ -209,14 +212,24 @@ int runB(std::string filename, std::string output) {
 int main(int argc, char ** argv) {
     int errors = 0, notFound = 0;
     bool mem = false;
-    // Один флаг -- режим теста
+    bool opt = false;
 
-    if (argc > 1) {
-        if ((argv[1][0] == '-') && (argv[1][1] == 'm'))
-            mem = true;
+    for (int i = argc; i > 1; i--) {
+        if (argv[i - 1][0] == '-') {
+            switch (argv[i - 1][1]) {
+                case 'm':
+                    mem = true;
+                    break;
+                case 'O':
+                    opt = true;
+                    break;
+                default:
+                    throw std::runtime_error("Неизвестный флаг.");
+            }
+        }
     }
 
-    for (int i = (mem) ? 2 : 1; i < argc; i++) {
+    for (int i = (int)mem + (int)opt + 1; i < argc; i++) {
         std::string filename = argv[i];
         bool unitA = filename.find("/A-unit/") != std::string::npos;
         bool unitB = filename.find("/B-unit/") != std::string::npos;
@@ -237,14 +250,14 @@ int main(int argc, char ** argv) {
 
         if (unitA) {
             std::string input = path + "input" + source + ".in";
-            if (mem) errors += runValgrind(filename, input);
+            if (mem) errors += runValgrind(filename, opt, input);
             else {
-                int x = runA(filename, input, output);
+                int x = runA(filename, input, output, opt);
                 if (x > 0) errors += x;
                 else notFound -= x;
             }
-        } else if (mem) errors += runValgrind(filename); 
-        else errors += runB(filename, output);
+        } else if (mem) errors += runValgrind(filename, opt); 
+        else errors += runB(filename, output, opt);
 
     }
 

@@ -19,7 +19,8 @@ struct flags_t {
 void help(void) {
     std::cout << "Компилятор Модельного Языка Программирования " << VERSION << std::endl;
     std::cout << "Флаги командной строки:\n\t-c\tКомпиляция\n\t-r\tВыполнение\n\t";
-    std::cout << "-d\tОтладка\n\t-o\tОптимизация\n\t-s\tНе печатать ПОЛИЗ\n";
+    std::cout << "-d\tОтладка\n\t-O\tОптимизация\n\t-s\tНе печатать ПОЛИЗ\n\t";
+    std::cout << "-i\tУказать входной файл\n\t-o\tУказать выходной файл\n";
 }
 
 bool compile(flags_t options, std::string ifname, std::string ofname) {

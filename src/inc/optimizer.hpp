@@ -11,6 +11,7 @@ public:
     Optimizer(IdentTable * IT, POLIZ * p);
 
     void optimize(void);
+    void constProp(void);
 };
 
 #endif
