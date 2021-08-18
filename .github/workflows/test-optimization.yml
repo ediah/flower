@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  A-unit (Optimized):
+  A-unit:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +17,7 @@ jobs:
       run: make
     - name: Run A-units with optimization
       run: ./mlc-test -O ./test/A-unit/unit*.ml
-  B-unit (Optimized):
+  B-unit:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
       run: make
     - name: Run B-units with optimization
       run: ./mlc-test -O ./test/B-unit/unit*.ml
-  Valgrind (Optimized):
+  Valgrind:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
