@@ -192,7 +192,7 @@ IdentTable * IdentTable::getIT(char * name, bool autodel) {
     return p;
 }
 
-void IdentTable::whoami(void) {
+void IdentTable::whoami() {
 
     std::cout << '{' << typetostr(valType) << ' ';
     if (valType == _STRUCT_) {

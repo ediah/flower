@@ -1,4 +1,6 @@
 #include "optimizer.hpp"
+#include "exprtype.hpp"
+#include <iostream>
 
 Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
     IdTable = IT;
@@ -9,16 +11,7 @@ void Optimizer::optimize(void) {
     IdTable->repr();
     poliz->repr();
 
-    constProp();
+    CFG.make(poliz);
+    CFG.draw();
 
-}
-
-void Optimizer::constProp(void) {
-    op_t * prog = poliz->getProg();
-    bool * eb = poliz->getEB();
-    int n = poliz->getSize();
-
-    for (int i = 0; i < n; i++) {
-        
-    }
 }

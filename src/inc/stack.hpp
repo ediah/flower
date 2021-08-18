@@ -28,6 +28,7 @@ public:
 
 class Stack {
     void * elem[MAXSTACK];
+    bool defined[MAXSTACK];
     int pos;
 
     Gendarme memControl;
@@ -43,6 +44,7 @@ public:
     void dump(void) const;
     type_t topType(void) const;
     bool isEmpty(void);
+    bool isDefined(void);
 };
 
 #endif

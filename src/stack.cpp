@@ -79,6 +79,11 @@ bool Stack::isEmpty(void) {
     return pos == 0;
 }
 
+bool Stack::isDefined(void) {
+    assert(pos >= 0);
+    return defined[pos - 1];
+}
+
 void Stack::dump(void) const {
     for (int i = 0; i < pos; i++)
         std::cout << i << ") " << elem[i] << std::endl;

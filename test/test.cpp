@@ -265,5 +265,5 @@ int main(int argc, char ** argv) {
     std::cout << argc - 1 - errors - notFound << " успешно\n\t" << errors;
     std::cout << " с ошибкой\n\t" << notFound << " тестов не было запущено\n";
 
-    return errors;
+    return errors + notFound;
 }

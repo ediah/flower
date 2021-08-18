@@ -18,7 +18,8 @@ public:
 
     void pushVal(IdentTable * val);
     void pushOp(type_t lval, type_t rval, operation_t op);
-    void repr(void);
+    void pop(void);
+    void repr(bool dontBreak = false);
     void interpretAsOp(op_t op);
     void interpretAsVal(op_t val);
     int getSize(void) const;

@@ -102,3 +102,12 @@ char * typetostr(type_t t) {
     }
     throw Obstacle(PANIC);
 }
+
+
+bool isExpr(operation_t o) {
+    bool ret = (o == INV) || (o == PLUS) || (o == MINUS) || (o == LOR);
+    ret = ret || (o == MUL) || (o == DIV) || (o == LAND) || (o == LNOT);
+    ret = ret || (o == MOD) || (o == LESS) || (o == GRTR) || (o == LESSEQ);
+    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ);
+    return ret;
+}

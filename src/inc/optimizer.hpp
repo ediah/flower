@@ -3,10 +3,12 @@
 
 #include "tables.hpp"
 #include "poliz.hpp"
+#include "controlflow.hpp"
 
 class Optimizer {
     IdentTable * IdTable;
     POLIZ * poliz;
+    ControlFlowGraph CFG;
 public:
     Optimizer(IdentTable * IT, POLIZ * p);
 

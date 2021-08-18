@@ -47,7 +47,7 @@ public:
     int getParams(void) const;
     IdentTable * getIT(char * name, bool autodel = true);
     IdentTable * last(void);
-    void whoami(void);
+    void whoami();
     void repr(void);
     void setOffset(int x);
     int getOffset(void) const;

@@ -12,12 +12,15 @@ POLIZ::POLIZ(void) {
 
 }
 
-void POLIZ::repr(void) {
+void POLIZ::repr(bool dontBreak) {
     for (int i = 0; i < iter; i++) {
         std::cout << i << ") ";
         if (execBit[i]) interpretAsOp(prog[i]);
         else interpretAsVal(prog[i]);
-        std::cout << std::endl;
+        if (!dontBreak)
+            std::cout << "\n";
+        else
+            std::cout << "\\n";
     }
 }
 
@@ -100,4 +103,8 @@ bool * POLIZ::getEB(void) {
 
 int POLIZ::getSize(void) const {
     return iter;
+}
+
+void POLIZ::pop(void) {
+    iter = (iter == 0) ? 0 : iter - 1;
 }
