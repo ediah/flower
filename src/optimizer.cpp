@@ -6,8 +6,8 @@ Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
 }
 
 void Optimizer::optimize(void) {
-    //IdTable->repr();
-    //poliz->repr();
+    IdTable->repr();
+    poliz->repr();
 
     constProp();
 
