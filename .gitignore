@@ -4,6 +4,8 @@ mlc.tgz
 out.bin
 cppcheck/
 cov-int/
+graph.dot
+graph.png
 # Prerequisites
 *.d
 

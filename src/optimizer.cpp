@@ -8,8 +8,10 @@ Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
 }
 
 void Optimizer::optimize(void) {
+    #ifdef DEBUG
     IdTable->repr();
     poliz->repr();
+    #endif
 
     CFG.make(poliz);
     CFG.draw();
