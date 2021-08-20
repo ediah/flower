@@ -12,7 +12,7 @@ class Optimizer {
 public:
     Optimizer(IdentTable * IT, POLIZ * p);
 
-    void optimize(void);
+    void optimize(bool verbose);
     void constProp(void);
 };
 

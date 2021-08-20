@@ -1153,7 +1153,7 @@ void Parser::revert(int x) {
     code >>= c;
 }
 
-void Parser::optimize(void) {
+void Parser::optimize(bool verbose) {
     Optimizer opt(&IdTable, &poliz);
-    opt.optimize();
+    opt.optimize(verbose);
 }

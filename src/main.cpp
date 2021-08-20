@@ -7,19 +7,21 @@
 #include "debugger.hpp"
 
 struct flags_t {
-    bool debug;
-    bool optimize;
-    bool compile;
-    bool run;
-    bool silent;
-    bool infile;
-    bool outfile;
+    bool debug;    // -d
+    bool optimize; // -O
+    bool compile;  // -c
+    bool run;      // -r
+    bool silent;   // -s
+    bool verbose;  // -v
+    bool infile;   // -i
+    bool outfile;  // -o
 };
 
 void help(void) {
     std::cout << "Компилятор Модельного Языка Программирования " << VERSION << std::endl;
     std::cout << "Флаги командной строки:\n\t-c\tКомпиляция\n\t-r\tВыполнение\n\t";
     std::cout << "-d\tОтладка\n\t-O\tОптимизация\n\t-s\tНе печатать ПОЛИЗ\n\t";
+    std::cout << "-v\tВыводить сообщения оптимизатора\n\t";
     std::cout << "-i\tУказать входной файл\n\t-o\tУказать выходной файл\n";
 }
 
@@ -31,8 +33,10 @@ bool compile(flags_t options, std::string ifname, std::string ofname) {
     bool ok = pworker.parse();
 
     if (ok) {
-        if (options.optimize) pworker.optimize();
-        if (!options.silent) pworker.finalize();
+        if (options.optimize) 
+            pworker.optimize(options.verbose);
+        if (!options.silent) 
+            pworker.finalize();
         pworker.giveBIN(ofname.data());
 
         auto end = std::chrono::steady_clock::now();
@@ -67,7 +71,7 @@ void run(flags_t options, std::string ifname) {
 }
 
 int main(int argc, char** argv) {
-    struct flags_t flags = {false, false, false, false, false, false, false};
+    struct flags_t flags = {false, false, false, false, false, false, false, false};
     std::string flag, inname, outname;
 
     setbuf(stdout, NULL);
@@ -96,6 +100,7 @@ int main(int argc, char** argv) {
                         outname = argv[++i]; 
                         break;
                     case 's': flags.silent = true; break;
+                    case 'v': flags.verbose = true; break;
                     case 'c': flags.compile = true; break;
                     case 'r': flags.run = true; break;
                     default:

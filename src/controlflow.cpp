@@ -1,5 +1,6 @@
 #include "controlflow.hpp"
 #include "tables.hpp"
+#include "obstacle.hpp"
 #include <algorithm>
 #include <functional>
 #include <iterator>
@@ -29,6 +30,16 @@ int find(std::vector<std::pair<K, V>> vec, V x) {
         if (vec[i].second == x) return i;
     }
     return -1;
+}
+
+void copyPOLIZ(POLIZ & src, POLIZ & dst, int start, int end) {
+    int j = dst.getSize();
+    for (int i = start; i < end; i++) {
+        dst.getEB()[j]   = src.getEB()[i];
+        dst.getProg()[j] = src.getProg()[i];
+        dst.incIter();
+        j++;
+    }
 }
 
 flowTree* flowTree::getFT(int id, bool head) {
@@ -65,17 +76,9 @@ flowTree* flowTree::split(int id) {
     #endif
 
     flowTree * fb = new flowTree(id);
+    fb->splitted = true;
 
-    for (int i = id - ID; i < block.getSize(); i++) {
-        op_t op = block.getProg()[i];
-        if (block.getEB()[i]) {
-            type_t lval = (type_t) ((op >> 16) & 0xFF);
-            type_t rval = (type_t) ((op >>  8) & 0xFF);
-            fb->block.pushOp(lval, rval, (operation_t) (op & 0xFF));
-        } else {
-            fb->block.pushVal((IdentTable *) op);
-        }
-    }
+    copyPOLIZ(block, fb->block, id - ID, block.getSize());
 
     for (int i = block.getSize(); i > id - ID; i--)
         block.pop();
@@ -90,7 +93,6 @@ flowTree* flowTree::split(int id) {
 
     next.clear();
     next.push_back(std::make_pair(fb, 0));
-
     fb->prev.push_back(std::make_pair(this, 0));
 
     return fb;
@@ -105,12 +107,16 @@ flowTree* ControlFlowGraph::newBlock(int blockId, POLIZ * p, flowTree * curBlock
     if (fb == nullptr) {
         fb = new flowTree(blockId);
         exists = false;
-    } else {
-        //if (find(fb->prev, curBlock) != -1)
-        //    return;
+        blocksNum++;
+    }
+    if (fb->splitted) {
+        fb->splitted = false;
+        jumpsNum++;
+        blocksNum++;
     }
     fb->prev.push_back(std::make_pair(curBlock, cond));
     curBlock->next.push_back(std::make_pair(fb, cond));
+    jumpsNum++;
     makeBranch(p, curBlock, fb, exists);
     return fb->prev[0].first;
 }
@@ -146,14 +152,11 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 break;
             }
 
-            //if (!exists) {
-                type_t lval = (type_t) ((op >> 16) & 0xFF);
-                type_t rval = (type_t) ((op >>  8) & 0xFF);
-                curBlock->block.pushOp(lval, rval, (operation_t) (op & 0xFF));
-            //}
+            type_t lval = (type_t) ((op >> 16) & 0xFF);
+            type_t rval = (type_t) ((op >>  8) & 0xFF);
+            curBlock->block.pushOp(lval, rval, (operation_t) (op & 0xFF));
         } else {
-            //if (!exists)
-                curBlock->block.pushVal((IdentTable *) op);
+            curBlock->block.pushVal((IdentTable *) op);
         }
 
         eip++;
@@ -162,10 +165,17 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
 
 void ControlFlowGraph::make(POLIZ * p) {
     makeBranch(p, &ft, nullptr, false);
+    blocksNum++;
 }
 
-void ControlFlowGraph::draw(void) {
-    graph.open("graph.dot");
+void ControlFlowGraph::info(void) {
+    std::cout << "Граф потока управления построен. Статистика:\n";
+    std::cout << "\tВсего блоков: " << blocksNum << "\n";
+    std::cout << "\tВсего переходов: " << jumpsNum << "\n";
+}
+
+void ControlFlowGraph::draw(std::string filename) {
+    graph.open(filename + ".dot");
 
     graph << "digraph CFG {\n";
 
@@ -182,7 +192,8 @@ void ControlFlowGraph::draw(void) {
     graph << "}\n";
     graph.close();
 
-    std::system("dot -v -Tpng -o./graph.png ./graph.dot 2>&1 | grep -i error");
+    std::system(("dot -v -Tpng -o./" + filename + ".png ./" +
+                filename + ".dot 2>&1 | grep -i error").data() );
 }
 
 void ControlFlowGraph::drawNode(flowTree p) {
@@ -217,5 +228,57 @@ void ControlFlowGraph::drawEdge(flowTree & p) {
         graph << ";\n";
 
         drawEdge(* node.first);
+    }
+}
+
+void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock, 
+                                   std::vector<int> * ls, std::vector<flowTree *> * eb) {
+    if (find(*eb, curBlock) == -1) {
+        // Вписываем сюда
+        insertBlock(poliz, curBlock, ls, eb);
+    } else {
+        // Прыжок назад
+        ls->push_back(poliz->getSize());
+        poliz->getProg()[poliz->getSize()] = (op_t) curBlock;
+        poliz->getEB()[poliz->getSize()]   = false;
+        poliz->incIter();
+        poliz->pushOp(_NONE_, _NONE_, JMP);
+    }
+}
+
+void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock, 
+                                   std::vector<int> * ls, std::vector<flowTree *> * eb) {
+    curBlock->ID = poliz->getSize();
+    eb->push_back(curBlock);
+    copyPOLIZ(curBlock->block, *poliz, 0, curBlock->block.getSize());
+
+    if (curBlock->next.size() == 1) {
+        newConn(poliz, curBlock->next[0].first, ls, eb);
+    } else if (curBlock->next.size() == 2) {
+        flowTree * falseb = curBlock->next[find(curBlock->next, (char)2)].first;
+        flowTree * trueb  = curBlock->next[find(curBlock->next, (char)1)].first;
+        int idx = poliz->getSize();
+        ls->push_back(idx);
+        poliz->getProg()[idx] = (op_t) trueb;
+        poliz->getEB()[idx]   = false;
+        poliz->incIter();
+        poliz->pushOp(_BOOLEAN_, _INT_, JIT);
+        newConn(poliz, falseb, ls, eb);
+        newConn(poliz, trueb, ls, eb);
+    } else if (curBlock->next.size() > 2) throw Obstacle(PANIC);
+}
+
+void ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
+    poliz->clear();
+    std::vector<int> labelStorage;
+    std::vector<flowTree*> existingBlocks;
+    insertBlock(poliz, &ft, &labelStorage, &existingBlocks);
+    if (existingBlocks.size() != blocksNum)
+        std::cout << "Чего-то не хватает...\n";
+    for (auto lpos: labelStorage) {
+        flowTree * block = (flowTree *) poliz->getProg()[lpos];
+        IT->pushVal(new int (block->ID));
+        IT->pushType(_LABEL_);
+        poliz->getProg()[lpos] = (op_t) IT->confirm();
     }
 }

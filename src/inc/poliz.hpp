@@ -19,12 +19,14 @@ public:
     void pushVal(IdentTable * val);
     void pushOp(type_t lval, type_t rval, operation_t op);
     void pop(void);
+    void clear(void);
     void repr(bool dontBreak = false);
     void interpretAsOp(op_t op);
     void interpretAsVal(op_t val);
     int getSize(void) const;
     op_t * getProg(void);
     bool * getEB(void);
+    void incIter(void);
 
 };
 

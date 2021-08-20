@@ -108,3 +108,11 @@ int POLIZ::getSize(void) const {
 void POLIZ::pop(void) {
     iter = (iter == 0) ? 0 : iter - 1;
 }
+
+void POLIZ::clear(void) {
+    iter = 0;
+}
+
+void POLIZ::incIter(void) {
+    iter++;
+}

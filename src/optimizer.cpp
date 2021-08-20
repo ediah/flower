@@ -7,13 +7,21 @@ Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
     poliz = p;
 }
 
-void Optimizer::optimize(void) {
+void Optimizer::optimize(bool verbose) {
+    CFG.make(poliz);
+    CFG.draw("compiled");
+
+    if (verbose) CFG.info();
+
+    /* Тут должны быть оптимизационные процедуры */
+
+    CFG.decompose(IdTable, poliz);
+
+    //CFG.make(poliz);
+    //CFG.draw("optimized");
+
     #ifdef DEBUG
     IdTable->repr();
     poliz->repr();
-    #endif
-
-    CFG.make(poliz);
-    CFG.draw();
-
+    #endif    
 }
