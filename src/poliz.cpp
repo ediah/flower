@@ -116,3 +116,9 @@ void POLIZ::clear(void) {
 void POLIZ::incIter(void) {
     iter++;
 }
+
+void POLIZ::push(op_t op, bool eb) {
+    prog[iter] = op;
+    execBit[iter] = eb;
+    iter++;
+}

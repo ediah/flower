@@ -6,6 +6,9 @@
 #include "tables.hpp"
 #include "poliz.hpp"
 
+/* Эта опция нужна для прорисовки ГПУ по шагам */
+//#define CFG_STEPBYSTEP
+
 struct flowTree {
     int ID;                           // Для визуализации
     POLIZ block;                      // Блок кода
@@ -35,11 +38,14 @@ public:
     void draw(std::string filename);
     void drawNode(flowTree p);
     void drawEdge(flowTree & p);
-    flowTree* newBlock(int blockId, POLIZ * p, flowTree * curBlock, char cond = 0);
+    void newBlock(int blockId, POLIZ * p, flowTree * curBlock, char cond = 0);
     void decompose(IdentTable* IT, POLIZ* poliz);
     void insertBlock(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
     void newConn(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
     void info(void);
+    void clear(void);
+    void deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del);
+    void fixStop(flowTree * ft);
 };
 
 #endif

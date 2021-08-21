@@ -52,6 +52,7 @@ public:
     void setOffset(int x);
     int getOffset(void) const;
     void writeValToStream(std::ostream & s);
+    IdentTable * deleteLabels(void);
 
     ~IdentTable();
 };

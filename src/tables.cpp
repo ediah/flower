@@ -194,19 +194,19 @@ IdentTable * IdentTable::getIT(char * name, bool autodel) {
 
 void IdentTable::whoami() {
 
-    std::cout << '{' << typetostr(valType) << ' ';
+    std::cout << '[' << typetostr(valType) << ' ';
     if (valType == _STRUCT_) {
         std::cout << structName << ' ';
         if (name != nullptr) std::cout << name;
         else std::cout << "? ";
         if (func) std::cout << "FUNCTION ";
-        std::cout << " = {";
+        std::cout << " = [";
         IdentTable * fields = (IdentTable *) val;
         while (fields->next != nullptr) {
             fields->whoami();
             fields = fields->next;
         }
-        std::cout << " }";
+        std::cout << " ]";
     } else {
         if (func) std::cout << "FUNCTION ";
         if (name != nullptr)
@@ -222,11 +222,11 @@ void IdentTable::whoami() {
                 case _BOOLEAN_:
                     std::cout << * (bool*) val; break;
                 default: 
-                    std::cout << "[неизвестен]"; break;
+                    std::cout << "?"; break;
             }
-        } else std::cout << "(не определён)";
+        } else std::cout << "?";
     }
-    std::cout << '}';
+    std::cout << ']';
 
 }
 
@@ -314,6 +314,35 @@ void IdentTable::writeValToStream(std::ostream & s) {
             throw Obstacle(PANIC);
     }
 }
+
+IdentTable * IdentTable::deleteLabels(void) {
+    IdentTable *p, *head = this, *temp;
+
+    if (head->valType == _LABEL_) head = head->next;
+
+    while ((head != nullptr) && (head->valType == _LABEL_)) {
+        temp = head;
+        head = head->next;
+        temp->next = nullptr;
+        delete temp;
+    }
+
+    p = head;
+
+    if (p == nullptr) return p;
+
+    while (p->next != nullptr) {
+        if (p->next->valType == _LABEL_) {
+            temp = p->next;
+            p->next = p->next->next;
+            temp->next = nullptr;
+            delete temp;
+        } else p = p->next;
+    }    
+
+    return head;
+}
+
 
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;

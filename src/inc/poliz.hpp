@@ -19,6 +19,7 @@ public:
     void pushVal(IdentTable * val);
     void pushOp(type_t lval, type_t rval, operation_t op);
     void pop(void);
+    void push(op_t op, bool eb);
     void clear(void);
     void repr(bool dontBreak = false);
     void interpretAsOp(op_t op);
