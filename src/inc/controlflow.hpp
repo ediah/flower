@@ -46,6 +46,7 @@ public:
     void clear(void);
     void deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del);
     void fixStop(flowTree * ft);
+    ~ControlFlowGraph();
 };
 
 #endif

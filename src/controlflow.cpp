@@ -345,3 +345,7 @@ void ControlFlowGraph::clear(void) {
     blocksNum = 0;
     jumpsNum = 0;
 }
+
+ControlFlowGraph::~ControlFlowGraph() {
+    clear();
+}
