@@ -103,11 +103,39 @@ char * typetostr(type_t t) {
     throw Obstacle(PANIC);
 }
 
+bool isNullary(operation_t o) {
+    bool ret = (o == NONE) || (o == ENDL) || (o == RET) || (o == STOP);
+    return ret;
+}
+
+bool isUnary(operation_t o) {
+    bool ret = (o == INV) || (o == LNOT) || (o == LOAD) || (o == READ);
+    ret = ret || (o == WRITE) || (o == JMP);
+    return ret;
+}
+
+bool isBinary(operation_t o) {
+    bool ret = (o == JIT) || (o == CALL) || (o == PLUS) || (o == MINUS);
+    ret = ret || (o == LOR) || (o == MUL) || (o == DIV) || (o == LAND);
+    ret = ret || (o == MOD) || (o == LESS) || (o == GRTR) || (o == LESSEQ);
+    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ) || (o == ASSIGN);
+    return ret;
+}
 
 bool isExpr(operation_t o) {
     bool ret = (o == INV) || (o == PLUS) || (o == MINUS) || (o == LOR);
     ret = ret || (o == MUL) || (o == DIV) || (o == LAND) || (o == LNOT);
     ret = ret || (o == MOD) || (o == LESS) || (o == GRTR) || (o == LESSEQ);
-    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ);
+    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ) || (o == ASSIGN);
     return ret;
+}
+
+int operands(operation_t o) {
+    if (isNullary(o))
+        return 0;
+    if (isUnary(o))
+        return 1;
+    if (isBinary(o))
+        return 2;
+    throw Obstacle(PANIC);
 }

@@ -26,12 +26,14 @@ struct flowTree {
 
 class ControlFlowGraph {
     flowTree ft;
+    std::vector<flowTree *> tails;
     std::ofstream graph;
     std::vector<int> drawed;
     int blocksNum;
     int jumpsNum;
+    int funcsNum;
 public:
-    ControlFlowGraph(): ft(0), blocksNum(0), jumpsNum(0) {};
+    ControlFlowGraph(): ft(0), blocksNum(0), jumpsNum(0), funcsNum(0) {};
 
     void make(POLIZ * p);
     void makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb, bool exists);
@@ -45,7 +47,10 @@ public:
     void info(void);
     void clear(void);
     void deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del);
-    void fixStop(flowTree * ft);
+    void findTails(flowTree * ft);
+    flowTree * head(void);
+    flowTree * tailStop(void);
+    std::vector<flowTree *> tailRet(void);
     ~ControlFlowGraph();
 };
 

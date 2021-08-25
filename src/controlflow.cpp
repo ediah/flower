@@ -1,44 +1,11 @@
 #include "controlflow.hpp"
 #include "tables.hpp"
 #include "obstacle.hpp"
+#include "util.hpp"
 #include <iterator>
 #include <iostream>
 
 std::vector<int> flowTree::checked {0};
-
-template<typename T>
-int find(std::vector<T> vec, T x) {
-    for (int i = 0; i < vec.size(); i++) {
-        if (vec[i] == x) return i;
-    }
-    return -1;
-}
-
-template<typename K, typename V>
-int find(std::vector<std::pair<K, V>> vec, K x) {
-    for (int i = 0; i < vec.size(); i++) {
-        if (vec[i].first == x) return i;
-    }
-    return -1;
-}
-
-template<typename K, typename V>
-int find(std::vector<std::pair<K, V>> vec, V x) {
-    for (int i = 0; i < vec.size(); i++) {
-        if (vec[i].second == x) return i;
-    }
-    return -1;
-}
-
-void copyPOLIZ(POLIZ & src, POLIZ & dst, int start, int end) {
-    int j = dst.getSize();
-    for (int i = start; i < end; i++) {
-        dst.getEB()[j]   = src.getEB()[i];
-        dst.getProg()[j] = src.getProg()[i];
-        dst.incIter();
-        j++;
-    }
-}
 
 flowTree* flowTree::getFT(int id, bool head) {
     if (ID == id) return this;
@@ -191,19 +158,36 @@ void ControlFlowGraph::make(POLIZ * p) {
     makeBranch(p, &ft, nullptr, false);
     blocksNum++;
     ft.checked.clear();
-    fixStop(&ft);
+    findTails(&ft);
 }
 
-void ControlFlowGraph::fixStop(flowTree * ft) {
+void ControlFlowGraph::findTails(flowTree * ft) {
     int s = ft->block.getSize();
-    if ((s > 0) && ((ft->block.getProg()[s-1] & 0xFF) == STOP)) {
-        ft->next.clear();
-        return;
+    if (s > 0) {
+        operation_t op = (operation_t) (ft->block.getProg()[s-1] & 0xFF);
+        if ((op == STOP) || (op == RET)) {
+            for (auto node: ft->next) {
+                auto vec = node.first->prev;
+                int idx = find(vec, ft);
+                if (idx == -1) throw Obstacle(PANIC);
+                vec.erase(vec.begin() + idx);
+            }
+            ft->next.clear();
+        }
+        if (op == STOP) {
+            tails.insert(tails.begin(), ft);
+            return;
+        }
+        if (op == RET) {
+            funcsNum++;
+            tails.insert(tails.end(), ft);
+            return;
+        }
     }
     for (auto node: ft->next) {
         if (find(ft->checked, node.first->ID) == -1) {
             ft->checked.push_back(node.first->ID);
-            fixStop(node.first);
+            findTails(node.first);
         }
     }
 }
@@ -212,6 +196,7 @@ void ControlFlowGraph::info(void) {
     std::cout << "Граф потока управления построен. Статистика:\n";
     std::cout << "\tВсего блоков: " << blocksNum << "\n";
     std::cout << "\tВсего переходов: " << jumpsNum << "\n";
+    std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
 void ControlFlowGraph::draw(std::string filename) {
@@ -344,6 +329,25 @@ void ControlFlowGraph::clear(void) {
     drawed.clear();
     blocksNum = 0;
     jumpsNum = 0;
+}
+
+flowTree * ControlFlowGraph::head(void) {
+    return &ft;
+}
+
+flowTree * ControlFlowGraph::tailStop(void) {
+    if (funcsNum + 1 != tails.size())
+        throw Obstacle(PANIC);
+    
+    return tails[0];
+}
+
+std::vector<flowTree *> ControlFlowGraph::tailRet(void) {
+    std::vector<flowTree *> ret;
+    for (auto it = tails.begin() + 1; it != tails.end(); ++it)
+        ret.push_back(*it);
+
+    return ret;
 }
 
 ControlFlowGraph::~ControlFlowGraph() {

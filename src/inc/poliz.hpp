@@ -14,7 +14,9 @@ class POLIZ {
     int iter;
 
 public:
-    POLIZ(void);
+    POLIZ(int s = 0);
+
+    POLIZ& operator=(const POLIZ& p);
 
     void pushVal(IdentTable * val);
     void pushOp(type_t lval, type_t rval, operation_t op);
