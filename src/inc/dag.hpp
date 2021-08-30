@@ -2,6 +2,7 @@
 #define DAG_HPP
 
 #include <vector>
+#include <utility>
 #include "exprtype.hpp"
 #include "tables.hpp"
 #include "poliz.hpp"
@@ -11,17 +12,21 @@ struct DAGRow {
     op_t opcode;
     DAGRow * lvar;
     DAGRow * rvar;
+    DAGRow * prev;
     bool assigned;
 
-    static std::vector<DAGRow *> deleted;
+    static std::vector<DAGRow *> created;
 
     DAGRow(): lvar(nullptr), rvar(nullptr), ident(nullptr), 
-                    assigned(false), opcode((op_t) NONE) {};
-    void decompose(POLIZ & p);
+        prev(nullptr), assigned(false), opcode((op_t) NONE) {
+            created.push_back(this);
+        };
+    void decompose(POLIZ & p, std::vector<DAGRow *> * asd);
+    bool isLast(void);
 
     friend bool operator==(DAGRow & a, DAGRow & b);
+    DAGRow & operator=(const DAGRow & dr);
 
-    ~DAGRow();
 };
 
 /*
@@ -30,18 +35,18 @@ struct DAGRow {
 class DirectedAcyclicGraph {
     std::vector<DAGRow *> rows;
     POLIZ stashed;
+    bool verbose;
 public:
-    DirectedAcyclicGraph() {};
+    DirectedAcyclicGraph(bool v): verbose(v) {};
     void make(POLIZ p);
     POLIZ decompose(void);
 
-    void commonSubExpr(void);
+    void commonSubExpr(IdentTable * IT);
 
-    void replace(int from, int to);
-    void remove(int idx);
     void stash(POLIZ & p);
 
-    int findLast(IdentTable * var);
+    std::pair<std::pair<DAGRow *, DAGRow *>, int> findCopies(
+                DAGRow * left, DAGRow * right, int a, int b);
 
     ~DirectedAcyclicGraph();
 };

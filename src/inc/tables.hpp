@@ -9,6 +9,7 @@ class IdentTable {
     type_t valType;    // Тип идентификатора
     char * structName; // Имя структуры (если valType == _STRUCT_)
     char * name;       // Имя идентификатора
+    char * fadedName;  // Для отладки
     bool def;          // Определён ли
     bool func;         // Является ли функцией
     bool reg;          // Лежит ли на регистрах
@@ -20,8 +21,9 @@ class IdentTable {
 public:
     IdentTable *next;
 
-    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), params(0),
-        next(nullptr), def(false), func(false), reg(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
+                      params(0), fadedName(nullptr), next(nullptr), def(false), 
+                      func(false), reg(false), val(nullptr), ord(0), offset(0) {};
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
     void pushId(char * ident);
@@ -36,6 +38,7 @@ public:
     void * getVal(void);
     void setFunc(void);
     bool isFunc(void) const;
+    bool isDef(void) const;
     void setVal(void * val);
     void setId(char * name);
     char * getId(void) const;
@@ -53,6 +56,8 @@ public:
     int getOffset(void) const;
     void writeValToStream(std::ostream & s);
     IdentTable * deleteLabels(void);
+    friend bool operator==(IdentTable & a, IdentTable & b);
+    void fade(void);
 
     ~IdentTable();
 };

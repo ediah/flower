@@ -35,6 +35,17 @@ void copyPOLIZ(POLIZ & src, POLIZ & dst, int start, int end) {
     }
 }
 
+bool charEqual(char* a, char* b) {
+    bool ret = true;
+    int i = 0;
+    while (ret && (a[i] != '\0') && (b[i] != '\0')) {
+        ret = ret && (a[i] == b[i]);
+        i++;
+    }
+    ret = ret && (a[i] == '\0') && (b[i] == '\0');
+    return ret;
+}
+
 template int find(std::vector<int> vec, int x);
 template int find(std::vector<flowTree*>, flowTree*);
 template int find(std::vector<DAGRow*>, DAGRow*);

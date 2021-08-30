@@ -4,6 +4,7 @@
 #include "tables.hpp"
 #include "obstacle.hpp"
 #include "exprtype.hpp"
+#include "util.hpp"
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
     valType = templateIT.valType;
@@ -22,6 +23,11 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
         name = new char[strnlen(templateIT.name, MAXIDENT) + 1];
         memccpy(name, templateIT.name, '\0', strnlen(templateIT.name, MAXIDENT) + 1);
     } else name = nullptr;
+
+    if (templateIT.fadedName != nullptr) {
+        fadedName = new char[strnlen(templateIT.fadedName, MAXIDENT) + 1];
+        memccpy(fadedName, templateIT.fadedName, '\0', strnlen(templateIT.fadedName, MAXIDENT) + 1);
+    } else fadedName = nullptr;
     
     if (templateIT.valType == _STRUCT_)
         val = new IdentTable( * (IdentTable *)templateIT.val);
@@ -47,6 +53,11 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
         name = new char[strnlen(templateIT.name, MAXIDENT) + 1];
         memccpy(name, templateIT.name, '\0', strnlen(templateIT.name, MAXIDENT) + 1);
     } else name = nullptr;
+
+    if (templateIT.fadedName != nullptr) {
+        fadedName = new char[strnlen(templateIT.fadedName, MAXIDENT) + 1];
+        memccpy(fadedName, templateIT.fadedName, '\0', strnlen(templateIT.fadedName, MAXIDENT) + 1);
+    } else fadedName = nullptr;
     
     if (templateIT.valType == _STRUCT_)
         val = new IdentTable( * (IdentTable *)templateIT.val);
@@ -210,8 +221,12 @@ void IdentTable::whoami() {
     } else {
         if (func) std::cout << "FUNCTION ";
         if (name != nullptr)
-            std::cout << name << " = ";
-        if (def) {
+            std::cout << name;
+        if (fadedName != nullptr) 
+            std::cout << '(' << fadedName << ") ";
+        if (func) std::cout << * (int*) val;
+        else if (def) {
+            std::cout << "= ";
             switch (valType) {
                 case _INT_: case _LABEL_:
                     std::cout << * (int*) val; break;
@@ -224,7 +239,7 @@ void IdentTable::whoami() {
                 default: 
                     std::cout << "?"; break;
             }
-        } else std::cout << "?";
+        } else std::cout << "= ?";
     }
     std::cout << ']';
 
@@ -343,9 +358,53 @@ IdentTable * IdentTable::deleteLabels(void) {
     return head;
 }
 
+bool IdentTable::isDef(void) const {
+    return def;
+}
+
+bool operator==(IdentTable & a, IdentTable & b) {
+    if (&a == &b) return true;
+
+    if ((a.name == nullptr) && (b.name == nullptr)) {
+        if (a.valType != b.valType) return false;
+        if ((a.val == nullptr) && (b.val == nullptr))
+            return true;
+        if ((a.val == nullptr) || (b.val == nullptr))
+            return false;
+        bool ret;
+        switch (a.valType) {
+            case _INT_:
+                ret = ((*(int*)a.val) == (*(int*)b.val));
+                break;
+            case _REAL_:
+                ret = ((*(float*)a.val) == (*(float*)b.val));
+                break;
+            case _STRING_:
+                ret = charEqual((char*)a.val, (char*)b.val);
+                break;
+            case _BOOLEAN_:
+                ret = ((*(bool*)a.val) == (*(bool*)b.val));
+                break;
+            default:
+                ret = false;
+        }
+        return ret;
+    }
+
+    if ((a.name != nullptr) && (b.name != nullptr))
+        return charEqual(a.name, b.name);
+
+    return false;
+}
+
+void IdentTable::fade(void) {
+    fadedName = name;
+    name = nullptr;
+}
 
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;
+    if (fadedName != nullptr) delete [] fadedName;
 
     if ((val != nullptr) && (!func)) {
         switch (valType) {

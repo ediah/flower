@@ -137,7 +137,7 @@ void Parser::defFunction(void) {
     if (inFunc) throw Obstacle(NO_RETURN);
 
     while (formalParams != nullptr) {
-        formalParams->setId(nullptr);
+        formalParams->fade();
         formalParams = formalParams->next;
     }
     inFunc = false;

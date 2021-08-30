@@ -11,13 +11,11 @@ class Optimizer {
     IdentTable * IdTable;
     POLIZ * poliz;
     ControlFlowGraph CFG;
-    DirectedAcyclicGraph DAG;
 public:
     Optimizer(IdentTable * IT, POLIZ * p);
 
     void optimize(bool verbose);
-    //void constProp(void);
-    void constantFolding(void);
+    void reduceConstants(void);
     void commonSubExpr(void);
 };
 

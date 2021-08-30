@@ -9,10 +9,38 @@ Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
     poliz = p;
 }
 
+void Optimizer::reduceConstants(void) {
+    IdentTable * ait = IdTable, *bit = IdTable, *temp;
+
+    while (ait->next != nullptr) {
+        bit = ait;
+        while (bit->next != nullptr) {
+            if ((*ait == *bit->next) && (bit->next->isDef())) {
+                for (int i = 0; i < poliz->getSize(); i++) {
+                    if ((!poliz->getEB()[i]) && (poliz->getProg()[i] == (op_t)bit->next))
+                        poliz->getProg()[i] = (op_t) ait;
+                }
+                #ifdef DEBUG
+                std::cout << "УДАЛЁН ";
+                bit->next->whoami();
+                std::cout << "\n";
+                #endif
+                temp = bit->next;
+                bit->next = bit->next->next;
+                temp->next = nullptr;
+                delete temp;
+            } else bit = bit->next;
+        }
+        ait = ait->next;
+    }
+}
+
 void Optimizer::optimize(bool verbose) {
+    reduceConstants();
+    
     CFG.make(poliz);
     #ifdef DEBUG
-    CFG.draw("compiled");
+    //CFG.draw("compiled");
     #endif
     if (verbose) CFG.info();
 
@@ -22,15 +50,14 @@ void Optimizer::optimize(bool verbose) {
     optimized.push_back(CFG.head());
 
     while (queue.size() != 0) {
-        DirectedAcyclicGraph DAG;
+        DirectedAcyclicGraph DAG(verbose);
         DAG.make(queue.front()->block);
 
-        DAG.commonSubExpr();
+        DAG.commonSubExpr(IdTable);
 
-        POLIZ dst = queue.front()->block;
         POLIZ src = DAG.decompose();
-        dst.clear();
-        copyPOLIZ(src, dst, 0, src.getSize());
+        queue.front()->block.clear();
+        copyPOLIZ(src, queue.front()->block, 0, src.getSize());
 
         for (auto node: queue.front()->next) {
             if (find(optimized, node.first) == -1) {
@@ -44,19 +71,15 @@ void Optimizer::optimize(bool verbose) {
     CFG.decompose(IdTable, poliz);
 
     #ifdef DEBUG
+    /*
     CFG.clear();
     CFG.make(poliz);
     CFG.draw("optimized");
 
     if (verbose) CFG.info();
 
-    DAG.make(CFG.head()->block);
-    POLIZ dcp = DAG.decompose();
-    CFG.head()->block.repr();
-    std::cout << "\n";
-    dcp.repr();
-
     //IdTable->repr();
     //poliz->repr();
+    */
     #endif    
 }
