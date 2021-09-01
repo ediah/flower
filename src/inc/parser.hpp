@@ -82,7 +82,7 @@ public:
     void continueOp(void); // continue
     void returnOp(void);
 
-    void optimize(void);
+    void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде
     void giveBIN(const char * filename); // Запись бинарника
 

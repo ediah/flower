@@ -6,22 +6,24 @@
 #include "exprtype.hpp"
 
 class IdentTable {
-    type_t valType;
-    char * structName;
-    char * name;
-    bool def;
-    bool func;
-    bool reg;
-    void * val;
-    int ord;
-    int params;
-    int offset; // для бинарки
+    type_t valType;    // Тип идентификатора
+    char * structName; // Имя структуры (если valType == _STRUCT_)
+    char * name;       // Имя идентификатора
+    char * fadedName;  // Для отладки
+    bool def;          // Определён ли
+    bool func;         // Является ли функцией
+    bool reg;          // Лежит ли на регистрах
+    void * val;        // Данные
+    int ord;           // Номер элемента
+    int params;        // Количество переменных (если функция)
+    int offset;        // Позиция в байткоде
 
 public:
     IdentTable *next;
 
-    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), params(0),
-        next(nullptr), def(false), func(false), reg(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
+                      params(0), fadedName(nullptr), next(nullptr), def(false), 
+                      func(false), reg(false), val(nullptr), ord(0), offset(0) {};
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
     void pushId(char * ident);
@@ -36,6 +38,7 @@ public:
     void * getVal(void);
     void setFunc(void);
     bool isFunc(void) const;
+    bool isDef(void) const;
     void setVal(void * val);
     void setId(char * name);
     char * getId(void) const;
@@ -47,11 +50,14 @@ public:
     int getParams(void) const;
     IdentTable * getIT(char * name, bool autodel = true);
     IdentTable * last(void);
-    void whoami(void);
+    void whoami();
     void repr(void);
     void setOffset(int x);
     int getOffset(void) const;
     void writeValToStream(std::ostream & s);
+    IdentTable * deleteLabels(void);
+    friend bool operator==(IdentTable & a, IdentTable & b);
+    void fade(void);
 
     ~IdentTable();
 };

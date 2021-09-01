@@ -43,5 +43,9 @@ enum operation_t {
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);
 char * typetostr(type_t t);
+bool isExpr(operation_t o);
+bool isUnary(operation_t o);
+
+int operands(operation_t o);
 
 #endif

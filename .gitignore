@@ -4,6 +4,10 @@ mlc.tgz
 out.bin
 cppcheck/
 cov-int/
+compiled.dot
+compiled.png
+optimized.dot
+optimized.png
 # Prerequisites
 *.d
 

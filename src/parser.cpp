@@ -137,7 +137,7 @@ void Parser::defFunction(void) {
     if (inFunc) throw Obstacle(NO_RETURN);
 
     while (formalParams != nullptr) {
-        formalParams->setId(nullptr);
+        formalParams->fade();
         formalParams = formalParams->next;
     }
     inFunc = false;
@@ -1153,7 +1153,7 @@ void Parser::revert(int x) {
     code >>= c;
 }
 
-void Parser::optimize(void) {
+void Parser::optimize(bool verbose) {
     Optimizer opt(&IdTable, &poliz);
-    opt.optimize();
+    opt.optimize(verbose);
 }

@@ -2,7 +2,7 @@
 #include "poliz.hpp"
 #include "obstacle.hpp"
 
-POLIZ::POLIZ(void) {
+POLIZ::POLIZ(int s) {
     iter = 0;
 
     for (int i = 0; i < MAXCMD; i++) {
@@ -12,12 +12,25 @@ POLIZ::POLIZ(void) {
 
 }
 
-void POLIZ::repr(void) {
+POLIZ& POLIZ::operator=(const POLIZ& p) {
+    if (this == &p) return *this;
+    for (int i = 0; i < p.iter; i++) {
+        prog[i] = p.prog[i];
+        execBit[i] = p.execBit[i];
+    }
+    iter = p.iter;
+    return *this;
+}
+
+void POLIZ::repr(bool dontBreak) {
     for (int i = 0; i < iter; i++) {
         std::cout << i << ") ";
         if (execBit[i]) interpretAsOp(prog[i]);
         else interpretAsVal(prog[i]);
-        std::cout << std::endl;
+        if (!dontBreak)
+            std::cout << "\n";
+        else
+            std::cout << "\\n";
     }
 }
 
@@ -100,4 +113,22 @@ bool * POLIZ::getEB(void) {
 
 int POLIZ::getSize(void) const {
     return iter;
+}
+
+void POLIZ::pop(void) {
+    iter = (iter == 0) ? 0 : iter - 1;
+}
+
+void POLIZ::clear(void) {
+    iter = 0;
+}
+
+void POLIZ::incIter(void) {
+    iter++;
+}
+
+void POLIZ::push(op_t op, bool eb) {
+    prog[iter] = op;
+    execBit[iter] = eb;
+    iter++;
 }

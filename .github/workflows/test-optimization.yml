@@ -1,0 +1,37 @@
+name: Test Optimization
+
+on:
+  push:
+    branches: [ master, optimize ]
+  pull_request:
+    branches: [ master, optimize ]
+
+  workflow_dispatch:
+
+jobs:
+  A-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: make
+    - name: Run A-units with optimization
+      run: ./mlc-test -O ./test/A-unit/unit*.ml
+  B-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: make
+    - name: Run B-units with optimization
+      run: ./mlc-test -O ./test/B-unit/unit*.ml
+  Valgrind:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Valgrind
+      run: sudo apt install valgrind
+    - name: Build
+      run: make
+    - name: Run Checks with optimization
+      run: ./mlc-test -m -O ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml

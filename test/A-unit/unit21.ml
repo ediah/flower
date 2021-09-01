@@ -1,0 +1,24 @@
+/* Тест оптимизации глобальных общих подвыражений */
+
+def somePolynome(real x): real {
+    real a, b, c;
+    a = (x * x) * (x * x);
+    b = (a + a) + (a + a);
+    c = (x * a) + (x * a) * x * a;
+    return c;
+}
+
+
+program {
+    int a = 1, b = 2;
+    int c = 3, d = 4;
+    real x;
+    a = 20 * b;
+    d = a + 20 * b;     /* d = a + a */
+    b = a + d;
+    c = 20 * b;
+    c = a + d;          /* c = b */
+    write(a, " ", b, " ", c, " ", d);
+    x = somePolynome(5.0);
+    write(x);
+}
