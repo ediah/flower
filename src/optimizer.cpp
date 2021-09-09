@@ -39,8 +39,8 @@ void Optimizer::optimize(bool verbose) {
     reduceConstants();
     
     CFG.make(poliz);
-    #ifdef DEBUG
-    //CFG.draw("compiled");
+    #ifdef DRAW_GRAPH
+    CFG.draw("compiled");
     #endif
     if (verbose) CFG.info();
 
@@ -70,16 +70,9 @@ void Optimizer::optimize(bool verbose) {
 
     CFG.decompose(IdTable, poliz);
 
-    #ifdef DEBUG
-    /*
+    #ifdef DRAW_GRAPH
     CFG.clear();
     CFG.make(poliz);
     CFG.draw("optimized");
-
-    if (verbose) CFG.info();
-
-    //IdTable->repr();
-    //poliz->repr();
-    */
     #endif    
 }

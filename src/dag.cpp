@@ -12,8 +12,6 @@ DAGRow & DAGRow::operator=(const DAGRow & dr) {
     ident = dr.ident;
     opcode = dr.opcode;
     prev = dr.prev;
-    //lvar = dr.lvar;
-    //rvar = dr.rvar;
     
     if (dr.lvar != nullptr) {
         lvar = new DAGRow;
@@ -28,6 +26,24 @@ DAGRow & DAGRow::operator=(const DAGRow & dr) {
     assigned = dr.assigned;
 
     return *this;
+}
+
+DAGRow::DAGRow(const DAGRow & dr) {
+    ident = dr.ident;
+    opcode = dr.opcode;
+    prev = dr.prev;
+    
+    if (dr.lvar != nullptr) {
+        lvar = new DAGRow;
+        *lvar = *dr.lvar;
+    } else lvar = nullptr;
+
+    if (dr.rvar != nullptr) {
+        rvar = new DAGRow;
+        *rvar = *dr.rvar;
+    } else rvar = nullptr;
+
+    assigned = dr.assigned;
 }
 
 bool operator==(DAGRow & a, DAGRow & b) {
@@ -75,7 +91,6 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
 }
 
 void DirectedAcyclicGraph::make(POLIZ p) {
-    DAGRow * nr;
     std::vector<std::pair<IdentTable *, DAGRow *>> changed;
     std::pair<IdentTable *, DAGRow *> rep;
     std::vector<DAGRow *> queue;
@@ -173,7 +188,6 @@ POLIZ DirectedAcyclicGraph::decompose(void) {
 }
 
 void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
-    bool found;
     std::pair<std::pair<DAGRow *, DAGRow *>, int> fcret;
     std::pair<DAGRow *, DAGRow *> rowc;
 

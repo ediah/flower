@@ -93,8 +93,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
 
                 int alen = 0;
                 int blen = 0;
-                for (; a[alen] != '\0'; ++alen);
-                for (; b[blen] != '\0'; ++blen);
+                for (; a[alen] != '\0'; ++alen) {}
+                for (; b[blen] != '\0'; ++blen) {}
 
                 char * c = new char [alen + blen + 1 + sizeof(char*)];
                 memcpy(c, "\0\0\0\0\0\0\0\0", sizeof(char*));
@@ -192,7 +192,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 int i = 0;
-                for (; (a[i] != '\0') && (b[i] != '\0'); i++);
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++) {}
                 stackVM.push(new bool ((a[i] == '\0') && (b[i] != '\0')), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(<)
@@ -203,7 +203,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 int i = 0;
-                for (; (a[i] != '\0') && (b[i] != '\0'); i++);
+                for (; (a[i] != '\0') && (b[i] != '\0'); i++) {}
                 stackVM.push(new bool (b[i] == '\0'), _BOOLEAN_);
             } else {
                 LOGIC_OPERATION(>)

@@ -26,6 +26,7 @@ struct DAGRow {
 
     friend bool operator==(DAGRow & a, DAGRow & b);
     DAGRow & operator=(const DAGRow & dr);
+    DAGRow(const DAGRow & dr);
 
 };
 
@@ -37,7 +38,7 @@ class DirectedAcyclicGraph {
     POLIZ stashed;
     bool verbose;
 public:
-    DirectedAcyclicGraph(bool v): verbose(v) {};
+    explicit DirectedAcyclicGraph(bool v): verbose(v) {};
     void make(POLIZ p);
     POLIZ decompose(void);
 

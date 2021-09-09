@@ -39,8 +39,6 @@ int checkMem(std::string cmd) {
     std::system( ("valgrind --log-file=\"a.out\" " + cmd).data() );
     std::ifstream log("a.out");
     std::string line;
-    std::string checkLeak("All heap blocks were freed");
-    std::string checkError("ERROR SUMMARY: 0 errors");
     while (! log.eof()) {
         log >> line;
         if (line == "All") {
@@ -90,7 +88,6 @@ int genCaseIn(std::ifstream & cases) {
 }
 
 int runValgrind(std::string filename, bool optimize, std::string input = "") {
-    int caseIterator = 0, errorIterator = 0;
     int ret = 0;
 
     ret += checkMem("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " + 
@@ -98,6 +95,7 @@ int runValgrind(std::string filename, bool optimize, std::string input = "") {
     std::cout << filename << std::endl;
 
     if (input != "") {
+        int caseIterator = 0;
         std::ifstream cases(input);
         std::string line;
         cases >> line;

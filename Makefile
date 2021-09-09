@@ -2,6 +2,7 @@ vpath %.cpp ./src
 vpath %.hpp ./src/inc
 
 RELEASE=YES
+WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
 REPORT=./cppcheck/cppcheck.report
@@ -22,6 +23,10 @@ ifeq (${RELEASE},YES)
 	OPTIFLAGS= -O2
 else
 	OPTIFLAGS= -O0 -g -DDEBUG
+endif
+
+ifeq (${WITH_DRAWING},YES)
+	OPTIFLAGS += -DDRAW_GRAPH
 endif
 
 CC= g++

@@ -115,7 +115,6 @@ int main(int argc, char** argv) {
         }
     }
         
-    bool ok;
     if (flags.compile) {
         if (!flags.infile) {
             std::cout << "Не указан входной файл." << std::endl;
@@ -127,7 +126,7 @@ int main(int argc, char** argv) {
             outname = "out.bin";
         }
 
-        ok = compile(flags, inname, outname);
+        bool ok = compile(flags, inname, outname);
         flags.run = flags.run && ok;
 
         if (flags.run) {

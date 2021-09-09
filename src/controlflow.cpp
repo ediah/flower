@@ -48,9 +48,9 @@ flowTree* flowTree::split(int id) {
     for (int i = block.getSize(); i > id - ID; i--)
         block.pop();
 
-    int idx;
     for (auto p: next) {
         fb->next.push_back(p);
+        int idx;
         while ((idx = find(p.first->prev, this)) != -1) {
             p.first->prev[idx].first = fb;
         }
@@ -236,8 +236,6 @@ void ControlFlowGraph::drawNode(flowTree p) {
 }
 
 void ControlFlowGraph::drawEdge(flowTree & p) {
-    int size = p.next.size();
-
     if (find(drawed, p.ID) != -1)
         return;
     

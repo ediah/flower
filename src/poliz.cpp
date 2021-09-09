@@ -22,6 +22,15 @@ POLIZ& POLIZ::operator=(const POLIZ& p) {
     return *this;
 }
 
+POLIZ::POLIZ(const POLIZ& p) {
+    if (this == &p) return;
+    for (int i = 0; i < p.iter; i++) {
+        prog[i] = p.prog[i];
+        execBit[i] = p.execBit[i];
+    }
+    iter = p.iter;
+}
+
 void POLIZ::repr(bool dontBreak) {
     for (int i = 0; i < iter; i++) {
         std::cout << i << ") ";
