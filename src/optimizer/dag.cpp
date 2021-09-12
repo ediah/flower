@@ -1,5 +1,5 @@
-#include "dag.hpp"
-#include "util.hpp"
+#include "optimizer/dag.hpp"
+#include "common/util.hpp"
 #include <iostream>
 
 std::vector<DAGRow *> DAGRow::created;

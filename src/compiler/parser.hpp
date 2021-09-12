@@ -6,12 +6,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "cursor.hpp"
-#include "tables.hpp"
-#include "poliz.hpp"
-#include "stack.hpp"
-
-#include "optimizer.hpp"
+#include "compiler/cursor.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
+#include "common/stack.hpp"
+#include "optimizer/optimizer.hpp"
 
 class Parser {
     std::ifstream code; // Код

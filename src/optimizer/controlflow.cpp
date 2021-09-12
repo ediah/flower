@@ -1,7 +1,7 @@
-#include "controlflow.hpp"
-#include "tables.hpp"
-#include "obstacle.hpp"
-#include "util.hpp"
+#include "optimizer/controlflow.hpp"
+#include "common/tables.hpp"
+#include "common/obstacle.hpp"
+#include "common/util.hpp"
 #include <iterator>
 #include <iostream>
 

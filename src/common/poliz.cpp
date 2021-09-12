@@ -1,6 +1,6 @@
 #include <iostream>
-#include "poliz.hpp"
-#include "obstacle.hpp"
+#include "common/poliz.hpp"
+#include "common/obstacle.hpp"
 
 POLIZ::POLIZ(int s) {
     iter = 0;

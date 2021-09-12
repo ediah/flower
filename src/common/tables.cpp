@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cstring>
-#include "parser.hpp"
-#include "tables.hpp"
-#include "obstacle.hpp"
-#include "exprtype.hpp"
-#include "util.hpp"
+#include "compiler/parser.hpp"
+#include "common/tables.hpp"
+#include "common/obstacle.hpp"
+#include "common/exprtype.hpp"
+#include "common/util.hpp"
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
     valType = templateIT.valType;

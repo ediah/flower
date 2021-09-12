@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <fstream>
-#include "tables.hpp"
-#include "poliz.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
 
 /* Эта опция нужна для прорисовки ГПУ по шагам */
 //#define CFG_STEPBYSTEP

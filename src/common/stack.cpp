@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iostream>
-#include "stack.hpp"
-#include "exprtype.hpp"
+#include "common/stack.hpp"
+#include "common/exprtype.hpp"
 
 void Gendarme::push(void * p, type_t type) {
     pointers[pos] = p;

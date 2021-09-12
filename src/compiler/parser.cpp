@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
-#include "parser.hpp"
-#include "obstacle.hpp"
+#include "compiler/parser.hpp"
+#include "common/obstacle.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 

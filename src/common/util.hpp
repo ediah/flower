@@ -2,8 +2,8 @@
 #define UTIL_HPP
 
 #include <vector>
-#include "poliz.hpp"
-#include "controlflow.hpp"
+#include "common/poliz.hpp"
+#include "optimizer/controlflow.hpp"
 
 template<typename T>
 int find(std::vector<T> vec, T x);

@@ -3,8 +3,8 @@
 
 #define MAXCMD 1024
 
-#include "tables.hpp"
-#include "exprtype.hpp"
+#include "common/tables.hpp"
+#include "common/exprtype.hpp"
 
 typedef long long op_t;
 

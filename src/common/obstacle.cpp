@@ -1,5 +1,5 @@
 #include <iostream>
-#include "obstacle.hpp"
+#include "common/obstacle.hpp"
 
 void Obstacle::describe(void) const {
     switch (r) {

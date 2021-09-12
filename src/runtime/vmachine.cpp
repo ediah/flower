@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
-#include "vmachine.hpp"
-#include "exprtype.hpp"
-#include "obstacle.hpp"
+#include "runtime/vmachine.hpp"
+#include "common/exprtype.hpp"
+#include "common/obstacle.hpp"
 
 void VirtualMachine::loadBIN(const char * filename) {
     std::ifstream bin;

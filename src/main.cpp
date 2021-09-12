@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <chrono>
-#include "parser.hpp"
-#include "vmachine.hpp"
-#include "debugger.hpp"
+#include "compiler/parser.hpp"
+#include "runtime/vmachine.hpp"
+#include "debugger/debugger.hpp"
 
 struct flags_t {
     bool debug;    // -d

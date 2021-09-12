@@ -2,10 +2,10 @@
 #define OPTIMIZER_H
 
 #include <vector>
-#include "tables.hpp"
-#include "poliz.hpp"
-#include "controlflow.hpp"
-#include "dag.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
+#include "optimizer/controlflow.hpp"
+#include "optimizer/dag.hpp"
 
 class Optimizer {
     IdentTable * IdTable;

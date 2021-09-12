@@ -1,5 +1,5 @@
-#include "obstacle.hpp"
-#include "exprtype.hpp"
+#include "common/obstacle.hpp"
+#include "common/exprtype.hpp"
 
 type_t expressionType(type_t t1, type_t t2, operation_t o) {
     type_t r = _NONE_;

@@ -2,10 +2,10 @@
 #define VMACHINE_H
 
 #include <fstream>
-#include "tables.hpp"
-#include "poliz.hpp"
-#include "parser.hpp"
-#include "stack.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
+#include "compiler/parser.hpp"
+#include "common/stack.hpp"
 
 #define MAXREGS 10
 

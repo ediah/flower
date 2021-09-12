@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <utility>
-#include "exprtype.hpp"
-#include "tables.hpp"
-#include "poliz.hpp"
+#include "common/exprtype.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
 
 struct DAGRow {
     IdentTable * ident;

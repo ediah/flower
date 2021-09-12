@@ -2,7 +2,7 @@
 #define DEBUGGER_H
 
 #include <iostream>
-#include "vmachine.hpp"
+#include "runtime/vmachine.hpp"
 
 class Debugger: public VirtualMachine {
 public:

@@ -3,7 +3,7 @@
 
 #include <cstddef>
 #include <ostream>
-#include "exprtype.hpp"
+#include "common/exprtype.hpp"
 
 class IdentTable {
     type_t valType;    // Тип идентификатора

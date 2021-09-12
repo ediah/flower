@@ -1,6 +1,6 @@
-#include "optimizer.hpp"
-#include "exprtype.hpp"
-#include "util.hpp"
+#include "optimizer/optimizer.hpp"
+#include "common/exprtype.hpp"
+#include "common/util.hpp"
 #include <iostream>
 #include <vector>
 
