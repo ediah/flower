@@ -83,7 +83,7 @@ public:
 
     void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде
-    void giveBIN(const char * filename); // Запись бинарника
+    void giveBIN(const char * filename, bool optimize, bool verbose); // Запись бинарника
 
     ~Parser(void);
 };

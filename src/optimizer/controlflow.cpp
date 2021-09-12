@@ -198,7 +198,7 @@ void ControlFlowGraph::info(void) const {
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
-void ControlFlowGraph::draw(std::string & filename) {
+void ControlFlowGraph::draw(std::string filename) {
     graph.open(filename + ".dot");
 
     graph << "digraph CFG {\n";
@@ -293,8 +293,8 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
     } else if (curBlock->next.size() > 2) throw Obstacle(PANIC);
 }
 
-void ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
-    //*IT = * IT->deleteLabels(); // эта функция всё портит
+IdentTable * ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
+    IT = IT->deleteLabels();
     poliz->clear();
     std::vector<int> labelStorage;
     std::vector<flowTree*> existingBlocks;
@@ -305,6 +305,7 @@ void ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
         IT->pushType(_LABEL_);
         poliz->getProg()[lpos] = (op_t) IT->confirm();
     }
+    return IT;
 }
 
 void ControlFlowGraph::deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del) {

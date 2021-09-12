@@ -35,7 +35,7 @@ void Optimizer::reduceConstants(void) {
     }
 }
 
-void Optimizer::optimize(bool verbose) {
+IdentTable * Optimizer::optimize(bool verbose) {
     reduceConstants();
     
     CFG.make(poliz);
@@ -68,11 +68,13 @@ void Optimizer::optimize(bool verbose) {
         queue.erase(queue.begin());
     }
 
-    CFG.decompose(IdTable, poliz);
+    IdTable = CFG.decompose(IdTable, poliz);
 
     #ifdef DRAW_GRAPH
     CFG.clear();
     CFG.make(poliz);
     CFG.draw("optimized");
-    #endif    
+    #endif   
+
+    return IdTable; 
 }

@@ -1117,12 +1117,18 @@ void Parser::finalize(void) {
     std::cout << std::endl;
 }
 
-void Parser::giveBIN(const char * filename) {
+void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
 
     IdentTable * ITp = &IdTable;
+
+    if (optimize) {
+        Optimizer opt(&IdTable, &poliz);
+        ITp = opt.optimize(verbose);
+    }
+
     while (ITp->next != nullptr) {
         ITp->setOffset((int)bin.tellp());
         ITp->writeValToStream(bin);
@@ -1152,9 +1158,4 @@ void Parser::giveBIN(const char * filename) {
 void Parser::revert(int x) {
     code.seekg((int)code.tellg() - x - 1);
     code >>= c;
-}
-
-void Parser::optimize(bool verbose) {
-    Optimizer opt(&IdTable, &poliz);
-    opt.optimize(verbose);
 }

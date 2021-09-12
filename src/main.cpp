@@ -33,11 +33,9 @@ bool compile(flags_t options, std::string ifname, std::string ofname) {
     bool ok = pworker.parse();
 
     if (ok) {
-        if (options.optimize) 
-            pworker.optimize(options.verbose);
         if (!options.silent) 
             pworker.finalize();
-        pworker.giveBIN(ofname.data());
+        pworker.giveBIN(ofname.data(), options.optimize, options.verbose);
 
         auto end = std::chrono::steady_clock::now();
         auto diff = end-start;

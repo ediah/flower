@@ -14,7 +14,7 @@ class Optimizer {
 public:
     Optimizer(IdentTable * IT, POLIZ * p);
 
-    void optimize(bool verbose);
+    IdentTable * optimize(bool verbose);
     void reduceConstants(void);
     void commonSubExpr(void);
 };
