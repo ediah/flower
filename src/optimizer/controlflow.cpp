@@ -118,7 +118,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
         if (p->getEB()[eip]) {
             if ((op & 0xFF) == JMP) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock);
                 break;
             }
@@ -126,7 +126,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             if ((op & 0xFF) == JIT) {
                 curBlock->block.pop(); // удалить LABEL
                 int bsize = curBlock->block.getSize();
-                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
                 if (curBlock->block.getSize() != bsize)
                     curBlock = curBlock->next[0].first;
@@ -137,7 +137,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             if ((op & 0xFF) == CALL) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
-                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1);
                 newBlock(eip + 1, p, curBlock, 2);
                 break;

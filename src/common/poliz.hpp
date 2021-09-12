@@ -8,6 +8,8 @@
 
 typedef long long op_t;
 
+#define IT_FROM_POLIZ(p, i) reinterpret_cast<IdentTable *>(p.getProg()[i])
+
 class POLIZ {
     op_t prog[MAXCMD];
     bool execBit[MAXCMD];

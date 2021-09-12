@@ -5,7 +5,7 @@
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "optimizer/controlflow.hpp"
-#include "optimizer/dag.hpp"
+#include "optimizer/acyclicgraph.hpp"
 
 class Optimizer {
     IdentTable * IdTable;

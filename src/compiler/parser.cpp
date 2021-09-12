@@ -120,7 +120,7 @@ void Parser::defFunction(void) {
             char * stName = identificator();
             IdTable.pushStruct(stName);
         } else throw Obstacle(NO_TYPE);
-    } else throw Obstacle(PROCEDURE);//thisFunc->setType(_NONE_);
+    } else throw Obstacle(PROCEDURE);
 
     retTypes.push(new type_t (thisFunc->getType()));
 
@@ -638,7 +638,7 @@ type_t Parser::boolExpr(void) {
     type_t r = _NONE_;
 
     r = add();
-    //code >>= c;
+    
     if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
         operation_t op = NONE;
         char p = c.symbol();
@@ -1144,7 +1144,7 @@ void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
             int tempint1 = (int)prog[i];
             bin.write((char*)&tempint1, sizeof(int));
         } else {
-            int tempint2 = reinterpret_cast<IdentTable *>(prog[i])->getOffset();
+            int tempint2 = IT_FROM_POLIZ(poliz, i)->getOffset();
             bin.write((char*)&tempint2, sizeof(int));
         }
         bin.write((char*)&execBit[i], sizeof(bool));

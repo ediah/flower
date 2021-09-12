@@ -1,4 +1,4 @@
-#include "optimizer/dag.hpp"
+#include "optimizer/acyclicgraph.hpp"
 #include "common/util.hpp"
 #include <iostream>
 
@@ -52,8 +52,6 @@ bool operator==(DAGRow & a, DAGRow & b) {
     if (&a == &b) return false;
 
     bool ret = (a.opcode == b.opcode);
-    //ret = ret && (a.lvar == b.lvar) && (a.rvar == b.rvar);
-
 
     if (a.lvar != b.lvar) {
         if ((a.lvar == nullptr) || (b.lvar == nullptr))
@@ -84,7 +82,7 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
     if ((operation_t)(p.getProg()[s - 1] & 0xFF) != CALL)
         return;
     
-    IdentTable * paramit = reinterpret_cast<IdentTable *>(p.getProg()[s - 2]);
+    IdentTable * paramit = IT_FROM_POLIZ(p, s - 2);
     int paramNum = * (int *) paramit->getVal();
     stashed.clear();
     copyPOLIZ(p, stashed, s - paramNum - 2, s);
@@ -126,18 +124,14 @@ void DirectedAcyclicGraph::make(POLIZ p) {
                 rep = std::make_pair(qrow->lvar->ident, qrow->rvar);
                 changed.emplace(changed.begin(), rep); 
             }
-            /*
-            if ((op == LOAD) && (qrow->rvar != nullptr)) {
-                qrow->ident = qrow->rvar->ident;
-            }
-            */
+            
         } else {
-            int idx = find(changed, reinterpret_cast<IdentTable *>(p.getProg()[i]));
+            int idx = find(changed, IT_FROM_POLIZ(p, i));
             if (idx != -1) {
                 qrow = changed[idx].second;
             } else {
                 qrow = new DAGRow;
-                qrow->ident = reinterpret_cast<IdentTable *>(p.getProg()[i]);
+                qrow->ident = IT_FROM_POLIZ(p, i);
             }
             queue.push_back(qrow);
         }
