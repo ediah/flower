@@ -21,9 +21,11 @@ class IdentTable {
 public:
     IdentTable *next;
 
-    IdentTable(void): valType(_NONE_), structName(nullptr), name(nullptr), 
-                      params(0), fadedName(nullptr), next(nullptr), def(false), 
-                      func(false), reg(false), val(nullptr), ord(0), offset(0) {};
+    IdentTable(void): valType(_NONE_), structName(nullptr), 
+                      name(nullptr), fadedName(nullptr), 
+                      def(false), func(false), reg(false), 
+                      val(nullptr), ord(0), params(0),
+                      offset(0), next(nullptr) {};
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
     void pushId(char * ident);

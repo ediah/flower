@@ -28,9 +28,9 @@ class Parser {
     Stack retTypes;      // Тип возвращаемых параметров из функций
 
     // Вспомогательные функции
-    int fastPow(int x, int n);  // Быстрое возведение в степень
-    bool readWord(char * word); // Чтение непрерывной последовательности символов
-    void revert(int x);         // Возврат курсора
+    static int fastPow(int x, int n);  // Быстрое возведение в степень
+    bool readWord(char * word);        // Чтение непрерывной последовательности символов
+    void revert(int x);                // Возврат курсора
 public:
     Parser(): ok(true), inFunc(false) {
         c.line = 1;

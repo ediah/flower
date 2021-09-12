@@ -33,9 +33,7 @@ class Stack {
 
     Gendarme memControl;
 public:
-    Stack(bool gendarme = true): pos(0){
-        for (int i = 0; i < MAXSTACK; i++) elem[i] = nullptr;
-    };
+    Stack(bool gendarme = true);
 
     void push(void * x, type_t type = _NONE_);
     void * pop(void); // удаляет
@@ -43,7 +41,7 @@ public:
     void * get(int x) const; // НЕ удаляет
     void dump(void) const;
     type_t topType(void) const;
-    bool isEmpty(void);
+    bool isEmpty(void) const;
     bool isDefined(void);
 };
 

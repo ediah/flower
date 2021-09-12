@@ -13,6 +13,7 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     offset = templateIT.offset;
     func = templateIT.func;
     reg = templateIT.reg;
+    params = templateIT.params;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -30,7 +31,7 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     } else fadedName = nullptr;
     
     if (templateIT.valType == _STRUCT_)
-        val = new IdentTable( * (IdentTable *)templateIT.val);
+        val = new IdentTable( * static_cast<IdentTable *>(templateIT.val));
     else val = templateIT.val;
 
     if (templateIT.next->getType() != _NONE_)
@@ -39,10 +40,15 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
 }
 
 IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
+    if (this == &templateIT) return *this;
+
     valType = templateIT.valType;
     def = templateIT.def;
     ord = templateIT.ord;
     offset = templateIT.offset;
+    func = templateIT.func;
+    reg = templateIT.reg;
+    params = templateIT.params;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -60,7 +66,7 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     } else fadedName = nullptr;
     
     if (templateIT.valType == _STRUCT_)
-        val = new IdentTable( * (IdentTable *)templateIT.val);
+        val = new IdentTable( * static_cast<IdentTable *>(templateIT.val));
     else val = templateIT.val;
 
     if (templateIT.next->getType() != _NONE_)
@@ -135,8 +141,8 @@ void IdentTable::dupType(void) {
             memccpy(p->next->structName, p->structName, '\0', strnlen(p->structName, MAXIDENT) + 1);
         }
         if (p->valType == _STRUCT_) {
-            p->next->val = new IdentTable(* (IdentTable *) p->val);
-            p = (IdentTable *) p->next->val;
+            p->next->val = new IdentTable(* static_cast<IdentTable *>(p->val));
+            p = static_cast<IdentTable *>(p->next->val);
             while (p->next != nullptr) {
                 if (p->valType != _STRUCT_)
                     p->val = nullptr;
@@ -212,7 +218,7 @@ void IdentTable::whoami() {
         else std::cout << "? ";
         if (func) std::cout << "FUNCTION ";
         std::cout << " = [";
-        IdentTable * fields = (IdentTable *) val;
+        IdentTable * fields = static_cast<IdentTable *>(val);
         while (fields->next != nullptr) {
             fields->whoami();
             fields = fields->next;
@@ -318,7 +324,7 @@ void IdentTable::writeValToStream(std::ostream & s) {
         case _BOOLEAN_:
             s.write((char*)val, sizeof(bool)); break;
         case _STRUCT_:
-            ITp = (IdentTable*)val;
+            ITp = static_cast<IdentTable*>(val);
             while (ITp->next != nullptr) {
                 ITp->setOffset((int)s.tellp());
                 ITp->writeValToStream(s);
@@ -328,34 +334,6 @@ void IdentTable::writeValToStream(std::ostream & s) {
         default:
             throw Obstacle(PANIC);
     }
-}
-
-IdentTable * IdentTable::deleteLabels(void) {
-    IdentTable *p, *head = this, *temp;
-
-    if (head->valType == _LABEL_) head = head->next;
-
-    while ((head != nullptr) && (head->valType == _LABEL_)) {
-        temp = head;
-        head = head->next;
-        temp->next = nullptr;
-        delete temp;
-    }
-
-    p = head;
-
-    if (p == nullptr) return p;
-
-    while (p->next != nullptr) {
-        if (p->next->valType == _LABEL_) {
-            temp = p->next;
-            p->next = p->next->next;
-            temp->next = nullptr;
-            delete temp;
-        } else p = p->next;
-    }    
-
-    return head;
 }
 
 bool IdentTable::isDef(void) const {
@@ -417,7 +395,7 @@ IdentTable::~IdentTable() {
             case _STRING_: 
                 delete [] (char*)val; break;
             case _STRUCT_: 
-                delete (IdentTable*)val; break;
+                delete static_cast<IdentTable*>(val); break;
             default: break;
         }
     }

@@ -25,8 +25,8 @@ public:
     void push(op_t op, bool eb);
     void clear(void);
     void repr(bool dontBreak = false);
-    void interpretAsOp(op_t op);
-    void interpretAsVal(op_t val);
+    static void interpretAsOp(op_t op);
+    static void interpretAsVal(op_t val);
     int getSize(void) const;
     op_t * getProg(void);
     bool * getEB(void);

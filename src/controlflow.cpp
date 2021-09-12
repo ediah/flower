@@ -118,16 +118,15 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
         if (p->getEB()[eip]) {
             if ((op & 0xFF) == JMP) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
+                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
                 newBlock(*(int*)blockId, p, curBlock);
                 break;
             }
 
             if ((op & 0xFF) == JIT) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
-                //curBlock = newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
                 int bsize = curBlock->block.getSize();
+                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
                 if (curBlock->block.getSize() != bsize)
                     curBlock = curBlock->next[0].first;
@@ -138,7 +137,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             if ((op & 0xFF) == CALL) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
+                blockId = reinterpret_cast<IdentTable *>(p->getProg()[eip-1])->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1);
                 newBlock(eip + 1, p, curBlock, 2);
                 break;
@@ -192,14 +191,14 @@ void ControlFlowGraph::findTails(flowTree * ft) {
     }
 }
 
-void ControlFlowGraph::info(void) {
+void ControlFlowGraph::info(void) const {
     std::cout << "Граф потока управления построен. Статистика:\n";
     std::cout << "\tВсего блоков: " << blocksNum << "\n";
     std::cout << "\tВсего переходов: " << jumpsNum << "\n";
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
-void ControlFlowGraph::draw(std::string filename) {
+void ControlFlowGraph::draw(std::string & filename) {
     graph.open(filename + ".dot");
 
     graph << "digraph CFG {\n";
@@ -301,7 +300,7 @@ void ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
     std::vector<flowTree*> existingBlocks;
     insertBlock(poliz, &ft, &labelStorage, &existingBlocks);
     for (auto lpos: labelStorage) {
-        flowTree * block = (flowTree *) poliz->getProg()[lpos];
+        flowTree * block = reinterpret_cast<flowTree *>(poliz->getProg()[lpos]);
         IT->pushVal(new int (block->ID));
         IT->pushType(_LABEL_);
         poliz->getProg()[lpos] = (op_t) IT->confirm();
@@ -331,21 +330,6 @@ void ControlFlowGraph::clear(void) {
 
 flowTree * ControlFlowGraph::head(void) {
     return &ft;
-}
-
-flowTree * ControlFlowGraph::tailStop(void) {
-    if (funcsNum + 1 != tails.size())
-        throw Obstacle(PANIC);
-    
-    return tails[0];
-}
-
-std::vector<flowTree *> ControlFlowGraph::tailRet(void) {
-    std::vector<flowTree *> ret;
-    for (auto it = tails.begin() + 1; it != tails.end(); ++it)
-        ret.push_back(*it);
-
-    return ret;
 }
 
 ControlFlowGraph::~ControlFlowGraph() {

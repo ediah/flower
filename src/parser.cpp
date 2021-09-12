@@ -131,7 +131,7 @@ void Parser::defFunction(void) {
     defs();
     operations();
 
-    delete (type_t*) retTypes.pop();
+    delete static_cast<type_t*>(retTypes.pop());
     
     if (c != '}') throw Obstacle(PROG_CLOSEBR);
     if (inFunc) throw Obstacle(NO_RETURN);
@@ -147,7 +147,7 @@ void Parser::returnOp(void) {
     inFunc = false;
     code >> c;
     type_t retFact = expr();
-    if (retFact != * (type_t *) retTypes.top()) 
+    if (retFact != * static_cast<type_t *>(retTypes.top())) 
         throw Obstacle(RETURN_TYPE_MISMATCH);
     if (c != ';') throw Obstacle(SEMICOLON);
     code >> c;
@@ -296,7 +296,8 @@ bool Parser::readWord(char * word) {
 void Parser::assignStruct(IdentTable * lval, IdentTable * rval) {
     while (lval->next != nullptr) {
         if (lval->getType() == _STRUCT_)
-            assignStruct((IdentTable *) lval->getVal(), (IdentTable *) rval->getVal());
+            assignStruct(static_cast<IdentTable *>(lval->getVal()), 
+                         static_cast<IdentTable *>(rval->getVal()));
         else {
             poliz.pushVal(lval);
             poliz.pushVal(rval);
@@ -312,7 +313,7 @@ void Parser::assign(IdentTable * lval) {
 
     if (lvtype == _STRUCT_) {
         if (c == '{') {
-            IdentTable * fields = (IdentTable *) lval->getVal();
+            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
             do {
                 code >> c;
                 char * fieldName = identificator();
@@ -323,7 +324,7 @@ void Parser::assign(IdentTable * lval) {
                 while (c == '.') {
                     code >> c;
                     fieldName = identificator();
-                    IdentTable * innerFields = (IdentTable *) val->getVal();
+                    IdentTable * innerFields = static_cast<IdentTable *>(val->getVal());
                     val = innerFields->getIT(fieldName);
                     if ((c == ' ') || (c == '\n')) code >> c;
                 }
@@ -340,7 +341,8 @@ void Parser::assign(IdentTable * lval) {
             type_t rvtype = rval->getType();
             if ((rvtype == _STRUCT_) && (strcmp(lval->getStruct(), rval->getStruct()) == 0)) {
                 // структуры идентичны, можно приравнивать 
-                assignStruct((IdentTable *) lval->getVal(), (IdentTable *) rval->getVal());
+                assignStruct(static_cast<IdentTable *>(lval->getVal()), 
+                             static_cast<IdentTable *>(rval->getVal()));
                 
             } else throw Obstacle(EXPR_BAD_TYPE);
         }
@@ -401,7 +403,7 @@ void Parser::constStruct(IdentTable * fields) {
                 val->setVal( new bool (constBool()) );
                 break;
             case _STRUCT_:
-                constStruct((IdentTable *)val->getVal());
+                constStruct(static_cast<IdentTable *>(val->getVal()));
                 break;
             default:
                 throw Obstacle(PANIC);
@@ -432,7 +434,7 @@ void Parser::constVal(void) {
             IdTable.pushVal( new bool (constBool()) );
             break;
         case _STRUCT_:
-            constStruct((IdentTable *) val->getVal());
+            constStruct(static_cast<IdentTable *>(val->getVal()));
             break;
         default:
             throw Obstacle(PANIC);
@@ -558,7 +560,7 @@ void Parser::operation(void) {
             while (c == '.') {
                 code >> c;
                 name = identificator();
-                IdentTable * fields = (IdentTable *) lval->getVal();
+                IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
                 lval = fields->getIT(name);
                 if ((c == ' ') || (c == '\n')) code >> c;
             }
@@ -787,7 +789,7 @@ type_t Parser::constExpr(void) {
                     while (c == '.') { // Добираемся до поля структуры
                         code >> c;
                         name = identificator();
-                        IdentTable * fields = (IdentTable *) val->getVal();
+                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
                         val = fields->getIT(name);
                         if ((c == ' ') || (c == '\n')) code >> c;
                     }
@@ -799,7 +801,7 @@ type_t Parser::constExpr(void) {
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
                         code >> c;
-                        IdentTable * fields = (IdentTable *) val->getVal();
+                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
                         int paramCount = 0;
                         while (c != ')') {
                             if (fields == nullptr)
@@ -899,7 +901,7 @@ IdentTable * Parser::cycleparam(void) {
         while (c == '.') {
             code >> c;
             name = identificator();
-            IdentTable * fields = (IdentTable *) lval->getVal();
+            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
             lval = fields->getIT(name);
             if ((c == ' ') || (c == '\n')) code >> c;
         }
@@ -952,7 +954,6 @@ void Parser::forOp(void) {
     IdentTable * cyclexpr = IdTable.confirm();
     steps.push(cyclexpr);
 
-    type_t e3;
     code >> c;
 
     char * name = identificator();
@@ -1025,7 +1026,7 @@ void Parser::whileOp(void) {
 void Parser::breakOp(void) {
     if (exits.isEmpty())
         throw Obstacle(BREAK_OUTSIDE_CYCLE);
-    poliz.pushVal((IdentTable *) exits.top());
+    poliz.pushVal(static_cast<IdentTable *>(exits.top()));
     poliz.pushOp(_NONE_, _NONE_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
@@ -1035,7 +1036,7 @@ void Parser::breakOp(void) {
 void Parser::continueOp(void) {
     if (exits.isEmpty())
         throw Obstacle(CONTINUE_OUTSIDE_CYCLE);
-    poliz.pushVal((IdentTable *) steps.top());
+    poliz.pushVal(static_cast<IdentTable *>(steps.top()));
     poliz.pushOp(_NONE_, _NONE_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
@@ -1137,7 +1138,7 @@ void Parser::giveBIN(const char * filename) {
             int tempint1 = (int)prog[i];
             bin.write((char*)&tempint1, sizeof(int));
         } else {
-            int tempint2 = ((IdentTable *)prog[i])->getOffset();
+            int tempint2 = reinterpret_cast<IdentTable *>(prog[i])->getOffset();
             bin.write((char*)&tempint2, sizeof(int));
         }
         bin.write((char*)&execBit[i], sizeof(bool));

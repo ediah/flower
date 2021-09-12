@@ -5,10 +5,11 @@ RELEASE=YES
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
-REPORT=./cppcheck/cppcheck.report
+REPORT=./cppcheck/report.log
+SUPRLIST=./suprlist.txt
 
 ifeq (${COMPACT},YES)
-	CHTEMP={file}:{line}| {message} | [CWE:{cwe}]
+	CHTEMP={file}:{line}| {message} | [{id}]
 else
 	CHTEMP=CWE{cwe}: {message}\n{callstack}\n{code}
 endif
@@ -33,7 +34,7 @@ CC= g++
 CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS}
 CHFLAGS=-I./src/inc --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
         --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
-		--output-file=${REPORT}
+		--output-file=${REPORT} --suppressions-list=${SUPRLIST}
 
 VPATH = ./src ./src/inc ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}

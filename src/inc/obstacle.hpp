@@ -49,8 +49,8 @@ public:
     reason r;
     explicit Obstacle(reason x): r(x) {};
 
-    void describe(void);
-    void expected(const char * msg);
+    void describe(void) const;
+    static void expected(const char * msg);
 };
 
 #endif

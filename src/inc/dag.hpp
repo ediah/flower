@@ -17,12 +17,12 @@ struct DAGRow {
 
     static std::vector<DAGRow *> created;
 
-    DAGRow(): lvar(nullptr), rvar(nullptr), ident(nullptr), 
-        prev(nullptr), assigned(false), opcode((op_t) NONE) {
-            created.push_back(this);
-        };
+    DAGRow(): ident(nullptr), opcode((op_t) NONE), lvar(nullptr), 
+              rvar(nullptr), prev(nullptr), assigned(false) {
+                  created.push_back(this);
+              };
     void decompose(POLIZ & p, std::vector<DAGRow *> * asd);
-    bool isLast(void);
+    bool isLast(void) const;
 
     friend bool operator==(DAGRow & a, DAGRow & b);
     DAGRow & operator=(const DAGRow & dr);

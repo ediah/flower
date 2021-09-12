@@ -109,7 +109,7 @@ void POLIZ::interpretAsOp(op_t op) {
 }
 
 void POLIZ::interpretAsVal(op_t val) {
-    ((IdentTable *) val)->whoami();
+    reinterpret_cast<IdentTable *>(val)->whoami();
 }
 
 op_t * POLIZ::getProg(void) {

@@ -4,11 +4,13 @@
 
 std::vector<DAGRow *> DAGRow::created;
 
-bool DAGRow::isLast(void) {
+bool DAGRow::isLast(void) const {
     return (lvar == nullptr) && (rvar == nullptr);
 }
 
 DAGRow & DAGRow::operator=(const DAGRow & dr) {
+    if (this == &dr) return *this;
+
     ident = dr.ident;
     opcode = dr.opcode;
     prev = dr.prev;
@@ -82,7 +84,7 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
     if ((operation_t)(p.getProg()[s - 1] & 0xFF) != CALL)
         return;
     
-    IdentTable * paramit = (IdentTable *) p.getProg()[s - 2];
+    IdentTable * paramit = reinterpret_cast<IdentTable *>(p.getProg()[s - 2]);
     int paramNum = * (int *) paramit->getVal();
     stashed.clear();
     copyPOLIZ(p, stashed, s - paramNum - 2, s);
@@ -130,12 +132,12 @@ void DirectedAcyclicGraph::make(POLIZ p) {
             }
             */
         } else {
-            int idx = find(changed, (IdentTable *) p.getProg()[i]);
+            int idx = find(changed, reinterpret_cast<IdentTable *>(p.getProg()[i]));
             if (idx != -1) {
                 qrow = changed[idx].second;
             } else {
                 qrow = new DAGRow;
-                qrow->ident = (IdentTable *) p.getProg()[i];
+                qrow->ident = reinterpret_cast<IdentTable *>(p.getProg()[i]);
             }
             queue.push_back(qrow);
         }
