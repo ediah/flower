@@ -1,5 +1,4 @@
-vpath %.cpp ./src
-vpath %.hpp ./src/inc
+vpath %.cpp ${wildcard ./src/*}
 
 RELEASE=YES
 WITH_DRAWING=NO
@@ -32,11 +31,11 @@ endif
 
 CC= g++
 CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS}
-CHFLAGS=-I./src/inc --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
+CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
         --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
 		--output-file=${REPORT} --suppressions-list=${SUPRLIST}
 
-VPATH = ./src ./src/inc ./bin
+VPATH = ${wildcard ./src/*} ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}
 OBJ = ${SRC:.cpp=.o}
 DEP = ${shell ls ${VPATH} | grep \\.hpp}
