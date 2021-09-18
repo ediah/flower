@@ -38,7 +38,6 @@ CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
 VPATH = ${wildcard ./src/*} ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}
 OBJ = ${SRC:.cpp=.o}
-DEP = ${shell ls ${VPATH} | grep \\.hpp}
 
 default:
 	@mkdir -p bin

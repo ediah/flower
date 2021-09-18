@@ -9,8 +9,16 @@
 #include "compiler/cursor.hpp"
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
-#include "common/stack.hpp"
+#include "runtime/stack.hpp"
 #include "optimizer/optimizer.hpp"
+
+#define NEW_IDENT(IT, type, id, val) { \
+    IdTable.pushType(type); \
+    IdTable.pushVal(val); \
+    IdTable.pushId(id); \
+    IdentTable * IT = IdTable.confirm(); \
+    poliz.pushVal(IT); \
+}
 
 class Parser {
     std::ifstream code; // Код
@@ -55,6 +63,8 @@ public:
     float constReal(void);      // Вещественное число
     bool constBool(void);       // Логическая константа
     void constStruct(IdentTable * fields); // Структура
+    IdentTable * getFieldInStruct(void); // Получить элемент структуры
+    void callIdent(IdentTable * val); // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
 

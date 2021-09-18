@@ -5,9 +5,7 @@
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "compiler/parser.hpp"
-#include "common/stack.hpp"
-
-#define MAXREGS 10
+#include "runtime/stack.hpp"
 
 class VirtualMachine {
     char * base;
@@ -40,5 +38,27 @@ public:
 
     virtual ~VirtualMachine(void);
 };
+
+#define ARITH_OPERATION(OP) { \
+    if ((lval == _INT_) && (rval == _INT_)) \
+        tempOp<int, int, int>( [] (int x, int y) { return x OP y; }, _INT_); \
+    if ((lval == _INT_) && (rval == _REAL_)) \
+        tempOp<int, float, float>( [] (int x, float y) { return x OP y; }, _REAL_); \
+    if ((lval == _REAL_) && (rval == _INT_)) \
+        tempOp<float, int, float>( [] (float x, int y) { return x OP y; }, _REAL_); \
+    if ((lval == _REAL_) && (rval == _REAL_)) \
+        tempOp<float, float, float>( [] (float x, float y) { return x OP y; }, _REAL_); \
+}
+
+#define LOGIC_OPERATION(OP) { \
+    if ((lval == _INT_) && (rval == _INT_)) \
+        tempOp<int, int, bool>( [] (int x, int y) { return x OP y; }, _BOOLEAN_); \
+    if ((lval == _INT_) && (rval == _REAL_)) \
+        tempOp<int, float, bool>( [] (int x, float y) { return x OP y; }, _BOOLEAN_); \
+    if ((lval == _REAL_) && (rval == _INT_)) \
+        tempOp<float, int, bool>( [] (float x, int y) { return x OP y; }, _BOOLEAN_); \
+    if ((lval == _REAL_) && (rval == _REAL_)) \
+        tempOp<float, float, bool>( [] (float x, float y) { return x OP y; }, _BOOLEAN_); \
+}
 
 #endif

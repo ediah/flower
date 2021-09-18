@@ -209,18 +209,6 @@ void Parser::defStruct(void) {
     StTable.confirm();
 }
 
-/*
- * Опции тестирования программ.
- * Оставлено до лучших времён.
-void Parser::defInput(void) {
-
-}
-
-void Parser::defOutput(void) {
-    
-}
-*/
-
 void Parser::defs(void) {
     while (type()) {
         def();
@@ -729,18 +717,10 @@ type_t Parser::constExpr(void) {
 
     if (readWord("true")) {
         r = _BOOLEAN_;
-        IdTable.pushId(nullptr);
-        IdTable.pushType(_BOOLEAN_);
-        IdTable.pushVal(new bool (true));
-        IdentTable * val = IdTable.confirm();
-        poliz.pushVal(val);
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true))
     } else if (readWord("false")) {
         r = _BOOLEAN_;
-        IdTable.pushId(nullptr);
-        IdTable.pushType(_BOOLEAN_);
-        IdTable.pushVal(new bool (false));
-        IdentTable * val = IdTable.confirm();
-        poliz.pushVal(val);
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false))
     } else if (readWord("not")) {
         type_t val = constExpr();
         r = expressionType(_NONE_, val, LNOT);
@@ -755,78 +735,30 @@ type_t Parser::constExpr(void) {
         if (c == '\"') {
             r = _STRING_;
             char * x = constString();
-            IdTable.pushId(nullptr);
-            IdTable.pushType(_STRING_);
-            IdTable.pushVal(x);
-            IdentTable * val = IdTable.confirm();
-            poliz.pushVal(val);
+            NEW_IDENT(val, _STRING_, nullptr, x)
         } else {
             int start = code.tellg();
             try {
                 r = _REAL_;
                 float x = constReal();
-                IdTable.pushId(nullptr);
-                IdTable.pushType(_REAL_);
-                IdTable.pushVal(new float (x));
-                IdentTable * val = IdTable.confirm();
-                poliz.pushVal(val);
+                NEW_IDENT(val, _REAL_, nullptr, new float (x))
             } catch (Obstacle & o) {
                 code.seekg(start - 1);
                 code >>= c;
                 if (o.r != BAD_INT) {
                     r = _INT_;
                     int x = constInt();
-                    IdTable.pushId(nullptr);
-                    IdTable.pushType(_INT_);
-                    IdTable.pushVal(new int (x));
-                    IdentTable * val = IdTable.confirm();
-                    poliz.pushVal(val);
+                    NEW_IDENT(val, _INT_, nullptr, new int (x))
                 } else {
-                    char * name = identificator();
-                    IdentTable * val = IdTable.getIT(name);
-                    if ((c == ' ') || (c == '\n')) code >> c;
-
-                    while (c == '.') { // Добираемся до поля структуры
-                        code >> c;
-                        name = identificator();
-                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
-                        val = fields->getIT(name);
-                        if ((c == ' ') || (c == '\n')) code >> c;
-                    }
+                    IdentTable * val = getFieldInStruct();
                     r = val->getType();
-                    
+
                     if (r == _STRUCT_) throw Obstacle(STRUCT_IN_EXPR);
 
                     if (c == '(') { // Вызов функции
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
-                        code >> c;
-                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
-                        int paramCount = 0;
-                        while (c != ')') {
-                            if (fields == nullptr)
-                                throw Obstacle(TOO_MUCH_PARAMS);
-                            if (c == ',') code >> c;
-                            type_t exprType = expr();
-                            if (fields->getType() != exprType)
-                                throw Obstacle(EXPR_BAD_TYPE);
-                            fields = fields->next;
-                            paramCount++;
-                        }
-
-                        if (c != ')') throw Obstacle(FUNC_CLOSEBR);
-                        code >> c;
-                        if (paramCount != val->getParams())
-                            throw Obstacle(BAD_PARAMS_COUNT);
-                        IdTable.pushType(_INT_);
-                        IdTable.pushVal( new int (paramCount) );
-                        IdentTable * params = IdTable.confirm();
-                        IdTable.pushType(_LABEL_);
-                        IdTable.pushVal( new int (val->getOffset()) );
-                        IdentTable * callable = IdTable.confirm();
-                        poliz.pushVal(params);
-                        poliz.pushVal(callable);
-                        poliz.pushOp(_INT_, _LABEL_, CALL);
+                        callIdent(val);
                     } else {
                         if (val->isFunc())
                             throw Obstacle(CALLABLE);
@@ -840,6 +772,46 @@ type_t Parser::constExpr(void) {
     if ((c == ' ') || (c == '\n')) code >> c;
 
     return r;
+}
+
+IdentTable * Parser::getFieldInStruct(void) {
+    char * name = identificator();
+    IdentTable * val = IdTable.getIT(name);
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    while (c == '.') { // Добираемся до поля структуры
+        code >> c;
+        name = identificator();
+        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
+        val = fields->getIT(name);
+        if ((c == ' ') || (c == '\n')) code >> c;
+    }
+
+    return val;
+}
+
+void Parser::callIdent(IdentTable * val) {
+    code >> c;
+    IdentTable * fields = static_cast<IdentTable *>(val->getVal());
+    int paramCount = 0;
+    while (c != ')') {
+        if (fields == nullptr)
+            throw Obstacle(TOO_MUCH_PARAMS);
+        if (c == ',') code >> c;
+        type_t exprType = expr();
+        if (fields->getType() != exprType)
+            throw Obstacle(EXPR_BAD_TYPE);
+        fields = fields->next;
+        paramCount++;
+    }
+
+    if (c != ')') throw Obstacle(FUNC_CLOSEBR);
+    code >> c;
+    if (paramCount != val->getParams())
+        throw Obstacle(BAD_PARAMS_COUNT);
+    NEW_IDENT(params, _INT_, nullptr, new int (paramCount))
+    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()))
+    poliz.pushOp(_INT_, _LABEL_, CALL);
 }
 
 void Parser::condOp(void) {

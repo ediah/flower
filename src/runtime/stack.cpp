@@ -1,6 +1,6 @@
 #include <cassert>
 #include <iostream>
-#include "common/stack.hpp"
+#include "runtime/stack.hpp"
 #include "common/exprtype.hpp"
 
 void Gendarme::push(void * p, type_t type) {

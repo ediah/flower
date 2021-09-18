@@ -53,28 +53,6 @@ inline char * VirtualMachine::getString(void * x) {
     return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char**) x;
 }
 
-#define ARITH_OPERATION(OP) { \
-    if ((lval == _INT_) && (rval == _INT_)) \
-        tempOp<int, int, int>( [] (int x, int y) { return x OP y; }, _INT_); \
-    if ((lval == _INT_) && (rval == _REAL_)) \
-        tempOp<int, float, float>( [] (int x, float y) { return x OP y; }, _REAL_); \
-    if ((lval == _REAL_) && (rval == _INT_)) \
-        tempOp<float, int, float>( [] (float x, int y) { return x OP y; }, _REAL_); \
-    if ((lval == _REAL_) && (rval == _REAL_)) \
-        tempOp<float, float, float>( [] (float x, float y) { return x OP y; }, _REAL_); \
-}
-
-#define LOGIC_OPERATION(OP) { \
-    if ((lval == _INT_) && (rval == _INT_)) \
-        tempOp<int, int, bool>( [] (int x, int y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _INT_) && (rval == _REAL_)) \
-        tempOp<int, float, bool>( [] (int x, float y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _REAL_) && (rval == _INT_)) \
-        tempOp<float, int, bool>( [] (float x, int y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _REAL_) && (rval == _REAL_)) \
-        tempOp<float, float, bool>( [] (float x, float y) { return x OP y; }, _BOOLEAN_); \
-}
-
 bool VirtualMachine::exec(op_t op, int * eip) {
     bool exitStatus = false;
     type_t rest = (type_t) ((op >> 24) & 0xFF);
@@ -83,10 +61,6 @@ bool VirtualMachine::exec(op_t op, int * eip) {
 
     switch(op & 0xFF) {
         case PLUS:
-            if ((rest == _INT_) || (rest == _REAL_)) {
-                ARITH_OPERATION(+)
-            }
-
             if (rest == _STRING_){
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
@@ -103,6 +77,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 c[alen + blen + sizeof(char*)] = '\0';
                 stackVM.push(c);
                 dynamicStrings.push(c, _STRING_);
+            } else {
+                ARITH_OPERATION(+)
             }
             break;
         case MINUS: ARITH_OPERATION(-) break;
