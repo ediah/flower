@@ -31,7 +31,7 @@ class Parser {
     Stack steps;         // Стек входов в циклы
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
-    bool inFunc;
+    bool inFunc;         // Читает ли в данный момент тело функции
     Stack retTypes;      // Тип возвращаемых параметров из функций
 
     // Вспомогательные функции
@@ -49,10 +49,6 @@ public:
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
     void defFunction(void);      // Определение функции
-    /*
-    void defInput(void);
-    void defOutput(void);
-    */
     
     bool type(void);            // Тип
     IdentTable * variable(void);// Переменная
@@ -63,8 +59,8 @@ public:
     float constReal(void);      // Вещественное число
     bool constBool(void);       // Логическая константа
     void constStruct(IdentTable * fields); // Структура
-    IdentTable * getFieldInStruct(void); // Получить элемент структуры
-    void callIdent(IdentTable * val); // Вызов объекта
+    IdentTable * getFieldInStruct(void);   // Получить элемент структуры
+    void callIdent(IdentTable * val);      // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
 
@@ -78,7 +74,7 @@ public:
     type_t boolExpr(void); // Сравнение
     type_t add(void);      // a +- b
     type_t mul(void);      // a */ b
-    type_t constExpr(void);  // Константа или идентификатор
+    type_t constExpr(void);        // Константа или идентификатор
     IdentTable * cycleparam(void); // Циклическое выражение
 
     void condOp(void);  // if - else

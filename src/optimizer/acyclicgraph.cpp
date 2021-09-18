@@ -256,8 +256,8 @@ void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
 }
 
 // Это очень нагруженная функция! Как сделать лучше?
-std::pair<std::pair<DAGRow *, DAGRow *>, int> DirectedAcyclicGraph::findCopies(
-                                DAGRow * left, DAGRow * right, int a, int b) {
+std::pair<std::pair<DAGRow *, DAGRow *>, int> 
+DirectedAcyclicGraph::findCopies(DAGRow * left, DAGRow * right, int a, int b) {
 
     if ((left == nullptr) && (right != nullptr))
         return findCopies(right->lvar, right->rvar, b, b);
