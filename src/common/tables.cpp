@@ -339,18 +339,12 @@ void IdentTable::writeValToStream(std::ostream & s) {
 IdentTable * IdentTable::deleteLabels(void) {
     IdentTable *p = this, *head = this, *temp;
 
-    if (head->valType == _LABEL_) head = head->next;
-
     while ((p->next != nullptr) && (p->next->valType == _LABEL_))
         p = p->next;
 
-    if (head->valType == _LABEL_) {
-        temp = p->next;
-        p->next = nullptr;
-        delete head;
-        head = temp;
-    }
-    
+    if (head->valType == _LABEL_)
+        head = p->next;
+
     p = head;
 
     if (p == nullptr) return p;
