@@ -77,6 +77,7 @@ bool operator==(DAGRow & a, DAGRow & b) {
 void DirectedAcyclicGraph::stash(POLIZ & p) {
     int s = p.getSize();
 
+    if (s == 0) return;
     if (!p.getEB()[s - 1])
         return;
     if ((operation_t)(p.getProg()[s - 1] & 0xFF) != CALL)
