@@ -211,6 +211,7 @@ int main(int argc, char ** argv) {
     int errors = 0, notFound = 0;
     bool mem = false;
     bool opt = false;
+    bool bisect = false;
 
     for (int i = argc; i > 1; i--) {
         if (argv[i - 1][0] == '-') {
@@ -220,6 +221,9 @@ int main(int argc, char ** argv) {
                     break;
                 case 'O':
                     opt = true;
+                    break;
+                case 'f':
+                    bisect = true;
                     break;
                 default:
                     throw std::runtime_error("Неизвестный флаг.");
@@ -235,7 +239,10 @@ int main(int argc, char ** argv) {
     std::system("make clean; make");
     #endif
 
-    for (int i = (int)mem + (int)opt + 1; i < argc; i++) {
+    if (bisect) std::system("rm ./bin/*; make mlc");
+
+    int flags = (int)mem + (int)opt + (int)bisect;
+    for (int i = flags + 1; i < argc; i++) {
         std::string filename = argv[i];
         bool unitA = filename.find("/A-unit/") != std::string::npos;
         bool unitB = filename.find("/B-unit/") != std::string::npos;
@@ -265,6 +272,7 @@ int main(int argc, char ** argv) {
         } else if (mem) errors += runValgrind(filename, opt); 
         else errors += runB(filename, output, opt);
 
+        if ((errors != 0) && bisect) break;
     }
 
     std::cout << "\nПройдено " << argc - ((int)mem + (int)opt + 1) << " тестов, из них:\n\t";
