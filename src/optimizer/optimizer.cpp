@@ -1,6 +1,6 @@
-#include "optimizer.hpp"
-#include "exprtype.hpp"
-#include "util.hpp"
+#include "optimizer/optimizer.hpp"
+#include "common/exprtype.hpp"
+#include "common/util.hpp"
 #include <iostream>
 #include <vector>
 
@@ -35,12 +35,12 @@ void Optimizer::reduceConstants(void) {
     }
 }
 
-void Optimizer::optimize(bool verbose) {
+IdentTable * Optimizer::optimize(bool verbose) {
     reduceConstants();
     
     CFG.make(poliz);
-    #ifdef DEBUG
-    //CFG.draw("compiled");
+    #ifdef DRAW_GRAPH
+    CFG.draw("compiled");
     #endif
     if (verbose) CFG.info();
 
@@ -68,18 +68,13 @@ void Optimizer::optimize(bool verbose) {
         queue.erase(queue.begin());
     }
 
-    CFG.decompose(IdTable, poliz);
+    IdTable = CFG.decompose(IdTable, poliz);
 
-    #ifdef DEBUG
-    /*
+    #ifdef DRAW_GRAPH
     CFG.clear();
     CFG.make(poliz);
     CFG.draw("optimized");
+    #endif   
 
-    if (verbose) CFG.info();
-
-    //IdTable->repr();
-    //poliz->repr();
-    */
-    #endif    
+    return IdTable; 
 }

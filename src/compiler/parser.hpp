@@ -6,12 +6,19 @@
 #include <iostream>
 #include <fstream>
 
-#include "cursor.hpp"
-#include "tables.hpp"
-#include "poliz.hpp"
-#include "stack.hpp"
+#include "compiler/cursor.hpp"
+#include "common/tables.hpp"
+#include "common/poliz.hpp"
+#include "runtime/stack.hpp"
+#include "optimizer/optimizer.hpp"
 
-#include "optimizer.hpp"
+#define NEW_IDENT(IT, type, id, val) { \
+    IdTable.pushType(type); \
+    IdTable.pushVal(val); \
+    IdTable.pushId(id); \
+    IdentTable * IT = IdTable.confirm(); \
+    poliz.pushVal(IT); \
+}
 
 class Parser {
     std::ifstream code; // Код
@@ -24,13 +31,13 @@ class Parser {
     Stack steps;         // Стек входов в циклы
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
-    bool inFunc;
+    bool inFunc;         // Читает ли в данный момент тело функции
     Stack retTypes;      // Тип возвращаемых параметров из функций
 
     // Вспомогательные функции
-    int fastPow(int x, int n);  // Быстрое возведение в степень
-    bool readWord(char * word); // Чтение непрерывной последовательности символов
-    void revert(int x);         // Возврат курсора
+    static int fastPow(int x, int n);  // Быстрое возведение в степень
+    bool readWord(char * word);        // Чтение непрерывной последовательности символов
+    void revert(int x);                // Возврат курсора
 public:
     Parser(): ok(true), inFunc(false) {
         c.line = 1;
@@ -42,10 +49,6 @@ public:
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры
     void defFunction(void);      // Определение функции
-    /*
-    void defInput(void);
-    void defOutput(void);
-    */
     
     bool type(void);            // Тип
     IdentTable * variable(void);// Переменная
@@ -56,6 +59,8 @@ public:
     float constReal(void);      // Вещественное число
     bool constBool(void);       // Логическая константа
     void constStruct(IdentTable * fields); // Структура
+    IdentTable * getFieldInStruct(void);   // Получить элемент структуры
+    void callIdent(IdentTable * val);      // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
 
@@ -69,7 +74,7 @@ public:
     type_t boolExpr(void); // Сравнение
     type_t add(void);      // a +- b
     type_t mul(void);      // a */ b
-    type_t constExpr(void);  // Константа или идентификатор
+    type_t constExpr(void);        // Константа или идентификатор
     IdentTable * cycleparam(void); // Циклическое выражение
 
     void condOp(void);  // if - else
@@ -84,7 +89,7 @@ public:
 
     void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде
-    void giveBIN(const char * filename); // Запись бинарника
+    void giveBIN(const char * filename, bool optimize, bool verbose); // Запись бинарника
 
     ~Parser(void);
 };

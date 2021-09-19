@@ -1,13 +1,14 @@
-vpath %.cpp ./src
-vpath %.hpp ./src/inc
+vpath %.cpp ${wildcard ./src/*}
 
 RELEASE=YES
+WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
-REPORT=./cppcheck/cppcheck.report
+REPORT=./cppcheck/report.log
+SUPRLIST=./suprlist.txt
 
 ifeq (${COMPACT},YES)
-	CHTEMP={file}:{line}| {message} | [CWE:{cwe}]
+	CHTEMP={file}:{line}| {message} | [{id}]
 else
 	CHTEMP=CWE{cwe}: {message}\n{callstack}\n{code}
 endif
@@ -24,16 +25,19 @@ else
 	OPTIFLAGS= -O0 -g -DDEBUG
 endif
 
-CC= g++
-CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS}
-CHFLAGS=-I./src/inc --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
-        --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
-		--output-file=${REPORT}
+ifeq (${WITH_DRAWING},YES)
+	OPTIFLAGS += -DDRAW_GRAPH
+endif
 
-VPATH = ./src ./src/inc ./bin
+CC= g++
+CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS} -I ./src
+CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
+        --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \
+		--output-file=${REPORT} --suppressions-list=${SUPRLIST}
+
+VPATH = ${wildcard ./src/*} ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}
 OBJ = ${SRC:.cpp=.o}
-DEP = ${shell ls ${VPATH} | grep \\.hpp}
 
 default:
 	@mkdir -p bin
@@ -41,7 +45,7 @@ default:
 	@make mlc-test
 
 mlc: $(OBJ)
-	$(CC) ${addprefix ./bin/,${OBJ}} -o $@
+	$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
 
 mlc-test: ./test/test.cpp
 	$(CC) $(CFLAGS) $< -o $@
@@ -51,7 +55,7 @@ check:
 	@cat ${REPORT} | column -t -s '|'
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -I ./src/inc -c $< -o ./bin/$@
+	$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
 
 .PHONY: clean
 

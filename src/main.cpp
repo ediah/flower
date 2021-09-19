@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include <chrono>
-#include "parser.hpp"
-#include "vmachine.hpp"
-#include "debugger.hpp"
+#include "compiler/parser.hpp"
+#include "runtime/vmachine.hpp"
+#include "debugger/debugger.hpp"
 
 struct flags_t {
     bool debug;    // -d
@@ -33,11 +33,9 @@ bool compile(flags_t options, std::string ifname, std::string ofname) {
     bool ok = pworker.parse();
 
     if (ok) {
-        if (options.optimize) 
-            pworker.optimize(options.verbose);
         if (!options.silent) 
             pworker.finalize();
-        pworker.giveBIN(ofname.data());
+        pworker.giveBIN(ofname.data(), options.optimize, options.verbose);
 
         auto end = std::chrono::steady_clock::now();
         auto diff = end-start;
@@ -115,7 +113,6 @@ int main(int argc, char** argv) {
         }
     }
         
-    bool ok;
     if (flags.compile) {
         if (!flags.infile) {
             std::cout << "Не указан входной файл." << std::endl;
@@ -127,7 +124,7 @@ int main(int argc, char** argv) {
             outname = "out.bin";
         }
 
-        ok = compile(flags, inname, outname);
+        bool ok = compile(flags, inname, outname);
         flags.run = flags.run && ok;
 
         if (flags.run) {

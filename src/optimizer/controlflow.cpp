@@ -1,7 +1,7 @@
-#include "controlflow.hpp"
-#include "tables.hpp"
-#include "obstacle.hpp"
-#include "util.hpp"
+#include "optimizer/controlflow.hpp"
+#include "common/tables.hpp"
+#include "common/obstacle.hpp"
+#include "common/util.hpp"
 #include <iterator>
 #include <iostream>
 
@@ -48,9 +48,9 @@ flowTree* flowTree::split(int id) {
     for (int i = block.getSize(); i > id - ID; i--)
         block.pop();
 
-    int idx;
     for (auto p: next) {
         fb->next.push_back(p);
+        int idx;
         while ((idx = find(p.first->prev, this)) != -1) {
             p.first->prev[idx].first = fb;
         }
@@ -118,16 +118,15 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
         if (p->getEB()[eip]) {
             if ((op & 0xFF) == JMP) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock);
                 break;
             }
 
             if ((op & 0xFF) == JIT) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
-                //curBlock = newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
                 int bsize = curBlock->block.getSize();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
                 if (curBlock->block.getSize() != bsize)
                     curBlock = curBlock->next[0].first;
@@ -138,7 +137,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             if ((op & 0xFF) == CALL) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
-                blockId = ((IdentTable *) p->getProg()[eip-1])->getVal();
+                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
                 newBlock(*(int*)blockId, p, curBlock, 1);
                 newBlock(eip + 1, p, curBlock, 2);
                 break;
@@ -192,7 +191,7 @@ void ControlFlowGraph::findTails(flowTree * ft) {
     }
 }
 
-void ControlFlowGraph::info(void) {
+void ControlFlowGraph::info(void) const {
     std::cout << "Граф потока управления построен. Статистика:\n";
     std::cout << "\tВсего блоков: " << blocksNum << "\n";
     std::cout << "\tВсего переходов: " << jumpsNum << "\n";
@@ -236,8 +235,6 @@ void ControlFlowGraph::drawNode(flowTree p) {
 }
 
 void ControlFlowGraph::drawEdge(flowTree & p) {
-    int size = p.next.size();
-
     if (find(drawed, p.ID) != -1)
         return;
     
@@ -296,18 +293,19 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
     } else if (curBlock->next.size() > 2) throw Obstacle(PANIC);
 }
 
-void ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
-    //*IT = * IT->deleteLabels(); // эта функция всё портит
+IdentTable * ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
+    IT = IT->deleteLabels();
     poliz->clear();
     std::vector<int> labelStorage;
     std::vector<flowTree*> existingBlocks;
     insertBlock(poliz, &ft, &labelStorage, &existingBlocks);
     for (auto lpos: labelStorage) {
-        flowTree * block = (flowTree *) poliz->getProg()[lpos];
+        flowTree * block = reinterpret_cast<flowTree *>(poliz->getProg()[lpos]);
         IT->pushVal(new int (block->ID));
         IT->pushType(_LABEL_);
         poliz->getProg()[lpos] = (op_t) IT->confirm();
     }
+    return IT;
 }
 
 void ControlFlowGraph::deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del) {
@@ -333,21 +331,6 @@ void ControlFlowGraph::clear(void) {
 
 flowTree * ControlFlowGraph::head(void) {
     return &ft;
-}
-
-flowTree * ControlFlowGraph::tailStop(void) {
-    if (funcsNum + 1 != tails.size())
-        throw Obstacle(PANIC);
-    
-    return tails[0];
-}
-
-std::vector<flowTree *> ControlFlowGraph::tailRet(void) {
-    std::vector<flowTree *> ret;
-    for (auto it = tails.begin() + 1; it != tails.end(); ++it)
-        ret.push_back(*it);
-
-    return ret;
 }
 
 ControlFlowGraph::~ControlFlowGraph() {

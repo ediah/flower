@@ -1,6 +1,6 @@
 #include <iostream>
-#include "poliz.hpp"
-#include "obstacle.hpp"
+#include "common/poliz.hpp"
+#include "common/obstacle.hpp"
 
 POLIZ::POLIZ(int s) {
     iter = 0;
@@ -20,6 +20,15 @@ POLIZ& POLIZ::operator=(const POLIZ& p) {
     }
     iter = p.iter;
     return *this;
+}
+
+POLIZ::POLIZ(const POLIZ& p) {
+    if (this == &p) return;
+    for (int i = 0; i < p.iter; i++) {
+        prog[i] = p.prog[i];
+        execBit[i] = p.execBit[i];
+    }
+    iter = p.iter;
 }
 
 void POLIZ::repr(bool dontBreak) {
@@ -100,7 +109,7 @@ void POLIZ::interpretAsOp(op_t op) {
 }
 
 void POLIZ::interpretAsVal(op_t val) {
-    ((IdentTable *) val)->whoami();
+    reinterpret_cast<IdentTable *>(val)->whoami();
 }
 
 op_t * POLIZ::getProg(void) {

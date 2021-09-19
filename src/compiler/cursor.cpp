@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "cursor.hpp"
+#include "compiler/cursor.hpp"
 
 std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
     do { 

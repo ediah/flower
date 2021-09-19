@@ -1,19 +1,19 @@
-#include "dag.hpp"
-#include "util.hpp"
+#include "optimizer/acyclicgraph.hpp"
+#include "common/util.hpp"
 #include <iostream>
 
 std::vector<DAGRow *> DAGRow::created;
 
-bool DAGRow::isLast(void) {
+bool DAGRow::isLast(void) const {
     return (lvar == nullptr) && (rvar == nullptr);
 }
 
 DAGRow & DAGRow::operator=(const DAGRow & dr) {
+    if (this == &dr) return *this;
+
     ident = dr.ident;
     opcode = dr.opcode;
     prev = dr.prev;
-    //lvar = dr.lvar;
-    //rvar = dr.rvar;
     
     if (dr.lvar != nullptr) {
         lvar = new DAGRow;
@@ -30,12 +30,28 @@ DAGRow & DAGRow::operator=(const DAGRow & dr) {
     return *this;
 }
 
+DAGRow::DAGRow(const DAGRow & dr) {
+    ident = dr.ident;
+    opcode = dr.opcode;
+    prev = dr.prev;
+    
+    if (dr.lvar != nullptr) {
+        lvar = new DAGRow;
+        *lvar = *dr.lvar;
+    } else lvar = nullptr;
+
+    if (dr.rvar != nullptr) {
+        rvar = new DAGRow;
+        *rvar = *dr.rvar;
+    } else rvar = nullptr;
+
+    assigned = dr.assigned;
+}
+
 bool operator==(DAGRow & a, DAGRow & b) {
     if (&a == &b) return false;
 
     bool ret = (a.opcode == b.opcode);
-    //ret = ret && (a.lvar == b.lvar) && (a.rvar == b.rvar);
-
 
     if (a.lvar != b.lvar) {
         if ((a.lvar == nullptr) || (b.lvar == nullptr))
@@ -61,12 +77,13 @@ bool operator==(DAGRow & a, DAGRow & b) {
 void DirectedAcyclicGraph::stash(POLIZ & p) {
     int s = p.getSize();
 
+    if (s == 0) return;
     if (!p.getEB()[s - 1])
         return;
     if ((operation_t)(p.getProg()[s - 1] & 0xFF) != CALL)
         return;
     
-    IdentTable * paramit = (IdentTable *) p.getProg()[s - 2];
+    IdentTable * paramit = IT_FROM_POLIZ(p, s - 2);
     int paramNum = * (int *) paramit->getVal();
     stashed.clear();
     copyPOLIZ(p, stashed, s - paramNum - 2, s);
@@ -75,7 +92,6 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
 }
 
 void DirectedAcyclicGraph::make(POLIZ p) {
-    DAGRow * nr;
     std::vector<std::pair<IdentTable *, DAGRow *>> changed;
     std::pair<IdentTable *, DAGRow *> rep;
     std::vector<DAGRow *> queue;
@@ -109,18 +125,14 @@ void DirectedAcyclicGraph::make(POLIZ p) {
                 rep = std::make_pair(qrow->lvar->ident, qrow->rvar);
                 changed.emplace(changed.begin(), rep); 
             }
-            /*
-            if ((op == LOAD) && (qrow->rvar != nullptr)) {
-                qrow->ident = qrow->rvar->ident;
-            }
-            */
+            
         } else {
-            int idx = find(changed, (IdentTable *) p.getProg()[i]);
+            int idx = find(changed, IT_FROM_POLIZ(p, i));
             if (idx != -1) {
                 qrow = changed[idx].second;
             } else {
                 qrow = new DAGRow;
-                qrow->ident = (IdentTable *) p.getProg()[i];
+                qrow->ident = IT_FROM_POLIZ(p, i);
             }
             queue.push_back(qrow);
         }
@@ -173,7 +185,6 @@ POLIZ DirectedAcyclicGraph::decompose(void) {
 }
 
 void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
-    bool found;
     std::pair<std::pair<DAGRow *, DAGRow *>, int> fcret;
     std::pair<DAGRow *, DAGRow *> rowc;
 
@@ -246,8 +257,8 @@ void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
 }
 
 // Это очень нагруженная функция! Как сделать лучше?
-std::pair<std::pair<DAGRow *, DAGRow *>, int> DirectedAcyclicGraph::findCopies(
-                                DAGRow * left, DAGRow * right, int a, int b) {
+std::pair<std::pair<DAGRow *, DAGRow *>, int> 
+DirectedAcyclicGraph::findCopies(DAGRow * left, DAGRow * right, int a, int b) {
 
     if ((left == nullptr) && (right != nullptr))
         return findCopies(right->lvar, right->rvar, b, b);

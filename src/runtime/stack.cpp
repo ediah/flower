@@ -1,7 +1,7 @@
 #include <cassert>
 #include <iostream>
-#include "stack.hpp"
-#include "exprtype.hpp"
+#include "runtime/stack.hpp"
+#include "common/exprtype.hpp"
 
 void Gendarme::push(void * p, type_t type) {
     pointers[pos] = p;
@@ -29,6 +29,14 @@ void Gendarme::burn(void) {
 
 Gendarme::~Gendarme(void) {
     burn();
+}
+
+Stack::Stack(bool gendarme) {
+    pos = 0;
+    for (int i = 0; i < MAXSTACK; i++) {
+        elem[i] = nullptr;
+        defined[i] = false;
+    }
 }
 
 void Stack::push(void * x, type_t type) {
@@ -75,18 +83,8 @@ void * Stack::get(int x) const {
     return elem[pos - x - 1];
 }
 
-bool Stack::isEmpty(void) {
+bool Stack::isEmpty(void) const {
     return pos == 0;
-}
-
-bool Stack::isDefined(void) {
-    assert(pos >= 0);
-    return defined[pos - 1];
-}
-
-void Stack::dump(void) const {
-    for (int i = 0; i < pos; i++)
-        std::cout << i << ") " << elem[i] << std::endl;
 }
 
 type_t Stack::topType(void) const {

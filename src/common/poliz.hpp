@@ -3,10 +3,12 @@
 
 #define MAXCMD 1024
 
-#include "tables.hpp"
-#include "exprtype.hpp"
+#include "common/tables.hpp"
+#include "common/exprtype.hpp"
 
 typedef long long op_t;
+
+#define IT_FROM_POLIZ(p, i) reinterpret_cast<IdentTable *>(p.getProg()[i])
 
 class POLIZ {
     op_t prog[MAXCMD];
@@ -17,6 +19,7 @@ public:
     POLIZ(int s = 0);
 
     POLIZ& operator=(const POLIZ& p);
+    POLIZ(const POLIZ& p);
 
     void pushVal(IdentTable * val);
     void pushOp(type_t lval, type_t rval, operation_t op);
@@ -24,8 +27,8 @@ public:
     void push(op_t op, bool eb);
     void clear(void);
     void repr(bool dontBreak = false);
-    void interpretAsOp(op_t op);
-    void interpretAsVal(op_t val);
+    static void interpretAsOp(op_t op);
+    static void interpretAsVal(op_t val);
     int getSize(void) const;
     op_t * getProg(void);
     bool * getEB(void);

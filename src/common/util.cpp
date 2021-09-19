@@ -1,5 +1,5 @@
-#include "util.hpp"
-#include "dag.hpp"
+#include "common/util.hpp"
+#include "optimizer/acyclicgraph.hpp"
 
 template<typename T>
 int find(std::vector<T> vec, T x) {

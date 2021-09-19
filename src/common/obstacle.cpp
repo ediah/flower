@@ -1,7 +1,7 @@
 #include <iostream>
-#include "obstacle.hpp"
+#include "common/obstacle.hpp"
 
-void Obstacle::describe(void) {
+void Obstacle::describe(void) const {
     switch (r) {
         case PANIC:
             std::cout << "Компилятор в панике." << std::endl;
