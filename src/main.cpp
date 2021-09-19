@@ -1,4 +1,4 @@
-#define VERSION "v1.1.0 (Георгина)"
+#define VERSION "v1.2.0 (Календула)"
 
 #include <iostream>
 #include <chrono>
@@ -103,8 +103,9 @@ int main(int argc, char** argv) {
                     case 'r': flags.run = true; break;
                     default:
                         std::cout << flag << std::endl;
+                    case 'h':
                         help();
-                        exit(-1);
+                        exit(0);
                 }
             } else {
                 help();
