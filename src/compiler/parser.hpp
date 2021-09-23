@@ -48,6 +48,7 @@ class Parser {
     bool ok;             // Произошла ли ошибка во время чтения программы
     bool inFunc;         // Читает ли в данный момент тело функции
     Stack retTypes;      // Тип возвращаемых параметров из функций
+    std::vector<std::ifstream*> fileQueue; // Файлы в очереди к обработке
 
     // Вспомогательные функции
     static int fastPow(int x, int n);  // Быстрое возведение в степень
@@ -60,6 +61,7 @@ public:
 
     void load(std::string name); // Загрузка исходного кода
     bool parse(void);            // Разбор программы
+    void include(void);
     void defs(void);             // Определения
     IdentTable * def(void);      // Определение переменных одного типа
     void defStruct(void);        // Определение структуры

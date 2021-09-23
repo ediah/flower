@@ -248,7 +248,7 @@ void IdentTable::whoami() {
             std::cout << name;
         if (fadedName != nullptr) 
             std::cout << '(' << fadedName << ") ";
-        if (func) std::cout << * (int*) val;
+        if (func) std::cout << " (params num: " << params << ")";
         else if (def) {
             std::cout << "= ";
             switch (valType) {
@@ -311,6 +311,8 @@ int IdentTable::getOrd(void) const {
 }
 
 void IdentTable::writeValToStream(std::ostream & s) {
+    if (func) return;
+    
     if (!def) {
         switch (valType) {
             case _INT_: case _LABEL_:

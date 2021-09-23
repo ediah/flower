@@ -39,17 +39,28 @@ bool Parser::parse(void) {
     poliz.pushOp(_NONE_, _LABEL_, JMP);
     try {
 
-        while (!code.eof()) {
-            if (readWord("program")) {
-                progOffset->setVal(new int (poliz.getSize()));
-                program();
-            } else if (readWord("struct"))
-                defStruct();
-            else if (readWord("def"))
-                defFunction();
-            else throw Obstacle(WRONG_SCOPE);
-            code >> c;
-        }
+        do {
+            if (fileQueue.size() != 0) {
+                code.swap(*fileQueue.back());
+                fileQueue.pop_back();
+                code >> c;
+            }
+
+            while (!code.eof()) {
+                if (readWord("program")) {
+                    progOffset->setVal(new int (poliz.getSize()));
+                    program();
+                } else if (readWord("struct"))
+                    defStruct();
+                else if (readWord("def"))
+                    defFunction();
+                else if (readWord("include"))
+                    include();
+                else throw Obstacle(WRONG_SCOPE);
+                code >> c;
+            }
+        } while (fileQueue.size() != 0);
+        
        
     }
     catch(Obstacle & o) {
@@ -60,6 +71,33 @@ bool Parser::parse(void) {
         c.line++;
     }
     return ok;
+}
+
+void Parser::include() {
+    std::string incfile;
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c == '\"') {
+        do {
+            code >>= c;
+            incfile.push_back(c.symbol());
+        } while ((c != '\"') && (!code.eof()));
+    } else {
+        do {
+            incfile.push_back(c.symbol());
+            code >>= c;
+        } while ((c != ';') && (!code.eof()));
+    }
+
+    #ifdef DEBUG
+    std::cout << "Переключаюсь на файл \"" << incfile << "\"\n";
+    #endif
+
+    std::ifstream * mainFile = new std::ifstream;
+    mainFile->swap(code);
+    fileQueue.push_back(mainFile);
+    load(incfile);
+    if ((c == ' ') || (c == '\n')) code >> c;
 }
 
 void Parser::defFunction(void) {
@@ -87,6 +125,7 @@ void Parser::defFunction(void) {
 
         if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     }
+    
     int paramsNum;
     if (formalParams != nullptr) 
         paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
