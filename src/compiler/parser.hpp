@@ -20,6 +20,21 @@
     poliz.pushVal(IT); \
 }
 
+#define BYTECODE_OP_BIN(op) { \
+    type_t left, right; \
+    if (types.size() != 0) { \
+        right = types.back(); \
+        types.pop_back(); \
+    } else right = _NONE_; \
+    if (types.size() != 0) { \
+        left = types.back(); \
+        types.pop_back(); \
+    } else left = _NONE_; \
+    poliz.pushOp(left, right, op); \
+    type_t restype = expressionType(left, right, op); \
+    if (restype != _NONE_) types.push_back(restype); \
+}
+
 class Parser {
     std::ifstream code; // Код
     std::ofstream bin;  // Бинарник
@@ -50,6 +65,7 @@ public:
     void defStruct(void);        // Определение структуры
     void defFunction(void);      // Определение функции
     
+    bool typeModificator(void); // Модификатор типа
     bool type(void);            // Тип
     IdentTable * variable(void);// Переменная
     char * identificator(void); // Идентификатор
@@ -85,11 +101,12 @@ public:
     void gotoOp(void);  // goto
     void readOp(void);  // read
     void continueOp(void); // continue
+    void bytecodeOp(void); // bytecode
     void returnOp(void);
 
     void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде
-    void giveBIN(const char * filename, bool optimize, bool verbose); // Запись бинарника
+    void giveBIN(const char * filename, bool optimize, bool silent, bool verbose); // Запись бинарника
 
     ~Parser(void);
 };

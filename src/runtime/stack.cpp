@@ -83,6 +83,11 @@ void * Stack::get(int x) const {
     return elem[pos - x - 1];
 }
 
+void Stack::set(int i, void * x) {
+    assert(pos - i >= 0);
+    elem[pos - i - 1] = x;
+}
+
 bool Stack::isEmpty(void) const {
     return pos == 0;
 }

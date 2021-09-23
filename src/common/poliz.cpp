@@ -51,11 +51,12 @@ void POLIZ::pushVal(IdentTable * val) {
         std::cout << " REGISTER";
     std::cout << std::endl;
     #endif
+
     if (val->isReg()) {
         val->pushType(_INT_);
         val->pushVal(new int (val->getOrd()));
         pushVal(val->confirm());
-        pushOp(_NONE_, _NONE_, LOAD);
+        pushOp(_NONE_, _INT_, LOAD);
     } else {
         prog[iter] = (op_t) val;
         execBit[iter] = false;
@@ -101,8 +102,8 @@ void POLIZ::interpretAsOp(op_t op) {
         case JMP: std::cout << "JMP "; break;
         case RET: std::cout << "RET "; break;
         case CALL: std::cout << "CALL "; break;
-        case REGR: std::cout << "REGR "; break;
         case LOAD: std::cout << "LOAD "; break;
+        case SHARE: std::cout << "SHARE "; break;
         case NONE: std::cout << "NONE "; break;
         default: throw Obstacle(PANIC);
     }

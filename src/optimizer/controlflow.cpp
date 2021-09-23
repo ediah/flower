@@ -263,7 +263,7 @@ void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock,
         // Прыжок назад
         ls->push_back(poliz->getSize());
         poliz->push((op_t) curBlock, false);
-        poliz->pushOp(_NONE_, _NONE_, JMP);
+        poliz->pushOp(_NONE_, _LABEL_, JMP);
     }
 }
 
@@ -287,7 +287,7 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
         if ((lastop & 0xFF) == CALL)
             poliz->push(lastop, true);
         else
-            poliz->pushOp(_BOOLEAN_, _INT_, JIT);
+            poliz->pushOp(_BOOLEAN_, _LABEL_, JIT);
         newConn(poliz, falseb, ls, eb);
         newConn(poliz, trueb, ls, eb);
     } else if (curBlock->next.size() > 2) throw Obstacle(PANIC);

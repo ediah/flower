@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "compiler/parser.hpp"
 #include "common/obstacle.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
@@ -35,7 +36,7 @@ bool Parser::parse(void) {
     IdTable.pushType(_LABEL_);
     IdentTable * progOffset = IdTable.confirm();
     poliz.pushVal(progOffset);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     try {
 
         while (!code.eof()) {
@@ -98,6 +99,12 @@ void Parser::defFunction(void) {
     
     IdentTable * p = formalParams;
     for (int i = 0; i < paramsNum; i++) {
+        if (p->isShared()) {
+            IdTable.pushVal(new int (i));
+            IdTable.pushType(_INT_);
+            poliz.pushVal(IdTable.confirm());
+            poliz.pushOp(_NONE_, _INT_, SHARE);
+        }
         p->onReg();
         p = p->next;
     }
@@ -237,8 +244,22 @@ IdentTable * Parser::def(void) {
     return r;
 }
 
+bool Parser::typeModificator(void) {
+    bool r = true;
+
+    if (readWord("shared")) {
+        IdTable.last()->setShared();
+        if (c != ' ') throw Obstacle(BAD_TYPE);
+        code >> c;
+    }
+    else r = false;
+    
+    return r;
+}
+
 bool Parser::type(void) {
     bool r = true;
+    bool tmod = typeModificator();
 
     if (readWord("int"))
         IdTable.pushType(_INT_);
@@ -256,6 +277,9 @@ bool Parser::type(void) {
         IdentTable & templateFields = StTable.getStruct(stName)->getFields();
         IdTable.pushVal(new IdentTable(templateFields));
     } else r = false;
+
+    if (tmod && (!r))
+        throw Obstacle(MODIF_WITHOUT_TYPE);
 
     return r && (c == ' ');
 }
@@ -519,7 +543,8 @@ void Parser::operations(void) {
 
 void Parser::operation(void) {
 
-    if (readWord("if")) condOp();
+    if (c.symbol() == '}') return;
+    else if (readWord("if")) condOp();
     else if (readWord("for")) forOp();
     else if (readWord("while")) whileOp();
     else if (readWord("break")) breakOp();
@@ -527,7 +552,7 @@ void Parser::operation(void) {
     else if (readWord("write")) writeOp();
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
-    else if (readWord("pass")) code >> c;
+    else if (readWord("bytecode")) bytecodeOp();
     else if (readWord("return")) returnOp();
     else if (readWord("{")) {
         code >> c;
@@ -837,12 +862,12 @@ void Parser::condOp(void) {
 
     poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
     poliz.pushVal(elsecase);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
 
     operation();
 
     poliz.pushVal(endif);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     elsecase->setVal( new int (poliz.getSize()) );
 
@@ -913,10 +938,10 @@ void Parser::forOp(void) {
 
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushVal(body);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
     // Здесь машина будет в случае невыполнения условия
     poliz.pushVal(exit);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     if (c != ';')
         throw Obstacle(SEMICOLON);
@@ -939,7 +964,7 @@ void Parser::forOp(void) {
         throw Obstacle(BAD_PARAMS_CLBR);
 
     poliz.pushVal(condexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     code >> c;
     body->setVal(new int (poliz.getSize()) );
@@ -948,7 +973,7 @@ void Parser::forOp(void) {
     // Проверяем условие, если правда, то проходим через цикл. выражение
     // и возвращаемся в тело. Иначе выходим из него.
     poliz.pushVal(cyclexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     exit->setVal(new int (poliz.getSize()) );
 
@@ -958,6 +983,127 @@ void Parser::forOp(void) {
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
         cp = cp->next;
     }
+}
+
+void Parser::bytecodeOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '{')
+        throw Obstacle(PROG_OPENBR);
+
+    std::vector<type_t> types;
+
+    do {
+        bool couldRead = true;
+        code >> c;
+        switch (c.symbol()) {
+            case 'A':
+                if (readWord("ASSIGN")) {
+                    BYTECODE_OP_BIN(ASSIGN)
+                } else couldRead = false;
+                break;
+            case 'C':
+                if (readWord("CALL")) {
+                    BYTECODE_OP_BIN(CALL)
+                } else couldRead = false;
+                break;
+            case 'D':
+                if (readWord("DIV")) {
+                    BYTECODE_OP_BIN(DIV)
+                } else couldRead = false;
+                break;
+            case 'E':
+                if (readWord("ENDL")) {
+                    BYTECODE_OP_BIN(ENDL)
+                } else if (readWord("EQ")) {
+                    BYTECODE_OP_BIN(EQ)
+                } else couldRead = false;
+                break;
+            case 'G':
+                if (readWord("GRTR")) {
+                    BYTECODE_OP_BIN(GRTR)
+                } else if (readWord("GRTREQ")) {
+                    BYTECODE_OP_BIN(GRTREQ)
+                } else couldRead = false;
+                break;
+            case 'I':
+                if (readWord("INV")) {
+                    BYTECODE_OP_BIN(INV)
+                } else couldRead = false;
+                break;
+            case 'J':
+                if (readWord("JIT")) {
+                    BYTECODE_OP_BIN(JIT)
+                } else if (readWord("JMP")) {
+                    BYTECODE_OP_BIN(JMP)
+                } else couldRead = false;
+                break;
+            case 'L':
+                if (readWord("LAND")) {
+                    BYTECODE_OP_BIN(LAND)
+                } else if (readWord("LESS")) {
+                    BYTECODE_OP_BIN(LESS)
+                } else if (readWord("LESSEQ")) {
+                    BYTECODE_OP_BIN(LESSEQ)
+                } else if (readWord("LNOT")) {
+                    BYTECODE_OP_BIN(LNOT)
+                } else if (readWord("LOAD")) {
+                    BYTECODE_OP_BIN(LOAD)
+                } else if (readWord("LOR")) {
+                    BYTECODE_OP_BIN(LOR)
+                } else couldRead = false;
+                break;
+            case 'M':
+                if (readWord("MINUS")) {
+                    BYTECODE_OP_BIN(MINUS)
+                } else if (readWord("MOD")) {
+                    BYTECODE_OP_BIN(MOD)
+                } else if (readWord("MUL")) {
+                    BYTECODE_OP_BIN(MUL)
+                } else couldRead = false;
+                break;
+            case 'N':
+                if (readWord("NEQ")) {
+                    BYTECODE_OP_BIN(NEQ)
+                } else couldRead = false;
+                break;
+            case 'P':
+                if (readWord("PLUS")) {
+                    BYTECODE_OP_BIN(PLUS)
+                } else couldRead = false;
+                break;
+            case 'R':
+                if (readWord("READ")) {
+                    BYTECODE_OP_BIN(READ)
+                } else if (readWord("RET")) {
+                    BYTECODE_OP_BIN(RET)
+                } else couldRead = false;
+                break;
+            case 'S':
+                if (readWord("STOP")) {
+                    BYTECODE_OP_BIN(STOP)
+                } else couldRead = false;
+                break;
+            case 'W':
+                if (readWord("WRITE")) {
+                    BYTECODE_OP_BIN(WRITE)
+                } else couldRead = false;
+                break;
+            
+            default:
+                couldRead = false;
+                break;
+        }
+        if (!couldRead) {
+            types.push_back(constExpr());
+        }
+
+        if ((c == ' ') || (c == '\n')) code >> c;
+    } while (c == ',');
+
+    if (c != '}')
+        throw Obstacle(PROG_CLOSEBR);
+    
+    code >> c;
 }
 
 void Parser::whileOp(void) {
@@ -979,7 +1125,7 @@ void Parser::whileOp(void) {
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
     poliz.pushVal(exit);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
     
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != ')')
@@ -989,7 +1135,7 @@ void Parser::whileOp(void) {
     operation();  // тело цикла
 
     poliz.pushVal(condexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     exit->setVal(new int (poliz.getSize()) );
     exits.pop();
@@ -999,7 +1145,7 @@ void Parser::breakOp(void) {
     if (exits.isEmpty())
         throw Obstacle(BREAK_OUTSIDE_CYCLE);
     poliz.pushVal(static_cast<IdentTable *>(exits.top()));
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
     code >> c;
@@ -1009,7 +1155,7 @@ void Parser::continueOp(void) {
     if (exits.isEmpty())
         throw Obstacle(CONTINUE_OUTSIDE_CYCLE);
     poliz.pushVal(static_cast<IdentTable *>(steps.top()));
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
     code >> c;
@@ -1033,7 +1179,7 @@ void Parser::gotoOp(void) {
     code >> c;
 
     poliz.pushVal(labval);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 }
 
 void Parser::readOp(void) {
@@ -1089,7 +1235,7 @@ void Parser::finalize(void) {
     std::cout << std::endl;
 }
 
-void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
+void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool verbose) {
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
@@ -1099,6 +1245,12 @@ void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
     if (optimize) {
         Optimizer opt(&IdTable, &poliz);
         ITp = opt.optimize(verbose);
+    }
+
+    if (!silent) {
+        ITp->repr();
+        poliz.repr();
+        std::cout << std::endl;
     }
 
     while (ITp->next != nullptr) {

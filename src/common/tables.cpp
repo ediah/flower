@@ -6,6 +6,22 @@
 #include "common/exprtype.hpp"
 #include "common/util.hpp"
 
+IdentTable::IdentTable(void) {
+    valType = _NONE_;
+    structName = nullptr;
+    name = nullptr;
+    fadedName = nullptr;
+    def = false;
+    func = false;
+    reg = false;
+    val = nullptr;
+    ord = 0;
+    params = 0;
+    offset = 0;
+    next = nullptr;
+    shared = false;
+}
+
 IdentTable::IdentTable(const IdentTable & templateIT) {
     valType = templateIT.valType;
     def = templateIT.def;
@@ -14,6 +30,7 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     func = templateIT.func;
     reg = templateIT.reg;
     params = templateIT.params;
+    shared = templateIT.shared;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -49,6 +66,7 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     func = templateIT.func;
     reg = templateIT.reg;
     params = templateIT.params;
+    shared = templateIT.shared;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -403,6 +421,14 @@ bool operator==(IdentTable & a, IdentTable & b) {
 void IdentTable::fade(void) {
     fadedName = name;
     name = nullptr;
+}
+
+bool IdentTable::isShared(void) {
+    return shared;
+}
+
+void IdentTable::setShared(void) {
+    shared = true;
 }
 
 IdentTable::~IdentTable() {

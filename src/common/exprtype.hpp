@@ -29,7 +29,6 @@ enum operation_t {
     EQ,
     NEQ,
     ASSIGN,
-    REGR,
     LOAD,
     READ,
     WRITE,
@@ -38,7 +37,8 @@ enum operation_t {
     JMP,
     RET,
     CALL,
-    STOP
+    STOP,
+    SHARE
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

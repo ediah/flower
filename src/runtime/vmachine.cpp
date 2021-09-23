@@ -100,17 +100,12 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 stackVM.push(new float (-a), _REAL_);
             }
             break;
-        case REGR:
-            if (rest == _NONE_) {
-                void * a = stackVM.pop();
-                registerVM.push(a);
-            }
-            break;
         case LOAD:
             if (rest == _NONE_) {
                 int x = * (int *) stackVM.pop();
+                void * shv = sharedVars.get(x);
                 void * a = registerVM.get(x);
-                stackVM.push(a);
+                stackVM.push(shv == nullptr? a : shv);
             }
             break;
         case ASSIGN:
@@ -150,7 +145,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             std::cout << std::endl;
             break;
         case JIT:
-            if ((lval == _BOOLEAN_) && (rval == _INT_)) {
+            if ((lval == _BOOLEAN_) && (rval == _LABEL_)) {
                 int offset = * (int *) stackVM.pop();
                 bool condition = * (bool *) stackVM.pop();
 
@@ -158,7 +153,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             } else throw Obstacle(PANIC);
             break;
         case JMP:
-            if ((lval == _NONE_) && (rval == _NONE_)) {
+            if ((lval == _NONE_) && (rval == _LABEL_)) {
                 int offset = * (int *) stackVM.pop();
                 *eip = offset - 1;
             } else throw Obstacle(PANIC);
@@ -271,8 +266,10 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rest == _NONE_) {
                 int offset = * (int *) stackVM.pop();
                 int params = * (int *) stackVM.pop();
-                for (int i = 0; i < params; i++) 
+                for (int i = 0; i < params; i++) {
                     registerVM.push( stackVM.pop() );
+                    sharedVars.push(nullptr);
+                }
                 stackVM.push(new int (params), _INT_);
                 stackVM.push(new int (*eip + 1), _INT_);
                 *eip = offset - 1;
@@ -289,6 +286,12 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 copy(t, tType);
 
                 *eip = offset - 1;
+            }
+            break;
+        case SHARE:
+            if (rest == _NONE_) {
+                int x = * (int *) stackVM.pop();
+                sharedVars.set(x, registerVM.get(x));
             }
             break;
         default:

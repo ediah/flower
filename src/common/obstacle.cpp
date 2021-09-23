@@ -95,6 +95,12 @@ void Obstacle::describe(void) const {
         case RETURN_TYPE_MISMATCH:
             std::cout << "Неверный тип возвращаемого параметра." << std::endl;
             break;
+        case MODIF_WITHOUT_TYPE:
+            std::cout << "Модификатор должен использоваться с типом переменной." << std::endl;
+            break;
+        case BAD_TYPE:
+            std::cout << "Плохой тип." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

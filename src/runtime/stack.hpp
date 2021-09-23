@@ -39,6 +39,7 @@ public:
     void * pop(void); // удаляет
     void * top(void) const; // НЕ удаляет
     void * get(int x) const; // НЕ удаляет
+    void set(int i, void * x);
     void dump(void) const;
     type_t topType(void) const;
     bool isEmpty(void) const;

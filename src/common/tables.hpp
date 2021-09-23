@@ -17,15 +17,12 @@ class IdentTable {
     int ord;           // Номер элемента
     int params;        // Количество переменных (если функция)
     int offset;        // Позиция в байткоде
+    bool shared;
 
 public:
     IdentTable *next;
 
-    IdentTable(void): valType(_NONE_), structName(nullptr), 
-                      name(nullptr), fadedName(nullptr), 
-                      def(false), func(false), reg(false), 
-                      val(nullptr), ord(0), params(0),
-                      offset(0), next(nullptr) {};
+    IdentTable(void);
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
     void pushId(char * ident);
@@ -60,6 +57,8 @@ public:
     IdentTable * deleteLabels(void);
     friend bool operator==(IdentTable & a, IdentTable & b);
     void fade(void);
+    bool isShared(void);
+    void setShared(void);
 
     ~IdentTable();
 };

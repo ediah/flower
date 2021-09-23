@@ -41,7 +41,9 @@ enum reason {
     NO_RETURN,
     NO_TYPE,
     STRUCT_IN_EXPR,
-    RETURN_TYPE_MISMATCH
+    RETURN_TYPE_MISMATCH,
+    MODIF_WITHOUT_TYPE,
+    BAD_TYPE
 };
 
 class Obstacle {

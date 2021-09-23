@@ -64,15 +64,19 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         else throw Obstacle(EXPR_BAD_TYPE);
     } else if (o == ASSIGN) {
         if ((t1 == _INT_) || (t1 == _REAL_)) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t1;
+            if ((t2 == _INT_) || (t2 == _REAL_)) r = _NONE_;
             else throw Obstacle(EXPR_BAD_TYPE);
         } else if ((t1 == _BOOLEAN_) && (t2 == _BOOLEAN_))
-            r = _BOOLEAN_;
+            r = _NONE_;
         else if ((t1 == _STRING_) && (t2 == _STRING_))
-            r = _STRING_;
+            r = _NONE_;
         else throw Obstacle(EXPR_BAD_TYPE);
     } else if (o == JIT) {
-        if ((t1 == _BOOLEAN_) && (t2 == _INT_)) {
+        if ((t1 == _BOOLEAN_) && (t2 == _LABEL_)) {
+            r = _NONE_;
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == JMP) {
+        if ((t1 == _NONE_) && (t2 == _LABEL_)) {
             r = _NONE_;
         } else throw Obstacle(EXPR_BAD_TYPE);
     } else if (o == CALL) {
@@ -83,9 +87,36 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         if ((t1 == _INT_) && (t2 == _LABEL_))
             r = _NONE_;
         else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == STOP) || (o == WRITE) || (o == READ) || 
-               (o == JMP ) || (o == ENDL ) || (o == REGR ) || (o == LOAD)) {
-        r = _NONE_;
+    } else if (o == ENDL) {
+        if ((t1 == _NONE_) && (t2 == _NONE_))
+            r = _NONE_;
+        else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == READ) {
+        if (t1 == _NONE_) {
+            if ((t2 == _INT_) || (t2 == _REAL_) || 
+                (t2 == _STRING_) || (t2 == _BOOLEAN_))
+                r = _NONE_;
+            else throw Obstacle(EXPR_BAD_TYPE);
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == WRITE) {
+        if (t1 == _NONE_) {
+            if ((t2 == _INT_) || (t2 == _REAL_) || 
+                (t2 == _STRING_) || (t2 == _BOOLEAN_))
+                r = _NONE_;
+            else throw Obstacle(EXPR_BAD_TYPE);
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == STOP) {
+        if ((t1 == _NONE_) && (t2 == _NONE_)) {
+            r = _NONE_;
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == LOAD) {
+        if ((t1 == _NONE_) && (t2 == _INT_)) {
+            r = _NONE_;
+        } else throw Obstacle(EXPR_BAD_TYPE);
+    } else if (o == SHARE) {
+        if ((t1 == _NONE_) && (t2 == _INT_)) {
+            r = _NONE_;
+        } else throw Obstacle(EXPR_BAD_TYPE);
     } else throw Obstacle(PANIC);
     return r;
 }
@@ -110,7 +141,7 @@ bool isNullary(operation_t o) {
 
 bool isUnary(operation_t o) {
     bool ret = (o == INV) || (o == LNOT) || (o == LOAD) || (o == READ);
-    ret = ret || (o == WRITE) || (o == JMP);
+    ret = ret || (o == WRITE) || (o == JMP) || (o == SHARE);
     return ret;
 }
 

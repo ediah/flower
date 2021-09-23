@@ -14,6 +14,7 @@ class VirtualMachine {
 
     Stack stackVM;
     Stack registerVM;
+    Stack sharedVars;
     Gendarme dynamicStrings;
 public:
     VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0) {};
