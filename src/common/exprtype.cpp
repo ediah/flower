@@ -109,11 +109,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         if ((t1 == _NONE_) && (t2 == _NONE_)) {
             r = _NONE_;
         } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == LOAD) {
-        if ((t1 == _NONE_) && (t2 == _INT_)) {
-            r = _NONE_;
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == SHARE) {
+    } else if ((o == LOAD) || (o == SHARE) || (o == FORK)) {
         if ((t1 == _NONE_) && (t2 == _INT_)) {
             r = _NONE_;
         } else throw Obstacle(EXPR_BAD_TYPE);
@@ -141,7 +137,7 @@ bool isNullary(operation_t o) {
 
 bool isUnary(operation_t o) {
     bool ret = (o == INV) || (o == LNOT) || (o == LOAD) || (o == READ);
-    ret = ret || (o == WRITE) || (o == JMP) || (o == SHARE);
+    ret = ret || (o == WRITE) || (o == JMP) || (o == SHARE) || (o == FORK);
     return ret;
 }
 

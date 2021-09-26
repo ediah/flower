@@ -1,31 +1,17 @@
-/*
-    Итерация №0: x = 900
-    Итерация №100: x = 871
-    Итерация №200: x = 764
-    Итерация №300: x = 590
-            ...
-    Итерация №100000: x = 285
-
-
-    Числа от балды взял.
-*/
-
+def iterate(shared int a): shared int {
+    for (int i = 1; i <= 5; i = i + 1) {
+        write("Итерация #", i, ": a = ", a);
+    }
+    return a;
+}
 
 program {
-    shared int i = 1;
-    shared int x = 900;
+    shared int x = 900, y = 800;
 
-    thread:1 (i, x) {
-        for (; i <= 100000; i = i + 1)
-            x = iterate(i, x); /* что-то сложное */
-    }
-
-    thread:2 (i, x) {
-        while (i <= 100000) {
-            if (i % 1000 == 0)
-                write("Итерация №", i, ": x = ", x);
-        }
-    }
+    thread:1 { x = iterate(x); }
+    thread:2 { y = iterate(y); }
 
     employ_threads(1, 2);
+
+    write(x, " ", y);
 }

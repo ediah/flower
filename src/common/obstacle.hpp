@@ -43,7 +43,10 @@ enum reason {
     STRUCT_IN_EXPR,
     RETURN_TYPE_MISMATCH,
     MODIF_WITHOUT_TYPE,
-    BAD_TYPE
+    BAD_TYPE,
+    NEED_THREAD_NUMBER,
+    NESTED_THREADS,
+    PRIVATE_VAR_IN_THREAD
 };
 
 class Obstacle {

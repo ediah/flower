@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #define MAXIDENT 50
+#define MAXTHREADS 4
 
 #include <iostream>
 #include <fstream>
@@ -47,16 +48,20 @@ class Parser {
     StructTable StTable; // Таблица структур
     bool ok;             // Произошла ли ошибка во время чтения программы
     bool inFunc;         // Читает ли в данный момент тело функции
+    bool inThread;       // Читает ли в данный момент определение потока
     Stack retTypes;      // Тип возвращаемых параметров из функций
     std::vector<std::ifstream*> fileQueue; // Файлы в очереди к обработке
+    IdentTable * threads[MAXTHREADS];
 
     // Вспомогательные функции
     static int fastPow(int x, int n);  // Быстрое возведение в степень
     bool readWord(char * word);        // Чтение непрерывной последовательности символов
     void revert(int x);                // Возврат курсора
 public:
-    Parser(): ok(true), inFunc(false) {
+    Parser(): ok(true), inFunc(false), inThread(false) {
         c.line = 1;
+        for (int i = 0; i < MAXTHREADS; i++)
+                threads[i] = nullptr;
     };
 
     void load(std::string name); // Загрузка исходного кода
@@ -92,7 +97,7 @@ public:
     type_t boolExpr(void); // Сравнение
     type_t add(void);      // a +- b
     type_t mul(void);      // a */ b
-    type_t constExpr(void);        // Константа или идентификатор
+    type_t constExpr(int * fieldSize = nullptr); // Константа или идентификатор
     IdentTable * cycleparam(void); // Циклическое выражение
 
     void condOp(void);  // if - else
@@ -105,6 +110,8 @@ public:
     void continueOp(void); // continue
     void bytecodeOp(void); // bytecode
     void returnOp(void);
+    void threadOp(void);
+    void employOp(void);
 
     void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде

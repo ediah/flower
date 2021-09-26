@@ -104,6 +104,7 @@ void POLIZ::interpretAsOp(op_t op) {
         case CALL: std::cout << "CALL "; break;
         case LOAD: std::cout << "LOAD "; break;
         case SHARE: std::cout << "SHARE "; break;
+        case FORK: std::cout << "FORK "; break;
         case NONE: std::cout << "NONE "; break;
         default: throw Obstacle(PANIC);
     }

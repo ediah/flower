@@ -1,4 +1,4 @@
-include ./test/A-unit/inc1_25.ml;
+include "./test/A-unit/inc1_25.mli";
 
 program {
     write(sayHello());

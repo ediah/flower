@@ -38,7 +38,8 @@ enum operation_t {
     RET,
     CALL,
     STOP,
-    SHARE
+    SHARE,
+    FORK
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

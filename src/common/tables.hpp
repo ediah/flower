@@ -71,7 +71,7 @@ public:
     StructTable(void): name(nullptr), next(nullptr) {};
 
     void pushName(char * name);
-    void pushField(type_t type, char * name, char * structName);
+    void pushField(type_t type, char * name, char * structName, bool shared = false);
     StructTable * confirm(void);
     StructTable * last(void);
 

@@ -101,6 +101,15 @@ void Obstacle::describe(void) const {
         case BAD_TYPE:
             std::cout << "Плохой тип." << std::endl;
             break;
+        case NEED_THREAD_NUMBER:
+            std::cout << "Поток должен быть иметь свой номер." << std::endl;
+            break;
+        case NESTED_THREADS:
+            std::cout << "Вложенное описание потоков запрещено." << std::endl;
+            break;
+        case PRIVATE_VAR_IN_THREAD:
+            std::cout << "В потоках можно использовать только общие переменные." << std::endl;
+            break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;
             break;

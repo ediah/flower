@@ -154,6 +154,7 @@ void IdentTable::dupType(void) {
     if (last()->valType == _NONE_) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
+        p->next->shared = p->shared;
         if (p->structName != nullptr) {
             p->next->structName = new char[strnlen(p->structName, MAXIDENT) + 1];
             memccpy(p->next->structName, p->structName, '\0', strnlen(p->structName, MAXIDENT) + 1);
@@ -467,19 +468,15 @@ void StructTable::pushName(char * name) {
     last()->name = name;
 }
 
-void StructTable::pushField(type_t type, char * name, char * structName) {
+void StructTable::pushField(type_t type, char * name, char * structName, bool shared) {
     StructTable * l = last();
     l->fields.pushType(type);
     l->fields.pushId(name);
+    if (shared) l->fields.setShared();
     if (structName != nullptr) {
         l->fields.pushStruct(structName);
         IdentTable & templateIT = getStruct(structName)->getFields();
         l->fields.pushVal(new IdentTable(templateIT));
-    } else {
-        if (l->fields.getStruct() != nullptr) {
-            std::cout << "Структура не равна нулю\n" << l->fields.getStruct();
-            std::cout << std::endl;
-        }
     }
     l->fields.confirm();
 }

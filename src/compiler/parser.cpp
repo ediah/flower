@@ -20,7 +20,7 @@ int Parser::fastPow(int x, int n) {
 void Parser::load(std::string name) {
     code.open(name);
     if (!code.is_open()) {
-        std::cout << "Такого файла нет!";
+        std::cout << "Файл " << name << " не найден!\n";
         exit(-1);
     }
 }
@@ -82,6 +82,8 @@ void Parser::include() {
             code >>= c;
             incfile.push_back(c.symbol());
         } while ((c != '\"') && (!code.eof()));
+        incfile.pop_back();
+        code >> c;
     } else {
         do {
             incfile.push_back(c.symbol());
@@ -152,6 +154,12 @@ void Parser::defFunction(void) {
     
     if (c == ':') {
         code >> c;
+
+        if (readWord("shared")) {
+            thisFunc->setShared();
+            code >> c;
+        }
+
         if (readWord("int"))
             thisFunc->setType(_INT_);
         else if (readWord("string"))
@@ -224,6 +232,13 @@ void Parser::defStruct(void) {
         type_t field_type;
         char * struct_name = nullptr;
         char * field_name = nullptr;
+        bool shared = false;
+
+        if (readWord("shared")) {
+            if (c != ' ') throw Obstacle(TYPE_UNKNOWN);
+            shared = true;
+            code >> c;
+        }
 
         if (readWord("int"))
             field_type = _INT_;
@@ -245,7 +260,7 @@ void Parser::defStruct(void) {
         do {
             code >> c;
             field_name = identificator();
-            StTable.pushField(field_type, field_name, struct_name);
+            StTable.pushField(field_type, field_name, struct_name, shared);
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
 
@@ -569,7 +584,7 @@ bool Parser::constBool(void) {
 void Parser::operations(void) {
     while (c != '}') {
         try { operation(); }
-        catch(Obstacle & o) { 
+        catch(Obstacle & o) {
             ok = false;
             c.where();
             o.describe();
@@ -593,6 +608,8 @@ void Parser::operation(void) {
     else if (readWord("read")) readOp();
     else if (readWord("bytecode")) bytecodeOp();
     else if (readWord("return")) returnOp();
+    else if (readWord("thread")) threadOp();
+    else if (readWord("employ_threads")) employOp();
     else if (readWord("{")) {
         code >> c;
         operations();
@@ -624,6 +641,59 @@ void Parser::operation(void) {
         }
     }
 
+}
+
+void Parser::threadOp(void) {
+    if (inThread)
+        throw Obstacle(NESTED_THREADS);
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != ':')
+        throw Obstacle(NEED_THREAD_NUMBER);
+    code >> c;
+
+    int threadNum = constInt();
+    IdTable.pushType(_LABEL_);
+    IdTable.pushVal( new int (poliz.getSize()) );
+    IdTable.pushId(nullptr);
+    threads[threadNum] = IdTable.confirm();
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    if (c != '{')
+        throw Obstacle(PROG_OPENBR);
+    code >> c;
+
+    inThread = true;
+    operations();
+    inThread = false;
+    poliz.pushOp(_INT_, _LABEL_, RET);
+
+    if (c != '}')
+        throw Obstacle(PROG_CLOSEBR);
+    code >> c;
+}
+
+void Parser::employOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '(')
+        throw Obstacle(FUNC_OPENBR);
+
+    do {
+        code >> c;
+        int threadNum = constInt();
+        poliz.pushVal(threads[threadNum]);
+        poliz.pushOp(_NONE_, _INT_, FORK);
+        if ((c == ' ') || (c == '\n')) code >> c;
+    } while (c == ',');
+
+    if (c != ')')
+        throw Obstacle(FUNC_CLOSEBR);
+    code >> c;
+    if (c != ';')
+        throw Obstacle(SEMICOLON);
+
+    code >> c;
 }
 
 IdentTable * Parser::saveLabel(char * label, int addr) {
@@ -754,6 +824,7 @@ type_t Parser::add(void) {
 
 type_t Parser::mul(void) {
     bool exit = false;
+    //int * fieldSize = new int (0);
     type_t r = constExpr();
     operation_t op;
 
@@ -776,7 +847,7 @@ type_t Parser::mul(void) {
     return r;
 }
 
-type_t Parser::constExpr(void) {
+type_t Parser::constExpr(int * fieldSize) {
     type_t r;
 
     if (readWord("true")) {
@@ -817,7 +888,18 @@ type_t Parser::constExpr(void) {
                     IdentTable * val = getFieldInStruct();
                     r = val->getType();
 
-                    if (r == _STRUCT_) throw Obstacle(STRUCT_IN_EXPR);
+                    if (r == _STRUCT_) {
+                        throw Obstacle(STRUCT_IN_EXPR);
+                        /*
+                        *fieldSize = 0;
+                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
+                        while (fields->next != nullptr) {
+                            poliz.pushVal(fields);
+                            fields = fields->next;
+                            *fieldSize = *fieldSize + 1;
+                        }
+                        */
+                    }
 
                     if (c == '(') { // Вызов функции
                         if (! val->isFunc())
@@ -850,7 +932,9 @@ IdentTable * Parser::getFieldInStruct(void) {
         val = fields->getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;
     }
-
+    if (!val->isShared() && inThread)
+        throw Obstacle(PRIVATE_VAR_IN_THREAD);
+    
     return val;
 }
 
