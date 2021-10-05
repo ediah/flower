@@ -39,7 +39,8 @@ enum operation_t {
     CALL,
     STOP,
     SHARE,
-    FORK
+    FORK,
+    LOCK
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

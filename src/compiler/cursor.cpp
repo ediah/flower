@@ -36,9 +36,6 @@ std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
     s.read( &(x.c), sizeof(char));
     if (x.c == '\n') ++(x.line);
-    #ifdef DEBUG
-    std::cout << "прочитан \"" << x.c << "\"" << std::endl;
-    #endif
     return s;
 }
 

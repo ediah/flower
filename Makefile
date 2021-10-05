@@ -41,8 +41,7 @@ OBJ = ${SRC:.cpp=.o}
 
 default:
 	@mkdir -p bin
-	@make mlc -j4
-	@make mlc-test
+	@make mlc mlc-test -j4
 
 mlc: $(OBJ)
 	$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@

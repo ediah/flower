@@ -1,5 +1,11 @@
 #include <iostream>
 #include <cstring>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "runtime/vmachine.hpp"
 #include "common/exprtype.hpp"
 #include "common/obstacle.hpp"
@@ -33,6 +39,12 @@ void VirtualMachine::run(void) {
         }
         *eip += 1;
     }
+
+    if (inThread) {
+        void * nullp = nullptr;
+        write(pipefd.back()[1], &nullp, sizeof(void*));
+    }
+
     delete eip;
 }
 
@@ -45,8 +57,18 @@ void VirtualMachine::tempOp(res_t (*f) (lval_t, rval_t), type_t TYPE) {
 
 template <class lval_t, class rval_t>
 void VirtualMachine::assign(void) {
-    rval_t x = * (rval_t *) stackVM.pop();
-    * (lval_t *) stackVM.pop() = x;
+    if (inThread) {
+        rval_t x = * (rval_t *) stackVM.pop();
+        lval_t * p = (lval_t *) stackVM.pop();
+        *p = x;
+        int n = sizeof(rval_t);
+        write(pipefd.back()[1], &p, sizeof(void*));
+        write(pipefd.back()[1], &n, sizeof(int));
+        write(pipefd.back()[1], &x, sizeof(rval_t));
+    } else {
+        rval_t x = * (rval_t *) stackVM.pop();
+        * (lval_t *) stackVM.pop() = x;
+    }
 }
 
 inline char * VirtualMachine::getString(void * x) {
@@ -294,12 +316,57 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 sharedVars.set(x, registerVM.get(x));
             }
             break;
+        case FORK:
+            if (rest == _NONE_) {
+                pipefd.push_back(new int[2]);
+                pipe(pipefd.back());
+
+                pid_t pid = fork();
+                threads.push_back(pid);
+
+                if (pid == -1) throw Obstacle(PANIC);
+                if (pid == 0) {
+                    inThread = true;
+                    int offset = * (int *) stackVM.pop();
+                    *eip = offset - 1;
+                }
+            }
+
+            break;
+
+        case LOCK:
+            if (rest == _NONE_) {
+                int st, ret = 0;
+                while (threads.size() != 0) {
+                    pid_t pid = threads.back();
+                    ret = waitpid(pid, &st, 0);
+                    if (ret == -1) throw Obstacle(PANIC);
+                    else if (WIFEXITED(st)) threads.pop_back();
+                    updateVars();
+                }
+            }
+            break;
+
         default:
             std::cout << "Неизвестная команда." << std::endl;
             exit(-1);
     }
 
     return exitStatus;
+}
+
+void VirtualMachine::updateVars(void) {
+    void * p;
+    int n;
+    while (pipefd.size() != 0) {
+        read(pipefd.back()[0], &p, sizeof(void *));
+        if (p == nullptr) {
+            pipefd.pop_back();
+            continue;
+        }
+        read(pipefd.back()[0], &n, sizeof(int));
+        read(pipefd.back()[0], p, n);
+    }
 }
 
 void VirtualMachine::copy(void * x, type_t type) {

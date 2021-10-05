@@ -2,6 +2,7 @@
 #define VMACHINE_H
 
 #include <fstream>
+#include <vector>
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "compiler/parser.hpp"
@@ -12,12 +13,16 @@ class VirtualMachine {
     char * cmd;
     int cmdNum;
 
+    bool inThread;
+
     Stack stackVM;
     Stack registerVM;
     Stack sharedVars;
+    std::vector<pid_t> threads;
+    std::vector<int *> pipefd;
     Gendarme dynamicStrings;
 public:
-    VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0) {};
+    VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0), inThread(false) {};
 
     void loadBIN(const char * filename);
 
@@ -26,6 +31,8 @@ public:
     bool exec(op_t op, int * eip);
 
     void copy(void * x, type_t type);
+
+    void updateVars(void);
 
     char * getString(void * x);
 

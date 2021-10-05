@@ -134,7 +134,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 break;
             }
 
-            if ((op & 0xFF) == CALL) {
+            if (((op & 0xFF) == CALL) || ((op & 0xFF) == FORK)) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
                 blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
@@ -281,10 +281,11 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
         flowTree * trueb  = curBlock->next[find(curBlock->next, (char)1)].first;
 
         op_t lastop = curBlock->block.getProg()[bsize - 1];
-        if ((lastop & 0xFF) == CALL) poliz->pop();
+        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
+            poliz->pop();
         ls->push_back(poliz->getSize());
         poliz->push((op_t) trueb, false);
-        if ((lastop & 0xFF) == CALL)
+        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
             poliz->push(lastop, true);
         else
             poliz->pushOp(_BOOLEAN_, _LABEL_, JIT);

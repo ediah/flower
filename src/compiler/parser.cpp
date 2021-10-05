@@ -609,7 +609,8 @@ void Parser::operation(void) {
     else if (readWord("bytecode")) bytecodeOp();
     else if (readWord("return")) returnOp();
     else if (readWord("thread")) threadOp();
-    else if (readWord("employ_threads")) employOp();
+    else if (readWord("fork")) forkOp();
+    else if (readWord("lock")) lockOp();
     else if (readWord("{")) {
         code >> c;
         operations();
@@ -652,6 +653,11 @@ void Parser::threadOp(void) {
         throw Obstacle(NEED_THREAD_NUMBER);
     code >> c;
 
+    IdTable.pushType(_LABEL_);
+    IdentTable * progOffset = IdTable.confirm();
+    poliz.pushVal(progOffset);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
+
     int threadNum = constInt();
     IdTable.pushType(_LABEL_);
     IdTable.pushVal( new int (poliz.getSize()) );
@@ -667,14 +673,17 @@ void Parser::threadOp(void) {
     inThread = true;
     operations();
     inThread = false;
-    poliz.pushOp(_INT_, _LABEL_, RET);
+    poliz.pushOp(_NONE_, _NONE_, STOP);
 
     if (c != '}')
         throw Obstacle(PROG_CLOSEBR);
+    
+    progOffset->setVal(new int (poliz.getSize()));
+
     code >> c;
 }
 
-void Parser::employOp(void) {
+void Parser::forkOp(void) {
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '(')
         throw Obstacle(FUNC_OPENBR);
@@ -692,6 +701,23 @@ void Parser::employOp(void) {
     code >> c;
     if (c != ';')
         throw Obstacle(SEMICOLON);
+
+    code >> c;
+}
+
+void Parser::lockOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '(')
+        throw Obstacle(FUNC_OPENBR);
+    code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != ')')
+        throw Obstacle(FUNC_CLOSEBR);
+    code >> c;
+    if (c != ';')
+        throw Obstacle(SEMICOLON);
+
+    poliz.pushOp(_NONE_, _NONE_, LOCK);
 
     code >> c;
 }

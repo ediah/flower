@@ -111,7 +111,8 @@ public:
     void bytecodeOp(void); // bytecode
     void returnOp(void);
     void threadOp(void);
-    void employOp(void);
+    void forkOp(void);
+    void lockOp(void);
 
     void optimize(bool verbose);
     void finalize(void); // Вывод результата парсера в читаемом виде

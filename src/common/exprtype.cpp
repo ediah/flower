@@ -105,7 +105,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 r = _NONE_;
             else throw Obstacle(EXPR_BAD_TYPE);
         } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == STOP) {
+    } else if ((o == STOP) || (o == LOCK)) {
         if ((t1 == _NONE_) && (t2 == _NONE_)) {
             r = _NONE_;
         } else throw Obstacle(EXPR_BAD_TYPE);
@@ -127,11 +127,16 @@ char * typetostr(type_t t) {
         case _LABEL_: return "LABEL"; break;
         case _STRUCT_: return "STRUCT"; break;
     }
+    #ifdef DEBUG
+    return "???";
+    #else
     throw Obstacle(PANIC);
+    #endif
 }
 
 bool isNullary(operation_t o) {
     bool ret = (o == NONE) || (o == ENDL) || (o == RET) || (o == STOP);
+    ret = ret || (o == LOCK);
     return ret;
 }
 
