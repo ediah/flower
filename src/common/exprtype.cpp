@@ -3,117 +3,267 @@
 
 type_t expressionType(type_t t1, type_t t2, operation_t o) {
     type_t r = _NONE_;
-    if (o == PLUS) {
-        if (t1 == _INT_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _REAL_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = _REAL_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _STRING_) {
-            if (t2 == _STRING_) r = _STRING_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _NONE_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == MINUS) {
-        if (t1 == _INT_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _REAL_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = _REAL_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _NONE_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == MUL) || (o == DIV)) {
-        if (t1 == _INT_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = t2;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _REAL_) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = _REAL_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == MOD) {
-        if (t1 == _INT_) {
-            if (t2 == _INT_) r = _INT_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == INV) {
-        if ((t2 == _INT_) || (t2 == _REAL_) || (t2 == _BOOLEAN_)) r = t2;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == LESS) || (o == GRTR) || (o == EQ) || (o == NEQ)) {
-        if ((t1 == _INT_) || (t1 == _REAL_)) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = _BOOLEAN_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if (t1 == _STRING_) {
-            if (t2 == _STRING_) r = _BOOLEAN_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == LESSEQ) || (o == GRTREQ)) {
-        if (((t1 == _INT_) || (t1 == _REAL_)) &&
-            ((t2 == _INT_) || (t2 == _REAL_))) r = _BOOLEAN_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == LOR) || (o == LAND)) {
-        if ((t1 == _BOOLEAN_) && (t2 == _BOOLEAN_)) r = _BOOLEAN_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == LNOT) {
-        if ((t1 == _NONE_) && (t2 == _BOOLEAN_)) r = _BOOLEAN_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == ASSIGN) {
-        if ((t1 == _INT_) || (t1 == _REAL_)) {
-            if ((t2 == _INT_) || (t2 == _REAL_)) r = _NONE_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else if ((t1 == _BOOLEAN_) && (t2 == _BOOLEAN_))
+
+    switch (o) {
+        case PLUS:
+            switch (t1) {
+                // INT PLUS INT  = INT
+                // INT PLUS REAL = REAL
+                case _INT_:
+                    r = t2;
+                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                // REAL PLUS INT  = REAL
+                // REAL PLUS REAL = REAL
+                case _REAL_:
+                    r = _REAL_;
+                    if ((t2 != _INT_) && (t2 != _REAL_))
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                // STRING PLUS STRING = STRING
+                case _STRING_:
+                    r = _STRING_;
+                    if (t2 != _STRING_) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+                
+                // _ PLUS INT  = INT
+                // _ PLUS REAL = REAL
+                case _NONE_:
+                    r = t2;
+                    if ((t2 != _INT_) && (t2 != _REAL_))
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                default:
+                    throw Obstacle(EXPR_BAD_TYPE);
+            }
+
+            break;
+
+        case MINUS:
+            switch (t1) {
+                // INT MINUS INT  = INT
+                // INT MINUS REAL = REAL
+                case _INT_:
+                    r = t2;
+                    if ((t2 != _INT_) && (t2 != _REAL_))
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                // REAL MINUS INT  = REAL
+                // REAL MINUS REAL = REAL
+                case _REAL_:
+                    r = _REAL_;
+                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                // _ MINUS INT  = REAL
+                // _ MINUS REAL = REAL
+                case _NONE_:
+                    r = t2;
+                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                default:
+                    throw Obstacle(EXPR_BAD_TYPE);
+            }
+
+            break;
+        
+        case MUL: case DIV:
+            switch (t1) {
+                // INT MUL INT  = INT
+                // INT MUL REAL = REAL
+                // INT DIV INT  = INT
+                // INT DIV REAL = REAL
+                case _INT_:
+                    r = t2;
+                    if ((t2 != _INT_) && (t2 != _REAL_))
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                // REAL MUL INT  = REAL
+                // REAL MUL REAL = REAL
+                // REAL DIV INT  = REAL
+                // REAL DIV REAL = REAL
+                case _REAL_:
+                    r = _REAL_;
+                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
+
+                default:
+                    throw Obstacle(EXPR_BAD_TYPE);
+            }
+
+            break;
+
+        // INT MOD INT = INT
+        case MOD:
+            r = _INT_;
+            if ((t1 != _INT_) || (t2 != _INT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ INV INT     = INT
+        // _ INV REAL    = REAL
+        // _ INV BOOLEAN = BOOLEAN
+        case INV:
+            r = t2;
+            if (t1 != _NONE_)
+                throw Obstacle(EXPR_BAD_TYPE);
+            if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _BOOLEAN_)) 
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // INT    LESS INT    = BOOLEAN
+        // INT    LESS REAL   = BOOLEAN
+        // REAL   LESS INT    = BOOLEAN
+        // REAL   LESS REAL   = BOOLEAN
+        // INT    GRTR INT    = BOOLEAN
+        // INT    GRTR REAL   = BOOLEAN
+        // REAL   GRTR INT    = BOOLEAN
+        // REAL   GRTR REAL   = BOOLEAN
+        // INT    EQ   INT    = BOOLEAN
+        // INT    EQ   REAL   = BOOLEAN
+        // REAL   EQ   INT    = BOOLEAN
+        // REAL   EQ   REAL   = BOOLEAN
+        // INT    NEQ  INT    = BOOLEAN
+        // INT    NEQ  REAL   = BOOLEAN
+        // REAL   NEQ  INT    = BOOLEAN
+        // REAL   NEQ  REAL   = BOOLEAN
+        // STRING LESS STRING = BOOLEAN
+        // STRING GRTR STRING = BOOLEAN
+        // STRING EQ   STRING = BOOLEAN
+        // STRING NEQ  STRING = BOOLEAN
+        case LESS: case GRTR: case EQ: case NEQ:
+            r = _BOOLEAN_;
+            if (((t1 == _INT_) || (t1 == _REAL_)) && (t2 != _INT_) && (t2 != _REAL_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            if ((t1 == _STRING_) && (t2 != _STRING_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // INT  LESSEQ INT  = BOOLEAN
+        // INT  LESSEQ REAL = BOOLEAN
+        // REAL LESSEQ INT  = BOOLEAN
+        // REAL LESSEQ REAL = BOOLEAN
+        // INT  GRTREQ INT  = BOOLEAN
+        // INT  GRTREQ REAL = BOOLEAN
+        // REAL GRTREQ INT  = BOOLEAN
+        // REAL GRTREQ REAL = BOOLEAN
+        case LESSEQ: case GRTREQ:
+            r = _BOOLEAN_;
+            if (((t1 != _INT_) && (t1 != _REAL_)) || ((t2 != _INT_) && (t2 != _REAL_))) 
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // BOOLEAN LOR  BOOLEAN = BOOLEAN
+        // BOOLEAN LAND BOOLEAN = BOOLEAN
+        case LOR: case LAND:
+            r = _BOOLEAN_;
+            if ((t1 != _BOOLEAN_) || (t2 != _BOOLEAN_)) 
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ LNOT BOOLEAN = BOOLEAN
+        case LNOT:
+            r = _BOOLEAN_;
+            if ((t1 != _NONE_) || (t2 != _BOOLEAN_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // INT     ASSIGN INT     = INT
+        // INT     ASSIGN REAL    = INT
+        // REAL    ASSIGN INT     = REAL
+        // REAL    ASSIGN REAL    = REAL
+        // STRING  ASSIGN STRING  = STRING
+        // BOOLEAN ASSIGN BOOLEAN = BOOLEAN
+        case ASSIGN:
             r = _NONE_;
-        else if ((t1 == _STRING_) && (t2 == _STRING_))
+            if (((t1 == _INT_) || (t1 == _REAL_)) && (t2 != _INT_) && (t2 != _REAL_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            if (((t1 == _STRING_) || (t1 == _BOOLEAN_)) && (t1 != t2))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // BOOLEAN JIT LABEL = _
+        case JIT:
             r = _NONE_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == JIT) {
-        if ((t1 == _BOOLEAN_) && (t2 == _LABEL_)) {
+            if ((t1 != _BOOLEAN_) || (t2 != _LABEL_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ JMP LABEL = _
+        case JMP:
             r = _NONE_;
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == JMP) {
-        if ((t1 == _NONE_) && (t2 == _LABEL_)) {
+            if ((t1 != _NONE_) || (t2 != _LABEL_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // INT CALL LABEL = _
+        // INT RET  LABEL = _
+        case CALL: case RET:
             r = _NONE_;
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == CALL) {
-        if ((t1 == _INT_) && (t2 == _LABEL_))
+            if ((t1 != _INT_) || (t2 != _LABEL_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ READ  INT     = _
+        // _ READ  REAL    = _
+        // _ READ  STRING  = _
+        // _ READ  BOOLEAN = _
+        // _ WRITE INT     = _
+        // _ WRITE REAL    = _
+        // _ WRITE STRING  = _
+        // _ WRITE BOOLEAN = _
+        case READ: case WRITE:
             r = _NONE_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == RET) {
-        if ((t1 == _INT_) && (t2 == _LABEL_))
+            if ((t1 != _NONE_) || ((t2 == _NONE_) && (t2 == _STRUCT_)))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ STOP _ = _
+        // _ LOCK _ = _
+        // _ ENDL _ = _
+        case STOP: case LOCK: case ENDL:
             r = _NONE_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == ENDL) {
-        if ((t1 == _NONE_) && (t2 == _NONE_))
+            if ((t1 != _NONE_) || (t2 != _NONE_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ LOAD  INT = _
+        // _ SHARE INT = _
+        // _ FORK  INT = _
+        case LOAD: case SHARE: case FORK:
             r = _NONE_;
-        else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == READ) {
-        if (t1 == _NONE_) {
-            if ((t2 == _INT_) || (t2 == _REAL_) || 
-                (t2 == _STRING_) || (t2 == _BOOLEAN_))
-                r = _NONE_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if (o == WRITE) {
-        if (t1 == _NONE_) {
-            if ((t2 == _INT_) || (t2 == _REAL_) || 
-                (t2 == _STRING_) || (t2 == _BOOLEAN_))
-                r = _NONE_;
-            else throw Obstacle(EXPR_BAD_TYPE);
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == STOP) || (o == LOCK)) {
-        if ((t1 == _NONE_) && (t2 == _NONE_)) {
-            r = _NONE_;
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else if ((o == LOAD) || (o == SHARE) || (o == FORK)) {
-        if ((t1 == _NONE_) && (t2 == _INT_)) {
-            r = _NONE_;
-        } else throw Obstacle(EXPR_BAD_TYPE);
-    } else throw Obstacle(PANIC);
+            if ((t1 != _NONE_) || (t2 != _INT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        default:
+            throw Obstacle(PANIC);
+    }
+
     return r;
 }
 

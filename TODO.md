@@ -71,7 +71,7 @@
 - [ ] Тип выражения и констант вариантов в операторе **case** должен быть целочисленным.
 - [x] Тип выражения и совместимость типов операндов в выражении определяются по правилам, приведенным в Таблице №1.
 
-### Таблица №1
+### Таблица №1 (Выражения с основными типами)
 |     Операция    |  Тип X  |  Тип Y  | Тип результата |
 | --------------- | ------- | ------- | -------------- |
 | + − * / %       | int     | int     | int            |
@@ -94,6 +94,34 @@
 | =               | real    | real    | real           |
 | =               | string  | string  | string         |
 | =               | boolean | boolean | boolean        |
+
+
+### Таблица №2 (Выражения со структурами)
+|     Операция    |  Тип X  |  Тип Y  | Тип результата |
+| --------------- | ------- | ------- | -------------- |
+| + − * / %       | struct  | struct  | struct         |
+| + − * / %       | struct  | int     | struct         |
+| + − * / %       | int     | struct  | struct         |
+| + − * /         | struct  | real    | struct         |
+| + − * /         | real    | struct  | struct         |
+| +               | struct  | string  | struct         |
+| +               | string  | struct  | struct         |
+| унарные +-      | struct  | -       | struct         |
+| < > <= >= == != | struct  | struct  | boolean        |
+| < > <= >= == != | struct  | int     | boolean        |
+| < > <= >= == != | int     | struct  | boolean        |
+| < > <= >= == != | struct  | real    | boolean        |
+| < > <= >= == != | real    | struct  | boolean        |
+| < > == !=       | struct  | string  | boolean        |
+| < > == !=       | string  | struct  | boolean        |
+| and or          | struct  | struct  | struct         |
+| not             | struct  | -       | struct         |
+| =               | struct  | struct  | struct         |
+| =               | struct  | int     | struct         |
+| =               | struct  | real    | struct         |
+| =               | struct  | string  | struct         |
+| =               | struct  | bool    | struct         |
+
 
 ### Правила записи текста программы
 - [x] В любом месте программы, кроме идентификаторов, служебных слов и числовых констант, может находиться произвольное число пробельных литер и комментариев вида 
