@@ -11,7 +11,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 // INT PLUS REAL = REAL
                 case _INT_:
                     r = t2;
-                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_)) 
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
@@ -30,6 +30,10 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
                 
+                case _STRUCT_:
+                    r = _STRUCT_;
+                    break;
+
                 // _ PLUS INT  = INT
                 // _ PLUS REAL = REAL
                 case _NONE_:
@@ -50,7 +54,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 // INT MINUS REAL = REAL
                 case _INT_:
                     r = t2;
-                    if ((t2 != _INT_) && (t2 != _REAL_))
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_))
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
@@ -84,7 +88,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 // INT DIV REAL = REAL
                 case _INT_:
                     r = t2;
-                    if ((t2 != _INT_) && (t2 != _REAL_))
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_))
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
@@ -105,9 +109,16 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
             break;
 
         // INT MOD INT = INT
+        // INT MOD STRUCT = STRUCT
         case MOD:
-            r = _INT_;
-            if ((t1 != _INT_) || (t2 != _INT_))
+            if (t1 != _INT_)
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            if (t2 == _INT_)
+                r = _INT_;
+            else if (t2 == _STRUCT_)
+                r = _STRUCT_;
+            else
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;

@@ -9,12 +9,12 @@ struct object {
 
 def step(shared struct point pos): bool {
     bool status = true;
-    pos = { 
-        x = pos.x + 0.1, 
-        y = pos.y + 0.1, 
-        z = pos.z + 0.1
-    };
+    pos = pos + 1;
     return status;
+}
+
+def length(struct point pos): real {
+    return 0.0;
 }
 
 program {

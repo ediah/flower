@@ -140,6 +140,15 @@ void POLIZ::incIter(void) {
 }
 
 void POLIZ::push(op_t op, bool eb) {
+    #ifdef DEBUG
+    std::cout << "POLIZ push ";
+    if (eb)
+        interpretAsOp(op);
+    else
+        interpretAsVal(op);
+    std::cout << std::endl;
+    #endif
+
     prog[iter] = op;
     execBit[iter] = eb;
     iter++;

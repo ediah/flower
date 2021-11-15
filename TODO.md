@@ -97,30 +97,30 @@
 
 
 ### Таблица №2 (Выражения со структурами)
-|     Операция    |  Тип X  |  Тип Y  | Тип результата |
-| --------------- | ------- | ------- | -------------- |
-| + − * / %       | struct  | struct  | struct         |
-| + − * / %       | struct  | int     | struct         |
-| + − * / %       | int     | struct  | struct         |
-| + − * /         | struct  | real    | struct         |
-| + − * /         | real    | struct  | struct         |
-| +               | struct  | string  | struct         |
-| +               | string  | struct  | struct         |
-| унарные +-      | struct  | -       | struct         |
-| < > <= >= == != | struct  | struct  | boolean        |
-| < > <= >= == != | struct  | int     | boolean        |
-| < > <= >= == != | int     | struct  | boolean        |
-| < > <= >= == != | struct  | real    | boolean        |
-| < > <= >= == != | real    | struct  | boolean        |
-| < > == !=       | struct  | string  | boolean        |
-| < > == !=       | string  | struct  | boolean        |
-| and or          | struct  | struct  | struct         |
-| not             | struct  | -       | struct         |
-| =               | struct  | struct  | struct         |
-| =               | struct  | int     | struct         |
-| =               | struct  | real    | struct         |
-| =               | struct  | string  | struct         |
-| =               | struct  | bool    | struct         |
+|     Операция    |  Тип X  |  Тип Y  | Тип результата | Реализовано? |
+| --------------- | ------- | ------- | -------------- | ------------ |
+| + − * / %       | struct  | struct  | struct         |              |
+| + − * / %       | struct  | int     | struct         |              |
+| + − * / %       | int     | struct  | struct         |              |
+| + − * /         | struct  | real    | struct         |              |
+| + − * /         | real    | struct  | struct         |              |
+| +               | struct  | string  | struct         |              |
+| +               | string  | struct  | struct         |              |
+| унарные +-      | struct  | -       | struct         |              |
+| < > <= >= == != | struct  | struct  | boolean        |              |
+| < > <= >= == != | struct  | int     | boolean        |              |
+| < > <= >= == != | int     | struct  | boolean        |              |
+| < > <= >= == != | struct  | real    | boolean        |              |
+| < > <= >= == != | real    | struct  | boolean        |              |
+| < > == !=       | struct  | string  | boolean        |              |
+| < > == !=       | string  | struct  | boolean        |              |
+| and or          | struct  | struct  | struct         |              |
+| not             | struct  | -       | struct         |              |
+| =               | struct  | struct  | struct         |              |
+| =               | struct  | int     | struct         |              |
+| =               | struct  | real    | struct         |              |
+| =               | struct  | string  | struct         |              |
+| =               | struct  | bool    | struct         |              |
 
 
 ### Правила записи текста программы

@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cstring>
+#include <utility>
 #include <vector>
+#include <cassert>
+#include "common/exprtype.hpp"
 #include "compiler/parser.hpp"
 #include "common/obstacle.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
@@ -129,7 +132,7 @@ void Parser::defFunction(void) {
     }
     
     int paramsNum;
-    if (formalParams != nullptr) 
+    if (formalParams != nullptr)
         paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
     else paramsNum = 0;
 
@@ -139,14 +142,34 @@ void Parser::defFunction(void) {
         thisFunc->setVal(formalParams);
     
     IdentTable * p = formalParams;
+    int paramsSum = 0;
     for (int i = 0; i < paramsNum; i++) {
         if (p->isShared()) {
-            IdTable.pushVal(new int (i));
-            IdTable.pushType(_INT_);
-            poliz.pushVal(IdTable.confirm());
-            poliz.pushOp(_NONE_, _INT_, SHARE);
+            int nparamFact = 0;
+            if (p->getType() == _STRUCT_) {
+                IdentTable * fields = reinterpret_cast<IdentTable*>(p->getVal());
+                while (fields->next != nullptr) {
+                    nparamFact++;
+                    fields = fields->next;
+                }
+            } else nparamFact = 1;
+            
+            for (int k = 0; k < nparamFact; k++) {
+                IdTable.pushVal(new int (k + paramsSum));
+                IdTable.pushType(_INT_);
+                poliz.pushVal(IdTable.confirm());
+                poliz.pushOp(_NONE_, _INT_, SHARE);
+            }
+
+            paramsSum += nparamFact;
         }
-        p->onReg();
+        if (p->getType() == _STRUCT_) {
+            IdentTable * fields = reinterpret_cast<IdentTable*>(p->getVal());
+            while (fields->next != nullptr) {
+                fields->onReg();
+                fields = fields->next;
+            }
+        } else p->onReg();
         p = p->next;
     }
 
@@ -176,7 +199,7 @@ void Parser::defFunction(void) {
         } else throw Obstacle(NO_TYPE);
     } else throw Obstacle(PROCEDURE);
 
-    retTypes.push(new type_t (thisFunc->getType()));
+    retTypes.push_back(std::make_pair(thisFunc->getType(), thisFunc->getStruct()));
 
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '{') throw Obstacle(PROG_OPENBR);
@@ -185,7 +208,7 @@ void Parser::defFunction(void) {
     defs();
     operations();
 
-    delete static_cast<type_t*>(retTypes.pop());
+    retTypes.pop_back();
     
     if (c != '}') throw Obstacle(PROG_CLOSEBR);
     if (inFunc) throw Obstacle(NO_RETURN);
@@ -200,8 +223,15 @@ void Parser::defFunction(void) {
 void Parser::returnOp(void) {
     inFunc = false;
     code >> c;
-    type_t retFact = expr();
-    if (retFact != * static_cast<type_t *>(retTypes.top())) 
+    
+    int fieldSize = 1;
+    char * stName = retTypes.back().second;
+    if (retTypes.back().first == _STRUCT_) {
+        fieldSize = StTable.getStruct(stName)->getFields().last()->getOrd();
+    }
+    type_t retFact = expr(&fieldSize, stName);
+
+    if (retFact != retTypes.back().first) 
         throw Obstacle(RETURN_TYPE_MISMATCH);
     if (c != ';') throw Obstacle(SEMICOLON);
     code >> c;
@@ -377,31 +407,30 @@ void Parser::assignStruct(IdentTable * lval, IdentTable * rval) {
 void Parser::assign(IdentTable * lval) {
     type_t lvtype = lval->getType();
 
-    if (lvtype == _STRUCT_) {
-        if (c == '{') {
-            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-            do {
-                code >> c;
-                char * fieldName = identificator();
-                IdentTable * val = fields->getIT(fieldName);
-
-                if ((c == ' ') || (c == '\n')) code >> c;
-
-                while (c == '.') {
-                    code >> c;
-                    fieldName = identificator();
-                    IdentTable * innerFields = static_cast<IdentTable *>(val->getVal());
-                    val = innerFields->getIT(fieldName);
-                    if ((c == ' ') || (c == '\n')) code >> c;
-                }
-
-                if (c != '=') throw Obstacle(BAD_EXPR);
-                code >> c;
-                assign(val);
-            } while (c == ',');
-            if (c != '}') throw Obstacle(BAD_EXPR);
+    if ((lvtype == _STRUCT_) && (c == '{')) {
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        do {
             code >> c;
-        } else {
+            char * fieldName = identificator();
+            IdentTable * val = fields->getIT(fieldName);
+
+            if ((c == ' ') || (c == '\n')) code >> c;
+
+            while (c == '.') {
+                code >> c;
+                fieldName = identificator();
+                IdentTable * innerFields = static_cast<IdentTable *>(val->getVal());
+                val = innerFields->getIT(fieldName);
+                if ((c == ' ') || (c == '\n')) code >> c;
+            }
+
+            if (c != '=') throw Obstacle(BAD_EXPR);
+            code >> c;
+            assign(val);
+        } while (c == ',');
+        if (c != '}') throw Obstacle(BAD_EXPR);
+        code >> c;
+        /*} else {
             char * rvalName = identificator();
             IdentTable * rval = IdTable.getIT(rvalName);
             type_t rvtype = rval->getType();
@@ -411,12 +440,30 @@ void Parser::assign(IdentTable * lval) {
                              static_cast<IdentTable *>(rval->getVal()));
                 
             } else throw Obstacle(EXPR_BAD_TYPE);
-        }
+        }*/
     } else {
-        poliz.pushVal(lval);
-        type_t exop = expr();
+        int fieldSize = 1;
+        char * strName = nullptr;
+        if (lvtype == _STRUCT_){
+            strName = lval->getStruct();
+            StructTable * st = StTable.getStruct(strName);
+            fieldSize = st->getFields().last()->getOrd();
+            #ifdef DEBUG
+            std::cout << "РАЗМЕР " << fieldSize << std::endl;
+            #endif
+            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+            while (fields->next != nullptr) {
+                poliz.pushVal(fields);
+                fields = fields->next;
+            }
+        } else
+            poliz.pushVal(lval);
+        type_t exop = expr(&fieldSize, strName);
         expressionType(lvtype, exop, ASSIGN);
-        poliz.pushOp(lvtype, exop, ASSIGN);
+        if (exop == _STRUCT_)
+            repack(fieldSize);
+        for (int i = 0; i < fieldSize; i++)
+            poliz.pushOp(lvtype, exop, ASSIGN);
         if ((c == ' ') || (c == '\n')) code >> c;
     }
 }
@@ -749,16 +796,23 @@ IdentTable * Parser::saveLabel(char * label, int addr) {
     return existinglab;
 }
 
-type_t Parser::expr(void) {
+type_t Parser::expr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
 
-    r = andExpr();
+    assert(fieldSize != nullptr);
+
+    r = andExpr(fieldSize, structName);
 
     while (true) {
         if (readWord("or")) {
             code >> c;
-            type_t rval = andExpr();
-            poliz.pushOp(r, rval, LOR);
+            type_t rval = andExpr(fieldSize, structName);
+
+            if ((r == _STRUCT_) || (rval == _STRUCT_))
+                repack(*fieldSize);
+
+            for (int i = 0; i < *fieldSize; i++)
+                poliz.pushOp(r, rval, LOR);
             r = expressionType(r, rval, LOR);
         } else break;
     }
@@ -766,26 +820,31 @@ type_t Parser::expr(void) {
     return r;
 }
 
-type_t Parser::andExpr(void) {
+type_t Parser::andExpr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
     
-    r = boolExpr();
+    r = boolExpr(fieldSize, structName);
 
     while (true) {
         if (readWord("and")) {
             code >> c;
-            type_t rval = boolExpr();
-            poliz.pushOp(r, rval, LAND);
+            type_t rval = boolExpr(fieldSize, structName);
+            
+            if ((r == _STRUCT_) || (rval == _STRUCT_))
+                repack(*fieldSize);
+
+            for (int i = 0; i < *fieldSize; i++)
+                poliz.pushOp(r, rval, LAND);
             r = expressionType(r, rval, LAND);
         } else break;
     }
     return r;
 }
 
-type_t Parser::boolExpr(void) {
+type_t Parser::boolExpr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
 
-    r = add();
+    r = add(fieldSize, structName);
     
     if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
         operation_t op = NONE;
@@ -807,15 +866,20 @@ type_t Parser::boolExpr(void) {
             }
         }
         if ((c == ' ') || (c == '\n')) code >> c;
-        type_t rval = add();
-        poliz.pushOp(r, rval, op);
+        type_t rval = add(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_))
+            repack(*fieldSize);
+
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
     }
 
     return r;
 }
 
-type_t Parser::add(void) {
+type_t Parser::add(int * fieldSize, char * structName) {
     bool exit = false;
     bool inverse = false;
     if (c == '+') code >> c;
@@ -823,7 +887,7 @@ type_t Parser::add(void) {
         inverse = true;
         code >> c;
     }
-    type_t r = mul();
+    type_t r = mul(fieldSize, structName);
     operation_t op;
 
     while (true) {
@@ -835,23 +899,29 @@ type_t Parser::add(void) {
         }
         if (exit) break;
         code >> c;
-        type_t rval = mul();
-        poliz.pushOp(r, rval, op);
+        type_t rval = mul(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_))
+            repack(*fieldSize);
+        
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
     }
 
     if (inverse) {
-        poliz.pushOp(_NONE_, r, INV);
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(_NONE_, r, INV);
         r = expressionType(_NONE_, r, INV);
     }
 
     return r;
 }
 
-type_t Parser::mul(void) {
+type_t Parser::mul(int * fieldSize, char * structName) {
     bool exit = false;
-    //int * fieldSize = new int (0);
-    type_t r = constExpr();
+    int * opnum = new int (0);
+    type_t r = constExpr(fieldSize, structName);
     operation_t op;
 
     while (true) {
@@ -864,8 +934,13 @@ type_t Parser::mul(void) {
         }
         if (exit) break;
         code >> c;
-        type_t rval = constExpr();
-        poliz.pushOp(r, rval, op);
+        type_t rval = constExpr(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_))
+            repack(*fieldSize);
+        
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(r, rval, op);
         r = expressionType(r, rval, op);
 
     }
@@ -873,22 +948,67 @@ type_t Parser::mul(void) {
     return r;
 }
 
-type_t Parser::constExpr(int * fieldSize) {
+void Parser::repack(int fieldSize) {
+    int steps[2 * fieldSize];
+    for (int i = 0; i < fieldSize * 2; i++)
+        steps[i] = 0;
+
+    POLIZ buff[2];
+
+    /* Каков смысл steps? В нём хранится количество элементов ПОЛИЗА,
+     * которое нужно достать для каждого поля. Вначале идёт левая,
+     * потом правая ветка.
+     */
+    for (int buffIter = 1; buffIter >= 0; buffIter--) {
+        for (int nfield = fieldSize; nfield >= 0; nfield--) {
+            int fields = 1;
+            while (fields) {
+                int i = poliz.getSize();
+                bool ebit = poliz.getEB()[i];
+                op_t op = poliz.getProg()[i];
+                if (ebit) {
+                    int nops = operands(static_cast<operation_t>(op & 0xFF));
+                    fields += nops;
+                }
+                buff[buffIter].push(op, ebit);
+                steps[nfield + buffIter * fieldSize] += 1;
+
+                poliz.pop();
+                fields--;
+            }
+        }
+    }
+
+    for (int step = 0; step < fieldSize * 2; step++) {
+        while (steps[step]) {
+            int  bi   = buff[step % 2].getSize();
+            bool ebit = buff[step % 2].getEB()[bi];
+            op_t op   = buff[step % 2].getProg()[bi];
+            poliz.push(op, ebit);
+            steps[step] -= 1;
+        }
+    }
+}
+
+type_t Parser::constExpr(int * fieldSize, char * structName) {
     type_t r;
+    
+    if (fieldSize == nullptr) fieldSize = new int(1);
 
     if (readWord("true")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true))
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true), *fieldSize)
     } else if (readWord("false")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false))
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false), *fieldSize)
     } else if (readWord("not")) {
-        type_t val = constExpr();
+        type_t val = constExpr(fieldSize, structName);
         r = expressionType(_NONE_, val, LNOT);
-        poliz.pushOp(_NONE_, val, LNOT);
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(_NONE_, val, LNOT);
     } else if (c == '(') {
         code >> c;
-        r = expr();
+        r = expr(fieldSize, structName);
         if (c != ')') throw Obstacle(EXPR_CLOSEBR);
         code >>= c;
     } else {
@@ -896,37 +1016,33 @@ type_t Parser::constExpr(int * fieldSize) {
         if (c == '\"') {
             r = _STRING_;
             char * x = constString();
-            NEW_IDENT(val, _STRING_, nullptr, x)
+            NEW_IDENT(val, _STRING_, nullptr, x, *fieldSize)
         } else {
             int start = code.tellg();
             try {
                 r = _REAL_;
                 float x = constReal();
-                NEW_IDENT(val, _REAL_, nullptr, new float (x))
+                NEW_IDENT(val, _REAL_, nullptr, new float (x), *fieldSize)
             } catch (Obstacle & o) {
                 code.seekg(start - 1);
                 code >>= c;
                 if (o.r != BAD_INT) {
                     r = _INT_;
                     int x = constInt();
-                    NEW_IDENT(val, _INT_, nullptr, new int (x))
+                    NEW_IDENT(val, _INT_, nullptr, new int (x), *fieldSize)
                 } else {
                     IdentTable * val = getFieldInStruct();
                     r = val->getType();
-
+                    /*
                     if (r == _STRUCT_) {
-                        throw Obstacle(STRUCT_IN_EXPR);
-                        /*
-                        *fieldSize = 0;
                         IdentTable * fields = static_cast<IdentTable *>(val->getVal());
                         while (fields->next != nullptr) {
                             poliz.pushVal(fields);
                             fields = fields->next;
                             *fieldSize = *fieldSize + 1;
                         }
-                        */
                     }
-
+                    */
                     if (c == '(') { // Вызов функции
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
@@ -934,7 +1050,23 @@ type_t Parser::constExpr(int * fieldSize) {
                     } else {
                         if (val->isFunc())
                             throw Obstacle(CALLABLE);
-                        poliz.pushVal(val);
+
+                        if (r == _STRUCT_) {
+                            if ((structName != nullptr) && (strcmp(val->getStruct(), structName) != 0))
+                                throw Obstacle(EXPR_BAD_TYPE);
+                            
+                            IdentTable * fields = static_cast<IdentTable *>(val->getVal());
+                            while (fields->next != nullptr) {
+                                poliz.pushVal(fields);
+                                fields = fields->next;
+                                *fieldSize += 1;
+                            }
+                            std::cout << "Полей " << *fieldSize << std::endl;
+                        } else {
+                            for (int i = 0; i < *fieldSize; i++)
+                                poliz.pushVal(val);
+                        }
+                        
                     }
                 }
             }
@@ -968,23 +1100,28 @@ void Parser::callIdent(IdentTable * val) {
     code >> c;
     IdentTable * fields = static_cast<IdentTable *>(val->getVal());
     int paramCount = 0;
+    int paramCountFact = 0;
     while (c != ')') {
         if (fields == nullptr)
             throw Obstacle(TOO_MUCH_PARAMS);
         if (c == ',') code >> c;
-        type_t exprType = expr();
+
+        int * fieldSize = new int(0);
+
+        type_t exprType = expr(fieldSize);
         if (fields->getType() != exprType)
             throw Obstacle(EXPR_BAD_TYPE);
         fields = fields->next;
-        paramCount++;
+        paramCount += *fieldSize;
+        paramCountFact++;
     }
 
     if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     code >> c;
-    if (paramCount != val->getParams())
+    if (paramCountFact != val->getParams())
         throw Obstacle(BAD_PARAMS_COUNT);
-    NEW_IDENT(params, _INT_, nullptr, new int (paramCount))
-    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()))
+    NEW_IDENT(params, _INT_, nullptr, new int (paramCount), 1)
+    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()), 1)
     poliz.pushOp(_INT_, _LABEL_, CALL);
 }
 
@@ -994,7 +1131,8 @@ void Parser::condOp(void) {
         throw Obstacle(BAD_PARAMS_OPBR);
     code >> c;
 
-    type_t r = expr();
+    int fieldSize = 1;
+    type_t r = expr(&fieldSize);
 
     if (r != _BOOLEAN_)
         throw Obstacle(BAD_IF);
@@ -1083,7 +1221,9 @@ void Parser::forOp(void) {
     IdTable.pushVal( new int (poliz.getSize()) );
     IdentTable * condexpr = IdTable.confirm();
     code >> c;
-    type_t e2 = expr(); // условие продолжения
+
+    int fieldSize = 1;
+    type_t e2 = expr(&fieldSize); // условие продолжения
 
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushVal(body);
@@ -1269,7 +1409,9 @@ void Parser::whileOp(void) {
     IdentTable * condexpr = IdTable.confirm();
     steps.push(condexpr);
     code >> c;
-    type_t e2 = expr(); // условие продолжения
+
+    int fieldSize = 1;
+    type_t e2 = expr(&fieldSize); // условие продолжения
 
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
@@ -1361,7 +1503,8 @@ void Parser::writeOp(void) {
 
     do {
         code >> c;
-        type_t exop = expr();
+        int fieldSize = 1;
+        type_t exop = expr(&fieldSize);
         poliz.pushOp(_NONE_, exop, WRITE);
     } while (c == ',');
 

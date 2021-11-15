@@ -43,7 +43,14 @@ void VirtualMachine::run(void) {
     if (inThread) {
         void * nullp = nullptr;
         write(pipefd.back()[1], &nullp, sizeof(void*));
+        #ifdef DEBUG
+        std::cout << "Передал отцовскому процессу нуль." << std::endl;
+        #endif
     }
+
+    #ifdef DEBUG
+    std::cout << "Машина завершила свою работу." << std::endl;
+    #endif
 
     delete eip;
 }
@@ -329,7 +336,12 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                     inThread = true;
                     int offset = * (int *) stackVM.pop();
                     *eip = offset - 1;
+                } 
+                #ifdef DEBUG
+                else {
+                    std::cout << "Запущен новый поток с PID = " << pid << std::endl;
                 }
+                #endif
             }
 
             break;
@@ -338,11 +350,11 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rest == _NONE_) {
                 int st, ret = 0;
                 while (threads.size() != 0) {
+                    updateVars();
                     pid_t pid = threads.back();
                     ret = waitpid(pid, &st, 0);
                     if (ret == -1) throw Obstacle(PANIC);
                     else if (WIFEXITED(st)) threads.pop_back();
-                    updateVars();
                 }
             }
             break;

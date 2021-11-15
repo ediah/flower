@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "common/exprtype.hpp"
 #define MAXIDENT 50
 #define MAXTHREADS 4
 
@@ -13,12 +14,13 @@
 #include "runtime/stack.hpp"
 #include "optimizer/optimizer.hpp"
 
-#define NEW_IDENT(IT, type, id, val) { \
+#define NEW_IDENT(IT, type, id, val, fs) { \
     IdTable.pushType(type); \
     IdTable.pushVal(val); \
     IdTable.pushId(id); \
     IdentTable * IT = IdTable.confirm(); \
-    poliz.pushVal(IT); \
+    for (int i = 0; i < fs; i++) \
+        poliz.pushVal(IT); \
 }
 
 #define BYTECODE_OP_BIN(op) { \
@@ -49,7 +51,7 @@ class Parser {
     bool ok;             // Произошла ли ошибка во время чтения программы
     bool inFunc;         // Читает ли в данный момент тело функции
     bool inThread;       // Читает ли в данный момент определение потока
-    Stack retTypes;      // Тип возвращаемых параметров из функций
+    std::vector<std::pair<type_t, char*>> retTypes;  // Тип возвращаемых параметров из функций
     std::vector<std::ifstream*> fileQueue; // Файлы в очереди к обработке
     IdentTable * threads[MAXTHREADS];
 
@@ -92,12 +94,13 @@ public:
     void operations(void); // Операции
     void operation(void);  // Операция
     IdentTable * saveLabel(char * label, int addr); // Сохранение метки
-    type_t expr(void);     // Выражение ( a or b )
-    type_t andExpr(void);  // a and b
-    type_t boolExpr(void); // Сравнение
-    type_t add(void);      // a +- b
-    type_t mul(void);      // a */ b
-    type_t constExpr(int * fieldSize = nullptr); // Константа или идентификатор
+    type_t expr     (int * fieldSize = nullptr, char * structName = nullptr); // Выражение ( a or b )
+    type_t andExpr  (int * fieldSize = nullptr, char * structName = nullptr); // a and b
+    type_t boolExpr (int * fieldSize = nullptr, char * structName = nullptr); // Сравнение
+    type_t add      (int * fieldSize = nullptr, char * structName = nullptr); // a +- b
+    type_t mul      (int * fieldSize = nullptr, char * structName = nullptr); // a */ b
+    type_t constExpr(int * fieldSize = nullptr, char * structName = nullptr); // Константа или идентификатор
+    void repack(int fieldSize);
     IdentTable * cycleparam(void); // Циклическое выражение
 
     void condOp(void);  // if - else

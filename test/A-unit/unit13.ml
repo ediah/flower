@@ -18,6 +18,6 @@ program {
         
     for (struct point p = {x = 0, y = 0}; 
          p.x * p.x + p.y * p.y < 9;
-         p = {x = p.x + 1, y = p.y + 1})
+         p = p + 1)
         write(p.x, " ", p.y);
 }
