@@ -4,6 +4,7 @@
 #include <vector>
 #include <cassert>
 #include "common/exprtype.hpp"
+#include "common/tables.hpp"
 #include "compiler/parser.hpp"
 #include "common/obstacle.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
@@ -442,22 +443,13 @@ void Parser::assign(IdentTable * lval) {
             } else throw Obstacle(EXPR_BAD_TYPE);
         }*/
     } else {
-        int fieldSize = 1;
+        int fieldSize;
         char * strName = nullptr;
-        if (lvtype == _STRUCT_){
+
+        if (lval->getType() == _STRUCT_)
             strName = lval->getStruct();
-            StructTable * st = StTable.getStruct(strName);
-            fieldSize = st->getFields().last()->getOrd();
-            #ifdef DEBUG
-            std::cout << "РАЗМЕР " << fieldSize << std::endl;
-            #endif
-            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-            while (fields->next != nullptr) {
-                poliz.pushVal(fields);
-                fields = fields->next;
-            }
-        } else
-            poliz.pushVal(lval);
+
+        fieldSize = unrollStruct(lval);
         type_t exop = expr(&fieldSize, strName);
         expressionType(lvtype, exop, ASSIGN);
         if (exop == _STRUCT_)
@@ -466,6 +458,26 @@ void Parser::assign(IdentTable * lval) {
             poliz.pushOp(lvtype, exop, ASSIGN);
         if ((c == ' ') || (c == '\n')) code >> c;
     }
+}
+
+int Parser::unrollStruct(IdentTable * lval) {
+    int fieldSize = 0;
+    if (lval->getType() == _STRUCT_){
+        char * strName = lval->getStruct();
+        StructTable * st = StTable.getStruct(strName);
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        while (fields->next != nullptr) {
+            fieldSize += unrollStruct(fields);
+            fields = fields->next;
+        }
+        #ifdef DEBUG
+        std::cout << "РАЗМЕР " << fieldSize << std::endl;
+        #endif
+    } else {
+        fieldSize = 1;
+        poliz.pushVal(lval);
+    }
+    return fieldSize;
 }
 
 IdentTable * Parser::variable(void) {
@@ -960,18 +972,18 @@ void Parser::repack(int fieldSize) {
      * потом правая ветка.
      */
     for (int buffIter = 1; buffIter >= 0; buffIter--) {
-        for (int nfield = fieldSize; nfield >= 0; nfield--) {
+        for (int nfield = fieldSize; nfield > 0; nfield--) {
             int fields = 1;
             while (fields) {
                 int i = poliz.getSize();
-                bool ebit = poliz.getEB()[i];
-                op_t op = poliz.getProg()[i];
+                bool ebit = poliz.getEB()[i - 1];
+                op_t op = poliz.getProg()[i - 1];
                 if (ebit) {
                     int nops = operands(static_cast<operation_t>(op & 0xFF));
                     fields += nops;
                 }
                 buff[buffIter].push(op, ebit);
-                steps[nfield + buffIter * fieldSize] += 1;
+                steps[nfield + buffIter * fieldSize - 1] += 1;
 
                 poliz.pop();
                 fields--;
@@ -982,8 +994,9 @@ void Parser::repack(int fieldSize) {
     for (int step = 0; step < fieldSize * 2; step++) {
         while (steps[step]) {
             int  bi   = buff[step % 2].getSize();
-            bool ebit = buff[step % 2].getEB()[bi];
-            op_t op   = buff[step % 2].getProg()[bi];
+            bool ebit = buff[step % 2].getEB()[bi - 1];
+            op_t op   = buff[step % 2].getProg()[bi - 1];
+            buff[step % 2].pop();
             poliz.push(op, ebit);
             steps[step] -= 1;
         }
@@ -992,15 +1005,13 @@ void Parser::repack(int fieldSize) {
 
 type_t Parser::constExpr(int * fieldSize, char * structName) {
     type_t r;
-    
-    if (fieldSize == nullptr) fieldSize = new int(1);
 
     if (readWord("true")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true), *fieldSize)
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true), fieldSize)
     } else if (readWord("false")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false), *fieldSize)
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false), fieldSize)
     } else if (readWord("not")) {
         type_t val = constExpr(fieldSize, structName);
         r = expressionType(_NONE_, val, LNOT);
@@ -1016,33 +1027,24 @@ type_t Parser::constExpr(int * fieldSize, char * structName) {
         if (c == '\"') {
             r = _STRING_;
             char * x = constString();
-            NEW_IDENT(val, _STRING_, nullptr, x, *fieldSize)
+            NEW_IDENT(val, _STRING_, nullptr, x, fieldSize)
         } else {
             int start = code.tellg();
             try {
                 r = _REAL_;
                 float x = constReal();
-                NEW_IDENT(val, _REAL_, nullptr, new float (x), *fieldSize)
+                NEW_IDENT(val, _REAL_, nullptr, new float (x), fieldSize)
             } catch (Obstacle & o) {
                 code.seekg(start - 1);
                 code >>= c;
                 if (o.r != BAD_INT) {
                     r = _INT_;
                     int x = constInt();
-                    NEW_IDENT(val, _INT_, nullptr, new int (x), *fieldSize)
+                    NEW_IDENT(val, _INT_, nullptr, new int (x), fieldSize)
                 } else {
                     IdentTable * val = getFieldInStruct();
                     r = val->getType();
-                    /*
-                    if (r == _STRUCT_) {
-                        IdentTable * fields = static_cast<IdentTable *>(val->getVal());
-                        while (fields->next != nullptr) {
-                            poliz.pushVal(fields);
-                            fields = fields->next;
-                            *fieldSize = *fieldSize + 1;
-                        }
-                    }
-                    */
+                    
                     if (c == '(') { // Вызов функции
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
@@ -1054,17 +1056,11 @@ type_t Parser::constExpr(int * fieldSize, char * structName) {
                         if (r == _STRUCT_) {
                             if ((structName != nullptr) && (strcmp(val->getStruct(), structName) != 0))
                                 throw Obstacle(EXPR_BAD_TYPE);
+                        }
                             
-                            IdentTable * fields = static_cast<IdentTable *>(val->getVal());
-                            while (fields->next != nullptr) {
-                                poliz.pushVal(fields);
-                                fields = fields->next;
-                                *fieldSize += 1;
-                            }
-                            std::cout << "Полей " << *fieldSize << std::endl;
-                        } else {
-                            for (int i = 0; i < *fieldSize; i++)
-                                poliz.pushVal(val);
+                        int fields = unrollStruct(val);
+                        if (*fieldSize != 0) {
+                            *fieldSize = fields;
                         }
                         
                     }
@@ -1106,13 +1102,13 @@ void Parser::callIdent(IdentTable * val) {
             throw Obstacle(TOO_MUCH_PARAMS);
         if (c == ',') code >> c;
 
-        int * fieldSize = new int(0);
+        int fieldSize = 1;
 
-        type_t exprType = expr(fieldSize);
+        type_t exprType = expr(&fieldSize);
         if (fields->getType() != exprType)
             throw Obstacle(EXPR_BAD_TYPE);
         fields = fields->next;
-        paramCount += *fieldSize;
+        paramCount += fieldSize;
         paramCountFact++;
     }
 
@@ -1120,8 +1116,9 @@ void Parser::callIdent(IdentTable * val) {
     code >> c;
     if (paramCountFact != val->getParams())
         throw Obstacle(BAD_PARAMS_COUNT);
-    NEW_IDENT(params, _INT_, nullptr, new int (paramCount), 1)
-    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()), 1)
+    int fieldSize = 1;
+    NEW_IDENT(params, _INT_, nullptr, new int (paramCount), &fieldSize)
+    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()), &fieldSize)
     poliz.pushOp(_INT_, _LABEL_, CALL);
 }
 
@@ -1383,7 +1380,8 @@ void Parser::bytecodeOp(void) {
                 break;
         }
         if (!couldRead) {
-            types.push_back(constExpr());
+            int fieldSize = 1;
+            types.push_back(constExpr(&fieldSize));
         }
 
         if ((c == ' ') || (c == '\n')) code >> c;

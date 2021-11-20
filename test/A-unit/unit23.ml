@@ -1,6 +1,6 @@
 def iterate(shared int a): shared int {
     for (int i = 1; i <= 5; i = i + 1) {
-        write("Итерация #", i, ": a = ", a);
+        /* write("Итерация #", i, ": a = ", a); */
         a = a / 2;
     }
     return a;

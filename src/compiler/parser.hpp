@@ -19,7 +19,7 @@
     IdTable.pushVal(val); \
     IdTable.pushId(id); \
     IdentTable * IT = IdTable.confirm(); \
-    for (int i = 0; i < fs; i++) \
+    for (int i = 0; i < *fs; i++) \
         poliz.pushVal(IT); \
 }
 
@@ -88,7 +88,8 @@ public:
     void callIdent(IdentTable * val);      // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
-
+    int unrollStruct(IdentTable * lval);
+    
     void program(void);    // Программа
 
     void operations(void); // Операции
