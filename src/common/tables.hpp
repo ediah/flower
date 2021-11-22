@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <ostream>
+#include <vector>
 #include "common/exprtype.hpp"
 
 class IdentTable {
@@ -77,6 +78,7 @@ public:
 
     StructTable * getStruct(char * name);
     IdentTable & getFields(void);
+    std::vector<type_t> getTypes(char * name);
 
     ~StructTable();
 };

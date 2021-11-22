@@ -9,5 +9,6 @@ compiled.png
 optimized.dot
 optimized.png
 compile_commands.json
-bin/*
+bin/
 .cache/*
+Makefile.dep

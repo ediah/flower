@@ -431,31 +431,41 @@ void Parser::assign(IdentTable * lval) {
         } while (c == ',');
         if (c != '}') throw Obstacle(BAD_EXPR);
         code >> c;
-        /*} else {
-            char * rvalName = identificator();
-            IdentTable * rval = IdTable.getIT(rvalName);
-            type_t rvtype = rval->getType();
-            if ((rvtype == _STRUCT_) && (strcmp(lval->getStruct(), rval->getStruct()) == 0)) {
-                // структуры идентичны, можно приравнивать 
-                assignStruct(static_cast<IdentTable *>(lval->getVal()), 
-                             static_cast<IdentTable *>(rval->getVal()));
-                
-            } else throw Obstacle(EXPR_BAD_TYPE);
-        }*/
+        
     } else {
-        int fieldSize;
+        int fieldSize = unrollStruct(lval);
         char * strName = nullptr;
 
-        if (lval->getType() == _STRUCT_)
+        std::vector<type_t> fieldTypes;
+        if (lvtype == _STRUCT_) {
             strName = lval->getStruct();
+            fieldTypes = StTable.getTypes(lval->getStruct());
+        
+            #ifdef DEBUG
+            std::cout << "Типы в структуре: [ ";
+            for (type_t t: fieldTypes) {
+                std::cout << typetostr(t) << " ";
+            }
+            std::cout << "]\n";
+            #endif
+        }
 
-        fieldSize = unrollStruct(lval);
         type_t exop = expr(&fieldSize, strName);
         expressionType(lvtype, exop, ASSIGN);
         if (exop == _STRUCT_)
             repack(fieldSize);
-        for (int i = 0; i < fieldSize; i++)
+        
+        if (lvtype == _STRUCT_) {
+            for (int i = 0; i < fieldSize; i++) {
+                type_t t = fieldTypes[i];
+                // В expr => constExpr проверяется корректность типа
+                poliz.pushOp(t, t, ASSIGN);
+            }
+        } else {
             poliz.pushOp(lvtype, exop, ASSIGN);
+        }
+        
+        
         if ((c == ' ') || (c == '\n')) code >> c;
     }
 }
@@ -961,19 +971,31 @@ type_t Parser::mul(int * fieldSize, char * structName) {
 }
 
 void Parser::repack(int fieldSize) {
-    int steps[2 * fieldSize];
+    int steps[2 * fieldSize], opSteps[2 * fieldSize];
     for (int i = 0; i < fieldSize * 2; i++)
-        steps[i] = 0;
+        steps[i] = 1;
 
-    POLIZ buff[2];
+    POLIZ buff[2], opBuff[2];
 
     /* Каков смысл steps? В нём хранится количество элементов ПОЛИЗА,
      * которое нужно достать для каждого поля. Вначале идёт левая,
      * потом правая ветка.
      */
     for (int buffIter = 1; buffIter >= 0; buffIter--) {
+        int temp_iter = fieldSize - 1;
+        int i;
+        while (((i = poliz.getSize()) > 0) && (poliz.getEB()[i - 1])) {
+            op_t op = poliz.getProg()[i - 1];
+            int nops = operands(static_cast<operation_t>(op & 0xFF));
+            opBuff[buffIter].push(op, poliz.getEB()[i - 1]);
+            steps[buffIter + temp_iter * fieldSize] = nops;
+            poliz.pop();
+            temp_iter--;
+        }
         for (int nfield = fieldSize; nfield > 0; nfield--) {
-            int fields = 1;
+            int stepIdx = buffIter + (nfield - 1) * fieldSize;
+            int fields = steps[stepIdx];
+            steps[stepIdx] = 0;
             while (fields) {
                 int i = poliz.getSize();
                 bool ebit = poliz.getEB()[i - 1];
@@ -982,9 +1004,10 @@ void Parser::repack(int fieldSize) {
                     int nops = operands(static_cast<operation_t>(op & 0xFF));
                     fields += nops;
                 }
+                
                 buff[buffIter].push(op, ebit);
-                steps[nfield + buffIter * fieldSize - 1] += 1;
-
+                steps[stepIdx] += 1;
+                
                 poliz.pop();
                 fields--;
             }
@@ -999,6 +1022,13 @@ void Parser::repack(int fieldSize) {
             buff[step % 2].pop();
             poliz.push(op, ebit);
             steps[step] -= 1;
+        }
+        int  bi   = opBuff[step % 2].getSize();
+        if (bi > 0) {
+            bool ebit = opBuff[step % 2].getEB()[bi - 1];
+            op_t op   = opBuff[step % 2].getProg()[bi - 1];
+            opBuff[step % 2].pop();
+            poliz.push(op, ebit);
         }
     }
 }

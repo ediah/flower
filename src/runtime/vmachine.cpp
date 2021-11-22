@@ -148,9 +148,9 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 char * b = getString(stackVM.pop());
                 char * a = (char *) stackVM.pop();
                 memcpy(a, &b, sizeof(void*));
-            } else {
+            } else if (lval == _BOOLEAN_) {
                 assign<bool, bool>();
-            }
+            } else throw Obstacle(PANIC);
             break;
         case STOP:
             exitStatus = true;

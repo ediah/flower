@@ -1,6 +1,6 @@
-vpath %.cpp ${wildcard ./src/*}
+vpath %.cpp ${wildcard ./src/*} ./src
 
-RELEASE=YES
+RELEASE=NO
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -37,26 +37,36 @@ CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
 
 VPATH = ${wildcard ./src/*} ./bin
 SRC = ${shell ls ${VPATH} | grep \\.cpp}
-OBJ = ${SRC:.cpp=.o}
+OBJ = ${notdir ${SRC:.cpp=.o}}
 
 default:
 	@mkdir -p bin
-	@make mlc mlc-test -j4
+	@make mlc mlc-test -j4 -s
 
 mlc: $(OBJ)
-	$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
+	@echo "    LD    $@"
+	@$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
 
 mlc-test: ./test/test.cpp
-	$(CC) $(CFLAGS) $< -o $@
+	@echo "    CC    $@"
+	@$(CC) $(CFLAGS) $< -o $@
 
 check:
 	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
 	@cat ${REPORT} | column -t -s '|'
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
-
 .PHONY: clean
 
 clean:
 	rm -rf ./bin/* mlc mlc-test
+	rm -f ./compiled* ./optimized* out.bin
+	rm -f Makefile.dep
+
+%.o: %.cpp
+	@echo "    CC    $@"
+	@$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
+
+include Makefile.dep
+
+Makefile.dep: ./script/gendep.py
+	@./script/gendep.py ./src ./test

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "compiler/parser.hpp"
 #include "common/tables.hpp"
 #include "common/obstacle.hpp"
@@ -517,6 +518,23 @@ StructTable * StructTable::getStruct(char * name) {
 
 IdentTable & StructTable::getFields(void) {
     return fields;
+}
+
+std::vector<type_t> StructTable::getTypes(char * name) {
+    std::vector<type_t> result;
+
+    IdentTable * fields = & getStruct(name)->fields;
+    while (fields->next != nullptr) {
+        type_t type = fields->getType();
+        if (type == _STRUCT_) {
+            std::vector<type_t> part = getTypes(fields->getStruct());
+            result.reserve(result.size() + part.size());
+            result.insert(result.end(), part.begin(), part.end());
+        } else result.push_back(type);
+        fields = fields->next;
+    }
+
+    return result;
 }
 
 StructTable::~StructTable(void) {
