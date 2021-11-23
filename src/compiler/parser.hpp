@@ -88,8 +88,8 @@ public:
     void callIdent(IdentTable * val);      // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
-    int unrollStruct(IdentTable * lval);
-    
+    int unrollStruct(IdentTable * lval, int ord = -1);
+    void handleStruct(type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName);
     void program(void);    // Программа
 
     void operations(void); // Операции

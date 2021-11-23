@@ -43,11 +43,11 @@ default:
 	@mkdir -p bin
 	@make mlc mlc-test -j4 -s
 
-mlc: $(OBJ)
+mlc: $(OBJ) Makefile
 	@echo "    LD    $@"
 	@$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
 
-mlc-test: ./test/test.cpp
+mlc-test: ./test/test.cpp Makefile
 	@echo "    CC    $@"
 	@$(CC) $(CFLAGS) $< -o $@
 
@@ -62,7 +62,7 @@ clean:
 	rm -f ./compiled* ./optimized* out.bin
 	rm -f Makefile.dep
 
-%.o: %.cpp
+%.o: %.cpp Makefile
 	@echo "    CC    $@"
 	@$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
 

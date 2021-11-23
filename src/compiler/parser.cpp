@@ -167,10 +167,10 @@ void Parser::defFunction(void) {
         if (p->getType() == _STRUCT_) {
             IdentTable * fields = reinterpret_cast<IdentTable*>(p->getVal());
             while (fields->next != nullptr) {
-                fields->onReg();
+                fields->setReg(true);
                 fields = fields->next;
             }
-        } else p->onReg();
+        } else p->setReg(true);
         p = p->next;
     }
 
@@ -440,14 +440,6 @@ void Parser::assign(IdentTable * lval) {
         if (lvtype == _STRUCT_) {
             strName = lval->getStruct();
             fieldTypes = StTable.getTypes(lval->getStruct());
-        
-            #ifdef DEBUG
-            std::cout << "Типы в структуре: [ ";
-            for (type_t t: fieldTypes) {
-                std::cout << typetostr(t) << " ";
-            }
-            std::cout << "]\n";
-            #endif
         }
 
         type_t exop = expr(&fieldSize, strName);
@@ -456,7 +448,7 @@ void Parser::assign(IdentTable * lval) {
             repack(fieldSize);
         
         if (lvtype == _STRUCT_) {
-            for (int i = 0; i < fieldSize; i++) {
+            for (int i = fieldSize - 1; i >= 0; i--) {
                 type_t t = fieldTypes[i];
                 // В expr => constExpr проверяется корректность типа
                 poliz.pushOp(t, t, ASSIGN);
@@ -470,14 +462,17 @@ void Parser::assign(IdentTable * lval) {
     }
 }
 
-int Parser::unrollStruct(IdentTable * lval) {
+int Parser::unrollStruct(IdentTable * lval, int ord) {
     int fieldSize = 0;
     if (lval->getType() == _STRUCT_){
         char * strName = lval->getStruct();
         StructTable * st = StTable.getStruct(strName);
         IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
         while (fields->next != nullptr) {
-            fieldSize += unrollStruct(fields);
+            int newOrd = -1;
+            if (fields->isReg())
+                newOrd = fields->getOrd();
+            fieldSize += unrollStruct(fields, newOrd);
             fields = fields->next;
         }
         #ifdef DEBUG
@@ -485,7 +480,16 @@ int Parser::unrollStruct(IdentTable * lval) {
         #endif
     } else {
         fieldSize = 1;
+        int oldOrd = lval->getOrd();
+        if (ord != -1) {
+            lval->setOrd(ord);
+            lval->setReg(true);
+        }
         poliz.pushVal(lval);
+        if (ord != -1) {
+            lval->setOrd(oldOrd);
+            lval->setReg(false);
+        }
     }
     return fieldSize;
 }
@@ -830,11 +834,12 @@ type_t Parser::expr(int * fieldSize, char * structName) {
             code >> c;
             type_t rval = andExpr(fieldSize, structName);
 
-            if ((r == _STRUCT_) || (rval == _STRUCT_))
+            if ((r == _STRUCT_) || (rval == _STRUCT_)) {
                 repack(*fieldSize);
-
-            for (int i = 0; i < *fieldSize; i++)
+                handleStruct(r, rval, LOR, fieldSize, structName);
+            } else
                 poliz.pushOp(r, rval, LOR);
+
             r = expressionType(r, rval, LOR);
         } else break;
     }
@@ -852,11 +857,12 @@ type_t Parser::andExpr(int * fieldSize, char * structName) {
             code >> c;
             type_t rval = boolExpr(fieldSize, structName);
             
-            if ((r == _STRUCT_) || (rval == _STRUCT_))
+            if ((r == _STRUCT_) || (rval == _STRUCT_)) {
                 repack(*fieldSize);
-
-            for (int i = 0; i < *fieldSize; i++)
+                handleStruct(r, rval, LAND, fieldSize, structName);
+            } else
                 poliz.pushOp(r, rval, LAND);
+
             r = expressionType(r, rval, LAND);
         } else break;
     }
@@ -890,11 +896,12 @@ type_t Parser::boolExpr(int * fieldSize, char * structName) {
         if ((c == ' ') || (c == '\n')) code >> c;
         type_t rval = add(fieldSize, structName);
         
-        if ((r == _STRUCT_) || (rval == _STRUCT_))
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
             repack(*fieldSize);
-
-        for (int i = 0; i < *fieldSize; i++)
+            handleStruct(r, rval, op, fieldSize, structName);
+        } else
             poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
     }
 
@@ -923,21 +930,46 @@ type_t Parser::add(int * fieldSize, char * structName) {
         code >> c;
         type_t rval = mul(fieldSize, structName);
         
-        if ((r == _STRUCT_) || (rval == _STRUCT_))
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
             repack(*fieldSize);
-        
-        for (int i = 0; i < *fieldSize; i++)
+            handleStruct(r, rval, op, fieldSize, structName);
+        } else
             poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
     }
 
     if (inverse) {
-        for (int i = 0; i < *fieldSize; i++)
-            poliz.pushOp(_NONE_, r, INV);
+        handleStruct(_NONE_, r, INV, fieldSize, structName);
         r = expressionType(_NONE_, r, INV);
     }
 
     return r;
+}
+
+void Parser::handleStruct(
+    type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName) {
+   
+   /* Если в rval лежит простой тип, то его можно просто скопировать
+    * для всех остальных полей в lval. В случае, если rval -- структура,
+    * то нужно аккуратно обойти все её поля. Причём constExpr гарантирует,
+    * что структуры lval и rval идентичны, поэтому мы можем взять имя
+    * lval (т.е. structName) для определения структуры rval.
+    */
+    std::vector<type_t> types = StTable.getTypes(structName);
+    int newFieldSize = types.size();
+    type_t ltype, rtype;
+    for (int i = newFieldSize - 1; i >= 0; i--) {
+        if (lval == _STRUCT_) ltype = types[i];
+        else ltype = lval;
+        if (rval == _STRUCT_) rtype = types[i];
+        else rtype = lval;
+
+        if ((ltype == _STRUCT_) || (rtype == _STRUCT_))
+            handleStruct(ltype, rtype, op, &newFieldSize, structName);
+        else
+            poliz.pushOp(ltype, rtype, op);
+    }
 }
 
 type_t Parser::mul(int * fieldSize, char * structName) {
@@ -958,11 +990,12 @@ type_t Parser::mul(int * fieldSize, char * structName) {
         code >> c;
         type_t rval = constExpr(fieldSize, structName);
         
-        if ((r == _STRUCT_) || (rval == _STRUCT_))
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
             repack(*fieldSize);
-        
-        for (int i = 0; i < *fieldSize; i++)
+            handleStruct(r, rval, op, fieldSize, structName);
+        } else
             poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
 
     }
@@ -981,19 +1014,19 @@ void Parser::repack(int fieldSize) {
      * которое нужно достать для каждого поля. Вначале идёт левая,
      * потом правая ветка.
      */
+    int temp_iter = fieldSize - 1;
+    int i;
+    while (((i = poliz.getSize()) > 0) && (poliz.getEB()[i - 1])) {
+        op_t op = poliz.getProg()[i - 1];
+        int nops = operands(static_cast<operation_t>(op & 0xFF));
+        opBuff[1].push(op, poliz.getEB()[i - 1]);
+        steps[1 + temp_iter * fieldSize] = nops;
+        poliz.pop();
+        temp_iter--;
+    }
     for (int buffIter = 1; buffIter >= 0; buffIter--) {
-        int temp_iter = fieldSize - 1;
-        int i;
-        while (((i = poliz.getSize()) > 0) && (poliz.getEB()[i - 1])) {
-            op_t op = poliz.getProg()[i - 1];
-            int nops = operands(static_cast<operation_t>(op & 0xFF));
-            opBuff[buffIter].push(op, poliz.getEB()[i - 1]);
-            steps[buffIter + temp_iter * fieldSize] = nops;
-            poliz.pop();
-            temp_iter--;
-        }
         for (int nfield = fieldSize; nfield > 0; nfield--) {
-            int stepIdx = buffIter + (nfield - 1) * fieldSize;
+            int stepIdx = buffIter + (nfield - 1) * 2;
             int fields = steps[stepIdx];
             steps[stepIdx] = 0;
             while (fields) {
@@ -1133,8 +1166,14 @@ void Parser::callIdent(IdentTable * val) {
         if (c == ',') code >> c;
 
         int fieldSize = 1;
+        char * structName = nullptr;
 
-        type_t exprType = expr(&fieldSize);
+        if (fields->getType() == _STRUCT_) {
+            fieldSize = fields->last()->getOrd();
+            structName = fields->getStruct();
+        }
+
+        type_t exprType = expr(&fieldSize, structName);
         if (fields->getType() != exprType)
             throw Obstacle(EXPR_BAD_TYPE);
         fields = fields->next;

@@ -88,6 +88,9 @@ bool VirtualMachine::exec(op_t op, int * eip) {
     type_t lval = (type_t) ((op >> 16) & 0xFF);
     type_t rval = (type_t) ((op >>  8) & 0xFF);
 
+    if ((lval == _STRUCT_) || (rval == _STRUCT_))
+        throw Obstacle(PANIC);
+
     switch(op & 0xFF) {
         case PLUS:
             if (rest == _STRING_){
@@ -165,10 +168,10 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             } else if (rval == _STRING_) {
                 char * x = getString(stackVM.pop());
                 std::cout << x;
-            } else {
+            } else if (rval == _BOOLEAN_) {
                 bool x = * (bool *) stackVM.pop();
                 std::cout << x;
-            }
+            } else throw Obstacle(PANIC);
             break;
         case ENDL:
             std::cout << std::endl;

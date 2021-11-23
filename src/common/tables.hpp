@@ -44,7 +44,7 @@ public:
     char * getId(void) const;
     int getOrd(void) const;
     void setOrd(int x);
-    void onReg(void);
+    void setReg(bool x);
     bool isReg(void) const;
     void setParams(int x);
     int getParams(void) const;

@@ -197,8 +197,8 @@ void IdentTable::setOrd(int x) {
     ord = x;
 }
 
-void IdentTable::onReg(void) {
-    reg = true;
+void IdentTable::setReg(bool x) {
+    reg = x;
 }
 
 bool IdentTable::isReg(void) const {

@@ -1,8 +1,13 @@
+#include <iostream>
 #include "common/obstacle.hpp"
 #include "common/exprtype.hpp"
 
 type_t expressionType(type_t t1, type_t t2, operation_t o) {
     type_t r = _NONE_;
+
+    #ifdef DEBUG
+    std::cout << "Проверка " << typetostr(t1) << " " << typetostr(t2) << std::endl;
+    #endif
 
     switch (o) {
         case PLUS:

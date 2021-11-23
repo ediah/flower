@@ -212,6 +212,7 @@ int main(int argc, char ** argv) {
     bool mem = false;
     bool opt = false;
     bool bisect = false;
+    bool restore = false;
 
     for (int i = argc; i > 1; i--) {
         if (argv[i - 1][0] == '-') {
@@ -224,6 +225,9 @@ int main(int argc, char ** argv) {
                     break;
                 case 'f':
                     bisect = true;
+                    break;
+                case 'r':
+                    restore = true;
                     break;
                 default:
                     throw std::runtime_error("Неизвестный флаг.");
@@ -241,7 +245,7 @@ int main(int argc, char ** argv) {
 
     if (bisect) std::system("rm ./bin/*; make mlc");
 
-    int flags = (int)mem + (int)opt + (int)bisect;
+    int flags = (int)mem + (int)opt + (int)bisect + (int)restore;
     for (int i = flags + 1; i < argc; i++) {
         std::string filename = argv[i];
         bool unitA = filename.find("/A-unit/") != std::string::npos;
@@ -275,8 +279,20 @@ int main(int argc, char ** argv) {
         if ((errors != 0) && bisect) break;
     }
 
-    std::cout << "\nПройдено " << argc - ((int)mem + (int)opt + 1) << " тестов, из них:\n\t";
-    std::cout << argc - ((int)mem + (int)opt + 1) - errors - notFound << " успешно\n\t" << errors;
+    #ifdef DEBUG
+    if (restore) {
+        std::cout << "Возврат параметров Makefile...\n";
+        std::system("cp ./Makefile ./temp");
+        std::system("sed -e 's/RELEASE=YES/RELEASE=NO/g' ./temp > ./Makefile");
+        std::system("rm ./temp");
+        std::cout << "Пересборка...\n";
+        std::system("make clean; make");
+    }
+    #endif
+
+    int all = argc - (flags + 1);
+    std::cout << "\nПройдено " << all << " тестов, из них:\n\t";
+    std::cout << all - errors - notFound << " успешно\n\t" << errors;
     std::cout << " с ошибкой\n\t" << notFound << " тестов не было запущено\n";
 
     return errors + notFound;
