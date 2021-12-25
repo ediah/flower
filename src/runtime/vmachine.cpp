@@ -52,6 +52,11 @@ void VirtualMachine::run(void) {
     std::cout << "Машина завершила свою работу." << std::endl;
     #endif
 
+    while (pipefd.size() != 0) {
+        delete[] pipefd.back();
+        pipefd.pop_back();
+    }
+
     delete eip;
 }
 
@@ -376,6 +381,7 @@ void VirtualMachine::updateVars(void) {
     while (pipefd.size() != 0) {
         read(pipefd.back()[0], &p, sizeof(void *));
         if (p == nullptr) {
+            delete[] pipefd.back();
             pipefd.pop_back();
             continue;
         }

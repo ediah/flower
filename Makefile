@@ -14,13 +14,13 @@ else
 endif
 
 ifeq (${ALL},YES)
-	ENABLE= --enable=all --inconclusive
+	ENABLE= --enable=all --inconclusive --bug-hunting
 else
 	ENABLE= --enable=warning
 endif
 
 ifeq (${RELEASE},YES)
-	OPTIFLAGS= -O2
+	OPTIFLAGS= -O2 -g
 else
 	OPTIFLAGS= -O0 -g -DDEBUG
 endif
@@ -52,7 +52,7 @@ mlc-test: ./test/test.cpp Makefile
 	@$(CC) $(CFLAGS) $< -o $@
 
 check:
-	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
+	@cppcheck ${CHFLAGS} ./src/ | grep %
 	@cat ${REPORT} | column -t -s '|'
 
 .PHONY: clean

@@ -26,40 +26,45 @@ public:
     IdentTable(void);
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
+    friend bool operator==(IdentTable & a, IdentTable & b);
+
     void pushId(char * ident);
     void pushType(type_t t);
     void pushStruct(char * name);
     void pushVal(void* v);
-    IdentTable * confirm(void);
-    void dupType(void);
-    char * getStruct(void) const;
-    type_t getType(void) const;
+
     void setType(type_t newType);
-    void * getVal(void);
     void setFunc(void);
-    bool isFunc(void) const;
-    bool isDef(void) const;
     void setVal(void * val);
     void setId(char * name);
-    char * getId(void) const;
-    int getOrd(void) const;
     void setOrd(int x);
     void setReg(bool x);
-    bool isReg(void) const;
     void setParams(int x);
+    void setOffset(int x);
+    void setShared(void);
+
+    char * getStruct(void) const;
+    type_t getType(void) const;
+    void * getVal(void) const;
+    char * getId(void) const;
+    int getOrd(void) const;
     int getParams(void) const;
-    IdentTable * getIT(char * name, bool autodel = true);
-    IdentTable * last(void);
+    int getOffset(void) const;
+
+    bool isFunc(void) const;
+    bool isDef(void) const;
+    bool isReg(void) const;
+    bool isShared(void) const;
+
     void whoami();
     void repr(void);
-    void setOffset(int x);
-    int getOffset(void) const;
-    void writeValToStream(std::ostream & s);
-    IdentTable * deleteLabels(void);
-    friend bool operator==(IdentTable & a, IdentTable & b);
     void fade(void);
-    bool isShared(void);
-    void setShared(void);
+    void dupType(void);
+    IdentTable * last(void);
+    IdentTable * confirm(void);
+    IdentTable * deleteLabels(void);
+    void writeValToStream(std::ostream & s);
+    IdentTable * getIT(char * name, bool autodel = true);
 
     ~IdentTable();
 };

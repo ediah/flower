@@ -291,7 +291,7 @@ char * IdentTable::getId(void) const {
     return this->name;
 }
 
-void * IdentTable::getVal(void) {
+void * IdentTable::getVal(void) const {
     return val;
 }
 
@@ -427,7 +427,7 @@ void IdentTable::fade(void) {
     name = nullptr;
 }
 
-bool IdentTable::isShared(void) {
+bool IdentTable::isShared(void) const {
     return shared;
 }
 

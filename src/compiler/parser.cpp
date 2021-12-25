@@ -46,6 +46,8 @@ bool Parser::parse(void) {
         do {
             if (fileQueue.size() != 0) {
                 code.swap(*fileQueue.back());
+                fileQueue.back()->close();
+                delete fileQueue.back();
                 fileQueue.pop_back();
                 code >> c;
             }
@@ -377,7 +379,7 @@ bool Parser::type(void) {
  *        ^ <= курсор за последней буквой слова (если true)
  * Если false, курсор на начальной позиции
  */ 
-bool Parser::readWord(char * word) {
+bool Parser::readWord(const char * word) {
     bool r = true;
     int i;
     for (i = 0; word[i] != '\0'; i++) {
@@ -974,7 +976,6 @@ void Parser::handleStruct(
 
 type_t Parser::mul(int * fieldSize, char * structName) {
     bool exit = false;
-    int * opnum = new int (0);
     type_t r = constExpr(fieldSize, structName);
     operation_t op;
 
@@ -1004,7 +1005,7 @@ type_t Parser::mul(int * fieldSize, char * structName) {
 }
 
 void Parser::repack(int fieldSize) {
-    int steps[2 * fieldSize], opSteps[2 * fieldSize];
+    int steps[2 * fieldSize];
     for (int i = 0; i < fieldSize * 2; i++)
         steps[i] = 1;
 
@@ -1030,7 +1031,7 @@ void Parser::repack(int fieldSize) {
             int fields = steps[stepIdx];
             steps[stepIdx] = 0;
             while (fields) {
-                int i = poliz.getSize();
+                i = poliz.getSize();
                 bool ebit = poliz.getEB()[i - 1];
                 op_t op = poliz.getProg()[i - 1];
                 if (ebit) {
@@ -1181,7 +1182,6 @@ void Parser::callIdent(IdentTable * val) {
         paramCountFact++;
     }
 
-    if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     code >> c;
     if (paramCountFact != val->getParams())
         throw Obstacle(BAD_PARAMS_COUNT);
@@ -1586,12 +1586,6 @@ void Parser::writeOp(void) {
         throw Obstacle(SEMICOLON);
 
     code >> c;
-}
-
-void Parser::finalize(void) {
-    IdTable.repr();
-    poliz.repr();
-    std::cout << std::endl;
 }
 
 void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool verbose) {

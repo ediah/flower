@@ -1,10 +1,10 @@
 // Ложное срабатывание на обработке комментариев /* ... */
-oppositeInnerCondition:src/cursor.cpp
+oppositeInnerCondition:src/compiler/cursor.cpp
 
 // Ложное срабатывание на копировании памяти
-pointerSize:src/vmachine.cpp
+pointerSize:src/runtime/vmachine.cpp
 
 // DAGRow используется только в ControlFlowGraph,
 // освобождением памяти тоже занимается он.
-unsafeClassCanLeak:src/inc/dag.hpp:13
-unsafeClassCanLeak:src/inc/dag.hpp:14
+unsafeClassCanLeak:src/optimizer/acyclicgraph.hpp:13
+unsafeClassCanLeak:src/optimizer/acyclicgraph.hpp:14

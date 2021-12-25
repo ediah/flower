@@ -61,6 +61,8 @@ void POLIZ::pushVal(IdentTable * val) {
         prog[iter] = (op_t) val;
         execBit[iter] = false;
         iter++;
+
+        checkIter();
     }
 }
 
@@ -74,6 +76,8 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     prog[iter] = (char) rest << 24 | (char) lval << 16 | (char) rval << 8 | (char) op;
     execBit[iter] = true;
     iter++;
+
+    checkIter();
 }
 
 void POLIZ::interpretAsOp(op_t op) {
@@ -128,7 +132,7 @@ int POLIZ::getSize(void) const {
 }
 
 void POLIZ::pop(void) {
-    iter = (iter == 0) ? 0 : iter - 1;
+    iter = (iter <= 0) ? 0 : iter - 1;
 }
 
 void POLIZ::clear(void) {
@@ -137,6 +141,7 @@ void POLIZ::clear(void) {
 
 void POLIZ::incIter(void) {
     iter++;
+    checkIter();
 }
 
 void POLIZ::push(op_t op, bool eb) {
@@ -152,4 +157,13 @@ void POLIZ::push(op_t op, bool eb) {
     prog[iter] = op;
     execBit[iter] = eb;
     iter++;
+    checkIter();
+}
+
+void POLIZ::checkIter(void) const {
+    if (iter >= MAXCMD) {
+        std::cout << "Слот для байткода переполнен. Текущее значение: ";
+        std::cout << MAXCMD << ". Скомпилируйте с большим значением.\n";
+        exit(1);
+    }
 }

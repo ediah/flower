@@ -33,6 +33,7 @@ public:
     op_t * getProg(void);
     bool * getEB(void);
     void incIter(void);
+    void checkIter(void) const;
 
 };
 

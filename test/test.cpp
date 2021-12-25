@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 
 #include <unistd.h>
 #include <signal.h>
@@ -117,6 +118,7 @@ int runValgrind(std::string filename, bool optimize, std::string input = "") {
 
 int runA(std::string filename, std::string input, std::string output, bool optimize) {
     int caseIterator = 0, errorIterator = 0;
+    bool compileError = false;
     std::cout << "[A-unit ";
     std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
                   filename + " -s -o test.bin > a.out").data() );
@@ -128,8 +130,10 @@ int runA(std::string filename, std::string input, std::string output, bool optim
     log >> line;
     log.close();
     //#ifndef DEBUG
-    if (line != "КОМПИЛЯЦИЯ:") errorIterator = 1;
-    else {
+    if (line != "КОМПИЛЯЦИЯ:") {
+        errorIterator = 1;
+        compileError = true;
+    } else {
     //#endif
         std::ifstream cases(input);
         cases >> line;
@@ -172,7 +176,10 @@ int runA(std::string filename, std::string input, std::string output, bool optim
     
     if (caseIterator == 0) {
         errorIterator = -1;
-        std::cout << " [Тесты не найдены]";
+        if (compileError)
+            std::cout << " [ Ошибка компиляции ]";
+        else
+            std::cout << " [ Тесты не найдены ]";
     } else errorIterator = errorIterator != 0 ? 1 : 0;
 
     std::cout << std::endl;
@@ -235,12 +242,14 @@ int main(int argc, char ** argv) {
         }
     }
 
+    std::vector<std::string> filesWithError, filesWithCompileError;
+
     #ifdef DEBUG
     std::cout << "Собрано с отладочной информацией, пересборка.\n";
     std::system("cp ./Makefile ./temp");
     std::system("sed -e 's/RELEASE=NO/RELEASE=YES/g' ./temp > ./Makefile");
     std::system("rm ./temp");
-    std::system("make clean; make");
+    std::system("make -s clean; make -s");
     #endif
 
     if (bisect) std::system("rm ./bin/*; make mlc");
@@ -270,8 +279,13 @@ int main(int argc, char ** argv) {
             if (mem) errors += runValgrind(filename, opt, input);
             else {
                 int x = runA(filename, input, output, opt);
-                if (x > 0) errors += x;
-                else notFound -= x;
+                if (x > 0) {
+                    errors += x;
+                    filesWithError.push_back(filename);
+                } else if (x < 0) {
+                    notFound -= x;
+                    filesWithCompileError.push_back(filename);
+                }
             }
         } else if (mem) errors += runValgrind(filename, opt); 
         else errors += runB(filename, output, opt);
@@ -286,7 +300,7 @@ int main(int argc, char ** argv) {
         std::system("sed -e 's/RELEASE=YES/RELEASE=NO/g' ./temp > ./Makefile");
         std::system("rm ./temp");
         std::cout << "Пересборка...\n";
-        std::system("make clean; make");
+        std::system("make -s clean; make -s");
     }
     #endif
 
@@ -294,6 +308,18 @@ int main(int argc, char ** argv) {
     std::cout << "\nПройдено " << all << " тестов, из них:\n\t";
     std::cout << all - errors - notFound << " успешно\n\t" << errors;
     std::cout << " с ошибкой\n\t" << notFound << " тестов не было запущено\n";
+
+    if (filesWithError.size() > 0)
+        std::cout << "\nОШИБКА НА ТЕСТАХ:\n";
+
+    for (std::string ferr : filesWithError)
+        std::cout << "\t" << ferr << "\n";
+
+    if (filesWithCompileError.size() > 0)
+        std::cout << "\nОШИБКА КОМПИЛЯЦИИ НА ТЕСТАХ:\n";
+
+    for (std::string ferr : filesWithCompileError)
+        std::cout << "\t" << ferr << "\n";
 
     return errors + notFound;
 }

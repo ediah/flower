@@ -57,7 +57,7 @@ class Parser {
 
     // Вспомогательные функции
     static int fastPow(int x, int n);  // Быстрое возведение в степень
-    bool readWord(char * word);        // Чтение непрерывной последовательности символов
+    bool readWord(const char * word);        // Чтение непрерывной последовательности символов
     void revert(int x);                // Возврат курсора
 public:
     Parser(): ok(true), inFunc(false), inThread(false) {
@@ -119,7 +119,6 @@ public:
     void lockOp(void);
 
     void optimize(bool verbose);
-    void finalize(void); // Вывод результата парсера в читаемом виде
     void giveBIN(const char * filename, bool optimize, bool silent, bool verbose); // Запись бинарника
 
     ~Parser(void);

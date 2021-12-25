@@ -66,7 +66,7 @@ void run(flags_t options, std::string ifname) {
     }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, const char** argv) {
     struct flags_t flags = {false, false, false, false, false, false, false, false};
     std::string flag, inname, outname;
 

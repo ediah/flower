@@ -36,7 +36,7 @@ public:
 
     void make(POLIZ * p);
     void makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb, bool exists);
-    void draw(std::string filename);
+    void draw(const std::string &  filename);
     void drawNode(flowTree p);
     void drawEdge(flowTree & p);
     void newBlock(int blockId, POLIZ * p, flowTree * curBlock, char cond = 0);

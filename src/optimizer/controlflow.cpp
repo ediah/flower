@@ -198,7 +198,7 @@ void ControlFlowGraph::info(void) const {
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
-void ControlFlowGraph::draw(std::string filename) {
+void ControlFlowGraph::draw(const std::string & filename) {
     graph.open(filename + ".dot");
 
     graph << "digraph CFG {\n";

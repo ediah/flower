@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include "common/obstacle.hpp"
 #include "runtime/stack.hpp"
 #include "common/exprtype.hpp"
 
@@ -84,7 +85,7 @@ void * Stack::get(int x) const {
 }
 
 void Stack::set(int i, void * x) {
-    assert(pos - i >= 0);
+    assert(pos - i > 0);
     elem[pos - i - 1] = x;
 }
 
@@ -97,5 +98,6 @@ type_t Stack::topType(void) const {
 }
 
 type_t Gendarme::topType(void) const {
+    assert(pos > 0);
     return types[pos - 1];
 }

@@ -251,7 +251,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // _ WRITE BOOLEAN = _
         case READ: case WRITE:
             r = _NONE_;
-            if ((t1 != _NONE_) || ((t2 == _NONE_) && (t2 == _STRUCT_)))
+            if ((t1 != _NONE_) || (t2 == _NONE_) || (t2 == _STRUCT_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
