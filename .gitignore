@@ -13,3 +13,4 @@ bin/
 .cache/*
 Makefile.dep
 .vscode
+.gdb_history
