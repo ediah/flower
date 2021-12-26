@@ -13,6 +13,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+struct flags_t {
+
+};
+
 int compare(std::ifstream & file1, std::ifstream & file2) {
     int ret = 0;
     std::string line1, line2;
@@ -213,6 +217,12 @@ int runB(std::string filename, std::string output, bool optimize) {
     return ret;
 }
 
+void rebuild(const char * pattern) {
+    std::system("cp ./Makefile ./temp");
+    std::system( ("sed -e 's/" + std::string(pattern) + "/g' ./temp > ./Makefile").data() );
+    std::system("rm ./temp");
+    std::system("make -s clean; make -s");
+}
 
 int main(int argc, char ** argv) {
     int errors = 0, notFound = 0;
@@ -220,6 +230,7 @@ int main(int argc, char ** argv) {
     bool opt = false;
     bool bisect = false;
     bool restore = false;
+    bool coverage = false;
 
     for (int i = argc; i > 1; i--) {
         if (argv[i - 1][0] == '-') {
@@ -236,6 +247,9 @@ int main(int argc, char ** argv) {
                 case 'r':
                     restore = true;
                     break;
+                case 'c':
+                    coverage = true;
+                    break;
                 default:
                     throw std::runtime_error("Неизвестный флаг.");
             }
@@ -246,15 +260,22 @@ int main(int argc, char ** argv) {
 
     #ifdef DEBUG
     std::cout << "Собрано с отладочной информацией, пересборка.\n";
-    std::system("cp ./Makefile ./temp");
-    std::system("sed -e 's/RELEASE=NO/RELEASE=YES/g' ./temp > ./Makefile");
-    std::system("rm ./temp");
-    std::system("make -s clean; make -s");
+    rebuild("RELEASE=NO/RELEASE=YES");
+    #endif
+
+    #ifndef TCOV
+    if (coverage) {
+        std::cout << "Пересборка для анализа покрытия.\n";
+        rebuild("COVERAGE=NO/COVERAGE=YES");
+    } else {
+        std::cout << "Пересборка без анализа покрытия.\n";
+        rebuild("COVERAGE=YES/COVERAGE=NO");
+    }
     #endif
 
     if (bisect) std::system("rm ./bin/*; make mlc");
 
-    int flags = (int)mem + (int)opt + (int)bisect + (int)restore;
+    int flags = (int)mem + (int)opt + (int)bisect + (int)restore + (int)coverage;
     for (int i = flags + 1; i < argc; i++) {
         std::string filename = argv[i];
         bool unitA = filename.find("/A-unit/") != std::string::npos;
@@ -274,35 +295,41 @@ int main(int argc, char ** argv) {
         source = source.substr(0, source.find("."));
         std::string output = path + "output" + source + ".out";
 
+        int x;
+
         if (unitA) {
             std::string input = path + "input" + source + ".in";
-            if (mem) errors += runValgrind(filename, opt, input);
-            else {
-                int x = runA(filename, input, output, opt);
-                if (x > 0) {
-                    errors += x;
-                    filesWithError.push_back(filename);
-                } else if (x < 0) {
-                    notFound -= x;
-                    filesWithCompileError.push_back(filename);
-                }
-            }
-        } else if (mem) errors += runValgrind(filename, opt); 
-        else errors += runB(filename, output, opt);
+            if (mem) x = runValgrind(filename, opt, input);
+            else x = runA(filename, input, output, opt);
+        } else 
+            if (mem) x = runValgrind(filename, opt); 
+            else x = runB(filename, output, opt);
+
+        if (x > 0) {
+            errors += x;
+            filesWithError.push_back(filename);
+        } else if (x < 0) {
+            notFound -= x;
+            filesWithCompileError.push_back(filename);
+        }
 
         if ((errors != 0) && bisect) break;
     }
 
-    #ifdef DEBUG
+    
     if (restore) {
-        std::cout << "Возврат параметров Makefile...\n";
-        std::system("cp ./Makefile ./temp");
-        std::system("sed -e 's/RELEASE=YES/RELEASE=NO/g' ./temp > ./Makefile");
-        std::system("rm ./temp");
-        std::cout << "Пересборка...\n";
-        std::system("make -s clean; make -s");
+        #if defined(DEBUG) || defined(TCOV)
+        std::cout << "Возврат параметров Makefile, пересборка...\n";
+        #endif
+
+        #if defined(DEBUG) && !defined(TCOV)
+        rebuild("RELEASE=YES/RELEASE=NO");
+        #endif
+
+        #if defined(TCOV)
+        rebuild("COVERAGE=YES/COVERAGE=NO");
+        #endif
     }
-    #endif
 
     int all = argc - (flags + 1);
     std::cout << "\nПройдено " << all << " тестов, из них:\n\t";

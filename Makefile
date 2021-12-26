@@ -1,6 +1,7 @@
 vpath %.cpp ${wildcard ./src/*} ./src
 
 RELEASE=NO
+COVERAGE=YES
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -25,6 +26,13 @@ else
 	OPTIFLAGS= -O0 -g -DDEBUG
 endif
 
+ifeq (${COVERAGE},YES)
+	OPTIFLAGS= -O0 -g --coverage
+	LFLAGS=-lgcov --coverage
+else
+	LFLAGS=
+endif
+
 ifeq (${WITH_DRAWING},YES)
 	OPTIFLAGS += -DDRAW_GRAPH
 endif
@@ -45,22 +53,33 @@ default:
 
 mlc: $(OBJ) Makefile
 	@echo "    LD    $@"
-	@$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
+	@$(CC) $(LFLAGS) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
 
 mlc-test: ./test/test.cpp Makefile
 	@echo "    CC    $@"
-	@$(CC) $(CFLAGS) $< -o $@
+	@$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
 
 check:
 	@cppcheck ${CHFLAGS} ./src/ | grep %
 	@cat ${REPORT} | column -t -s '|'
 
-.PHONY: clean
+cov: mlc-test
+	@rm -f *.gcno *.gcda *.info
+	-@./mlc-test -r -O -c ./test/A-unit/*.ml ./test/B-unit/*.ml
+	@lcov -c -d . -o ./coverage/mlc.info 2>/dev/null
+	@lcov -o ./coverage/mlc-f.info --remove ./coverage/mlc.info \
+					'/usr/include/*' \
+					'$(shell pwd)/src/debugger/*' \
+					'$(shell pwd)/test/*' 2>/dev/null | grep lines > ./coverage/lines.info
+	@./script/updatecov.py ./coverage/lines.info
+
+.PHONY: clean check cov
 
 clean:
 	rm -rf ./bin/* mlc mlc-test
 	rm -f ./compiled* ./optimized* out.bin
 	rm -f Makefile.dep
+	rm -f *.gcno *.gcda *.info
 
 %.o: %.cpp Makefile
 	@echo "    CC    $@"

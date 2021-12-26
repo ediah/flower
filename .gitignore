@@ -14,3 +14,7 @@ bin/
 Makefile.dep
 .vscode
 .gdb_history
+*.gcno
+*.gcda
+*.info
+coverage
