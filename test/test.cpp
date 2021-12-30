@@ -217,11 +217,12 @@ int runB(std::string filename, std::string output, bool optimize) {
     return ret;
 }
 
-void rebuild(const char * pattern) {
+void rebuild(const char * pattern, bool make = true) {
     std::system("cp ./Makefile ./temp");
     std::system( ("sed -e 's/" + std::string(pattern) + "/g' ./temp > ./Makefile").data() );
     std::system("rm ./temp");
-    std::system("make -s clean; make -s");
+    if (make)
+        std::system("make -s clean; make -s");
 }
 
 int main(int argc, char ** argv) {
@@ -267,7 +268,9 @@ int main(int argc, char ** argv) {
     if (coverage) {
         std::cout << "Пересборка для анализа покрытия.\n";
         rebuild("COVERAGE=NO/COVERAGE=YES");
-    } else {
+    }
+    #else
+    if (!coverage) {
         std::cout << "Пересборка без анализа покрытия.\n";
         rebuild("COVERAGE=YES/COVERAGE=NO");
     }
@@ -319,11 +322,11 @@ int main(int argc, char ** argv) {
     
     if (restore) {
         #if defined(DEBUG) || defined(TCOV)
-        std::cout << "Возврат параметров Makefile, пересборка...\n";
+        std::cout << "Возврат параметров Makefile...\n";
         #endif
 
         #if defined(DEBUG) && !defined(TCOV)
-        rebuild("RELEASE=YES/RELEASE=NO");
+        rebuild("RELEASE=YES/RELEASE=NO", false);
         #endif
 
         #if defined(TCOV)

@@ -316,8 +316,10 @@ IdentTable * Parser::def(void) {
     try {
         do {
             code >> c;
-            if (r == nullptr) r = variable();
-            else variable();
+            if (r == nullptr) {
+                r = variable();
+                r->setMainTable(&IdTable);
+            } else variable()->setMainTable(&IdTable);
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
     } catch(Obstacle & o) {
@@ -446,11 +448,9 @@ void Parser::assign(IdentTable * lval) {
 
         type_t exop = expr(&fieldSize, strName);
         expressionType(lvtype, exop, ASSIGN);
-        if (exop == _STRUCT_)
-            repack(fieldSize);
         
         if (lvtype == _STRUCT_) {
-            for (int i = fieldSize - 1; i >= 0; i--) {
+            for (int i = 0; i < fieldSize; i++) {
                 type_t t = fieldTypes[i];
                 // В expr => constExpr проверяется корректность типа
                 poliz.pushOp(t, t, ASSIGN);
@@ -458,6 +458,9 @@ void Parser::assign(IdentTable * lval) {
         } else {
             poliz.pushOp(lvtype, exop, ASSIGN);
         }
+
+        if (exop == _STRUCT_)
+            repack(fieldSize);
         
         
         if ((c == ' ') || (c == '\n')) code >> c;
@@ -483,15 +486,15 @@ int Parser::unrollStruct(IdentTable * lval, int ord) {
     } else {
         fieldSize = 1;
         int oldOrd = lval->getOrd();
-        if (ord != -1) {
-            lval->setOrd(ord);
-            lval->setReg(true);
-        }
+        //if (ord != -1) {
+        //    lval->setOrd(ord);
+        //    lval->setReg(true);
+        //}
         poliz.pushVal(lval);
-        if (ord != -1) {
-            lval->setOrd(oldOrd);
-            lval->setReg(false);
-        }
+        //if (ord != -1) {
+        //    lval->setOrd(oldOrd);
+        //    lval->setReg(false);
+        //}
     }
     return fieldSize;
 }
@@ -837,8 +840,8 @@ type_t Parser::expr(int * fieldSize, char * structName) {
             type_t rval = andExpr(fieldSize, structName);
 
             if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-                repack(*fieldSize);
                 handleStruct(r, rval, LOR, fieldSize, structName);
+                repack(*fieldSize);
             } else
                 poliz.pushOp(r, rval, LOR);
 
@@ -860,8 +863,8 @@ type_t Parser::andExpr(int * fieldSize, char * structName) {
             type_t rval = boolExpr(fieldSize, structName);
             
             if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-                repack(*fieldSize);
                 handleStruct(r, rval, LAND, fieldSize, structName);
+                repack(*fieldSize);
             } else
                 poliz.pushOp(r, rval, LAND);
 
@@ -899,8 +902,8 @@ type_t Parser::boolExpr(int * fieldSize, char * structName) {
         type_t rval = add(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-            repack(*fieldSize);
             handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
         } else
             poliz.pushOp(r, rval, op);
 
@@ -933,8 +936,8 @@ type_t Parser::add(int * fieldSize, char * structName) {
         type_t rval = mul(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-            repack(*fieldSize);
             handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
         } else
             poliz.pushOp(r, rval, op);
 
@@ -943,6 +946,7 @@ type_t Parser::add(int * fieldSize, char * structName) {
 
     if (inverse) {
         handleStruct(_NONE_, r, INV, fieldSize, structName);
+        repack(*fieldSize);
         r = expressionType(_NONE_, r, INV);
     }
 
@@ -965,7 +969,7 @@ void Parser::handleStruct(
         if (lval == _STRUCT_) ltype = types[i];
         else ltype = lval;
         if (rval == _STRUCT_) rtype = types[i];
-        else rtype = lval;
+        else rtype = rval;
 
         if ((ltype == _STRUCT_) || (rtype == _STRUCT_))
             handleStruct(ltype, rtype, op, &newFieldSize, structName);
@@ -992,8 +996,8 @@ type_t Parser::mul(int * fieldSize, char * structName) {
         type_t rval = constExpr(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-            repack(*fieldSize);
             handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
         } else
             poliz.pushOp(r, rval, op);
 
@@ -1015,13 +1019,12 @@ void Parser::repack(int fieldSize) {
      * которое нужно достать для каждого поля. Вначале идёт левая,
      * потом правая ветка.
      */
-    int temp_iter = fieldSize - 1;
+    int temp_iter = fieldSize;
     int i;
-    while (((i = poliz.getSize()) > 0) && (poliz.getEB()[i - 1])) {
+    while (((i = poliz.getSize()) > 0) && poliz.getEB()[i - 1] && temp_iter) {
         op_t op = poliz.getProg()[i - 1];
         int nops = operands(static_cast<operation_t>(op & 0xFF));
         opBuff[1].push(op, poliz.getEB()[i - 1]);
-        steps[1 + temp_iter * fieldSize] = nops;
         poliz.pop();
         temp_iter--;
     }

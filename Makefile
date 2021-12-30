@@ -1,7 +1,7 @@
 vpath %.cpp ${wildcard ./src/*} ./src
 
 RELEASE=NO
-COVERAGE=YES
+COVERAGE=NO
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES

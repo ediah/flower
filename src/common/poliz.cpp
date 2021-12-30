@@ -53,9 +53,10 @@ void POLIZ::pushVal(IdentTable * val) {
     #endif
 
     if (val->isReg()) {
-        val->pushType(_INT_);
-        val->pushVal(new int (val->getOrd()));
-        pushVal(val->confirm());
+        IdentTable * mainIT = val->getMainTable();
+        mainIT->pushType(_INT_);
+        mainIT->pushVal(new int (val->getOrd()));
+        pushVal(mainIT->confirm());
         pushOp(_NONE_, _INT_, LOAD);
     } else {
         prog[iter] = (op_t) val;

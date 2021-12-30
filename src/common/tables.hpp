@@ -19,6 +19,7 @@ class IdentTable {
     int params;        // Количество переменных (если функция)
     int offset;        // Позиция в байткоде
     bool shared;
+    IdentTable * mainTable;
 
 public:
     IdentTable *next;
@@ -42,6 +43,7 @@ public:
     void setParams(int x);
     void setOffset(int x);
     void setShared(void);
+    void setMainTable(IdentTable* table);
 
     char * getStruct(void) const;
     type_t getType(void) const;
@@ -50,6 +52,7 @@ public:
     int getOrd(void) const;
     int getParams(void) const;
     int getOffset(void) const;
+    IdentTable* getMainTable(void);
 
     bool isFunc(void) const;
     bool isDef(void) const;

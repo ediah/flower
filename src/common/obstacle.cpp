@@ -89,9 +89,6 @@ void Obstacle::describe(void) const {
             std::cout << "Нет выхода из функции." << std::endl;
             break;
         case NO_TYPE: expected("тип функции"); break;
-        case STRUCT_IN_EXPR:
-            std::cout << "Структуры не могут участвовать в выражениях." << std::endl;
-            break;
         case RETURN_TYPE_MISMATCH:
             std::cout << "Неверный тип возвращаемого параметра." << std::endl;
             break;

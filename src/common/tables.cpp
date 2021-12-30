@@ -21,6 +21,7 @@ IdentTable::IdentTable(void) {
     offset = 0;
     next = nullptr;
     shared = false;
+    mainTable = nullptr;
 }
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
@@ -32,6 +33,7 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     reg = templateIT.reg;
     params = templateIT.params;
     shared = templateIT.shared;
+    mainTable = templateIT.mainTable;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -68,6 +70,7 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     reg = templateIT.reg;
     params = templateIT.params;
     shared = templateIT.shared;
+    mainTable = templateIT.mainTable;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -144,6 +147,7 @@ IdentTable * IdentTable::confirm(void) {
     IdentTable * newIdent = new IdentTable;
     l->next = newIdent;
     l->next->ord = l->ord + 1;
+    newIdent->mainTable = l->mainTable;
 
     return l;
 }
@@ -433,6 +437,20 @@ bool IdentTable::isShared(void) const {
 
 void IdentTable::setShared(void) {
     shared = true;
+}
+
+void IdentTable::setMainTable(IdentTable* table) {
+    mainTable = table;
+    if (structName != nullptr) {
+        static_cast<IdentTable*>(val)->setMainTable(table);
+    }
+    if (next != nullptr) {
+        next->setMainTable(table);
+    }
+}
+
+IdentTable* IdentTable::getMainTable(void) {
+    return mainTable;
 }
 
 IdentTable::~IdentTable() {
