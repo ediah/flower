@@ -8,6 +8,7 @@ bool DAGRow::isLast(void) const {
     return (lvar == nullptr) && (rvar == nullptr);
 }
 
+/*
 DAGRow & DAGRow::operator=(const DAGRow & dr) {
     if (this == &dr) return *this;
 
@@ -47,6 +48,7 @@ DAGRow::DAGRow(const DAGRow & dr) {
 
     assigned = dr.assigned;
 }
+*/
 
 bool operator==(DAGRow & a, DAGRow & b) {
     if (&a == &b) return false;

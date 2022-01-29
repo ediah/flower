@@ -31,6 +31,7 @@ POLIZ::POLIZ(const POLIZ& p) {
     iter = p.iter;
 }
 
+#ifdef DEBUG
 void POLIZ::repr(bool dontBreak) {
     for (int i = 0; i < iter; i++) {
         std::cout << i << ") ";
@@ -42,6 +43,7 @@ void POLIZ::repr(bool dontBreak) {
             std::cout << "\\n";
     }
 }
+#endif
 
 void POLIZ::pushVal(IdentTable * val) {
     #ifdef DEBUG
@@ -81,6 +83,8 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     checkIter();
 }
 
+#ifdef DEBUG
+
 void POLIZ::interpretAsOp(op_t op) {
     switch (op & 0xFF) {
         case INV: std::cout << "INV "; break;
@@ -112,6 +116,7 @@ void POLIZ::interpretAsOp(op_t op) {
         case FORK: std::cout << "FORK "; break;
         case LOCK: std::cout << "LOCK "; break;
         case NONE: std::cout << "NONE "; break;
+        case UNPACK: std::cout << "UNPACK "; break;
         default: throw Obstacle(PANIC);
     }
 }
@@ -119,6 +124,8 @@ void POLIZ::interpretAsOp(op_t op) {
 void POLIZ::interpretAsVal(op_t val) {
     reinterpret_cast<IdentTable *>(val)->whoami();
 }
+
+#endif
 
 op_t * POLIZ::getProg(void) {
     return prog;

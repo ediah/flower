@@ -56,7 +56,7 @@ void Obstacle::describe(void) const {
             std::cout << "Break вне цикла." << std::endl;
             break;
         case CONTINUE_OUTSIDE_CYCLE:
-            std::cout << "Continue вне цикла" << std::endl;
+            std::cout << "Continue вне цикла." << std::endl;
             break;
         case BAD_STRUCT:
             std::cout << "Плохое описание структуры." << std::endl;
@@ -99,7 +99,7 @@ void Obstacle::describe(void) const {
             std::cout << "Плохой тип." << std::endl;
             break;
         case NEED_THREAD_NUMBER:
-            std::cout << "Поток должен быть иметь свой номер." << std::endl;
+            std::cout << "Поток должен иметь свой номер." << std::endl;
             break;
         case NESTED_THREADS:
             std::cout << "Вложенное описание потоков запрещено." << std::endl;

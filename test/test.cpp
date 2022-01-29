@@ -176,14 +176,17 @@ int runA(std::string filename, std::string input, std::string output, bool optim
 
     expected.close();
 
-    std::system("rm ./a.out ./test.bin");
+    if (!compileError)
+        std::system("rm ./a.out ./test.bin");
     
     if (caseIterator == 0) {
-        errorIterator = -1;
-        if (compileError)
+        if (compileError) {
             std::cout << " [ Ошибка компиляции ]";
-        else
+            errorIterator = -1;
+        } else {
             std::cout << " [ Тесты не найдены ]";
+            errorIterator = -2;
+        }
     } else errorIterator = errorIterator != 0 ? 1 : 0;
 
     std::cout << std::endl;
@@ -257,7 +260,7 @@ int main(int argc, char ** argv) {
         }
     }
 
-    std::vector<std::string> filesWithError, filesWithCompileError;
+    std::vector<std::string> filesWithError, filesWithCompileError, testsNotFoundError;
 
     #ifdef DEBUG
     std::cout << "Собрано с отладочной информацией, пересборка.\n";
@@ -312,8 +315,11 @@ int main(int argc, char ** argv) {
             errors += x;
             filesWithError.push_back(filename);
         } else if (x < 0) {
-            notFound -= x;
-            filesWithCompileError.push_back(filename);
+            notFound += 1;
+            if (x == -1)
+                filesWithCompileError.push_back(filename);
+            else
+                testsNotFoundError.push_back(filename);
         }
 
         if ((errors != 0) && bisect) break;
@@ -349,6 +355,12 @@ int main(int argc, char ** argv) {
         std::cout << "\nОШИБКА КОМПИЛЯЦИИ НА ТЕСТАХ:\n";
 
     for (std::string ferr : filesWithCompileError)
+        std::cout << "\t" << ferr << "\n";
+
+    if (testsNotFoundError.size() > 0)
+        std::cout << "\nТЕСТЫ НЕ НАЙДЕНЫ:\n";
+
+    for (std::string ferr : testsNotFoundError)
         std::cout << "\t" << ferr << "\n";
 
     return errors + notFound;

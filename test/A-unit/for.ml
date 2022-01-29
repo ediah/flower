@@ -3,21 +3,24 @@ struct point {
 }
 
 program {
+    int i;
+    real r;
+    string s;
+    bool b;
+    struct point p = {x = 0, y = 10};
 
-    for (int i = 0; i < 5; i = i+1) 
+    for (i = 0; i < 5; i = i+1) 
         write(i);
 
-    for (real r = 0.0; r < 5; r = r + 1)
+    for (r = 0.0; r < 5; r = r + 1)
         write(r);
 
-    for (string s ="a"; s < "aaaaa"; s = s + "a")
+    for (s = "a"; s < "aaaaa"; s = s + "a")
         write(s);
 
-    for (bool b = true; b; b = false)
+    for (b = true; b; b = false)
         write(b);
         
-    for (struct point p = {x = 0, y = 0}; 
-         p.x * p.x + p.y * p.y < 9;
-         p = p + 1)
+    for (p.y = 0; p.x * p.x + p.y * p.y < 9; p = p + 1)
         write(p.x, " ", p.y);
 }

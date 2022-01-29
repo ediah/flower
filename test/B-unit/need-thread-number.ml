@@ -1,0 +1,3 @@
+program {
+    thread { write("ERROR"); }
+}

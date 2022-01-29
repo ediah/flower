@@ -453,6 +453,10 @@ IdentTable* IdentTable::getMainTable(void) {
     return mainTable;
 }
 
+void IdentTable::setStruct(char * name) {
+    structName = name;
+}
+
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;
     if (fadedName != nullptr) delete [] fadedName;

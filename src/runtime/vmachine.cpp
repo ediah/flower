@@ -302,25 +302,25 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case CALL:
             if (rest == _NONE_) {
                 int offset = * (int *) stackVM.pop();
-                int params = * (int *) stackVM.pop();
-                for (int i = 0; i < params; i++) {
+                int param  = * (int *) stackVM.pop();
+                for (int i = 0; i < param; i++) {
                     registerVM.push( stackVM.pop() );
                     sharedVars.push(nullptr);
                 }
-                stackVM.push(new int (params), _INT_);
-                stackVM.push(new int (*eip + 1), _INT_);
+                params.push(new int (param), _INT_);
+                offsets.push(new int (*eip + 1), _INT_);
                 *eip = offset - 1;
             }
             break;
         case RET:
             if (rest == _NONE_) {
-                type_t tType = stackVM.topType();
-                void * t = stackVM.pop();
-                int offset = * (int *) stackVM.pop();
-                int params = * (int *) stackVM.pop();
-                while (params--) registerVM.pop();
+                //type_t tType = stackVM.topType();
+                //void * t = stackVM.pop();
+                int offset = * (int *) offsets.pop();
+                int param  = * (int *) params.pop();
+                while (param--) registerVM.pop();
                 
-                copy(t, tType);
+                //copy(t, tType);
 
                 *eip = offset - 1;
             }
@@ -365,6 +365,23 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                     else if (WIFEXITED(st)) threads.pop_back();
                 }
             }
+            break;
+        
+        case UNPACK:
+            if (rest == _NONE_) {
+                int fieldSize = * (int *) stackVM.pop();
+                for (int i = 0; i < fieldSize * 2; i++) {
+                    registerVM.push(stackVM.pop());
+                }
+                for (int i = 0; i < fieldSize; i++) {
+                    stackVM.push(registerVM.get(i));
+                    stackVM.push(registerVM.get(i + fieldSize));
+                }
+                for (int i = 0; i < fieldSize * 2; i++) {
+                    registerVM.pop();
+                }
+            }
+
             break;
 
         default:

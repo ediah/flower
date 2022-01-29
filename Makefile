@@ -1,7 +1,7 @@
 vpath %.cpp ${wildcard ./src/*} ./src
 
 RELEASE=NO
-COVERAGE=NO
+COVERAGE=YES
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -64,6 +64,7 @@ check:
 	@cat ${REPORT} | column -t -s '|'
 
 cov: mlc-test
+	@rm -f ./bin/*.gcno ./bin/*.gcda
 	@rm -f *.gcno *.gcda *.info
 	-@./mlc-test -r -O -c ./test/A-unit/*.ml ./test/B-unit/*.ml
 	@lcov -c -d . -o ./coverage/mlc.info 2>/dev/null
@@ -71,6 +72,7 @@ cov: mlc-test
 					'/usr/include/*' \
 					'$(shell pwd)/src/debugger/*' \
 					'$(shell pwd)/test/*' 2>/dev/null | grep lines > ./coverage/lines.info
+	@genhtml -o coverage ./coverage/mlc-f.info
 	@./script/updatecov.py ./coverage/lines.info
 
 .PHONY: clean check cov

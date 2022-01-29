@@ -18,6 +18,8 @@ class VirtualMachine {
     Stack stackVM;
     Stack registerVM;
     Stack sharedVars;
+    Stack offsets;
+    Stack params;
     std::vector<pid_t> threads;
     std::vector<int *> pipefd;
     Gendarme dynamicStrings;

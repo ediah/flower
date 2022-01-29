@@ -195,10 +195,11 @@ void Parser::defFunction(void) {
         else if (readWord("bool"))
             thisFunc->setType(_BOOLEAN_);
         else if (readWord("struct")) {
-            thisFunc->setType(_STRUCT_);
             code >> c;
             char * stName = identificator();
-            IdTable.pushStruct(stName);
+            thisFunc->setType(_STRUCT_);
+            thisFunc->setStruct(stName);
+            //IdTable.pushStruct(stName);
         } else throw Obstacle(NO_TYPE);
     } else throw Obstacle(PROCEDURE);
 
@@ -213,7 +214,7 @@ void Parser::defFunction(void) {
 
     retTypes.pop_back();
     
-    if (c != '}') throw Obstacle(PROG_CLOSEBR);
+    if (c != '}') throw Obstacle(PROG_CLOSEBR); // никогда не будет исполнено
     if (inFunc) throw Obstacle(NO_RETURN);
 
     while (formalParams != nullptr) {
@@ -329,6 +330,7 @@ IdentTable * Parser::def(void) {
         o.describe();
         c.cite(code);
         c.line++;
+        revert(1); // исправление двоеточия
     }
     return r;
 }
@@ -392,21 +394,6 @@ bool Parser::readWord(const char * word) {
     if (C_IS_NUM || C_IS_ALPHA) r = false;
     if (!r) revert(i);
     return r;
-}
-
-void Parser::assignStruct(IdentTable * lval, IdentTable * rval) {
-    while (lval->next != nullptr) {
-        if (lval->getType() == _STRUCT_)
-            assignStruct(static_cast<IdentTable *>(lval->getVal()), 
-                         static_cast<IdentTable *>(rval->getVal()));
-        else {
-            poliz.pushVal(lval);
-            poliz.pushVal(rval);
-            poliz.pushOp(lval->getType(), rval->getType(), ASSIGN);
-        }
-        lval = lval->next;
-        rval = rval->next;
-    }
 }
 
 void Parser::assign(IdentTable * lval) {
@@ -666,9 +653,13 @@ void Parser::operations(void) {
             ok = false;
             c.where();
             o.describe();
-            c.cite(code);
-            c.line++;
-            code >> c;
+            bool opened = c.cite(code);
+            
+            revert(2);
+            code >>= c;
+            if ((c != '}') || opened) code >> c;
+            //while ((c != ';') && !code.eof()) code >>= c;
+            //code >> c;
         }
     }
 }
@@ -725,6 +716,7 @@ void Parser::operation(void) {
 void Parser::threadOp(void) {
     if (inThread)
         throw Obstacle(NESTED_THREADS);
+    inThread = true;
     
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != ':')
@@ -748,9 +740,8 @@ void Parser::threadOp(void) {
         throw Obstacle(PROG_OPENBR);
     code >> c;
 
-    inThread = true;
     operations();
-    inThread = false;
+    
     poliz.pushOp(_NONE_, _NONE_, STOP);
 
     if (c != '}')
@@ -759,6 +750,7 @@ void Parser::threadOp(void) {
     progOffset->setVal(new int (poliz.getSize()));
 
     code >> c;
+    inThread = false;
 }
 
 void Parser::forkOp(void) {
@@ -945,9 +937,14 @@ type_t Parser::add(int * fieldSize, char * structName) {
     }
 
     if (inverse) {
-        handleStruct(_NONE_, r, INV, fieldSize, structName);
-        repack(*fieldSize);
-        r = expressionType(_NONE_, r, INV);
+        if (r == _STRUCT_) {
+            handleStruct(_NONE_, r, INV, fieldSize, structName);
+            repack(*fieldSize);
+            r = expressionType(_NONE_, r, INV);
+        } else {
+
+        }
+        
     }
 
     return r;
@@ -962,6 +959,8 @@ void Parser::handleStruct(
     * что структуры lval и rval идентичны, поэтому мы можем взять имя
     * lval (т.е. structName) для определения структуры rval.
     */
+    assert((lval == _STRUCT_) || (rval == _STRUCT_));
+
     std::vector<type_t> types = StTable.getTypes(structName);
     int newFieldSize = types.size();
     type_t ltype, rtype;
@@ -1009,6 +1008,10 @@ type_t Parser::mul(int * fieldSize, char * structName) {
 }
 
 void Parser::repack(int fieldSize) {
+    op_t op = poliz.getProg()[poliz.getSize() - fieldSize - 1];
+    if ((operation_t)(op & 0xFF) == UNPACK)
+        return;
+
     int steps[2 * fieldSize];
     for (int i = 0; i < fieldSize * 2; i++)
         steps[i] = 1;
@@ -1192,6 +1195,14 @@ void Parser::callIdent(IdentTable * val) {
     NEW_IDENT(params, _INT_, nullptr, new int (paramCount), &fieldSize)
     NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()), &fieldSize)
     poliz.pushOp(_INT_, _LABEL_, CALL);
+    
+    if (val->getType() == _STRUCT_) {
+        int fnum = StTable.getStruct(val->getStruct())->getFields().last()->getOrd();
+        IdTable.pushType(_INT_);
+        IdTable.pushVal(new int (fnum));
+        poliz.pushVal(IdTable.confirm());
+        poliz.pushOp(_NONE_, _INT_, UNPACK);
+    }
 }
 
 void Parser::condOp(void) {
@@ -1237,27 +1248,28 @@ void Parser::condOp(void) {
 
 IdentTable * Parser::cycleparam(void) {
     IdentTable * lval;
+    char * name;
+
     if (type()) {
         // переменная не описана
         code >> c;
-        char * name = identificator();
+        name = identificator();
         IdTable.pushId(name);
         lval = IdTable.confirm();
-        if ((c == ' ') || (c == '\n')) code >> c;
     } else {
         // переменная описана
-        char * name = identificator();
+        name = identificator();
         lval = IdTable.getIT(name);
+    }
 
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    while (c == '.') {
+        code >> c;
+        name = identificator();
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        lval = fields->getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;
-
-        while (c == '.') {
-            code >> c;
-            name = identificator();
-            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-            lval = fields->getIT(name);
-            if ((c == ' ') || (c == '\n')) code >> c;
-        }
     }
 
     if (c != '=') throw Obstacle(BAD_EXPR);
@@ -1280,9 +1292,14 @@ void Parser::forOp(void) {
     code >> c;
 
     IdentTable * cp = nullptr;
+    cp = cycleparam(); // начальное выражение
+    /*
     try{ cp = cycleparam(); } // начальное выражение
-    catch(...){}
-
+    catch(Obstacle & o){
+        o.describe();
+    }
+    */
+    
     if (c != ';')
         throw Obstacle(SEMICOLON);
 
@@ -1337,9 +1354,9 @@ void Parser::forOp(void) {
 
     exits.pop();
     steps.pop();
-    while ((cp != nullptr) && (cp->getId() != nullptr)) {
+
+    if ((cp->next->getId() == nullptr)) {
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
-        cp = cp->next;
     }
 }
 
@@ -1433,6 +1450,7 @@ void Parser::bytecodeOp(void) {
                 if (readWord("READ")) {
                     BYTECODE_OP_BIN(READ)
                 } else if (readWord("RET")) {
+                    types.push_back(_LABEL_);
                     BYTECODE_OP_BIN(RET)
                 } else couldRead = false;
                 break;
@@ -1453,7 +1471,23 @@ void Parser::bytecodeOp(void) {
         }
         if (!couldRead) {
             int fieldSize = 1;
-            types.push_back(constExpr(&fieldSize));
+            int p = c.pos;
+            try {
+                types.push_back(constExpr(&fieldSize));
+            } catch (Obstacle & o) {
+                revert(c.pos - p - 1);
+                IdentTable * ident = IdTable.getIT(identificator());
+                if (ident->isFunc()) {
+                    IdTable.pushType(_LABEL_);
+                    IdTable.pushVal( new int (ident->getOffset()) );
+                    IdentTable * label = IdTable.confirm();
+                    poliz.pushVal(label);
+                    types.push_back(_LABEL_);
+                } else {
+                    poliz.pushVal(static_cast<IdentTable *>(ident->getVal()));
+                    types.push_back(ident->getType());
+                }
+            }
         }
 
         if ((c == ' ') || (c == '\n')) code >> c;
@@ -1603,11 +1637,13 @@ void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool ver
         ITp = opt.optimize(verbose);
     }
 
+    #ifdef DEBUG
     if (!silent) {
         ITp->repr();
         poliz.repr();
         std::cout << std::endl;
     }
+    #endif
 
     while (ITp->next != nullptr) {
         ITp->setOffset((int)bin.tellp());
@@ -1638,4 +1674,5 @@ void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool ver
 void Parser::revert(int x) {
     code.seekg((int)code.tellg() - x - 1);
     code >>= c;
+    c.pos -= x + 1;
 }

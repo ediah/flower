@@ -186,9 +186,11 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
 
         // BOOLEAN LOR  BOOLEAN = BOOLEAN
         // BOOLEAN LAND BOOLEAN = BOOLEAN
+        // STRUCT  LOR  STRUCT  = STRUCT
+        // STRUCT  LAND STRUCT  = STRUCT
         case LOR: case LAND:
-            r = _BOOLEAN_;
-            if ((t1 != _BOOLEAN_) || (t2 != _BOOLEAN_)) 
+            r = t1;
+            if ((t1 != _BOOLEAN_) && (t1 != _STRUCT_) && (t1 != t2)) 
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -207,11 +209,12 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // REAL    ASSIGN REAL    = REAL
         // STRING  ASSIGN STRING  = STRING
         // BOOLEAN ASSIGN BOOLEAN = BOOLEAN
+        // STRUCT  ASSIGN STRUCT  = STRUCT
         case ASSIGN:
             r = _NONE_;
             if (((t1 == _INT_) || (t1 == _REAL_)) && (t2 != _INT_) && (t2 != _REAL_))
                 throw Obstacle(EXPR_BAD_TYPE);
-            if (((t1 == _STRING_) || (t1 == _BOOLEAN_)) && (t1 != t2))
+            if (((t1 == _STRING_) || (t1 == _BOOLEAN_) || (t1 == _STRUCT_)) && (t1 != t2))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -266,10 +269,11 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
 
             break;
 
-        // _ LOAD  INT = _
-        // _ SHARE INT = _
-        // _ FORK  INT = _
-        case LOAD: case SHARE: case FORK:
+        // _ LOAD   INT = _
+        // _ SHARE  INT = _
+        // _ FORK   INT = _
+        // _ UNPACK INT = _
+        case LOAD: case SHARE: case FORK: case UNPACK:
             r = _NONE_;
             if ((t1 != _NONE_) || (t2 != _INT_))
                 throw Obstacle(EXPR_BAD_TYPE);
@@ -309,6 +313,7 @@ bool isNullary(operation_t o) {
 bool isUnary(operation_t o) {
     bool ret = (o == INV) || (o == LNOT) || (o == LOAD) || (o == READ);
     ret = ret || (o == WRITE) || (o == JMP) || (o == SHARE) || (o == FORK);
+    ret = ret || (o == UNPACK);
     return ret;
 }
 

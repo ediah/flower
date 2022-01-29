@@ -35,7 +35,11 @@ std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
 
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
     s.read( &(x.c), sizeof(char));
+    #ifdef DEBUG
+    std::cout << "cursor " << x.c << std::endl;
+    #endif
     if (x.c == '\n') ++(x.line);
+    ++(x.pos);
     return s;
 }
 
@@ -63,17 +67,21 @@ char Cursor::symbol(void) const {
     return c;
 }
 
-void Cursor::cite(std::ifstream & s) {
+bool Cursor::cite(std::ifstream & s) {
     std::ostringstream os;
     while ((*this != '\n') && ((int)s.tellg() > 1)) {
         s.seekg((int)s.tellg() - 2);
         s >>= *this;
     }
     if ((int)s.tellg() <= 1) os << this->c;
+    int l, r = 0;
     do {
         s >>= *this;
         os << this->c;
+        if (*this == '{') l++;
+        if (*this == '}') r++;
     } while ((*this != '\n') && (!s.eof()));
     std::cout << os.str() << std::endl;
     line -= 2;
+    return l > r;
 }

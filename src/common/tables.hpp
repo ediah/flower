@@ -44,6 +44,7 @@ public:
     void setOffset(int x);
     void setShared(void);
     void setMainTable(IdentTable* table);
+    void setStruct(char * name);
 
     char * getStruct(void) const;
     type_t getType(void) const;

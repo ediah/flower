@@ -198,6 +198,8 @@ void ControlFlowGraph::info(void) const {
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
+#ifdef CFG_STEPBYSTEP
+
 void ControlFlowGraph::draw(const std::string & filename) {
     graph.open(filename + ".dot");
 
@@ -253,6 +255,8 @@ void ControlFlowGraph::drawEdge(flowTree & p) {
         drawEdge(* node.first);
     }
 }
+
+#endif
 
 void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock, 
                                    std::vector<int> * ls, std::vector<flowTree *> * eb) {
