@@ -22,6 +22,8 @@ public:
     void push(void * p, type_t type);
     void burn(void);
     type_t topType(void) const;
+    const type_t * getTypes(void) const;
+    void updateType(type_t type);
 
     ~Gendarme();
 };
@@ -40,8 +42,11 @@ public:
     void * top(void) const; // НЕ удаляет
     void * get(int x) const; // НЕ удаляет
     void set(int i, void * x);
-    void dump(void) const;
+    int size(void) const;
+    void * const * data(void) const;
     type_t topType(void) const;
+    void updateType(type_t type);
+    const type_t * getTypes(void) const;
     bool isEmpty(void) const;
     bool isDefined(void);
 };

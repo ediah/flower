@@ -653,13 +653,9 @@ void Parser::operations(void) {
             ok = false;
             c.where();
             o.describe();
-            bool opened = c.cite(code);
-            
-            revert(2);
-            code >>= c;
-            if ((c != '}') || opened) code >> c;
-            //while ((c != ';') && !code.eof()) code >>= c;
-            //code >> c;
+            c.cite(code);
+            c.line++;
+            code >> c;
         }
     }
 }
@@ -716,12 +712,14 @@ void Parser::operation(void) {
 void Parser::threadOp(void) {
     if (inThread)
         throw Obstacle(NESTED_THREADS);
-    inThread = true;
-    
+
     if ((c == ' ') || (c == '\n')) code >> c;
+
     if (c != ':')
         throw Obstacle(NEED_THREAD_NUMBER);
+
     code >> c;
+    inThread = true;
 
     IdTable.pushType(_LABEL_);
     IdentTable * progOffset = IdTable.confirm();
@@ -1625,7 +1623,7 @@ void Parser::writeOp(void) {
     code >> c;
 }
 
-void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool verbose) {
+void Parser::giveBIN(const char * filename, bool optimize, bool printPoliz, bool verbose) {
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
@@ -1633,17 +1631,15 @@ void Parser::giveBIN(const char * filename, bool optimize, bool silent, bool ver
     IdentTable * ITp = &IdTable;
 
     if (optimize) {
-        Optimizer opt(&IdTable, &poliz);
-        ITp = opt.optimize(verbose);
+        Optimizer opt(&IdTable, &poliz, verbose);
+        ITp = opt.optimize();
     }
 
-    #ifdef DEBUG
-    if (!silent) {
+    if (printPoliz) {
         ITp->repr();
         poliz.repr();
         std::cout << std::endl;
     }
-    #endif
 
     while (ITp->next != nullptr) {
         ITp->setOffset((int)bin.tellp());

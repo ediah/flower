@@ -51,4 +51,6 @@ bool isUnary(operation_t o);
 
 int operands(operation_t o);
 
+void debugOp(operation_t op);
+
 #endif

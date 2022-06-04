@@ -119,7 +119,7 @@ public:
     void lockOp(void);
 
     void optimize(bool verbose);
-    void giveBIN(const char * filename, bool optimize, bool silent, bool verbose); // Запись бинарника
+    void giveBIN(const char * filename, bool optimize, bool printPoliz, bool verbose); // Запись бинарника
 
     ~Parser(void);
 };

@@ -96,7 +96,7 @@ int runValgrind(std::string filename, bool optimize, std::string input = "") {
     int ret = 0;
 
     ret += checkMem("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " + 
-                    filename + " -s -o test.bin > /dev/null");
+                    filename + " -o test.bin > /dev/null");
     std::cout << filename << std::endl;
 
     if (input != "") {
@@ -107,7 +107,7 @@ int runValgrind(std::string filename, bool optimize, std::string input = "") {
         while (line == "case") {
             if (genCaseIn(cases) != 0)
                 break;
-            ret += checkMem("./mlc -r -s -i test.bin > /dev/null < case.in");
+            ret += checkMem("./mlc -r -i test.bin > /dev/null < case.in");
             std::system("rm ./case.in");
             std::cout << "Case #" << caseIterator + 1 << std::endl;
             cases >> line;
@@ -125,7 +125,7 @@ int runA(std::string filename, std::string input, std::string output, bool optim
     bool compileError = false;
     std::cout << "[A-unit ";
     std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
-                  filename + " -s -o test.bin > a.out").data() );
+                  filename + " -o test.bin > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
 
@@ -147,7 +147,7 @@ int runA(std::string filename, std::string input, std::string output, bool optim
             //#ifdef DEBUG
             //std::system("gdb --args ./mlc -r -s -i test.bin");
             //#else
-            std::system("./mlc -r -s -i test.bin > a.out < case.in");
+            std::system("./mlc -r -i test.bin > a.out < case.in");
             //#endif
             std::system("rm ./case.in");
             std::ifstream actual("a.out");

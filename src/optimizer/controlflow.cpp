@@ -198,7 +198,7 @@ void ControlFlowGraph::info(void) const {
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
-#ifdef CFG_STEPBYSTEP
+#ifdef DRAW_GRAPH
 
 void ControlFlowGraph::draw(const std::string & filename) {
     graph.open(filename + ".dot");
@@ -218,7 +218,7 @@ void ControlFlowGraph::draw(const std::string & filename) {
     graph << "}\n";
     graph.close();
 
-    std::system(("dot -v -Tpng -o./" + filename + ".png ./" +
+    std::system(("dot -v -Tsvg -o./" + filename + ".svg ./" +
                 filename + ".dot 2>&1 | grep -i error").data() );
 }
 

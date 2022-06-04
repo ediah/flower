@@ -6,7 +6,7 @@
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>
   <a href="https://lgtm.com/projects/g/ediah/mlc/context:cpp"><img src="https://img.shields.io/lgtm/grade/cpp/github/ediah/mlc?style=for-the-badge" alt="Language grade: C/C++" /></a>
-  <img src="https://img.shields.io/badge/coverage-85.3%25-yellow?style=for-the-badge" alt="Coverage">
+  <img src="https://img.shields.io/badge/coverage-76.1%25-yellow?style=for-the-badge" alt="Coverage">
 </p>
 
 # Компилятор модельного языка программирования

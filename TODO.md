@@ -97,13 +97,13 @@
 ### Таблица №2 (Выражения со структурами)
 |     Операция    |  Тип X  |  Тип Y  | Тип результата | Реализовано? |
 | --------------- | ------- | ------- | -------------- | ------------ |
-| + − * / %       | struct  | struct  | struct         |              |
-| + − * / %       | struct  | int     | struct         |              |
-| + − * / %       | int     | struct  | struct         |              |
-| + − * /         | struct  | real    | struct         |              |
-| + − * /         | real    | struct  | struct         |              |
-| +               | struct  | string  | struct         |              |
-| +               | string  | struct  | struct         |              |
+| + − * / %       | struct  | struct  | struct         |  +           |
+| + − * / %       | struct  | int     | struct         |  +           |
+| + − * / %       | int     | struct  | struct         |  +           |
+| + − * /         | struct  | real    | struct         |  +           |
+| + − * /         | real    | struct  | struct         |  +           |
+| +               | struct  | string  | struct         |  +           |
+| +               | string  | struct  | struct         |  +           |
 | унарные +-      | struct  | -       | struct         |              |
 | < > <= >= == != | struct  | struct  | boolean        |              |
 | < > <= >= == != | struct  | int     | boolean        |              |

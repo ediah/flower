@@ -89,6 +89,18 @@ void Stack::set(int i, void * x) {
     elem[pos - i - 1] = x;
 }
 
+int Stack::size() const {
+    return pos;
+}
+
+void * const * Stack::data(void) const {
+    return elem;
+}
+
+const type_t * Stack::getTypes(void) const {
+    return memControl.getTypes();
+}
+
 bool Stack::isEmpty(void) const {
     return pos == 0;
 }
@@ -100,4 +112,16 @@ type_t Stack::topType(void) const {
 type_t Gendarme::topType(void) const {
     assert(pos > 0);
     return types[pos - 1];
+}
+
+const type_t * Gendarme::getTypes(void) const {
+    return types;
+}
+
+void Stack::updateType(type_t type) {
+    memControl.updateType(type);
+}
+
+void Gendarme::updateType(type_t type) {
+    types[pos] = type;
 }

@@ -32,11 +32,11 @@ public:
     bool * getEB(void);
     void incIter(void);
     void checkIter(void) const;
-    
-    #ifdef DEBUG
+    bool endsWithCall(void) const;
+    bool endsWithRet(void) const;
+
     static void interpretAsOp(op_t op);
     static void interpretAsVal(op_t val);
-    #endif
 
 };
 

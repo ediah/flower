@@ -31,7 +31,6 @@ POLIZ::POLIZ(const POLIZ& p) {
     iter = p.iter;
 }
 
-#ifdef DEBUG
 void POLIZ::repr(bool dontBreak) {
     for (int i = 0; i < iter; i++) {
         std::cout << i << ") ";
@@ -43,7 +42,6 @@ void POLIZ::repr(bool dontBreak) {
             std::cout << "\\n";
     }
 }
-#endif
 
 void POLIZ::pushVal(IdentTable * val) {
     #ifdef DEBUG
@@ -60,6 +58,7 @@ void POLIZ::pushVal(IdentTable * val) {
         mainIT->pushVal(new int (val->getOrd()));
         pushVal(mainIT->confirm());
         pushOp(_NONE_, _INT_, LOAD);
+        prog[iter - 1] = (char) val->getType() << 24 | (prog[iter - 1] & 0xFFF);
     } else {
         prog[iter] = (op_t) val;
         execBit[iter] = false;
@@ -82,8 +81,6 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
 
     checkIter();
 }
-
-#ifdef DEBUG
 
 void POLIZ::interpretAsOp(op_t op) {
     switch (op & 0xFF) {
@@ -119,13 +116,14 @@ void POLIZ::interpretAsOp(op_t op) {
         case UNPACK: std::cout << "UNPACK "; break;
         default: throw Obstacle(PANIC);
     }
+    std::cout << "["  << typetostr((type_t)((op >>  8) & 0xFF));
+    std::cout << ", " << typetostr((type_t)((op >> 16) & 0xFF));
+    std::cout << "]";
 }
 
 void POLIZ::interpretAsVal(op_t val) {
     reinterpret_cast<IdentTable *>(val)->whoami();
 }
-
-#endif
 
 op_t * POLIZ::getProg(void) {
     return prog;
@@ -174,4 +172,16 @@ void POLIZ::checkIter(void) const {
         std::cout << MAXCMD << ". Скомпилируйте с большим значением.\n";
         exit(1);
     }
+}
+
+bool POLIZ::endsWithCall(void) const {
+    bool call = (operation_t)(prog[iter - 1] & 0xFF) == CALL;
+    bool exec = execBit[iter - 1];
+    return call && exec;
+}
+
+bool POLIZ::endsWithRet(void) const {
+    bool call = (operation_t)(prog[iter - 1] & 0xFF) == RET;
+    bool exec = execBit[iter - 1];
+    return call && exec;
 }

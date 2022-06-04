@@ -11,7 +11,7 @@ struct flags_t {
     bool optimize; // -O
     bool compile;  // -c
     bool run;      // -r
-    bool silent;   // -s
+    bool poliz;    // -p
     bool verbose;  // -v
     bool infile;   // -i
     bool outfile;  // -o
@@ -20,8 +20,8 @@ struct flags_t {
 void help(void) {
     std::cout << "Компилятор Модельного Языка Программирования " << VERSION << std::endl;
     std::cout << "Флаги командной строки:\n\t-c\tКомпиляция\n\t-r\tВыполнение\n\t";
-    std::cout << "-d\tОтладка\n\t-O\tОптимизация\n\t-s\tНе печатать ПОЛИЗ\n\t";
-    std::cout << "-v\tВыводить сообщения оптимизатора\n\t";
+    std::cout << "-d\tОтладка\n\t-O\tОптимизация\n\t-p\tПечатать ПОЛИЗ\n\t";
+    std::cout << "-v\tВыводить сообщения\n\t";
     std::cout << "-i\tУказать входной файл\n\t-o\tУказать выходной файл\n";
 }
 
@@ -33,7 +33,7 @@ bool compile(flags_t options, std::string ifname, std::string ofname) {
     bool ok = pworker.parse();
 
     if (ok) {
-        pworker.giveBIN(ofname.data(), options.optimize, options.silent, options.verbose);
+        pworker.giveBIN(ofname.data(), options.optimize, options.poliz, options.verbose);
 
         auto end = std::chrono::steady_clock::now();
         auto diff = end-start;
@@ -58,7 +58,7 @@ void run(flags_t options, std::string ifname) {
         vm.run();
     }
 
-    if (!options.silent) {
+    if (options.verbose) {
         auto end = std::chrono::steady_clock::now();
         auto diff = end-start;
         int time = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
@@ -95,7 +95,7 @@ int main(int argc, const char** argv) {
                         flags.outfile = true;
                         outname = argv[++i]; 
                         break;
-                    case 's': flags.silent = true; break;
+                    case 'p': flags.poliz = true; break;
                     case 'v': flags.verbose = true; break;
                     case 'c': flags.compile = true; break;
                     case 'r': flags.run = true; break;

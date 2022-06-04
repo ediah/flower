@@ -48,7 +48,7 @@ public:
     void newConn(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
     void insertBlock(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
 
-    #ifdef CFG_STEPBYSTEP
+    #ifdef DRAW_GRAPH
     void draw(const std::string &  filename);
     void drawNode(flowTree p);
     void drawEdge(flowTree & p);

@@ -19,7 +19,7 @@ public:
     bool operator>=(char x) const;
 
     void where(void) const;
-    bool cite(std::ifstream & s);
+    void cite(std::ifstream & s);
     char symbol(void) const;
 };
 

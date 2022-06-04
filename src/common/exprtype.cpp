@@ -2,6 +2,42 @@
 #include "common/obstacle.hpp"
 #include "common/exprtype.hpp"
 
+void debugOp(operation_t op) {
+    switch (op) {
+        case INV: std::cout << "INV "; break;
+        case PLUS: std::cout << "PLUS "; break;
+        case MINUS: std::cout << "MINUS "; break;
+        case MUL: std::cout << "MUL "; break;
+        case DIV: std::cout << "DIV "; break;
+        case LOR: std::cout << "LOR "; break;
+        case LAND: std::cout << "LAND "; break;
+        case LNOT: std::cout << "LNOT "; break;
+        case MOD: std::cout << "MOD "; break;
+        case LESS: std::cout << "LESS "; break;
+        case GRTR: std::cout << "GRTR "; break;
+        case LESSEQ: std::cout << "LESSEQ "; break;
+        case GRTREQ: std::cout << "GRTREQ "; break;
+        case EQ: std::cout << "EQ "; break;
+        case NEQ: std::cout << "NEQ "; break;
+        case ASSIGN: std::cout << "ASSIGN "; break;
+        case STOP: std::cout << "STOP "; break;
+        case WRITE: std::cout << "WRITE "; break;
+        case ENDL: std::cout << "ENDL "; break;
+        case READ: std::cout << "READ "; break;
+        case JIT: std::cout << "JIT "; break;
+        case JMP: std::cout << "JMP "; break;
+        case RET: std::cout << "RET "; break;
+        case CALL: std::cout << "CALL "; break;
+        case LOAD: std::cout << "LOAD "; break;
+        case SHARE: std::cout << "SHARE "; break;
+        case FORK: std::cout << "FORK "; break;
+        case LOCK: std::cout << "LOCK "; break;
+        case NONE: std::cout << "NONE "; break;
+        case UNPACK: std::cout << "UNPACK "; break;
+        default: throw Obstacle(PANIC);
+    }
+}
+
 type_t expressionType(type_t t1, type_t t2, operation_t o) {
     type_t r = _NONE_;
 
@@ -35,8 +71,14 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
                 
+                // STRUCT PLUS STRUCT = STRUCT
+                // STRUCT PLUS INT = STRUCT
+                // STRUCT PLUS REAL = STRUCT
+                // STRUCT PLUS STRING = STRUCT
                 case _STRUCT_:
                     r = _STRUCT_;
+                    if (t2 == _BOOLEAN_)
+                        throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
                 // _ PLUS INT  = INT
@@ -48,6 +90,12 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                     break;
 
                 default:
+                    throw Obstacle(EXPR_BAD_TYPE);
+            }
+
+            if (t2 == _STRUCT_) {
+                r = _STRUCT_;
+                if (t1 == _BOOLEAN_)
                     throw Obstacle(EXPR_BAD_TYPE);
             }
 
@@ -216,6 +264,8 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 throw Obstacle(EXPR_BAD_TYPE);
             if (((t1 == _STRING_) || (t1 == _BOOLEAN_) || (t1 == _STRUCT_)) && (t1 != t2))
                 throw Obstacle(EXPR_BAD_TYPE);
+            if ((t1 == _NONE_) || (t2 == _NONE_))
+                throw Obstacle(EXPR_BAD_TYPE);
 
             break;
 
@@ -269,12 +319,19 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
 
             break;
 
-        // _ LOAD   INT = _
         // _ SHARE  INT = _
         // _ FORK   INT = _
         // _ UNPACK INT = _
-        case LOAD: case SHARE: case FORK: case UNPACK:
+        case SHARE: case FORK: case UNPACK:
             r = _NONE_;
+            if ((t1 != _NONE_) || (t2 != _INT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            break;
+
+        // _ LOAD INT = *        
+        case LOAD:
+            r = _NONE_; // Нужна замена на реальный тип
             if ((t1 != _NONE_) || (t2 != _INT_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
@@ -329,7 +386,7 @@ bool isExpr(operation_t o) {
     bool ret = (o == INV) || (o == PLUS) || (o == MINUS) || (o == LOR);
     ret = ret || (o == MUL) || (o == DIV) || (o == LAND) || (o == LNOT);
     ret = ret || (o == MOD) || (o == LESS) || (o == GRTR) || (o == LESSEQ);
-    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ) || (o == ASSIGN);
+    ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ) || (o == LOAD); //|| (o == ASSIGN);
     return ret;
 }
 

@@ -83,7 +83,7 @@ void VirtualMachine::assign(void) {
     }
 }
 
-inline char * VirtualMachine::getString(void * x) {
+char * VirtualMachine::getString(void * x) {
     return ( ((char **) x)[0] == nullptr) ? (char *) x + sizeof(char*) : * (char**) x;
 }
 
@@ -121,13 +121,12 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case MINUS: ARITH_OPERATION(-) break;
         case MUL:   ARITH_OPERATION(*) break;
         case DIV:   ARITH_OPERATION(/) break;
-        case MOD:
-            if (rest == _INT_) {
-                int b = * (int *) stackVM.pop();
-                int a = * (int *) stackVM.pop();
-                stackVM.push(new int (a % b), _INT_);
-            }
+        case MOD: {
+            int b = * (int *) stackVM.pop();
+            int a = * (int *) stackVM.pop();
+            stackVM.push(new int (a % b), _INT_);
             break;
+        }
         case INV:
             if (rest == _INT_) {
                 int a = * (int *) stackVM.pop();
@@ -137,14 +136,13 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 stackVM.push(new float (-a), _REAL_);
             }
             break;
-        case LOAD:
-            if (rest == _NONE_) {
-                int x = * (int *) stackVM.pop();
-                void * shv = sharedVars.get(x);
-                void * a = registerVM.get(x);
-                stackVM.push(shv == nullptr? a : shv);
-            }
+        case LOAD: {
+            int x = * (int *) stackVM.pop();
+            void * shv = sharedVars.get(x);
+            void * a = registerVM.get(x);
+            stackVM.push(shv == nullptr? a : shv);
             break;
+        }
         case ASSIGN:
             if (lval == _INT_) {
                 if (rval == _INT_) assign<int, int>();
@@ -181,20 +179,17 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case ENDL:
             std::cout << std::endl;
             break;
-        case JIT:
-            if ((lval == _BOOLEAN_) && (rval == _LABEL_)) {
-                int offset = * (int *) stackVM.pop();
-                bool condition = * (bool *) stackVM.pop();
-
-                if (condition) *eip = offset - 1;
-            } else throw Obstacle(PANIC);
+        case JIT: {
+            int offset = * (int *) stackVM.pop();
+            bool condition = * (bool *) stackVM.pop();
+            if (condition) *eip = offset - 1;
             break;
-        case JMP:
-            if ((lval == _NONE_) && (rval == _LABEL_)) {
-                int offset = * (int *) stackVM.pop();
-                *eip = offset - 1;
-            } else throw Obstacle(PANIC);
+        }
+        case JMP: {
+            int offset = * (int *) stackVM.pop();
+            *eip = offset - 1;
             break;
+        }
         case LESS:
             if ((lval == _STRING_) && (rval == _STRING_)) {
                 char * b = getString(stackVM.pop());
@@ -259,6 +254,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (rval == _INT_) {
                 float temp;
                 std::cin >> temp;
+
+                stackVM.updateType(_INT_);
                 * (int *) stackVM.pop() = (int)temp;
             } else if (rval == _REAL_) {
                 std::cin >> * (float *) stackVM.pop();
@@ -279,111 +276,92 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             }
             break;
 
-        case LAND:
-            if (rest == _BOOLEAN_) {
-                bool b = * (bool *) stackVM.pop();
-                bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (a && b), _BOOLEAN_);
-            }
+        case LAND: {
+            bool b = * (bool *) stackVM.pop();
+            bool a = * (bool *) stackVM.pop();
+            stackVM.push(new bool (a && b), _BOOLEAN_);
             break;
-        case LOR:
-            if (rest == _BOOLEAN_) {
-                bool b = * (bool *) stackVM.pop();
-                bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (a || b), _BOOLEAN_);
-            }
+        }
+        case LOR: {
+            bool b = * (bool *) stackVM.pop();
+            bool a = * (bool *) stackVM.pop();
+            stackVM.push(new bool (a || b), _BOOLEAN_);
             break;
-        case LNOT:
-            if (rest == _BOOLEAN_) {
-                bool a = * (bool *) stackVM.pop();
-                stackVM.push(new bool (!a), _BOOLEAN_);
-            }
+        }
+        case LNOT: {
+            bool a = * (bool *) stackVM.pop();
+            stackVM.push(new bool (!a), _BOOLEAN_);
             break;
-        case CALL:
-            if (rest == _NONE_) {
+        }
+        case CALL: {
+            int offset = * (int *) stackVM.pop();
+            int param  = * (int *) stackVM.pop();
+            for (int i = 0; i < param; i++) {
+                registerVM.push( stackVM.pop() );
+                sharedVars.push(nullptr);
+            }
+            params.push(new int (param), _INT_);
+            offsets.push(new int (*eip + 1), _INT_);
+            *eip = offset - 1;
+            break;
+        }
+        case RET: {
+            int offset = * (int *) offsets.pop();
+            int param  = * (int *) params.pop();
+            while (param--) registerVM.pop();
+            *eip = offset - 1;
+            break;
+        }
+        case SHARE: {
+            int x = * (int *) stackVM.pop();
+            sharedVars.set(x, registerVM.get(x));
+            break;
+        }
+        case FORK: {
+            pipefd.push_back(new int[2]);
+            pipe(pipefd.back());
+
+            pid_t pid = fork();
+            threads.push_back(pid);
+
+            if (pid == -1) throw Obstacle(PANIC);
+            if (pid == 0) {
+                inThread = true;
                 int offset = * (int *) stackVM.pop();
-                int param  = * (int *) stackVM.pop();
-                for (int i = 0; i < param; i++) {
-                    registerVM.push( stackVM.pop() );
-                    sharedVars.push(nullptr);
-                }
-                params.push(new int (param), _INT_);
-                offsets.push(new int (*eip + 1), _INT_);
                 *eip = offset - 1;
+            } 
+            #ifdef DEBUG
+            else {
+                std::cout << "Запущен новый поток с PID = " << pid << std::endl;
+            }
+            #endif
+            break;
+        }
+        case LOCK: {
+            int st, ret = 0;
+            while (threads.size() != 0) {
+                updateVars();
+                pid_t pid = threads.back();
+                ret = waitpid(pid, &st, 0);
+                if (ret == -1) throw Obstacle(PANIC);
+                else if (WIFEXITED(st)) threads.pop_back();
             }
             break;
-        case RET:
-            if (rest == _NONE_) {
-                //type_t tType = stackVM.topType();
-                //void * t = stackVM.pop();
-                int offset = * (int *) offsets.pop();
-                int param  = * (int *) params.pop();
-                while (param--) registerVM.pop();
-                
-                //copy(t, tType);
-
-                *eip = offset - 1;
+        }
+        case UNPACK: {
+            int fieldSize = * (int *) stackVM.pop();
+            for (int i = 0; i < fieldSize * 2; i++) {
+                registerVM.push(stackVM.pop());
+            }
+            for (int i = 0; i < fieldSize; i++) {
+                stackVM.push(registerVM.get(i));
+                stackVM.push(registerVM.get(i + fieldSize));
+            }
+            for (int i = 0; i < fieldSize * 2; i++) {
+                registerVM.pop();
             }
             break;
-        case SHARE:
-            if (rest == _NONE_) {
-                int x = * (int *) stackVM.pop();
-                sharedVars.set(x, registerVM.get(x));
-            }
-            break;
-        case FORK:
-            if (rest == _NONE_) {
-                pipefd.push_back(new int[2]);
-                pipe(pipefd.back());
-
-                pid_t pid = fork();
-                threads.push_back(pid);
-
-                if (pid == -1) throw Obstacle(PANIC);
-                if (pid == 0) {
-                    inThread = true;
-                    int offset = * (int *) stackVM.pop();
-                    *eip = offset - 1;
-                } 
-                #ifdef DEBUG
-                else {
-                    std::cout << "Запущен новый поток с PID = " << pid << std::endl;
-                }
-                #endif
-            }
-
-            break;
-
-        case LOCK:
-            if (rest == _NONE_) {
-                int st, ret = 0;
-                while (threads.size() != 0) {
-                    updateVars();
-                    pid_t pid = threads.back();
-                    ret = waitpid(pid, &st, 0);
-                    if (ret == -1) throw Obstacle(PANIC);
-                    else if (WIFEXITED(st)) threads.pop_back();
-                }
-            }
-            break;
-        
-        case UNPACK:
-            if (rest == _NONE_) {
-                int fieldSize = * (int *) stackVM.pop();
-                for (int i = 0; i < fieldSize * 2; i++) {
-                    registerVM.push(stackVM.pop());
-                }
-                for (int i = 0; i < fieldSize; i++) {
-                    stackVM.push(registerVM.get(i));
-                    stackVM.push(registerVM.get(i + fieldSize));
-                }
-                for (int i = 0; i < fieldSize * 2; i++) {
-                    registerVM.pop();
-                }
-            }
-
-            break;
-
+        }
         default:
             std::cout << "Неизвестная команда." << std::endl;
             exit(-1);

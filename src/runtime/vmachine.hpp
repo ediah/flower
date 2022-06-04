@@ -9,6 +9,7 @@
 #include "runtime/stack.hpp"
 
 class VirtualMachine {
+protected:
     char * base;
     char * cmd;
     int cmdNum;

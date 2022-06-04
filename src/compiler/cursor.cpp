@@ -67,14 +67,14 @@ char Cursor::symbol(void) const {
     return c;
 }
 
-bool Cursor::cite(std::ifstream & s) {
+void Cursor::cite(std::ifstream & s) {
     std::ostringstream os;
     while ((*this != '\n') && ((int)s.tellg() > 1)) {
         s.seekg((int)s.tellg() - 2);
         s >>= *this;
     }
     if ((int)s.tellg() <= 1) os << this->c;
-    int l, r = 0;
+    int l = 0, r = 0;
     do {
         s >>= *this;
         os << this->c;
@@ -83,5 +83,4 @@ bool Cursor::cite(std::ifstream & s) {
     } while ((*this != '\n') && (!s.eof()));
     std::cout << os.str() << std::endl;
     line -= 2;
-    return l > r;
 }

@@ -99,7 +99,7 @@ void Obstacle::describe(void) const {
             std::cout << "Плохой тип." << std::endl;
             break;
         case NEED_THREAD_NUMBER:
-            std::cout << "Поток должен иметь свой номер." << std::endl;
+            std::cout << "Поток должен иметь свой номер, отделённый двоеточием." << std::endl;
             break;
         case NESTED_THREADS:
             std::cout << "Вложенное описание потоков запрещено." << std::endl;
