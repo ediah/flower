@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ediah/mlc/b42af024b5c50ee507205f0f1affdcd0929b1d56/logo.png" alt="Icon" width="500"/>
+  <img src="https://github.com/ediah/mlc/blob/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="500"/>
 </p>
 
 
