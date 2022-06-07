@@ -32,7 +32,7 @@ void Obstacle::describe(void) const {
             std::cout << "Неизвестный тип." << std::endl;
             break;
         case EXPR_BAD_TYPE:
-            std::cout << "Несовпадение типов выражения." << std::endl;
+            std::cout << "Неподходящий тип выражения." << std::endl;
             break;
         case BAD_OPERATOR:
             std::cout << "Плохой оператор." << std::endl;
@@ -56,7 +56,7 @@ void Obstacle::describe(void) const {
             std::cout << "Break вне цикла." << std::endl;
             break;
         case CONTINUE_OUTSIDE_CYCLE:
-            std::cout << "Continue вне цикла" << std::endl;
+            std::cout << "Continue вне цикла." << std::endl;
             break;
         case BAD_STRUCT:
             std::cout << "Плохое описание структуры." << std::endl;
@@ -89,11 +89,23 @@ void Obstacle::describe(void) const {
             std::cout << "Нет выхода из функции." << std::endl;
             break;
         case NO_TYPE: expected("тип функции"); break;
-        case STRUCT_IN_EXPR:
-            std::cout << "Структуры не могут участвовать в выражениях." << std::endl;
-            break;
         case RETURN_TYPE_MISMATCH:
             std::cout << "Неверный тип возвращаемого параметра." << std::endl;
+            break;
+        case MODIF_WITHOUT_TYPE:
+            std::cout << "Модификатор должен использоваться с типом переменной." << std::endl;
+            break;
+        case BAD_TYPE:
+            std::cout << "Плохой тип." << std::endl;
+            break;
+        case NEED_THREAD_NUMBER:
+            std::cout << "Поток должен иметь свой номер, отделённый двоеточием." << std::endl;
+            break;
+        case NESTED_THREADS:
+            std::cout << "Вложенное описание потоков запрещено." << std::endl;
+            break;
+        case PRIVATE_VAR_IN_THREAD:
+            std::cout << "В потоках можно использовать только общие переменные." << std::endl;
             break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;

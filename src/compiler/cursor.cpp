@@ -35,10 +35,11 @@ std::ifstream & operator>>(std::ifstream & s, Cursor & x) {
 
 std::ifstream & operator>>=(std::ifstream & s, Cursor & x) {
     s.read( &(x.c), sizeof(char));
-    if (x.c == '\n') ++(x.line);
     #ifdef DEBUG
-    std::cout << "прочитан \"" << x.c << "\"" << std::endl;
+    std::cout << "cursor " << x.c << std::endl;
     #endif
+    if (x.c == '\n') ++(x.line);
+    ++(x.pos);
     return s;
 }
 
@@ -73,9 +74,12 @@ void Cursor::cite(std::ifstream & s) {
         s >>= *this;
     }
     if ((int)s.tellg() <= 1) os << this->c;
+    int l = 0, r = 0;
     do {
         s >>= *this;
         os << this->c;
+        if (*this == '{') l++;
+        if (*this == '}') r++;
     } while ((*this != '\n') && (!s.eof()));
     std::cout << os.str() << std::endl;
     line -= 2;

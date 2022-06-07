@@ -51,15 +51,20 @@ void POLIZ::pushVal(IdentTable * val) {
         std::cout << " REGISTER";
     std::cout << std::endl;
     #endif
+
     if (val->isReg()) {
-        val->pushType(_INT_);
-        val->pushVal(new int (val->getOrd()));
-        pushVal(val->confirm());
-        pushOp(_NONE_, _NONE_, LOAD);
+        IdentTable * mainIT = val->getMainTable();
+        mainIT->pushType(_INT_);
+        mainIT->pushVal(new int (val->getOrd()));
+        pushVal(mainIT->confirm());
+        pushOp(_NONE_, _INT_, LOAD);
+        prog[iter - 1] = (char) val->getType() << 24 | (prog[iter - 1] & 0xFFF);
     } else {
         prog[iter] = (op_t) val;
         execBit[iter] = false;
         iter++;
+
+        checkIter();
     }
 }
 
@@ -73,6 +78,8 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     prog[iter] = (char) rest << 24 | (char) lval << 16 | (char) rval << 8 | (char) op;
     execBit[iter] = true;
     iter++;
+
+    checkIter();
 }
 
 void POLIZ::interpretAsOp(op_t op) {
@@ -101,11 +108,17 @@ void POLIZ::interpretAsOp(op_t op) {
         case JMP: std::cout << "JMP "; break;
         case RET: std::cout << "RET "; break;
         case CALL: std::cout << "CALL "; break;
-        case REGR: std::cout << "REGR "; break;
         case LOAD: std::cout << "LOAD "; break;
+        case SHARE: std::cout << "SHARE "; break;
+        case FORK: std::cout << "FORK "; break;
+        case LOCK: std::cout << "LOCK "; break;
         case NONE: std::cout << "NONE "; break;
+        case UNPACK: std::cout << "UNPACK "; break;
         default: throw Obstacle(PANIC);
     }
+    std::cout << "["  << typetostr((type_t)((op >>  8) & 0xFF));
+    std::cout << ", " << typetostr((type_t)((op >> 16) & 0xFF));
+    std::cout << "]";
 }
 
 void POLIZ::interpretAsVal(op_t val) {
@@ -125,7 +138,7 @@ int POLIZ::getSize(void) const {
 }
 
 void POLIZ::pop(void) {
-    iter = (iter == 0) ? 0 : iter - 1;
+    iter = (iter <= 0) ? 0 : iter - 1;
 }
 
 void POLIZ::clear(void) {
@@ -134,10 +147,41 @@ void POLIZ::clear(void) {
 
 void POLIZ::incIter(void) {
     iter++;
+    checkIter();
 }
 
 void POLIZ::push(op_t op, bool eb) {
+    #ifdef DEBUG
+    std::cout << "POLIZ push ";
+    if (eb)
+        interpretAsOp(op);
+    else
+        interpretAsVal(op);
+    std::cout << std::endl;
+    #endif
+
     prog[iter] = op;
     execBit[iter] = eb;
     iter++;
+    checkIter();
+}
+
+void POLIZ::checkIter(void) const {
+    if (iter >= MAXCMD) {
+        std::cout << "Слот для байткода переполнен. Текущее значение: ";
+        std::cout << MAXCMD << ". Скомпилируйте с большим значением.\n";
+        exit(1);
+    }
+}
+
+bool POLIZ::endsWithCall(void) const {
+    bool call = (operation_t)(prog[iter - 1] & 0xFF) == CALL;
+    bool exec = execBit[iter - 1];
+    return call && exec;
+}
+
+bool POLIZ::endsWithRet(void) const {
+    bool call = (operation_t)(prog[iter - 1] & 0xFF) == RET;
+    bool exec = execBit[iter - 1];
+    return call && exec;
 }

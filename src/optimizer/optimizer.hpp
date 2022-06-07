@@ -11,10 +11,11 @@ class Optimizer {
     IdentTable * IdTable;
     POLIZ * poliz;
     ControlFlowGraph CFG;
+    bool verbose;
 public:
-    Optimizer(IdentTable * IT, POLIZ * p);
+    Optimizer(IdentTable * IT, POLIZ * p, bool verb);
 
-    IdentTable * optimize(bool verbose);
+    IdentTable * optimize();
     void reduceConstants(void);
     void commonSubExpr(void);
 };

@@ -29,7 +29,6 @@ enum operation_t {
     EQ,
     NEQ,
     ASSIGN,
-    REGR,
     LOAD,
     READ,
     WRITE,
@@ -38,7 +37,11 @@ enum operation_t {
     JMP,
     RET,
     CALL,
-    STOP
+    STOP,
+    SHARE,
+    FORK,
+    LOCK,
+    UNPACK
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);
@@ -47,5 +50,7 @@ bool isExpr(operation_t o);
 bool isUnary(operation_t o);
 
 int operands(operation_t o);
+
+void debugOp(operation_t op);
 
 #endif

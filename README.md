@@ -1,56 +1,54 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ediah/mlc/b42af024b5c50ee507205f0f1affdcd0929b1d56/logo.png" alt="Icon" width="500"/>
+  <img src="https://github.com/ediah/mlc/blob/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="400"/>
 </p>
 
 
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>
   <a href="https://lgtm.com/projects/g/ediah/mlc/context:cpp"><img src="https://img.shields.io/lgtm/grade/cpp/github/ediah/mlc?style=for-the-badge" alt="Language grade: C/C++" /></a>
+  <img src="https://img.shields.io/badge/coverage-75.9%25-yellow?style=for-the-badge" alt="Coverage">
 </p>
 
-# Компилятор модельного языка программирования
-Рождённый на втором курсе факультета ВМК МГУ в качестве зачётной работы, он послужил для меня отличной практикой, благодаря которой я многому научился. Теперь я продолжаю этот проект в качестве хобби. Надеюсь, Вы тоже сможете извлечь из него пользу!
-
 # Краткое описание
-Model Language (ml) -- строго типизированный язык процедурного программирования.
+**Flower** — строго типизированный язык процедурного программирования. Языком поддерживается многопоточность, указатели заменены на концепт "общей" (или "разделяемой") переменной, есть 4 простых типа и один составной. Продвинутая работа со структурами: над ними можно проводить арифметические операции.
 
-Model Langage Compiler (mlc) -- оптимизирующий байт-код компилятор и виртуальная стековая машина.
+В репозитории ведётся разработка:
 
-# Особенности реализации
+1. Оптимизирующего байт-код компилятора (**flc**),
 
-1. Основные операции: **if - else**, **for**, **while**, **break**, **continue**, **goto**, **read**, **write**
-2. Основные простые типы: **int**, **real**, **string**, **bool**
-3. Возможность описания пользовательского составного типа: **struct**
-4. Поддержка функций
-5. При обнаружении ошибки чтение не прекращается, а продолжается до конца
+2. Виртуальной стековой машины (**flvm**),
 
-```bash 
-$> ./mlc -h
-Компилятор Модельного Языка Программирования v1.2.0 (Календула)
-Флаги командной строки:
-        -c      Компиляция
-        -r      Выполнение
-        -d      Отладка
-        -O      Оптимизация
-        -s      Не печатать ПОЛИЗ
-        -v      Выводить сообщения оптимизатора
-        -i      Указать входной файл
-        -o      Указать выходной файл
-``` 
+3. Отладчика виртуальной машины (**fldbg**).
+
+# Порядок работы
+
+1. Скомпилировать написанную программу `source.fl`:
+```bash
+./flc source.fl
+```
+
+2. Запустить бинарный файл на виртуальной машине:
+```bash
+./flvm out.bin
+```
+
+3. В случае ошибок или иных проблем отладить:
+```bash
+./fldbg out.bin
+```
+
+4. Если вносятся изменения в код проекта, все изменения можно автоматически протестировать с помощью команды:
+```bash
+./fltest [-O] [-m] [-r] ./test/A-unit/*.fl ./test/B-unit/*.fl
+```
+# Документация
+Скоро будет доступна в разделе wiki, планируется работа с doxygen.
 
 # Примеры
 
-### Привет, мир!
-
-```py
-program {
-    write("Привет, мир!");
-}
-```
-
 ### Факториал
 
-```py
+```c#
 def factorial(int n): int {
     if (n > 1) 
         return factorial(n - 1) * n;
@@ -62,6 +60,33 @@ program {
     int a;
     read(a);
     write(factorial(a));
+}
+```
+
+### Многопоточность
+
+```c#
+def iterate(shared int a): shared int {
+    for (int i = 1; i <= 5; i = i + 1) {
+        /* write("Итерация #", i, ": a = ", a); */
+        a = a / 2;
+    }
+    return a;
+}
+
+program {
+    shared int x, y;
+    
+    read(x);
+    read(y);
+
+    thread:1 { x = iterate(x); }
+    thread:2 { y = iterate(y); }
+
+    fork(1, 2);
+    lock();
+
+    write(x, " ", y);
 }
 ```
 

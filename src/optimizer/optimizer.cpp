@@ -3,10 +3,12 @@
 #include "common/util.hpp"
 #include <iostream>
 #include <vector>
+#include <map>
 
-Optimizer::Optimizer(IdentTable * IT, POLIZ * p) {
+Optimizer::Optimizer(IdentTable * IT, POLIZ * p, bool verb) {
     IdTable = IT;
     poliz = p;
+    verbose = verb;
 }
 
 void Optimizer::reduceConstants(void) {
@@ -20,11 +22,12 @@ void Optimizer::reduceConstants(void) {
                     if ((!poliz->getEB()[i]) && (poliz->getProg()[i] == (op_t)bit->next))
                         poliz->getProg()[i] = (op_t) ait;
                 }
-                #ifdef DEBUG
-                std::cout << "УДАЛЁН ";
-                bit->next->whoami();
-                std::cout << "\n";
-                #endif
+                if (verbose) {
+                    std::cout << "УДАЛЁН ";
+                    bit->next->whoami();
+                    std::cout << "\n";
+                }
+                
                 temp = bit->next;
                 bit->next = bit->next->next;
                 temp->next = nullptr;
@@ -35,7 +38,7 @@ void Optimizer::reduceConstants(void) {
     }
 }
 
-IdentTable * Optimizer::optimize(bool verbose) {
+IdentTable * Optimizer::optimize() {
     reduceConstants();
     
     CFG.make(poliz);
@@ -44,28 +47,79 @@ IdentTable * Optimizer::optimize(bool verbose) {
     #endif
     if (verbose) CFG.info();
 
-    std::vector<flowTree *> optimized;
-    std::vector<flowTree *> queue;
-    queue.push_back(CFG.head());
-    optimized.push_back(CFG.head());
+    std::vector<flowTree *> optimized = {CFG.head()};
+    std::vector<flowTree *> queue = {CFG.head()};
+    std::vector<bool> afterCall = {false}; // Нужно собирать возврат
+
+    std::map<int, std::vector<type_t>> funcRets;
+    std::vector<type_t> typeOnStack = {};
+    std::vector<std::vector<type_t>> oldStack = {{}};
+    std::vector<int> conn; // ID вызванной функции
+    std::vector<int> funcHead = {};
 
     while (queue.size() != 0) {
         DirectedAcyclicGraph DAG(verbose);
-        DAG.make(queue.front()->block);
+        DAG.make(queue.back()->block);
 
         DAG.commonSubExpr(IdTable);
 
-        POLIZ src = DAG.decompose();
-        queue.front()->block.clear();
-        copyPOLIZ(src, queue.front()->block, 0, src.getSize());
+        typeOnStack = oldStack.front();
+        if (afterCall.front()) {
+            std::vector<type_t> tail = funcRets[conn.front()];
+            typeOnStack.insert(typeOnStack.end(), tail.begin(), tail.begin());
+            conn.erase(conn.begin());
+        }
+        POLIZ src = DAG.decompose(&typeOnStack);
+        src.repr();
+        queue.back()->block.clear();
+        copyPOLIZ(src, queue.back()->block, 0, src.getSize());
 
-        for (auto node: queue.front()->next) {
-            if (find(optimized, node.first) == -1) {
-                queue.push_back(node.first);
-                optimized.push_back(node.first);
+        if (queue.back()->block.endsWithRet()) {
+            funcRets[funcHead.back()] = typeOnStack;
+            funcHead.pop_back();
+        }
+
+        if (queue.back()->block.endsWithCall()) {
+            int connID;
+            for (auto node: queue.back()->next) {
+                if (node.second == 1) {
+                    connID = node.first->ID;
+                    break;
+                }
+            }
+
+            for (auto node: queue.back()->next) {
+                if ((node.second == 2) && (find(optimized, node.first) == -1)) {
+                    conn.push_back(connID);
+                    queue.push_back(node.first);
+                    optimized.push_back(node.first);
+                    afterCall.push_back(true);
+                    oldStack.push_back(typeOnStack);
+                }
+            }
+            for (auto node: queue.back()->next) {
+                if ((node.second == 1) && (find(optimized, node.first) == -1)) {
+                        queue.push_back(node.first);
+                        optimized.push_back(node.first);
+                        afterCall.push_back(false);
+                        oldStack.push_back({});
+                        funcHead.push_back(connID);
+                }
+            }
+        } else {
+            for (auto node: queue.back()->next) {
+                if (find(optimized, node.first) == -1) {
+                    queue.push_back(node.first);
+                    optimized.push_back(node.first);
+                    afterCall.push_back(false);
+                    oldStack.push_back(typeOnStack);
+                }
             }
         }
-        queue.erase(queue.begin());
+        
+        queue.pop_back();
+        afterCall.erase(afterCall.begin());
+        oldStack.erase(oldStack.begin());
     }
 
     IdTable = CFG.decompose(IdTable, poliz);

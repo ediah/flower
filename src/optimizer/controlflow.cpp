@@ -134,7 +134,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 break;
             }
 
-            if ((op & 0xFF) == CALL) {
+            if (((op & 0xFF) == CALL) || ((op & 0xFF) == FORK)) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
                 blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
@@ -198,7 +198,9 @@ void ControlFlowGraph::info(void) const {
     std::cout << "\tВсего функций: " << funcsNum << "\n";
 }
 
-void ControlFlowGraph::draw(std::string filename) {
+#ifdef DRAW_GRAPH
+
+void ControlFlowGraph::draw(const std::string & filename) {
     graph.open(filename + ".dot");
 
     graph << "digraph CFG {\n";
@@ -216,7 +218,7 @@ void ControlFlowGraph::draw(std::string filename) {
     graph << "}\n";
     graph.close();
 
-    std::system(("dot -v -Tpng -o./" + filename + ".png ./" +
+    std::system(("dot -v -Tsvg -o./" + filename + ".svg ./" +
                 filename + ".dot 2>&1 | grep -i error").data() );
 }
 
@@ -254,6 +256,8 @@ void ControlFlowGraph::drawEdge(flowTree & p) {
     }
 }
 
+#endif
+
 void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock, 
                                    std::vector<int> * ls, std::vector<flowTree *> * eb) {
     if (find(*eb, curBlock) == -1) {
@@ -263,7 +267,7 @@ void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock,
         // Прыжок назад
         ls->push_back(poliz->getSize());
         poliz->push((op_t) curBlock, false);
-        poliz->pushOp(_NONE_, _NONE_, JMP);
+        poliz->pushOp(_NONE_, _LABEL_, JMP);
     }
 }
 
@@ -281,13 +285,14 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
         flowTree * trueb  = curBlock->next[find(curBlock->next, (char)1)].first;
 
         op_t lastop = curBlock->block.getProg()[bsize - 1];
-        if ((lastop & 0xFF) == CALL) poliz->pop();
+        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
+            poliz->pop();
         ls->push_back(poliz->getSize());
         poliz->push((op_t) trueb, false);
-        if ((lastop & 0xFF) == CALL)
+        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
             poliz->push(lastop, true);
         else
-            poliz->pushOp(_BOOLEAN_, _INT_, JIT);
+            poliz->pushOp(_BOOLEAN_, _LABEL_, JIT);
         newConn(poliz, falseb, ls, eb);
         newConn(poliz, trueb, ls, eb);
     } else if (curBlock->next.size() > 2) throw Obstacle(PANIC);

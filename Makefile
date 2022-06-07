@@ -1,6 +1,7 @@
-vpath %.cpp ${wildcard ./src/*}
+vpath %.cpp ${wildcard ./src/*} ./src
 
 RELEASE=YES
+COVERAGE=YES
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -14,15 +15,22 @@ else
 endif
 
 ifeq (${ALL},YES)
-	ENABLE= --enable=all --inconclusive
+	ENABLE= --enable=all --inconclusive --bug-hunting
 else
 	ENABLE= --enable=warning
 endif
 
 ifeq (${RELEASE},YES)
-	OPTIFLAGS= -O2
+	OPTIFLAGS= -O2 -g
 else
 	OPTIFLAGS= -O0 -g -DDEBUG
+endif
+
+ifeq (${COVERAGE},YES)
+	OPTIFLAGS= -O0 -g --coverage
+	LFLAGS=-lgcov --coverage
+else
+	LFLAGS=
 endif
 
 ifeq (${WITH_DRAWING},YES)
@@ -36,28 +44,62 @@ CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
 		--output-file=${REPORT} --suppressions-list=${SUPRLIST}
 
 VPATH = ${wildcard ./src/*} ./bin
-SRC = ${shell ls ${VPATH} | grep \\.cpp}
-OBJ = ${SRC:.cpp=.o}
+
+SRC_FLC   = ${shell ls ./src/common ./src/compiler ./src/optimizer | grep \\.cpp} ./src/flc.cpp
+SRC_FLVM  = ${shell ls ./src/common ./src/runtime | grep \\.cpp} ./src/flvm.cpp
+SRC_FLDBG = ${shell ls ./src/common ./src/runtime ./src/debugger | grep \\.cpp} ./src/fldbg.cpp
+OBJ_FLC   = ${notdir ${SRC_FLC:.cpp=.o}}
+OBJ_FLVM  = ${notdir ${SRC_FLVM:.cpp=.o}}
+OBJ_FLDBG = ${notdir ${SRC_FLDBG:.cpp=.o}}
 
 default:
 	@mkdir -p bin
-	@make mlc -j4
-	@make mlc-test
+	@make flc flvm fldbg fltest -j4 -s
 
-mlc: $(OBJ)
-	$(CC) ${addprefix ./bin/,${notdir ${OBJ}}} -o $@
+flc: $(OBJ_FLC) Makefile
+	@echo "    LD    $@"
+	@$(CC) $(LFLAGS) ${addprefix ./bin/,${notdir ${OBJ_FLC}}} -o $@
 
-mlc-test: ./test/test.cpp
-	$(CC) $(CFLAGS) $< -o $@
+flvm: $(OBJ_FLVM) Makefile
+	@echo "    LD    $@"
+	@$(CC) $(LFLAGS) ${addprefix ./bin/,${notdir ${OBJ_FLVM}}} -o $@
+
+fldbg: $(OBJ_FLDBG) Makefile
+	@echo "    LD    $@"
+	@$(CC) $(LFLAGS) ${addprefix ./bin/,${notdir ${OBJ_FLDBG}}} -o $@
+
+fltest: ./test/test.cpp Makefile
+	@echo "    LD    $@"
+	@$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
 
 check:
-	@cppcheck ${CHFLAGS} ${addprefix ./src/,${SRC}} | grep %
+	@cppcheck ${CHFLAGS} ./src/ | grep %
 	@cat ${REPORT} | column -t -s '|'
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
+cov: fltest
+	@rm -f ./bin/*.gcno ./bin/*.gcda
+	@rm -f *.gcno *.gcda *.info
+	-@./fltest -r -O -c ./test/A-unit/*.fl ./test/B-unit/*.fl
+	@lcov -c -d . -o ./coverage/flower.info 2>/dev/null
+	@lcov -o ./coverage/flower-f.info --remove ./coverage/flower.info \
+					'/usr/include/*' \
+					'$(shell pwd)/test/*' 2>/dev/null | grep lines > ./coverage/lines.info
+	@genhtml -o coverage ./coverage/flower-f.info
+	@./script/updatecov.py ./coverage/lines.info
 
-.PHONY: clean
+.PHONY: clean check cov
 
 clean:
-	rm -rf ./bin/* mlc mlc-test
+	rm -rf ./bin/* flc fltest
+	rm -f ./compiled* ./optimized* out.bin
+	rm -f Makefile.dep
+	rm -f *.gcno *.gcda *.info
+
+%.o: %.cpp Makefile
+	@echo "    CC    $@"
+	@$(CC) $(CFLAGS) -c $< -o ./bin/${notdir $@}
+
+include Makefile.dep
+
+Makefile.dep: ./script/gendep.py
+	@./script/gendep.py ./src ./test

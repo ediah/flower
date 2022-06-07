@@ -34,22 +34,25 @@ class ControlFlowGraph {
 public:
     ControlFlowGraph(): ft(0), blocksNum(0), jumpsNum(0), funcsNum(0) {};
 
-    void make(POLIZ * p);
-    void makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb, bool exists);
-    void draw(std::string filename);
-    void drawNode(flowTree p);
-    void drawEdge(flowTree & p);
-    void newBlock(int blockId, POLIZ * p, flowTree * curBlock, char cond = 0);
-    IdentTable * decompose(IdentTable* IT, POLIZ* poliz);
-    void insertBlock(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
-    void newConn(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
-    void info(void) const;
     void clear(void);
-    void deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del);
-    void findTails(flowTree * ft);
+    void make(POLIZ * p);
+    void info(void) const;
     flowTree * head(void);
     flowTree * tailStop(void);
+    void findTails(flowTree * ft);
     std::vector<flowTree *> tailRet(void);
+    IdentTable * decompose(IdentTable* IT, POLIZ* poliz);
+    void newBlock(int blockId, POLIZ * p, flowTree * curBlock, char cond = 0);
+    void makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb, bool exists);
+    void deleteBranch(std::vector<std::pair<flowTree *, char>> vec, std::vector<flowTree*> * del);
+    void newConn(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
+    void insertBlock(POLIZ* poliz, flowTree * curBlock, std::vector<int> * ls, std::vector<flowTree *> * eb);
+
+    #ifdef DRAW_GRAPH
+    void draw(const std::string &  filename);
+    void drawNode(flowTree p);
+    void drawEdge(flowTree & p);
+    #endif
     ~ControlFlowGraph();
 };
 

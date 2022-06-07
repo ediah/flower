@@ -1,0 +1,6 @@
+include "./test/A-unit/include-1.fli";
+
+program {
+    write(sayHello());
+    write(newSayHello());
+}

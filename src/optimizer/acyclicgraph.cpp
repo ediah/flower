@@ -1,4 +1,5 @@
 #include "optimizer/acyclicgraph.hpp"
+#include "common/exprtype.hpp"
 #include "common/util.hpp"
 #include <iostream>
 
@@ -8,6 +9,7 @@ bool DAGRow::isLast(void) const {
     return (lvar == nullptr) && (rvar == nullptr);
 }
 
+/*
 DAGRow & DAGRow::operator=(const DAGRow & dr) {
     if (this == &dr) return *this;
 
@@ -47,6 +49,7 @@ DAGRow::DAGRow(const DAGRow & dr) {
 
     assigned = dr.assigned;
 }
+*/
 
 bool operator==(DAGRow & a, DAGRow & b) {
     if (&a == &b) return false;
@@ -101,6 +104,8 @@ void DirectedAcyclicGraph::make(POLIZ p) {
         if (p.getEB()[i]) {
             qrow = new DAGRow;
             operation_t op = (operation_t)(p.getProg()[i] & 0xFF);
+            type_t rettype = (type_t) ((p.getProg()[i] >> 24) & 0xFF);
+            qrow->type = rettype;
             int opnum = operands(op);
             if ((opnum != 0) && (queue.size() != 0)) {
                 qrow->rvar = queue.back();
@@ -154,18 +159,76 @@ void DAGRow::decompose(POLIZ & p, std::vector<DAGRow *> * asd) {
         }
 
         bool execBit = (opcode != (op_t) NONE);
+        type_t ltype = (lvar == NULL)
+                                    ? _NONE_
+                                    : lvar->type;
+        type_t rtype = (rvar == NULL)
+                                    ? _NONE_
+                                    : rvar->type;
+
+        op_t newOp = (char) type << 24 | (char) ltype << 16;
+        newOp |= (char) rtype << 8 | (char) (opcode & 0xFF);
         op_t op = (execBit)
-                        ? opcode
+                        ? newOp
                         : (op_t) ident;
         p.push(op, execBit);
     } else p.push((op_t)ident, false);
 }
 
-POLIZ DirectedAcyclicGraph::decompose(void) {
+type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
+    type_t ltype, rtype;
+    
+    int x, y;
+    switch ((operation_t) (opcode & 0xFF)) {
+        case LOAD:
+            if ((!typeOnStack->empty()))
+                typeOnStack->pop_back();
+            return type;
+        default:
+            break;
+    }
+
+    if ((lvar != nullptr)) {
+        ltype = lvar->updateType(typeOnStack);
+    } else ltype = _NONE_;
+    
+    if ((rvar != nullptr)) {
+        rtype = rvar->updateType(typeOnStack);
+    } else rtype = _NONE_;
+
+    if (opcode != (op_t) NONE) {
+        operation_t oper = (operation_t) (opcode & 0xFF);
+        try {
+            type = expressionType(ltype, rtype, oper);
+        } catch (...) {
+            if ((ltype == _NONE_) && (!typeOnStack->empty())) {
+                ltype = typeOnStack->back();
+                typeOnStack->pop_back();
+            }
+            if ((rtype == _NONE_) && (!typeOnStack->empty())) {
+                rtype = typeOnStack->back();
+                typeOnStack->pop_back();
+            }
+            type = expressionType(ltype, rtype, oper);
+        }
+        
+    } else {
+        if (ident != nullptr){
+            type = ident->getType();
+        } else
+            type = _NONE_;
+    }
+    return type;
+}
+
+POLIZ DirectedAcyclicGraph::decompose(std::vector<type_t> * typeOnStack) {
     POLIZ ret;
     std::vector<DAGRow *> asd;
+    type_t t;
 
     for (auto head: rows) {
+        t = head->updateType(typeOnStack);
+        if (t != _NONE_) typeOnStack->push_back(t);
         head->decompose(ret, &asd);
         #ifdef DEBUG
         //ret.repr();
@@ -179,8 +242,7 @@ POLIZ DirectedAcyclicGraph::decompose(void) {
     }
 
     copyPOLIZ(stashed, ret, 0, stashed.getSize());
-       
-
+    
     return ret;
 }
 
@@ -250,7 +312,8 @@ void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
 
             #ifdef DEBUG
             std::cout << "Итерация i = " << i << " j = " << j << ":\n";
-            decompose().repr(false);
+            std::vector<type_t> typeOnStack;
+            decompose(&typeOnStack).repr(false);
             #endif
         }
     }

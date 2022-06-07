@@ -2,9 +2,9 @@ name: Test Compilation
 
 on:
   push:
-    branches: [ master, optimize ]
+    branches: [ stable, dev ]
   pull_request:
-    branches: [ master, optimize ]
+    branches: [ stable, dev ]
 
   workflow_dispatch:
 
@@ -16,7 +16,7 @@ jobs:
     - name: Build
       run: make
     - name: Run A-units
-      run: ./mlc-test ./test/A-unit/unit*.ml
+      run: ./fltest ./test/A-unit/*.fl
   B-unit:
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: make
     - name: Run B-units
-      run: ./mlc-test ./test/B-unit/unit*.ml
+      run: ./fltest ./test/B-unit/*.fl
   Valgrind:
     runs-on: ubuntu-latest
     steps:
@@ -34,4 +34,4 @@ jobs:
     - name: Build
       run: make
     - name: Run Checks
-      run: ./mlc-test -m ./test/A-unit/unit*.ml ./test/B-unit/unit*.ml
+      run: ./fltest -m ./test/A-unit/*.fl ./test/B-unit/*.fl

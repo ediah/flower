@@ -8,6 +8,7 @@
 #include "common/poliz.hpp"
 
 struct DAGRow {
+    type_t type;
     IdentTable * ident;
     op_t opcode;
     DAGRow * lvar;
@@ -18,11 +19,12 @@ struct DAGRow {
     static std::vector<DAGRow *> created;
 
     DAGRow(): ident(nullptr), opcode((op_t) NONE), lvar(nullptr), 
-              rvar(nullptr), prev(nullptr), assigned(false) {
+              rvar(nullptr), prev(nullptr), assigned(false), type(_NONE_) {
                   created.push_back(this);
               };
     void decompose(POLIZ & p, std::vector<DAGRow *> * asd);
     bool isLast(void) const;
+    type_t updateType(std::vector<type_t> * typeOnStack = nullptr);
 
     friend bool operator==(DAGRow & a, DAGRow & b);
     DAGRow & operator=(const DAGRow & dr);
@@ -40,7 +42,8 @@ class DirectedAcyclicGraph {
 public:
     explicit DirectedAcyclicGraph(bool v): verbose(v) {};
     void make(POLIZ p);
-    POLIZ decompose(void);
+    POLIZ decompose(std::vector<type_t> * typeOnStack);
+    void updateTypes(void);
 
     void commonSubExpr(IdentTable * IT);
 

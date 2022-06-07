@@ -1,41 +1,22 @@
-mlc
-mlc-test
+flc
+flvm
+fldbg
+fltest
 mlc.tgz
-out.bin
+*.bin
 cppcheck/
 cov-int/
 compiled.dot
 compiled.png
 optimized.dot
 optimized.png
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.app
+compile_commands.json
+bin/
+.cache/*
+Makefile.dep
+.vscode
+.gdb_history
+*.gcno
+*.gcda
+*.info
+coverage

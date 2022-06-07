@@ -27,12 +27,16 @@ public:
     void push(op_t op, bool eb);
     void clear(void);
     void repr(bool dontBreak = false);
-    static void interpretAsOp(op_t op);
-    static void interpretAsVal(op_t val);
     int getSize(void) const;
     op_t * getProg(void);
     bool * getEB(void);
     void incIter(void);
+    void checkIter(void) const;
+    bool endsWithCall(void) const;
+    bool endsWithRet(void) const;
+
+    static void interpretAsOp(op_t op);
+    static void interpretAsVal(op_t val);
 
 };
 

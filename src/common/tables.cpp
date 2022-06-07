@@ -1,10 +1,28 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include "compiler/parser.hpp"
 #include "common/tables.hpp"
 #include "common/obstacle.hpp"
 #include "common/exprtype.hpp"
 #include "common/util.hpp"
+
+IdentTable::IdentTable(void) {
+    valType = _NONE_;
+    structName = nullptr;
+    name = nullptr;
+    fadedName = nullptr;
+    def = false;
+    func = false;
+    reg = false;
+    val = nullptr;
+    ord = 0;
+    params = 0;
+    offset = 0;
+    next = nullptr;
+    shared = false;
+    mainTable = nullptr;
+}
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
     valType = templateIT.valType;
@@ -14,6 +32,8 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     func = templateIT.func;
     reg = templateIT.reg;
     params = templateIT.params;
+    shared = templateIT.shared;
+    mainTable = templateIT.mainTable;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -49,6 +69,8 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     func = templateIT.func;
     reg = templateIT.reg;
     params = templateIT.params;
+    shared = templateIT.shared;
+    mainTable = templateIT.mainTable;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -125,6 +147,7 @@ IdentTable * IdentTable::confirm(void) {
     IdentTable * newIdent = new IdentTable;
     l->next = newIdent;
     l->next->ord = l->ord + 1;
+    newIdent->mainTable = l->mainTable;
 
     return l;
 }
@@ -136,6 +159,7 @@ void IdentTable::dupType(void) {
     if (last()->valType == _NONE_) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
+        p->next->shared = p->shared;
         if (p->structName != nullptr) {
             p->next->structName = new char[strnlen(p->structName, MAXIDENT) + 1];
             memccpy(p->next->structName, p->structName, '\0', strnlen(p->structName, MAXIDENT) + 1);
@@ -177,8 +201,8 @@ void IdentTable::setOrd(int x) {
     ord = x;
 }
 
-void IdentTable::onReg(void) {
-    reg = true;
+void IdentTable::setReg(bool x) {
+    reg = x;
 }
 
 bool IdentTable::isReg(void) const {
@@ -230,7 +254,7 @@ void IdentTable::whoami() {
             std::cout << name;
         if (fadedName != nullptr) 
             std::cout << '(' << fadedName << ") ";
-        if (func) std::cout << * (int*) val;
+        if (func) std::cout << " (params num: " << params << ")";
         else if (def) {
             std::cout << "= ";
             switch (valType) {
@@ -271,7 +295,7 @@ char * IdentTable::getId(void) const {
     return this->name;
 }
 
-void * IdentTable::getVal(void) {
+void * IdentTable::getVal(void) const {
     return val;
 }
 
@@ -293,6 +317,8 @@ int IdentTable::getOrd(void) const {
 }
 
 void IdentTable::writeValToStream(std::ostream & s) {
+    if (func) return;
+    
     if (!def) {
         switch (valType) {
             case _INT_: case _LABEL_:
@@ -405,6 +431,32 @@ void IdentTable::fade(void) {
     name = nullptr;
 }
 
+bool IdentTable::isShared(void) const {
+    return shared;
+}
+
+void IdentTable::setShared(void) {
+    shared = true;
+}
+
+void IdentTable::setMainTable(IdentTable* table) {
+    mainTable = table;
+    if (structName != nullptr) {
+        static_cast<IdentTable*>(val)->setMainTable(table);
+    }
+    if (next != nullptr) {
+        next->setMainTable(table);
+    }
+}
+
+IdentTable* IdentTable::getMainTable(void) {
+    return mainTable;
+}
+
+void IdentTable::setStruct(char * name) {
+    structName = name;
+}
+
 IdentTable::~IdentTable() {
     if (name != nullptr) delete [] name;
     if (fadedName != nullptr) delete [] fadedName;
@@ -439,19 +491,15 @@ void StructTable::pushName(char * name) {
     last()->name = name;
 }
 
-void StructTable::pushField(type_t type, char * name, char * structName) {
+void StructTable::pushField(type_t type, char * name, char * structName, bool shared) {
     StructTable * l = last();
     l->fields.pushType(type);
     l->fields.pushId(name);
+    if (shared) l->fields.setShared();
     if (structName != nullptr) {
         l->fields.pushStruct(structName);
         IdentTable & templateIT = getStruct(structName)->getFields();
         l->fields.pushVal(new IdentTable(templateIT));
-    } else {
-        if (l->fields.getStruct() != nullptr) {
-            std::cout << "Структура не равна нулю\n" << l->fields.getStruct();
-            std::cout << std::endl;
-        }
     }
     l->fields.confirm();
 }
@@ -492,6 +540,23 @@ StructTable * StructTable::getStruct(char * name) {
 
 IdentTable & StructTable::getFields(void) {
     return fields;
+}
+
+std::vector<type_t> StructTable::getTypes(char * name) {
+    std::vector<type_t> result;
+
+    IdentTable * fields = & getStruct(name)->fields;
+    while (fields->next != nullptr) {
+        type_t type = fields->getType();
+        if (type == _STRUCT_) {
+            std::vector<type_t> part = getTypes(fields->getStruct());
+            result.reserve(result.size() + part.size());
+            result.insert(result.end(), part.begin(), part.end());
+        } else result.push_back(type);
+        fields = fields->next;
+    }
+
+    return result;
 }
 
 StructTable::~StructTable(void) {

@@ -1,7 +1,12 @@
 #include <iostream>
 #include <cstring>
-#include "compiler/parser.hpp"
+#include <utility>
+#include <vector>
+#include <cassert>
+#include "common/exprtype.hpp"
+#include "common/tables.hpp"
 #include "common/obstacle.hpp"
+#include "compiler/parser.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 
@@ -19,7 +24,7 @@ int Parser::fastPow(int x, int n) {
 void Parser::load(std::string name) {
     code.open(name);
     if (!code.is_open()) {
-        std::cout << "Такого файла нет!";
+        std::cout << "Файл " << name << " не найден!\n";
         exit(-1);
     }
 }
@@ -35,20 +40,33 @@ bool Parser::parse(void) {
     IdTable.pushType(_LABEL_);
     IdentTable * progOffset = IdTable.confirm();
     poliz.pushVal(progOffset);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     try {
 
-        while (!code.eof()) {
-            if (readWord("program")) {
-                progOffset->setVal(new int (poliz.getSize()));
-                program();
-            } else if (readWord("struct"))
-                defStruct();
-            else if (readWord("def"))
-                defFunction();
-            else throw Obstacle(WRONG_SCOPE);
-            code >> c;
-        }
+        do {
+            if (fileQueue.size() != 0) {
+                code.swap(*fileQueue.back());
+                fileQueue.back()->close();
+                delete fileQueue.back();
+                fileQueue.pop_back();
+                code >> c;
+            }
+
+            while (!code.eof()) {
+                if (readWord("program")) {
+                    progOffset->setVal(new int (poliz.getSize()));
+                    program();
+                } else if (readWord("struct"))
+                    defStruct();
+                else if (readWord("def"))
+                    defFunction();
+                else if (readWord("include"))
+                    include();
+                else throw Obstacle(WRONG_SCOPE);
+                code >> c;
+            }
+        } while (fileQueue.size() != 0);
+        
        
     }
     catch(Obstacle & o) {
@@ -59,6 +77,35 @@ bool Parser::parse(void) {
         c.line++;
     }
     return ok;
+}
+
+void Parser::include() {
+    std::string incfile;
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c == '\"') {
+        do {
+            code >>= c;
+            incfile.push_back(c.symbol());
+        } while ((c != '\"') && (!code.eof()));
+        incfile.pop_back();
+        code >> c;
+    } else {
+        do {
+            incfile.push_back(c.symbol());
+            code >>= c;
+        } while ((c != ';') && (!code.eof()));
+    }
+
+    #ifdef DEBUG
+    std::cout << "Переключаюсь на файл \"" << incfile << "\"\n";
+    #endif
+
+    std::ifstream * mainFile = new std::ifstream;
+    mainFile->swap(code);
+    fileQueue.push_back(mainFile);
+    load(incfile);
+    if ((c == ' ') || (c == '\n')) code >> c;
 }
 
 void Parser::defFunction(void) {
@@ -86,8 +133,9 @@ void Parser::defFunction(void) {
 
         if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     }
+    
     int paramsNum;
-    if (formalParams != nullptr) 
+    if (formalParams != nullptr)
         paramsNum = IdTable.last()->getOrd() - formalParams->getOrd();
     else paramsNum = 0;
 
@@ -97,8 +145,34 @@ void Parser::defFunction(void) {
         thisFunc->setVal(formalParams);
     
     IdentTable * p = formalParams;
+    int paramsSum = 0;
     for (int i = 0; i < paramsNum; i++) {
-        p->onReg();
+        if (p->isShared()) {
+            int nparamFact = 0;
+            if (p->getType() == _STRUCT_) {
+                IdentTable * fields = reinterpret_cast<IdentTable*>(p->getVal());
+                while (fields->next != nullptr) {
+                    nparamFact++;
+                    fields = fields->next;
+                }
+            } else nparamFact = 1;
+            
+            for (int k = 0; k < nparamFact; k++) {
+                IdTable.pushVal(new int (k + paramsSum));
+                IdTable.pushType(_INT_);
+                poliz.pushVal(IdTable.confirm());
+                poliz.pushOp(_NONE_, _INT_, SHARE);
+            }
+
+            paramsSum += nparamFact;
+        }
+        if (p->getType() == _STRUCT_) {
+            IdentTable * fields = reinterpret_cast<IdentTable*>(p->getVal());
+            while (fields->next != nullptr) {
+                fields->setReg(true);
+                fields = fields->next;
+            }
+        } else p->setReg(true);
         p = p->next;
     }
 
@@ -106,6 +180,12 @@ void Parser::defFunction(void) {
     
     if (c == ':') {
         code >> c;
+
+        if (readWord("shared")) {
+            thisFunc->setShared();
+            code >> c;
+        }
+
         if (readWord("int"))
             thisFunc->setType(_INT_);
         else if (readWord("string"))
@@ -115,14 +195,15 @@ void Parser::defFunction(void) {
         else if (readWord("bool"))
             thisFunc->setType(_BOOLEAN_);
         else if (readWord("struct")) {
-            thisFunc->setType(_STRUCT_);
             code >> c;
             char * stName = identificator();
-            IdTable.pushStruct(stName);
+            thisFunc->setType(_STRUCT_);
+            thisFunc->setStruct(stName);
+            //IdTable.pushStruct(stName);
         } else throw Obstacle(NO_TYPE);
     } else throw Obstacle(PROCEDURE);
 
-    retTypes.push(new type_t (thisFunc->getType()));
+    retTypes.push_back(std::make_pair(thisFunc->getType(), thisFunc->getStruct()));
 
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != '{') throw Obstacle(PROG_OPENBR);
@@ -131,9 +212,9 @@ void Parser::defFunction(void) {
     defs();
     operations();
 
-    delete static_cast<type_t*>(retTypes.pop());
+    retTypes.pop_back();
     
-    if (c != '}') throw Obstacle(PROG_CLOSEBR);
+    if (c != '}') throw Obstacle(PROG_CLOSEBR); // никогда не будет исполнено
     if (inFunc) throw Obstacle(NO_RETURN);
 
     while (formalParams != nullptr) {
@@ -146,8 +227,15 @@ void Parser::defFunction(void) {
 void Parser::returnOp(void) {
     inFunc = false;
     code >> c;
-    type_t retFact = expr();
-    if (retFact != * static_cast<type_t *>(retTypes.top())) 
+    
+    int fieldSize = 1;
+    char * stName = retTypes.back().second;
+    if (retTypes.back().first == _STRUCT_) {
+        fieldSize = StTable.getStruct(stName)->getFields().last()->getOrd();
+    }
+    type_t retFact = expr(&fieldSize, stName);
+
+    if (retFact != retTypes.back().first) 
         throw Obstacle(RETURN_TYPE_MISMATCH);
     if (c != ';') throw Obstacle(SEMICOLON);
     code >> c;
@@ -178,6 +266,13 @@ void Parser::defStruct(void) {
         type_t field_type;
         char * struct_name = nullptr;
         char * field_name = nullptr;
+        bool shared = false;
+
+        if (readWord("shared")) {
+            if (c != ' ') throw Obstacle(TYPE_UNKNOWN);
+            shared = true;
+            code >> c;
+        }
 
         if (readWord("int"))
             field_type = _INT_;
@@ -199,7 +294,7 @@ void Parser::defStruct(void) {
         do {
             code >> c;
             field_name = identificator();
-            StTable.pushField(field_type, field_name, struct_name);
+            StTable.pushField(field_type, field_name, struct_name, shared);
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
 
@@ -222,8 +317,10 @@ IdentTable * Parser::def(void) {
     try {
         do {
             code >> c;
-            if (r == nullptr) r = variable();
-            else variable();
+            if (r == nullptr) {
+                r = variable();
+                r->setMainTable(&IdTable);
+            } else variable()->setMainTable(&IdTable);
             if ((c == ' ') || (c == '\n')) code >> c;
         } while (c == ',');
     } catch(Obstacle & o) {
@@ -233,12 +330,27 @@ IdentTable * Parser::def(void) {
         o.describe();
         c.cite(code);
         c.line++;
+        revert(1); // исправление двоеточия
     }
+    return r;
+}
+
+bool Parser::typeModificator(void) {
+    bool r = true;
+
+    if (readWord("shared")) {
+        IdTable.last()->setShared();
+        if (c != ' ') throw Obstacle(BAD_TYPE);
+        code >> c;
+    }
+    else r = false;
+    
     return r;
 }
 
 bool Parser::type(void) {
     bool r = true;
+    bool tmod = typeModificator();
 
     if (readWord("int"))
         IdTable.pushType(_INT_);
@@ -257,6 +369,9 @@ bool Parser::type(void) {
         IdTable.pushVal(new IdentTable(templateFields));
     } else r = false;
 
+    if (tmod && (!r))
+        throw Obstacle(MODIF_WITHOUT_TYPE);
+
     return r && (c == ' ');
 }
 
@@ -268,7 +383,7 @@ bool Parser::type(void) {
  *        ^ <= курсор за последней буквой слова (если true)
  * Если false, курсор на начальной позиции
  */ 
-bool Parser::readWord(char * word) {
+bool Parser::readWord(const char * word) {
     bool r = true;
     int i;
     for (i = 0; word[i] != '\0'; i++) {
@@ -281,66 +396,94 @@ bool Parser::readWord(char * word) {
     return r;
 }
 
-void Parser::assignStruct(IdentTable * lval, IdentTable * rval) {
-    while (lval->next != nullptr) {
-        if (lval->getType() == _STRUCT_)
-            assignStruct(static_cast<IdentTable *>(lval->getVal()), 
-                         static_cast<IdentTable *>(rval->getVal()));
-        else {
-            poliz.pushVal(lval);
-            poliz.pushVal(rval);
-            poliz.pushOp(lval->getType(), rval->getType(), ASSIGN);
-        }
-        lval = lval->next;
-        rval = rval->next;
-    }
-}
-
 void Parser::assign(IdentTable * lval) {
     type_t lvtype = lval->getType();
 
-    if (lvtype == _STRUCT_) {
-        if (c == '{') {
-            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-            do {
-                code >> c;
-                char * fieldName = identificator();
-                IdentTable * val = fields->getIT(fieldName);
-
-                if ((c == ' ') || (c == '\n')) code >> c;
-
-                while (c == '.') {
-                    code >> c;
-                    fieldName = identificator();
-                    IdentTable * innerFields = static_cast<IdentTable *>(val->getVal());
-                    val = innerFields->getIT(fieldName);
-                    if ((c == ' ') || (c == '\n')) code >> c;
-                }
-
-                if (c != '=') throw Obstacle(BAD_EXPR);
-                code >> c;
-                assign(val);
-            } while (c == ',');
-            if (c != '}') throw Obstacle(BAD_EXPR);
+    if ((lvtype == _STRUCT_) && (c == '{')) {
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        do {
             code >> c;
-        } else {
-            char * rvalName = identificator();
-            IdentTable * rval = IdTable.getIT(rvalName);
-            type_t rvtype = rval->getType();
-            if ((rvtype == _STRUCT_) && (strcmp(lval->getStruct(), rval->getStruct()) == 0)) {
-                // структуры идентичны, можно приравнивать 
-                assignStruct(static_cast<IdentTable *>(lval->getVal()), 
-                             static_cast<IdentTable *>(rval->getVal()));
-                
-            } else throw Obstacle(EXPR_BAD_TYPE);
-        }
+            char * fieldName = identificator();
+            IdentTable * val = fields->getIT(fieldName);
+
+            if ((c == ' ') || (c == '\n')) code >> c;
+
+            while (c == '.') {
+                code >> c;
+                fieldName = identificator();
+                IdentTable * innerFields = static_cast<IdentTable *>(val->getVal());
+                val = innerFields->getIT(fieldName);
+                if ((c == ' ') || (c == '\n')) code >> c;
+            }
+
+            if (c != '=') throw Obstacle(BAD_EXPR);
+            code >> c;
+            assign(val);
+        } while (c == ',');
+        if (c != '}') throw Obstacle(BAD_EXPR);
+        code >> c;
+        
     } else {
-        poliz.pushVal(lval);
-        type_t exop = expr();
+        int fieldSize = unrollStruct(lval);
+        char * strName = nullptr;
+
+        std::vector<type_t> fieldTypes;
+        if (lvtype == _STRUCT_) {
+            strName = lval->getStruct();
+            fieldTypes = StTable.getTypes(lval->getStruct());
+        }
+
+        type_t exop = expr(&fieldSize, strName);
         expressionType(lvtype, exop, ASSIGN);
-        poliz.pushOp(lvtype, exop, ASSIGN);
+        
+        if (lvtype == _STRUCT_) {
+            for (int i = 0; i < fieldSize; i++) {
+                type_t t = fieldTypes[i];
+                // В expr => constExpr проверяется корректность типа
+                poliz.pushOp(t, t, ASSIGN);
+            }
+        } else {
+            poliz.pushOp(lvtype, exop, ASSIGN);
+        }
+
+        if (exop == _STRUCT_)
+            repack(fieldSize);
+        
+        
         if ((c == ' ') || (c == '\n')) code >> c;
     }
+}
+
+int Parser::unrollStruct(IdentTable * lval, int ord) {
+    int fieldSize = 0;
+    if (lval->getType() == _STRUCT_){
+        char * strName = lval->getStruct();
+        StructTable * st = StTable.getStruct(strName);
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        while (fields->next != nullptr) {
+            int newOrd = -1;
+            if (fields->isReg())
+                newOrd = fields->getOrd();
+            fieldSize += unrollStruct(fields, newOrd);
+            fields = fields->next;
+        }
+        #ifdef DEBUG
+        std::cout << "РАЗМЕР " << fieldSize << std::endl;
+        #endif
+    } else {
+        fieldSize = 1;
+        int oldOrd = lval->getOrd();
+        //if (ord != -1) {
+        //    lval->setOrd(ord);
+        //    lval->setReg(true);
+        //}
+        poliz.pushVal(lval);
+        //if (ord != -1) {
+        //    lval->setOrd(oldOrd);
+        //    lval->setReg(false);
+        //}
+    }
+    return fieldSize;
 }
 
 IdentTable * Parser::variable(void) {
@@ -506,7 +649,7 @@ bool Parser::constBool(void) {
 void Parser::operations(void) {
     while (c != '}') {
         try { operation(); }
-        catch(Obstacle & o) { 
+        catch(Obstacle & o) {
             ok = false;
             c.where();
             o.describe();
@@ -519,7 +662,8 @@ void Parser::operations(void) {
 
 void Parser::operation(void) {
 
-    if (readWord("if")) condOp();
+    if (c.symbol() == '}') return;
+    else if (readWord("if")) condOp();
     else if (readWord("for")) forOp();
     else if (readWord("while")) whileOp();
     else if (readWord("break")) breakOp();
@@ -527,8 +671,11 @@ void Parser::operation(void) {
     else if (readWord("write")) writeOp();
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
-    else if (readWord("pass")) code >> c;
+    else if (readWord("bytecode")) bytecodeOp();
     else if (readWord("return")) returnOp();
+    else if (readWord("thread")) threadOp();
+    else if (readWord("fork")) forkOp();
+    else if (readWord("lock")) lockOp();
     else if (readWord("{")) {
         code >> c;
         operations();
@@ -562,6 +709,87 @@ void Parser::operation(void) {
 
 }
 
+void Parser::threadOp(void) {
+    if (inThread)
+        throw Obstacle(NESTED_THREADS);
+
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    if (c != ':')
+        throw Obstacle(NEED_THREAD_NUMBER);
+
+    code >> c;
+    inThread = true;
+
+    IdTable.pushType(_LABEL_);
+    IdentTable * progOffset = IdTable.confirm();
+    poliz.pushVal(progOffset);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
+
+    int threadNum = constInt();
+    IdTable.pushType(_LABEL_);
+    IdTable.pushVal( new int (poliz.getSize()) );
+    IdTable.pushId(nullptr);
+    threads[threadNum] = IdTable.confirm();
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    if (c != '{')
+        throw Obstacle(PROG_OPENBR);
+    code >> c;
+
+    operations();
+    
+    poliz.pushOp(_NONE_, _NONE_, STOP);
+
+    if (c != '}')
+        throw Obstacle(PROG_CLOSEBR);
+    
+    progOffset->setVal(new int (poliz.getSize()));
+
+    code >> c;
+    inThread = false;
+}
+
+void Parser::forkOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '(')
+        throw Obstacle(FUNC_OPENBR);
+
+    do {
+        code >> c;
+        int threadNum = constInt();
+        poliz.pushVal(threads[threadNum]);
+        poliz.pushOp(_NONE_, _INT_, FORK);
+        if ((c == ' ') || (c == '\n')) code >> c;
+    } while (c == ',');
+
+    if (c != ')')
+        throw Obstacle(FUNC_CLOSEBR);
+    code >> c;
+    if (c != ';')
+        throw Obstacle(SEMICOLON);
+
+    code >> c;
+}
+
+void Parser::lockOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '(')
+        throw Obstacle(FUNC_OPENBR);
+    code >> c;
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != ')')
+        throw Obstacle(FUNC_CLOSEBR);
+    code >> c;
+    if (c != ';')
+        throw Obstacle(SEMICOLON);
+
+    poliz.pushOp(_NONE_, _NONE_, LOCK);
+
+    code >> c;
+}
+
 IdentTable * Parser::saveLabel(char * label, int addr) {
     IdentTable * existinglab;
     try {
@@ -589,16 +817,24 @@ IdentTable * Parser::saveLabel(char * label, int addr) {
     return existinglab;
 }
 
-type_t Parser::expr(void) {
+type_t Parser::expr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
 
-    r = andExpr();
+    assert(fieldSize != nullptr);
+
+    r = andExpr(fieldSize, structName);
 
     while (true) {
         if (readWord("or")) {
             code >> c;
-            type_t rval = andExpr();
-            poliz.pushOp(r, rval, LOR);
+            type_t rval = andExpr(fieldSize, structName);
+
+            if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+                handleStruct(r, rval, LOR, fieldSize, structName);
+                repack(*fieldSize);
+            } else
+                poliz.pushOp(r, rval, LOR);
+
             r = expressionType(r, rval, LOR);
         } else break;
     }
@@ -606,26 +842,32 @@ type_t Parser::expr(void) {
     return r;
 }
 
-type_t Parser::andExpr(void) {
+type_t Parser::andExpr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
     
-    r = boolExpr();
+    r = boolExpr(fieldSize, structName);
 
     while (true) {
         if (readWord("and")) {
             code >> c;
-            type_t rval = boolExpr();
-            poliz.pushOp(r, rval, LAND);
+            type_t rval = boolExpr(fieldSize, structName);
+            
+            if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+                handleStruct(r, rval, LAND, fieldSize, structName);
+                repack(*fieldSize);
+            } else
+                poliz.pushOp(r, rval, LAND);
+
             r = expressionType(r, rval, LAND);
         } else break;
     }
     return r;
 }
 
-type_t Parser::boolExpr(void) {
+type_t Parser::boolExpr(int * fieldSize, char * structName) {
     type_t r = _NONE_;
 
-    r = add();
+    r = add(fieldSize, structName);
     
     if ( (c == '=') || (c == '<') || (c == '>') || (c == '!')) {
         operation_t op = NONE;
@@ -647,15 +889,21 @@ type_t Parser::boolExpr(void) {
             }
         }
         if ((c == ' ') || (c == '\n')) code >> c;
-        type_t rval = add();
-        poliz.pushOp(r, rval, op);
+        type_t rval = add(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
+        } else
+            poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
     }
 
     return r;
 }
 
-type_t Parser::add(void) {
+type_t Parser::add(int * fieldSize, char * structName) {
     bool exit = false;
     bool inverse = false;
     if (c == '+') code >> c;
@@ -663,7 +911,7 @@ type_t Parser::add(void) {
         inverse = true;
         code >> c;
     }
-    type_t r = mul();
+    type_t r = mul(fieldSize, structName);
     operation_t op;
 
     while (true) {
@@ -675,22 +923,58 @@ type_t Parser::add(void) {
         }
         if (exit) break;
         code >> c;
-        type_t rval = mul();
-        poliz.pushOp(r, rval, op);
+        type_t rval = mul(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
+        } else
+            poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
     }
 
     if (inverse) {
-        poliz.pushOp(_NONE_, r, INV);
-        r = expressionType(_NONE_, r, INV);
+        if (r == _STRUCT_) {
+            handleStruct(_NONE_, r, INV, fieldSize, structName);
+            repack(*fieldSize);
+            r = expressionType(_NONE_, r, INV);
+        }
     }
 
     return r;
 }
 
-type_t Parser::mul(void) {
+void Parser::handleStruct(
+    type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName) {
+   
+   /* Если в rval лежит простой тип, то его можно просто скопировать
+    * для всех остальных полей в lval. В случае, если rval -- структура,
+    * то нужно аккуратно обойти все её поля. Причём constExpr гарантирует,
+    * что структуры lval и rval идентичны, поэтому мы можем взять имя
+    * lval (т.е. structName) для определения структуры rval.
+    */
+    assert((lval == _STRUCT_) || (rval == _STRUCT_));
+
+    std::vector<type_t> types = StTable.getTypes(structName);
+    int newFieldSize = types.size();
+    type_t ltype, rtype;
+    for (int i = newFieldSize - 1; i >= 0; i--) {
+        if (lval == _STRUCT_) ltype = types[i];
+        else ltype = lval;
+        if (rval == _STRUCT_) rtype = types[i];
+        else rtype = rval;
+
+        if ((ltype == _STRUCT_) || (rtype == _STRUCT_))
+            handleStruct(ltype, rtype, op, &newFieldSize, structName);
+        else
+            poliz.pushOp(ltype, rtype, op);
+    }
+}
+
+type_t Parser::mul(int * fieldSize, char * structName) {
     bool exit = false;
-    type_t r = constExpr();
+    type_t r = constExpr(fieldSize, structName);
     operation_t op;
 
     while (true) {
@@ -703,8 +987,14 @@ type_t Parser::mul(void) {
         }
         if (exit) break;
         code >> c;
-        type_t rval = constExpr();
-        poliz.pushOp(r, rval, op);
+        type_t rval = constExpr(fieldSize, structName);
+        
+        if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            handleStruct(r, rval, op, fieldSize, structName);
+            repack(*fieldSize);
+        } else
+            poliz.pushOp(r, rval, op);
+
         r = expressionType(r, rval, op);
 
     }
@@ -712,22 +1002,89 @@ type_t Parser::mul(void) {
     return r;
 }
 
-type_t Parser::constExpr(void) {
+void Parser::repack(int fieldSize) {
+    op_t op = poliz.getProg()[poliz.getSize() - fieldSize - 1];
+    if ((operation_t)(op & 0xFF) == UNPACK)
+        return;
+
+    int steps[2 * fieldSize];
+    for (int i = 0; i < fieldSize * 2; i++)
+        steps[i] = 1;
+
+    POLIZ buff[2], opBuff[2];
+
+    /* Каков смысл steps? В нём хранится количество элементов ПОЛИЗА,
+     * которое нужно достать для каждого поля. Вначале идёт левая,
+     * потом правая ветка.
+     */
+    int temp_iter = fieldSize;
+    int i;
+    while (((i = poliz.getSize()) > 0) && poliz.getEB()[i - 1] && temp_iter) {
+        op_t op = poliz.getProg()[i - 1];
+        int nops = operands(static_cast<operation_t>(op & 0xFF));
+        opBuff[1].push(op, poliz.getEB()[i - 1]);
+        poliz.pop();
+        temp_iter--;
+    }
+    for (int buffIter = 1; buffIter >= 0; buffIter--) {
+        for (int nfield = fieldSize; nfield > 0; nfield--) {
+            int stepIdx = buffIter + (nfield - 1) * 2;
+            int fields = steps[stepIdx];
+            steps[stepIdx] = 0;
+            while (fields) {
+                i = poliz.getSize();
+                bool ebit = poliz.getEB()[i - 1];
+                op_t op = poliz.getProg()[i - 1];
+                if (ebit) {
+                    int nops = operands(static_cast<operation_t>(op & 0xFF));
+                    fields += nops;
+                }
+                
+                buff[buffIter].push(op, ebit);
+                steps[stepIdx] += 1;
+                
+                poliz.pop();
+                fields--;
+            }
+        }
+    }
+
+    for (int step = 0; step < fieldSize * 2; step++) {
+        while (steps[step]) {
+            int  bi   = buff[step % 2].getSize();
+            bool ebit = buff[step % 2].getEB()[bi - 1];
+            op_t op   = buff[step % 2].getProg()[bi - 1];
+            buff[step % 2].pop();
+            poliz.push(op, ebit);
+            steps[step] -= 1;
+        }
+        int  bi   = opBuff[step % 2].getSize();
+        if (bi > 0) {
+            bool ebit = opBuff[step % 2].getEB()[bi - 1];
+            op_t op   = opBuff[step % 2].getProg()[bi - 1];
+            opBuff[step % 2].pop();
+            poliz.push(op, ebit);
+        }
+    }
+}
+
+type_t Parser::constExpr(int * fieldSize, char * structName) {
     type_t r;
 
     if (readWord("true")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true))
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (true), fieldSize)
     } else if (readWord("false")) {
         r = _BOOLEAN_;
-        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false))
+        NEW_IDENT(val, _BOOLEAN_, nullptr, new bool (false), fieldSize)
     } else if (readWord("not")) {
-        type_t val = constExpr();
+        type_t val = constExpr(fieldSize, structName);
         r = expressionType(_NONE_, val, LNOT);
-        poliz.pushOp(_NONE_, val, LNOT);
+        for (int i = 0; i < *fieldSize; i++)
+            poliz.pushOp(_NONE_, val, LNOT);
     } else if (c == '(') {
         code >> c;
-        r = expr();
+        r = expr(fieldSize, structName);
         if (c != ')') throw Obstacle(EXPR_CLOSEBR);
         code >>= c;
     } else {
@@ -735,26 +1092,24 @@ type_t Parser::constExpr(void) {
         if (c == '\"') {
             r = _STRING_;
             char * x = constString();
-            NEW_IDENT(val, _STRING_, nullptr, x)
+            NEW_IDENT(val, _STRING_, nullptr, x, fieldSize)
         } else {
             int start = code.tellg();
             try {
                 r = _REAL_;
                 float x = constReal();
-                NEW_IDENT(val, _REAL_, nullptr, new float (x))
+                NEW_IDENT(val, _REAL_, nullptr, new float (x), fieldSize)
             } catch (Obstacle & o) {
                 code.seekg(start - 1);
                 code >>= c;
                 if (o.r != BAD_INT) {
                     r = _INT_;
                     int x = constInt();
-                    NEW_IDENT(val, _INT_, nullptr, new int (x))
+                    NEW_IDENT(val, _INT_, nullptr, new int (x), fieldSize)
                 } else {
                     IdentTable * val = getFieldInStruct();
                     r = val->getType();
-
-                    if (r == _STRUCT_) throw Obstacle(STRUCT_IN_EXPR);
-
+                    
                     if (c == '(') { // Вызов функции
                         if (! val->isFunc())
                             throw Obstacle(NOT_CALLABLE);
@@ -762,7 +1117,17 @@ type_t Parser::constExpr(void) {
                     } else {
                         if (val->isFunc())
                             throw Obstacle(CALLABLE);
-                        poliz.pushVal(val);
+
+                        if (r == _STRUCT_) {
+                            if ((structName != nullptr) && (strcmp(val->getStruct(), structName) != 0))
+                                throw Obstacle(EXPR_BAD_TYPE);
+                        }
+                            
+                        int fields = unrollStruct(val);
+                        if (*fieldSize != 0) {
+                            *fieldSize = fields;
+                        }
+                        
                     }
                 }
             }
@@ -786,7 +1151,9 @@ IdentTable * Parser::getFieldInStruct(void) {
         val = fields->getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;
     }
-
+    if (!val->isShared() && inThread)
+        throw Obstacle(PRIVATE_VAR_IN_THREAD);
+    
     return val;
 }
 
@@ -794,24 +1161,43 @@ void Parser::callIdent(IdentTable * val) {
     code >> c;
     IdentTable * fields = static_cast<IdentTable *>(val->getVal());
     int paramCount = 0;
+    int paramCountFact = 0;
     while (c != ')') {
         if (fields == nullptr)
             throw Obstacle(TOO_MUCH_PARAMS);
         if (c == ',') code >> c;
-        type_t exprType = expr();
+
+        int fieldSize = 1;
+        char * structName = nullptr;
+
+        if (fields->getType() == _STRUCT_) {
+            fieldSize = fields->last()->getOrd();
+            structName = fields->getStruct();
+        }
+
+        type_t exprType = expr(&fieldSize, structName);
         if (fields->getType() != exprType)
             throw Obstacle(EXPR_BAD_TYPE);
         fields = fields->next;
-        paramCount++;
+        paramCount += fieldSize;
+        paramCountFact++;
     }
 
-    if (c != ')') throw Obstacle(FUNC_CLOSEBR);
     code >> c;
-    if (paramCount != val->getParams())
+    if (paramCountFact != val->getParams())
         throw Obstacle(BAD_PARAMS_COUNT);
-    NEW_IDENT(params, _INT_, nullptr, new int (paramCount))
-    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()))
+    int fieldSize = 1;
+    NEW_IDENT(params, _INT_, nullptr, new int (paramCount), &fieldSize)
+    NEW_IDENT(callable, _LABEL_, nullptr, new int (val->getOffset()), &fieldSize)
     poliz.pushOp(_INT_, _LABEL_, CALL);
+    
+    if (val->getType() == _STRUCT_) {
+        int fnum = StTable.getStruct(val->getStruct())->getFields().last()->getOrd();
+        IdTable.pushType(_INT_);
+        IdTable.pushVal(new int (fnum));
+        poliz.pushVal(IdTable.confirm());
+        poliz.pushOp(_NONE_, _INT_, UNPACK);
+    }
 }
 
 void Parser::condOp(void) {
@@ -820,7 +1206,8 @@ void Parser::condOp(void) {
         throw Obstacle(BAD_PARAMS_OPBR);
     code >> c;
 
-    type_t r = expr();
+    int fieldSize = 1;
+    type_t r = expr(&fieldSize);
 
     if (r != _BOOLEAN_)
         throw Obstacle(BAD_IF);
@@ -837,12 +1224,12 @@ void Parser::condOp(void) {
 
     poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
     poliz.pushVal(elsecase);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
 
     operation();
 
     poliz.pushVal(endif);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     elsecase->setVal( new int (poliz.getSize()) );
 
@@ -856,27 +1243,28 @@ void Parser::condOp(void) {
 
 IdentTable * Parser::cycleparam(void) {
     IdentTable * lval;
+    char * name;
+
     if (type()) {
         // переменная не описана
         code >> c;
-        char * name = identificator();
+        name = identificator();
         IdTable.pushId(name);
         lval = IdTable.confirm();
-        if ((c == ' ') || (c == '\n')) code >> c;
     } else {
         // переменная описана
-        char * name = identificator();
+        name = identificator();
         lval = IdTable.getIT(name);
+    }
 
+    if ((c == ' ') || (c == '\n')) code >> c;
+
+    while (c == '.') {
+        code >> c;
+        name = identificator();
+        IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        lval = fields->getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;
-
-        while (c == '.') {
-            code >> c;
-            name = identificator();
-            IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-            lval = fields->getIT(name);
-            if ((c == ' ') || (c == '\n')) code >> c;
-        }
     }
 
     if (c != '=') throw Obstacle(BAD_EXPR);
@@ -899,9 +1287,14 @@ void Parser::forOp(void) {
     code >> c;
 
     IdentTable * cp = nullptr;
+    cp = cycleparam(); // начальное выражение
+    /*
     try{ cp = cycleparam(); } // начальное выражение
-    catch(...){}
-
+    catch(Obstacle & o){
+        o.describe();
+    }
+    */
+    
     if (c != ';')
         throw Obstacle(SEMICOLON);
 
@@ -909,14 +1302,16 @@ void Parser::forOp(void) {
     IdTable.pushVal( new int (poliz.getSize()) );
     IdentTable * condexpr = IdTable.confirm();
     code >> c;
-    type_t e2 = expr(); // условие продолжения
+
+    int fieldSize = 1;
+    type_t e2 = expr(&fieldSize); // условие продолжения
 
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushVal(body);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
     // Здесь машина будет в случае невыполнения условия
     poliz.pushVal(exit);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     if (c != ';')
         throw Obstacle(SEMICOLON);
@@ -939,7 +1334,7 @@ void Parser::forOp(void) {
         throw Obstacle(BAD_PARAMS_CLBR);
 
     poliz.pushVal(condexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     code >> c;
     body->setVal(new int (poliz.getSize()) );
@@ -948,16 +1343,155 @@ void Parser::forOp(void) {
     // Проверяем условие, если правда, то проходим через цикл. выражение
     // и возвращаемся в тело. Иначе выходим из него.
     poliz.pushVal(cyclexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     exit->setVal(new int (poliz.getSize()) );
 
     exits.pop();
     steps.pop();
-    while ((cp != nullptr) && (cp->getId() != nullptr)) {
+
+    if ((cp->next->getId() == nullptr)) {
         cp->setId(nullptr); // Эта переменная вне цикла не определена.
-        cp = cp->next;
     }
+}
+
+void Parser::bytecodeOp(void) {
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != '{')
+        throw Obstacle(PROG_OPENBR);
+
+    std::vector<type_t> types;
+
+    do {
+        bool couldRead = true;
+        code >> c;
+        switch (c.symbol()) {
+            case 'A':
+                if (readWord("ASSIGN")) {
+                    BYTECODE_OP_BIN(ASSIGN)
+                } else couldRead = false;
+                break;
+            case 'C':
+                if (readWord("CALL")) {
+                    BYTECODE_OP_BIN(CALL)
+                } else couldRead = false;
+                break;
+            case 'D':
+                if (readWord("DIV")) {
+                    BYTECODE_OP_BIN(DIV)
+                } else couldRead = false;
+                break;
+            case 'E':
+                if (readWord("ENDL")) {
+                    BYTECODE_OP_BIN(ENDL)
+                } else if (readWord("EQ")) {
+                    BYTECODE_OP_BIN(EQ)
+                } else couldRead = false;
+                break;
+            case 'G':
+                if (readWord("GRTR")) {
+                    BYTECODE_OP_BIN(GRTR)
+                } else if (readWord("GRTREQ")) {
+                    BYTECODE_OP_BIN(GRTREQ)
+                } else couldRead = false;
+                break;
+            case 'I':
+                if (readWord("INV")) {
+                    BYTECODE_OP_BIN(INV)
+                } else couldRead = false;
+                break;
+            case 'J':
+                if (readWord("JIT")) {
+                    BYTECODE_OP_BIN(JIT)
+                } else if (readWord("JMP")) {
+                    BYTECODE_OP_BIN(JMP)
+                } else couldRead = false;
+                break;
+            case 'L':
+                if (readWord("LAND")) {
+                    BYTECODE_OP_BIN(LAND)
+                } else if (readWord("LESS")) {
+                    BYTECODE_OP_BIN(LESS)
+                } else if (readWord("LESSEQ")) {
+                    BYTECODE_OP_BIN(LESSEQ)
+                } else if (readWord("LNOT")) {
+                    BYTECODE_OP_BIN(LNOT)
+                } else if (readWord("LOAD")) {
+                    BYTECODE_OP_BIN(LOAD)
+                } else if (readWord("LOR")) {
+                    BYTECODE_OP_BIN(LOR)
+                } else couldRead = false;
+                break;
+            case 'M':
+                if (readWord("MINUS")) {
+                    BYTECODE_OP_BIN(MINUS)
+                } else if (readWord("MOD")) {
+                    BYTECODE_OP_BIN(MOD)
+                } else if (readWord("MUL")) {
+                    BYTECODE_OP_BIN(MUL)
+                } else couldRead = false;
+                break;
+            case 'N':
+                if (readWord("NEQ")) {
+                    BYTECODE_OP_BIN(NEQ)
+                } else couldRead = false;
+                break;
+            case 'P':
+                if (readWord("PLUS")) {
+                    BYTECODE_OP_BIN(PLUS)
+                } else couldRead = false;
+                break;
+            case 'R':
+                if (readWord("READ")) {
+                    BYTECODE_OP_BIN(READ)
+                } else if (readWord("RET")) {
+                    types.push_back(_LABEL_);
+                    BYTECODE_OP_BIN(RET)
+                } else couldRead = false;
+                break;
+            case 'S':
+                if (readWord("STOP")) {
+                    BYTECODE_OP_BIN(STOP)
+                } else couldRead = false;
+                break;
+            case 'W':
+                if (readWord("WRITE")) {
+                    BYTECODE_OP_BIN(WRITE)
+                } else couldRead = false;
+                break;
+            
+            default:
+                couldRead = false;
+                break;
+        }
+        if (!couldRead) {
+            int fieldSize = 1;
+            int p = c.pos;
+            try {
+                types.push_back(constExpr(&fieldSize));
+            } catch (Obstacle & o) {
+                revert(c.pos - p - 1);
+                IdentTable * ident = IdTable.getIT(identificator());
+                if (ident->isFunc()) {
+                    IdTable.pushType(_LABEL_);
+                    IdTable.pushVal( new int (ident->getOffset()) );
+                    IdentTable * label = IdTable.confirm();
+                    poliz.pushVal(label);
+                    types.push_back(_LABEL_);
+                } else {
+                    poliz.pushVal(static_cast<IdentTable *>(ident->getVal()));
+                    types.push_back(ident->getType());
+                }
+            }
+        }
+
+        if ((c == ' ') || (c == '\n')) code >> c;
+    } while (c == ',');
+
+    if (c != '}')
+        throw Obstacle(PROG_CLOSEBR);
+    
+    code >> c;
 }
 
 void Parser::whileOp(void) {
@@ -974,12 +1508,14 @@ void Parser::whileOp(void) {
     IdentTable * condexpr = IdTable.confirm();
     steps.push(condexpr);
     code >> c;
-    type_t e2 = expr(); // условие продолжения
+
+    int fieldSize = 1;
+    type_t e2 = expr(&fieldSize); // условие продолжения
 
     if (e2 != _BOOLEAN_) throw Obstacle(BAD_IF);
     poliz.pushOp(_NONE_, _BOOLEAN_, LNOT);
     poliz.pushVal(exit);
-    poliz.pushOp(_BOOLEAN_, _INT_, JIT);
+    poliz.pushOp(_BOOLEAN_, _LABEL_, JIT);
     
     if ((c == ' ') || (c == '\n')) code >> c;
     if (c != ')')
@@ -989,7 +1525,7 @@ void Parser::whileOp(void) {
     operation();  // тело цикла
 
     poliz.pushVal(condexpr);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 
     exit->setVal(new int (poliz.getSize()) );
     exits.pop();
@@ -999,7 +1535,7 @@ void Parser::breakOp(void) {
     if (exits.isEmpty())
         throw Obstacle(BREAK_OUTSIDE_CYCLE);
     poliz.pushVal(static_cast<IdentTable *>(exits.top()));
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
     code >> c;
@@ -1009,7 +1545,7 @@ void Parser::continueOp(void) {
     if (exits.isEmpty())
         throw Obstacle(CONTINUE_OUTSIDE_CYCLE);
     poliz.pushVal(static_cast<IdentTable *>(steps.top()));
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
     if (c != ';')
         throw Obstacle(SEMICOLON);
     code >> c;
@@ -1033,7 +1569,7 @@ void Parser::gotoOp(void) {
     code >> c;
 
     poliz.pushVal(labval);
-    poliz.pushOp(_NONE_, _NONE_, JMP);
+    poliz.pushOp(_NONE_, _LABEL_, JMP);
 }
 
 void Parser::readOp(void) {
@@ -1066,7 +1602,8 @@ void Parser::writeOp(void) {
 
     do {
         code >> c;
-        type_t exop = expr();
+        int fieldSize = 1;
+        type_t exop = expr(&fieldSize);
         poliz.pushOp(_NONE_, exop, WRITE);
     } while (c == ',');
 
@@ -1083,13 +1620,7 @@ void Parser::writeOp(void) {
     code >> c;
 }
 
-void Parser::finalize(void) {
-    IdTable.repr();
-    poliz.repr();
-    std::cout << std::endl;
-}
-
-void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
+void Parser::giveBIN(const char * filename, bool optimize, bool printPoliz, bool verbose) {
     bin.open(filename, std::ios_base::binary | std::ios_base::out);
     int x = 0;
     bin.write((char*)&x, sizeof(int)); // Сюда запишем адрес начала команд
@@ -1097,8 +1628,14 @@ void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
     IdentTable * ITp = &IdTable;
 
     if (optimize) {
-        Optimizer opt(&IdTable, &poliz);
-        ITp = opt.optimize(verbose);
+        Optimizer opt(&IdTable, &poliz, verbose);
+        ITp = opt.optimize();
+    }
+
+    if (printPoliz) {
+        ITp->repr();
+        poliz.repr();
+        std::cout << std::endl;
     }
 
     while (ITp->next != nullptr) {
@@ -1130,4 +1667,5 @@ void Parser::giveBIN(const char * filename, bool optimize, bool verbose) {
 void Parser::revert(int x) {
     code.seekg((int)code.tellg() - x - 1);
     code >>= c;
+    c.pos -= x + 1;
 }
