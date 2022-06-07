@@ -183,39 +183,21 @@ type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
         case LOAD:
             if ((!typeOnStack->empty()))
                 typeOnStack->pop_back();
-            std::cout << "<= " << this << " (" << typetostr(type) << ")" << std::endl;
             return type;
-        /*
-        case CALL:
-            x = * (int *) lvar->ident->getVal();
-            //y = * (int *) rvar->ident->getVal();
-            for (int i = 0; i < x; i++)
-                typeOnStack->pop_back();
-            break;
-        */
         default:
             break;
     }
 
-    if ((lvar != nullptr)){ //&& isExpr((operation_t) (lvar->opcode & 0xFF))) {
-        std::cout << "=> " << lvar << "\n";
+    if ((lvar != nullptr)) {
         ltype = lvar->updateType(typeOnStack);
-    //} else if (opcode != (op_t) NONE) {
-    //    ltype = (type_t) ((opcode >> 16) & 0xFF);
     } else ltype = _NONE_;
     
-    if ((rvar != nullptr)){ //&& isExpr((operation_t) (rvar->opcode & 0xFF))) {
-        std::cout << "=> " << rvar << "\n";
+    if ((rvar != nullptr)) {
         rtype = rvar->updateType(typeOnStack);
-    //} else if (opcode != (op_t) NONE) {
-    //    rtype = (type_t) ((opcode >> 8) & 0xFF);
     } else rtype = _NONE_;
 
     if (opcode != (op_t) NONE) {
-        // FIXME: Убрать это!!!
         operation_t oper = (operation_t) (opcode & 0xFF);
-        debugOp(oper);
-        std::cout << "[" << typetostr(ltype) << ", " << typetostr(rtype) << "]\n";
         try {
             type = expressionType(ltype, rtype, oper);
         } catch (...) {
@@ -236,7 +218,6 @@ type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
         } else
             type = _NONE_;
     }
-    std::cout << "<= " << this << " (" << typetostr(type) << ")" << std::endl;
     return type;
 }
 
@@ -264,28 +245,6 @@ POLIZ DirectedAcyclicGraph::decompose(std::vector<type_t> * typeOnStack) {
     
     return ret;
 }
-
-/* FIXME: Ошибка в небезопасном преобразовании типов
- * 
- * def fun(): int {
- *   int x;
- *   real a = 0.1;
- *   x = a;
- *   return x; // <= становится "return a;"
- * }
- * 
- * Не совпадает тип возвращаемого значения с заявленным типом,
- * машина пытается прочесть float как int.
- * То есть, смотреть надо на это, как на несовпадение правого 
- * типа в ASSIGN и правой части выражения
- * (real)x =real=real= (int)a;
- * И надо добираться до места, где встречается тот ASSIGN, менять
- * его на другой тип.
- *
- * Надо понять, в какой момент происходит замена такого выражения.
- * Я искал, искал, но код не проходит по ядру этой функции, хотя
- * почему-то идёт замена x на r.
- */
 
 void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
     std::pair<std::pair<DAGRow *, DAGRow *>, int> fcret;

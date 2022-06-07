@@ -939,10 +939,7 @@ type_t Parser::add(int * fieldSize, char * structName) {
             handleStruct(_NONE_, r, INV, fieldSize, structName);
             repack(*fieldSize);
             r = expressionType(_NONE_, r, INV);
-        } else {
-
         }
-        
     }
 
     return r;
