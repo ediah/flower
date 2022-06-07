@@ -5,8 +5,8 @@
 #include <cassert>
 #include "common/exprtype.hpp"
 #include "common/tables.hpp"
-#include "compiler/parser.hpp"
 #include "common/obstacle.hpp"
+#include "compiler/parser.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 

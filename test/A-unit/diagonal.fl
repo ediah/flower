@@ -1,4 +1,4 @@
-include "test/A-unit/inc/sqrt.mli";
+include "test/A-unit/inc/sqrt.fli";
 
 struct point {
     int x, y;

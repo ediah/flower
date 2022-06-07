@@ -8,10 +8,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "compiler/cursor.hpp"
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
-#include "runtime/stack.hpp"
+#include "common/stack.hpp"
+#include "compiler/cursor.hpp"
 #include "optimizer/optimizer.hpp"
 
 #define NEW_IDENT(IT, type, id, val, fs) { \

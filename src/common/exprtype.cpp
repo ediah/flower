@@ -72,20 +72,21 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                     break;
                 
                 // STRUCT PLUS STRUCT = STRUCT
-                // STRUCT PLUS INT = STRUCT
-                // STRUCT PLUS REAL = STRUCT
+                // STRUCT PLUS INT    = STRUCT
+                // STRUCT PLUS REAL   = STRUCT
                 // STRUCT PLUS STRING = STRUCT
                 case _STRUCT_:
                     r = _STRUCT_;
-                    if (t2 == _BOOLEAN_)
+                    if ((t2 == _BOOLEAN_) || (t2 == _LABEL_) || (t2 == _NONE_))
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
-                // _ PLUS INT  = INT
-                // _ PLUS REAL = REAL
+                // _ PLUS INT    = INT
+                // _ PLUS REAL   = REAL
+                // _ PLUS STRUCT = STRUCT
                 case _NONE_:
                     r = t2;
-                    if ((t2 != _INT_) && (t2 != _REAL_))
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_))
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
@@ -93,9 +94,14 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                     throw Obstacle(EXPR_BAD_TYPE);
             }
 
+            // STRUCT PLUS STRUCT = STRUCT
+            // INT    PLUS STRUCT = STRUCT
+            // REAL   PLUS STRUCT = STRUCT
+            // STRING PLUS STRUCT = STRUCT
+            // _      PLUS STRUCT = STRUCT
             if (t2 == _STRUCT_) {
                 r = _STRUCT_;
-                if (t1 == _BOOLEAN_)
+                if ((t1 == _BOOLEAN_) || (t1 == _LABEL_))
                     throw Obstacle(EXPR_BAD_TYPE);
             }
 
@@ -121,13 +127,33 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
 
                 // _ MINUS INT  = REAL
                 // _ MINUS REAL = REAL
+                // _ MINUS STRUCT = STRUCT
                 case _NONE_:
                     r = t2;
-                    if ((t2 != _INT_) && (t2 != _REAL_)) 
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_)) 
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
+                // STRUCT MINUS STRUCT = STRUCT
+                // STRUCT MINUS INT    = STRUCT
+                // STRUCT MINUS REAL   = STRUCT
+                case _STRUCT_:
+                    r = _STRUCT_;
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
                 default:
+                    throw Obstacle(EXPR_BAD_TYPE);
+            }
+
+            // STRUCT MINUS STRUCT = STRUCT
+            // INT    MINUS STRUCT = STRUCT
+            // REAL   MINUS STRUCT = STRUCT
+            // STRING MINUS STRUCT = STRUCT
+            // _      MINUS STRUCT = STRUCT
+            if (t2 == _STRUCT_) {
+                r = _STRUCT_;
+                if ((t1 == _BOOLEAN_) || (t1 == _LABEL_)) 
                     throw Obstacle(EXPR_BAD_TYPE);
             }
 
@@ -155,35 +181,47 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                         throw Obstacle(EXPR_BAD_TYPE);
                     break;
 
+                case _STRUCT_:
+                    r = _STRUCT_;
+                    if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+                    break;
                 default:
                     throw Obstacle(EXPR_BAD_TYPE);
             }
 
+            if (t2 == _STRUCT_) {
+                r = _STRUCT_;
+                if ((t1 != _INT_) && (t1 != _REAL_) && (t1 != _STRUCT_)) 
+                        throw Obstacle(EXPR_BAD_TYPE);
+            }
+            
             break;
 
         // INT MOD INT = INT
         // INT MOD STRUCT = STRUCT
         case MOD:
-            if (t1 != _INT_)
+            if ((t1 != _INT_) && (t1 != _STRUCT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            
+            if ((t2 != _INT_) && (t2 != _STRUCT_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
-            if (t2 == _INT_)
-                r = _INT_;
-            else if (t2 == _STRUCT_)
+            if ((t1 == _STRUCT_) || (t2 == _STRUCT_))
                 r = _STRUCT_;
-            else
-                throw Obstacle(EXPR_BAD_TYPE);
+            else r = _INT_;
 
             break;
 
         // _ INV INT     = INT
         // _ INV REAL    = REAL
         // _ INV BOOLEAN = BOOLEAN
+        // _ INV STRUCT  = STRUCT
         case INV:
             r = t2;
             if (t1 != _NONE_)
                 throw Obstacle(EXPR_BAD_TYPE);
-            if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _BOOLEAN_)) 
+            if ((t2 == _STRING_) || (t2 == _NONE_) || (t2 == _LABEL_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -208,11 +246,32 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // STRING GRTR STRING = BOOLEAN
         // STRING EQ   STRING = BOOLEAN
         // STRING NEQ  STRING = BOOLEAN
+        // STRING LESS STRUCT = BOOLEAN
+        // STRING GRTR STRUCT = BOOLEAN
+        // STRING EQ   STRUCT = BOOLEAN
+        // STRING NEQ  STRUCT = BOOLEAN
+        // STRUCT LESS STRING = BOOLEAN
+        // STRUCT GRTR STRING = BOOLEAN
+        // STRUCT EQ   STRING = BOOLEAN
+        // STRUCT NEQ  STRING = BOOLEAN
+        // STRUCT LESS STRUCT = BOOLEAN
+        // STRUCT GRTR STRUCT = BOOLEAN
+        // STRUCT EQ   STRUCT = BOOLEAN
+        // STRUCT NEQ  STRUCT = BOOLEAN
         case LESS: case GRTR: case EQ: case NEQ:
             r = _BOOLEAN_;
-            if (((t1 == _INT_) || (t1 == _REAL_)) && (t2 != _INT_) && (t2 != _REAL_))
+            if (((t1 == _INT_) || (t1 == _REAL_)) && 
+                    (t2 != _INT_) && (t2 != _REAL_))
                 throw Obstacle(EXPR_BAD_TYPE);
-            if ((t1 == _STRING_) && (t2 != _STRING_))
+
+            if (((t1 == _STRING_) || (t1 == _STRUCT_)) && 
+                    (t2 != _STRING_) && (t2 != _STRUCT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            
+            if ((t1 == _BOOLEAN_) || (t1 == _LABEL_) || (t1 == _NONE_))
+                throw Obstacle(EXPR_BAD_TYPE);
+
+            if ((t2 == _BOOLEAN_) || (t2 == _LABEL_) || (t2 == _NONE_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -227,7 +286,11 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // REAL GRTREQ REAL = BOOLEAN
         case LESSEQ: case GRTREQ:
             r = _BOOLEAN_;
-            if (((t1 != _INT_) && (t1 != _REAL_)) || ((t2 != _INT_) && (t2 != _REAL_))) 
+
+            if ((t1 != _INT_) && (t1 != _REAL_) && (t1 != _STRUCT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            
+            if ((t2 != _INT_) && (t2 != _REAL_) && (t2 != _STRUCT_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -244,9 +307,10 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
             break;
 
         // _ LNOT BOOLEAN = BOOLEAN
+        // _ LNOT STRUCT  = STRUCT
         case LNOT:
-            r = _BOOLEAN_;
-            if ((t1 != _NONE_) || (t2 != _BOOLEAN_))
+            r = t2;
+            if ((t1 != _NONE_) || ((t2 != _BOOLEAN_) && (t2 != _STRUCT_)))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -262,9 +326,13 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
             r = _NONE_;
             if (((t1 == _INT_) || (t1 == _REAL_)) && (t2 != _INT_) && (t2 != _REAL_))
                 throw Obstacle(EXPR_BAD_TYPE);
-            if (((t1 == _STRING_) || (t1 == _BOOLEAN_) || (t1 == _STRUCT_)) && (t1 != t2))
+            if (((t1 == _STRING_) || (t1 == _BOOLEAN_)) && (t1 != t2))
                 throw Obstacle(EXPR_BAD_TYPE);
             if ((t1 == _NONE_) || (t2 == _NONE_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            if ((t2 == _STRUCT_) && (t1 != _STRUCT_))
+                throw Obstacle(EXPR_BAD_TYPE);
+            if ((t1 == _LABEL_) || (t2 == _LABEL_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
@@ -304,7 +372,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // _ WRITE BOOLEAN = _
         case READ: case WRITE:
             r = _NONE_;
-            if ((t1 != _NONE_) || (t2 == _NONE_) || (t2 == _STRUCT_))
+            if ((t1 != _NONE_) || (t2 == _NONE_) || (t2 == _STRUCT_) || (t2 == _LABEL_))
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;

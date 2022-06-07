@@ -1,4 +1,4 @@
-include "./test/A-unit/include-1.mli";
+include "./test/A-unit/include-1.fli";
 
 program {
     write(sayHello());

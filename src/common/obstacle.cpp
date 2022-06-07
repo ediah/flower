@@ -32,7 +32,7 @@ void Obstacle::describe(void) const {
             std::cout << "Неизвестный тип." << std::endl;
             break;
         case EXPR_BAD_TYPE:
-            std::cout << "Несовпадение типов выражения." << std::endl;
+            std::cout << "Неподходящий тип выражения." << std::endl;
             break;
         case BAD_OPERATOR:
             std::cout << "Плохой оператор." << std::endl;

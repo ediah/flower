@@ -97,28 +97,28 @@
 ### Таблица №2 (Выражения со структурами)
 |     Операция    |  Тип X  |  Тип Y  | Тип результата | Реализовано? |
 | --------------- | ------- | ------- | -------------- | ------------ |
-| + − * / %       | struct  | struct  | struct         |  +           |
-| + − * / %       | struct  | int     | struct         |  +           |
-| + − * / %       | int     | struct  | struct         |  +           |
-| + − * /         | struct  | real    | struct         |  +           |
-| + − * /         | real    | struct  | struct         |  +           |
-| +               | struct  | string  | struct         |  +           |
-| +               | string  | struct  | struct         |  +           |
-| унарные +-      | struct  | -       | struct         |              |
-| < > <= >= == != | struct  | struct  | boolean        |              |
-| < > <= >= == != | struct  | int     | boolean        |              |
-| < > <= >= == != | int     | struct  | boolean        |              |
-| < > <= >= == != | struct  | real    | boolean        |              |
-| < > <= >= == != | real    | struct  | boolean        |              |
-| < > == !=       | struct  | string  | boolean        |              |
-| < > == !=       | string  | struct  | boolean        |              |
-| and or          | struct  | struct  | struct         |              |
-| not             | struct  | -       | struct         |              |
-| =               | struct  | struct  | struct         |              |
-| =               | struct  | int     | struct         |              |
-| =               | struct  | real    | struct         |              |
-| =               | struct  | string  | struct         |              |
-| =               | struct  | bool    | struct         |              |
+| + − * / %       | struct  | struct  | struct         |      +       |
+| + − * / %       | struct  | int     | struct         |      +       |
+| + − * / %       | int     | struct  | struct         |      +       |
+| + − * /         | struct  | real    | struct         |      +       |
+| + − * /         | real    | struct  | struct         |      +       |
+| +               | struct  | string  | struct         |      +       |
+| +               | string  | struct  | struct         |      +       |
+| унарные +-      | struct  | -       | struct         |      +       |
+| < > <= >= == != | struct  | struct  | boolean        |      +       |
+| < > <= >= == != | struct  | int     | boolean        |      +       |
+| < > <= >= == != | int     | struct  | boolean        |      +       |
+| < > <= >= == != | struct  | real    | boolean        |      +       |
+| < > <= >= == != | real    | struct  | boolean        |      +       |
+| < > == !=       | struct  | string  | boolean        |      +       |
+| < > == !=       | string  | struct  | boolean        |      +       |
+| and or          | struct  | struct  | struct         |      +       |
+| not             | struct  | -       | struct         |      +       |
+| =               | struct  | struct  | struct         |      +       |
+| =               | struct  | int     | struct         |      +       |
+| =               | struct  | real    | struct         |      +       |
+| =               | struct  | string  | struct         |      +       |
+| =               | struct  | bool    | struct         |      +       |
 
 
 ### Правила записи текста программы
@@ -127,8 +127,3 @@
 - [x] Пробел в строковой константе считается значащим символом строки. 
 - [x] Внутри идентификаторов, служебных слов, числовых констант и разделителей, состоящих из нескольких символов, пробельные литеры недопустимы.
 - [x] Между идентификаторами, числами и служебными словами должен находиться хотя бы один разделитель текста. Разделитель текста — это пробельная литера, комментарий либо разделитель, определенный в алфавите языка ( * / % + − < > <= >= == != , ; : ( ) ).
-
-## Цели Make
-**mlc** (default) -- сборка компилятора.
-
-**check** -- статический анализ **cppcheck** с отчётом.

@@ -5,8 +5,8 @@
 #include <vector>
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
+#include "common/stack.hpp"
 #include "compiler/parser.hpp"
-#include "runtime/stack.hpp"
 
 class VirtualMachine {
 protected:

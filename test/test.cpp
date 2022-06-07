@@ -1,10 +1,12 @@
-/* Автоматизация тестирования MLC компилятора. */
+/* Автоматизация тестирования компилятора Flower. */
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
+#include <chrono>
+#include <ctime>
 
 #include <unistd.h>
 #include <signal.h>
@@ -13,9 +15,20 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-struct flags_t {
+#include "version.hpp"
 
-};
+std::string gettime(void) {
+    using namespace std::chrono;
+    auto timepoint = system_clock::now();
+    auto h_m_s = system_clock::to_time_t(timepoint);
+    auto ms = time_point_cast<std::chrono::milliseconds>(timepoint);
+
+    char buffer[sizeof "23:59:59.999"];
+    std::snprintf(buffer + std::strftime(buffer, sizeof buffer - 3,
+        "%T.", std::localtime(&h_m_s)), 4, "%03lu", 
+        ms.time_since_epoch().count() % 1000);
+    return buffer;
+}
 
 int compare(std::ifstream & file1, std::ifstream & file2) {
     int ret = 0;
@@ -95,8 +108,8 @@ int genCaseIn(std::ifstream & cases) {
 int runValgrind(std::string filename, bool optimize, std::string input = "") {
     int ret = 0;
 
-    ret += checkMem("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " + 
-                    filename + " -o test.bin > /dev/null");
+    ret += checkMem("./flc " + std::string(optimize ? "-O " : "") + 
+                    filename + " test.bin > /dev/null");
     std::cout << filename << std::endl;
 
     if (input != "") {
@@ -107,7 +120,7 @@ int runValgrind(std::string filename, bool optimize, std::string input = "") {
         while (line == "case") {
             if (genCaseIn(cases) != 0)
                 break;
-            ret += checkMem("./mlc -r -i test.bin > /dev/null < case.in");
+            ret += checkMem("./flvm test.bin > /dev/null < case.in");
             std::system("rm ./case.in");
             std::cout << "Case #" << caseIterator + 1 << std::endl;
             cases >> line;
@@ -124,8 +137,8 @@ int runA(std::string filename, std::string input, std::string output, bool optim
     int caseIterator = 0, errorIterator = 0;
     bool compileError = false;
     std::cout << "[A-unit ";
-    std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
-                  filename + " -o test.bin > a.out").data() );
+    std::system( ("./flc " + std::string(optimize ? "-O " : "") +
+                  filename + " test.bin > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
 
@@ -145,9 +158,9 @@ int runA(std::string filename, std::string input, std::string output, bool optim
             if (genCaseIn(cases) != 0)
                 break;
             //#ifdef DEBUG
-            //std::system("gdb --args ./mlc -r -s -i test.bin");
+            //std::system("gdb --args ./flc -s -i test.bin");
             //#else
-            std::system("./mlc -r -i test.bin > a.out < case.in");
+            std::system("./flvm test.bin > a.out < case.in");
             //#endif
             std::system("rm ./case.in");
             std::ifstream actual("a.out");
@@ -198,7 +211,7 @@ int runA(std::string filename, std::string input, std::string output, bool optim
 int runB(std::string filename, std::string output, bool optimize) {
     int ret = 0;
     std::cout << "[B-unit ";
-    std::system( ("./mlc -c " + std::string(optimize ? "-O" : "") + " -i " +
+    std::system( ("./flc " + std::string(optimize ? "-O " : "") +
                   filename + " > a.out").data() );
     std::ifstream log("a.out");
     std::ifstream expected(output);
@@ -235,6 +248,8 @@ int main(int argc, char ** argv) {
     bool bisect = false;
     bool restore = false;
     bool coverage = false;
+
+    std::cout << "Автоматизация тестирования Flower " << VERSION << std::endl;
 
     for (int i = argc; i > 1; i--) {
         if (argv[i - 1][0] == '-') {
@@ -279,7 +294,12 @@ int main(int argc, char ** argv) {
     }
     #endif
 
-    if (bisect) std::system("rm ./bin/*; make mlc");
+    if (bisect) std::system("rm ./bin/*; make flc flvm");
+
+    auto start = std::chrono::system_clock::now();
+    
+    std::cout << "Запуск тестирования" << (mem? " с Valgrind" : "");
+    std::cout << " в " << gettime() << "\n\n";
 
     int flags = (int)mem + (int)opt + (int)bisect + (int)restore + (int)coverage;
     for (int i = flags + 1; i < argc; i++) {
@@ -362,6 +382,11 @@ int main(int argc, char ** argv) {
 
     for (std::string ferr : testsNotFoundError)
         std::cout << "\t" << ferr << "\n";
+
+    auto end = std::chrono::system_clock::now();
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "\nТест завершён в " << gettime() << "\n";
+    std::cout << "Прошло " << (float) diff / 1000 << " секунд.\n";
 
     return errors + notFound;
 }

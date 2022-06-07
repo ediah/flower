@@ -1,7 +1,9 @@
-mlc
-mlc-test
+flc
+flvm
+fldbg
+fltest
 mlc.tgz
-out.bin
+*.bin
 cppcheck/
 cov-int/
 compiled.dot
