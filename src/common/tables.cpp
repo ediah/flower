@@ -1,11 +1,22 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-#include "compiler/parser.hpp"
+#include "config.hpp"
 #include "common/tables.hpp"
 #include "common/obstacle.hpp"
 #include "common/exprtype.hpp"
-#include "common/util.hpp"
+//#include "common/util.hpp"
+
+bool charEqual(const char* a, const char* b) {
+    bool ret = true;
+    int i = 0;
+    while (ret && (a[i] != '\0') && (b[i] != '\0')) {
+        ret = ret && (a[i] == b[i]);
+        i++;
+    }
+    ret = ret && (a[i] == '\0') && (b[i] == '\0');
+    return ret;
+}
 
 IdentTable::IdentTable(void) {
     valType = _NONE_;
@@ -259,13 +270,13 @@ void IdentTable::whoami() {
             std::cout << "= ";
             switch (valType) {
                 case _INT_: case _LABEL_:
-                    std::cout << * (int*) val; break;
+                    std::cout << * static_cast<int *>  ( val ); break;
                 case _REAL_:
-                    std::cout << * (float*) val; break;
+                    std::cout << * static_cast<float *>( val ); break;
                 case _STRING_:
-                    std::cout << (char*) val; break;
+                    std::cout <<   static_cast<char *> ( val ); break;
                 case _BOOLEAN_:
-                    std::cout << * (bool*) val; break;
+                    std::cout << * static_cast<bool *> ( val ); break;
                 default: 
                     std::cout << "?"; break;
             }
@@ -327,7 +338,7 @@ void IdentTable::writeValToStream(std::ostream & s) {
                 val = new float (0); break;
             case _STRING_:
                 val = new char[1];
-                ( (char*)val )[0] = '\0'; 
+                static_cast<char*>(val)[0] = '\0'; 
                 break;
             case _BOOLEAN_:
                 val = new bool (false); break;
@@ -340,15 +351,15 @@ void IdentTable::writeValToStream(std::ostream & s) {
     IdentTable * ITp;
     switch (valType) {
         case _INT_: case _LABEL_:
-            s.write((char*)val, sizeof(int)); break;
+            s.write(static_cast<char*>(val), sizeof(int)); break;
         case _REAL_:
-            s.write((char*)val, sizeof(float)); break;
+            s.write(static_cast<char*>(val), sizeof(float)); break;
         case _STRING_:
             s.write("\0\0\0\0\0\0\0\0", sizeof(void*));
-            s.write((char*)val, sizeof(char) * (strlen((char*)val) + 1));
+            s.write(static_cast<char*>(val), sizeof(char) * (strlen(static_cast<char*>(val)) + 1));
             break;
         case _BOOLEAN_:
-            s.write((char*)val, sizeof(bool)); break;
+            s.write(static_cast<char*>(val), sizeof(bool)); break;
         case _STRUCT_:
             ITp = static_cast<IdentTable*>(val);
             while (ITp->next != nullptr) {
@@ -403,16 +414,16 @@ bool operator==(IdentTable & a, IdentTable & b) {
         bool ret;
         switch (a.valType) {
             case _INT_:
-                ret = ((*(int*)a.val) == (*(int*)b.val));
+                ret = ((*static_cast<int *>(a.val)) == (*static_cast<int *>(b.val)));
                 break;
             case _REAL_:
-                ret = ((*(float*)a.val) == (*(float*)b.val));
+                ret = ((*static_cast<float *>(a.val)) == (*static_cast<float *>(b.val)));
                 break;
             case _STRING_:
-                ret = charEqual((char*)a.val, (char*)b.val);
+                ret = charEqual(static_cast<char *>(a.val), static_cast<char *>(b.val));
                 break;
             case _BOOLEAN_:
-                ret = ((*(bool*)a.val) == (*(bool*)b.val));
+                ret = ((*static_cast<bool *>(a.val)) == (*static_cast<bool *>(b.val)));
                 break;
             default:
                 ret = false;
@@ -464,13 +475,13 @@ IdentTable::~IdentTable() {
     if ((val != nullptr) && (!func)) {
         switch (valType) {
             case _INT_: case _LABEL_:
-                delete (int*) val; break;
+                delete static_cast<int *>( val ); break;
             case _REAL_:
-                delete (float*) val; break;
+                delete static_cast<float *>( val ); break;
             case _BOOLEAN_:
-                delete (bool*) val; break;
+                delete static_cast<bool *>( val ); break;
             case _STRING_: 
-                delete [] (char*)val; break;
+                delete [] static_cast<char *>( val ); break;
             case _STRUCT_: 
                 delete static_cast<IdentTable*>(val); break;
             default: break;
@@ -509,12 +520,12 @@ StructTable * StructTable::confirm(void) {
 
     #ifdef DEBUG
     std::cout << "Описана новая структура: " << p->name << '{';
-    IdentTable * fields = & p->fields;
-    fields->whoami();
-    while (fields->next->next != nullptr) {
+    IdentTable * targetFields = & p->fields;
+    targetFields->whoami();
+    while (targetFields->next->next != nullptr) {
         std::cout << ", ";
-        fields = fields->next;
-        fields->whoami();
+        targetFields = targetFields->next;
+        targetFields->whoami();
     }
     std::cout << '}' << std::endl;
     #endif
@@ -545,15 +556,15 @@ IdentTable & StructTable::getFields(void) {
 std::vector<type_t> StructTable::getTypes(char * name) {
     std::vector<type_t> result;
 
-    IdentTable * fields = & getStruct(name)->fields;
-    while (fields->next != nullptr) {
-        type_t type = fields->getType();
+    IdentTable * targetFields = & getStruct(name)->fields;
+    while (targetFields->next != nullptr) {
+        type_t type = targetFields->getType();
         if (type == _STRUCT_) {
-            std::vector<type_t> part = getTypes(fields->getStruct());
+            std::vector<type_t> part = getTypes(targetFields->getStruct());
             result.reserve(result.size() + part.size());
             result.insert(result.end(), part.begin(), part.end());
         } else result.push_back(type);
-        fields = fields->next;
+        targetFields = targetFields->next;
     }
 
     return result;

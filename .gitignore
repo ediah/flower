@@ -5,7 +5,8 @@ fltest
 mlc.tgz
 *.bin
 cppcheck/
-cov-int/
+doxygen/html
+doxygen/latex
 compiled.dot
 compiled.png
 optimized.dot

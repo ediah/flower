@@ -11,7 +11,7 @@ class Debugger: public VirtualMachine {
 
     bool markMsg = false;
 
-    void printData(type_t type, void * data);
+    static void printData(type_t type, void * data);
 public:
     Debugger(): VirtualMachine() {
         synonims["quit"] = {"quit", "q"};
@@ -27,9 +27,9 @@ public:
     bool step(int * eip, int n);
     void help(std::vector<std::string> argv);
     bool prompt(int * eip);
-    void inspect(std::vector<std::string> argv, Stack stack);
-    void memory(void);
-    bool compare(std::string str, std::string ref);
+    void inspect(std::vector<std::string> argv, const Stack * stack);
+    void memory(void) const;
+    bool compare(const std::string & str, std::string ref);
 };
 
 #endif

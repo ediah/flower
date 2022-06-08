@@ -34,7 +34,6 @@ Parser::~Parser(void) {
 }
 
 bool Parser::parse(void) {
-    bool programExists = false;
     code >> c;
 
     IdTable.pushType(_LABEL_);
@@ -457,8 +456,6 @@ void Parser::assign(IdentTable * lval) {
 int Parser::unrollStruct(IdentTable * lval, int ord) {
     int fieldSize = 0;
     if (lval->getType() == _STRUCT_){
-        char * strName = lval->getStruct();
-        StructTable * st = StTable.getStruct(strName);
         IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
         while (fields->next != nullptr) {
             int newOrd = -1;
@@ -472,16 +469,7 @@ int Parser::unrollStruct(IdentTable * lval, int ord) {
         #endif
     } else {
         fieldSize = 1;
-        int oldOrd = lval->getOrd();
-        //if (ord != -1) {
-        //    lval->setOrd(ord);
-        //    lval->setReg(true);
-        //}
         poliz.pushVal(lval);
-        //if (ord != -1) {
-        //    lval->setOrd(oldOrd);
-        //    lval->setReg(false);
-        //}
     }
     return fieldSize;
 }
@@ -796,7 +784,7 @@ IdentTable * Parser::saveLabel(char * label, int addr) {
         existinglab = IdTable.getIT(label, false);
         if (existinglab->getType() != _LABEL_)
             throw Obstacle(LABEL_OR_IDENT);
-        delete (int *) existinglab->getVal();
+        delete static_cast<int *>(existinglab->getVal());
         existinglab->setVal(new int (addr));
     }
     catch(Obstacle & o) {
@@ -1007,9 +995,9 @@ void Parser::repack(int fieldSize) {
     if ((operation_t)(op & 0xFF) == UNPACK)
         return;
 
-    int steps[2 * fieldSize];
+    int POLIZsteps[2 * fieldSize];
     for (int i = 0; i < fieldSize * 2; i++)
-        steps[i] = 1;
+        POLIZsteps[i] = 1;
 
     POLIZ buff[2], opBuff[2];
 
@@ -1020,28 +1008,27 @@ void Parser::repack(int fieldSize) {
     int temp_iter = fieldSize;
     int i;
     while (((i = poliz.getSize()) > 0) && poliz.getEB()[i - 1] && temp_iter) {
-        op_t op = poliz.getProg()[i - 1];
-        int nops = operands(static_cast<operation_t>(op & 0xFF));
-        opBuff[1].push(op, poliz.getEB()[i - 1]);
+        op_t oper = poliz.getProg()[i - 1];
+        opBuff[1].push(oper, poliz.getEB()[i - 1]);
         poliz.pop();
         temp_iter--;
     }
     for (int buffIter = 1; buffIter >= 0; buffIter--) {
         for (int nfield = fieldSize; nfield > 0; nfield--) {
             int stepIdx = buffIter + (nfield - 1) * 2;
-            int fields = steps[stepIdx];
-            steps[stepIdx] = 0;
+            int fields = POLIZsteps[stepIdx];
+            POLIZsteps[stepIdx] = 0;
             while (fields) {
                 i = poliz.getSize();
                 bool ebit = poliz.getEB()[i - 1];
-                op_t op = poliz.getProg()[i - 1];
+                op_t oper = poliz.getProg()[i - 1];
                 if (ebit) {
-                    int nops = operands(static_cast<operation_t>(op & 0xFF));
+                    int nops = operands(static_cast<operation_t>(oper & 0xFF));
                     fields += nops;
                 }
                 
-                buff[buffIter].push(op, ebit);
-                steps[stepIdx] += 1;
+                buff[buffIter].push(oper, ebit);
+                POLIZsteps[stepIdx] += 1;
                 
                 poliz.pop();
                 fields--;
@@ -1050,20 +1037,20 @@ void Parser::repack(int fieldSize) {
     }
 
     for (int step = 0; step < fieldSize * 2; step++) {
-        while (steps[step]) {
+        while (POLIZsteps[step]) {
             int  bi   = buff[step % 2].getSize();
             bool ebit = buff[step % 2].getEB()[bi - 1];
-            op_t op   = buff[step % 2].getProg()[bi - 1];
+            op_t oper   = buff[step % 2].getProg()[bi - 1];
             buff[step % 2].pop();
-            poliz.push(op, ebit);
-            steps[step] -= 1;
+            poliz.push(oper, ebit);
+            POLIZsteps[step] -= 1;
         }
         int  bi   = opBuff[step % 2].getSize();
         if (bi > 0) {
             bool ebit = opBuff[step % 2].getEB()[bi - 1];
-            op_t op   = opBuff[step % 2].getProg()[bi - 1];
+            op_t oper   = opBuff[step % 2].getProg()[bi - 1];
             opBuff[step % 2].pop();
-            poliz.push(op, ebit);
+            poliz.push(oper, ebit);
         }
     }
 }

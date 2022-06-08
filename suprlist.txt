@@ -8,3 +8,9 @@ pointerSize:src/runtime/vmachine.cpp
 // освобождением памяти тоже занимается он.
 unsafeClassCanLeak:src/optimizer/acyclicgraph.hpp:13
 unsafeClassCanLeak:src/optimizer/acyclicgraph.hpp:14
+
+// Ложное срабатывание: переменная c будет изменена к этому моменту
+knownConditionTrueFalse:src/compiler/parser.cpp:89
+
+// ??? Похоже на ложное срабатывание, Valgrind никогда не ругался на это
+arrayIndexOutOfBounds:src/compiler/parser.cpp:389

@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <iomanip>
+#include <algorithm>
 #include "debugger/debugger.hpp"
 #include "common/exprtype.hpp"
 
@@ -24,15 +25,16 @@ bool Debugger::step(int * eip, int n) {
     op_t op;
 
     for (int i = 0; i < n; i++) {
-        if (*(bool*)(cmd + 4 + *eip * 5)) { // ExecBit = 1
-            op = (op_t) *(int*)(cmd + *eip * 5);
+        if (*reinterpret_cast<bool*>(cmd + 4 + *eip * 5)) { // ExecBit = 1
+            op = (op_t) *reinterpret_cast<int*>(cmd + *eip * 5);
             debugOp((operation_t) (op & 0xFF));
             std::cout << std::endl;
             if (exec(op, eip)) return false;
             if ((operation_t) (op & 0xFF) == READ)
                 while ((getchar()) != '\n');
         } else { // ExecBit = 0
-            stackVM.push((void *) (base + *(int*)(cmd + *eip * 5)));
+            int shift = *reinterpret_cast<int*>(cmd + *eip * 5);
+            stackVM.push(static_cast<void *>(base + shift));
         }
         *eip += 1;
     }
@@ -40,43 +42,41 @@ bool Debugger::step(int * eip, int n) {
     return true;
 }
 
-bool Debugger::compare(std::string str, std::string ref) {
-    for (auto comp: synonims[ref]) {
-        if (str == comp) return true;
-    }
-    return false;
+bool Debugger::compare(const std::string & str, const std::string ref) {
+    auto equals = [str](const std::string &r){return r == str;};
+    return std::any_of(synonims[ref].cbegin(), synonims[ref].cend(), equals);
 }
 
 void Debugger::printData(type_t type, void * data) {
     switch (type) {
         case _INT_:
-            std::cout << * (int *) data;
+            std::cout << * static_cast<int *>(data);
             break;
         case _REAL_:
-            std::cout << * (float *) data;
+            std::cout << * static_cast<float *>(data);
             break;
         case _STRING_:
             std::cout << getString(data);
             break;
         case _BOOLEAN_:
-            std::cout << * (bool *) data;
+            std::cout << * static_cast<bool *>(data);
             break;
         default:
             break;
     }
 }
 
-void Debugger::inspect(std::vector<std::string> argv, Stack stack) {
+void Debugger::inspect(std::vector<std::string> argv, const Stack * stack) {
     if ((argv.size() != 1) && (argv.size() != 3)) {
         help({"help", "inspect"});
         return;
     }
 
-    const type_t * types = stack.getTypes();
-    void * const * data = stack.data();
+    const type_t * types = stack->getTypes();
+    void * const * data = stack->data();
 
     if (argv.size() == 1) {
-        int size = stack.size();
+        int size = stack->size();
         for (int i = 0; i < size; i++) {
             std::cout << i << ") " << typetostr(types[i]) << " ";
             printData(types[i], data[i]);
@@ -102,11 +102,12 @@ void Debugger::inspect(std::vector<std::string> argv, Stack stack) {
     }
 }
 
-void Debugger::memory(void) {
+void Debugger::memory(void) const {
     for (char * p = base; p < cmd + 8; p = p + 4) {
         if ((base != p) && ((p - base) % (4 * 5) == 0))
             std::cout << std::endl;
-        std::cout << "0x" << std::hex << std::setfill('0') << std::setw(8) << * (int*)p << std::ends << " ";
+        std::cout << "0x" << std::hex << std::setfill('0') << std::setw(8)
+                  << * reinterpret_cast<int *>(p) << std::ends << " ";
     }
     std::cout << std::endl;
 }
@@ -151,9 +152,9 @@ bool Debugger::prompt(int * eip) {
     else if (compare(argv[0], "help"))
         help(argv);
     else if (compare(argv[0], "inspect"))
-        inspect(argv, stackVM);
+        inspect(argv, &stackVM);
     else if (compare(argv[0], "registry"))
-        inspect(argv, registerVM);
+        inspect(argv, &registerVM);
     else if (compare(argv[0], "memory"))
         memory();
     else if (compare(argv[0], "quit"))

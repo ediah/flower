@@ -18,8 +18,8 @@ struct DAGRow {
 
     static std::vector<DAGRow *> created;
 
-    DAGRow(): ident(nullptr), opcode((op_t) NONE), lvar(nullptr), 
-              rvar(nullptr), prev(nullptr), assigned(false), type(_NONE_) {
+    DAGRow(): type(_NONE_), ident(nullptr), opcode((op_t) NONE), lvar(nullptr), 
+              rvar(nullptr), prev(nullptr), assigned(false) {
                   created.push_back(this);
               };
     void decompose(POLIZ & p, std::vector<DAGRow *> * asd);

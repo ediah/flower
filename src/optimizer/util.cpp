@@ -1,4 +1,5 @@
-#include "common/util.hpp"
+#include "optimizer/util.hpp"
+#include "optimizer/controlflow.hpp"
 #include "optimizer/acyclicgraph.hpp"
 
 template<typename T>
@@ -33,17 +34,6 @@ void copyPOLIZ(POLIZ & src, POLIZ & dst, int start, int end) {
         dst.incIter();
         j++;
     }
-}
-
-bool charEqual(const char* a, const char* b) {
-    bool ret = true;
-    int i = 0;
-    while (ret && (a[i] != '\0') && (b[i] != '\0')) {
-        ret = ret && (a[i] == b[i]);
-        i++;
-    }
-    ret = ret && (a[i] == '\0') && (b[i] == '\0');
-    return ret;
 }
 
 template int find(std::vector<int> vec, int x);

@@ -6,7 +6,6 @@
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "common/stack.hpp"
-#include "compiler/parser.hpp"
 
 class VirtualMachine {
 protected:
@@ -33,11 +32,9 @@ public:
 
     bool exec(op_t op, int * eip);
 
-    void copy(void * x, type_t type);
-
     void updateVars(void);
 
-    char * getString(void * x);
+    static char * getString(void * x);
 
     void numberOp(type_t lval, type_t rval, void* f);
 

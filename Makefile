@@ -5,6 +5,7 @@ COVERAGE=YES
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
+
 REPORT=./cppcheck/report.log
 SUPRLIST=./suprlist.txt
 
@@ -15,7 +16,7 @@ else
 endif
 
 ifeq (${ALL},YES)
-	ENABLE= --enable=all --inconclusive --bug-hunting
+	ENABLE= --enable=all --inconclusive
 else
 	ENABLE= --enable=warning
 endif
@@ -73,10 +74,13 @@ fltest: ./test/test.cpp Makefile
 	@$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
 
 check:
-	@cppcheck ${CHFLAGS} ./src/ | grep %
+	@cppcheck ${CHFLAGS} ./src/
 	@cat ${REPORT} | column -t -s '|'
 
-cov: fltest
+report:
+	@cat ${REPORT} | column -t -s '|'
+
+cov: flc flvm fltest
 	@rm -f ./bin/*.gcno ./bin/*.gcda
 	@rm -f *.gcno *.gcda *.info
 	-@./fltest -r -O -c ./test/A-unit/*.fl ./test/B-unit/*.fl
@@ -87,13 +91,16 @@ cov: fltest
 	@genhtml -o coverage ./coverage/flower-f.info
 	@./script/updatecov.py ./coverage/lines.info
 
-.PHONY: clean check cov
+.PHONY: clean check cov report
 
 clean:
 	rm -rf ./bin/* flc fltest
 	rm -f ./compiled* ./optimized* out.bin
 	rm -f Makefile.dep
 	rm -f *.gcno *.gcda *.info
+
+clean-all: clean
+	rm -rf ./cppcheck ./coverage ./doxygen/html ./doxygen/latex
 
 %.o: %.cpp Makefile
 	@echo "    CC    $@"

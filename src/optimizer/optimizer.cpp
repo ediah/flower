@@ -1,7 +1,8 @@
 #include "optimizer/optimizer.hpp"
 #include "common/exprtype.hpp"
-#include "common/util.hpp"
+#include "optimizer/util.hpp"
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <map>
 
@@ -52,7 +53,7 @@ IdentTable * Optimizer::optimize() {
     std::vector<bool> afterCall = {false}; // Нужно собирать возврат
 
     std::map<int, std::vector<type_t>> funcRets;
-    std::vector<type_t> typeOnStack = {};
+    std::vector<type_t> typeOnStack;
     std::vector<std::vector<type_t>> oldStack = {{}};
     std::vector<int> conn; // ID вызванной функции
     std::vector<int> funcHead = {};
@@ -80,13 +81,10 @@ IdentTable * Optimizer::optimize() {
         }
 
         if (queue.back()->block.endsWithCall()) {
-            int connID;
-            for (auto node: queue.back()->next) {
-                if (node.second == 1) {
-                    connID = node.first->ID;
-                    break;
-                }
-            }
+            auto nextB = queue.back()->next;
+            auto isTrueB = [](std::pair<flowTree *, char> pair){return pair.second == 1;};
+            auto nodeTrueB = std::find_if(nextB.begin(), nextB.end(), isTrueB);
+            int connID = nodeTrueB->first->ID;
 
             for (auto node: queue.back()->next) {
                 if ((node.second == 2) && (find(optimized, node.first) == -1)) {
