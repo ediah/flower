@@ -2,7 +2,7 @@ name: Test Compilation
 
 on:
   push:
-    branches: [ stable, dev ]
+    branches: [ stable ]
   pull_request:
     branches: [ stable, dev ]
 
