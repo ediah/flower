@@ -8,7 +8,7 @@ class Cursor {
 public:
     int pos;
     int line;
-    Cursor(int l = 1): c('\0'), line(l), pos(0) { std::cout << std::boolalpha; };
+    Cursor(int l = 1): c('\0'), pos(0), line(l) { std::cout << std::boolalpha; };
     // Чтение с пропуском пробелов и переносов строки
     friend std::ifstream & operator>>(std::ifstream & s, Cursor & x);
     // Чтение один в один

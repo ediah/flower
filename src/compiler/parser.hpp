@@ -1,13 +1,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "common/exprtype.hpp"
-#define MAXIDENT 50
-#define MAXTHREADS 4
-
 #include <iostream>
 #include <fstream>
 
+#include "config.hpp"
+#include "common/exprtype.hpp"
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "common/stack.hpp"

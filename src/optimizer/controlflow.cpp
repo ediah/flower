@@ -1,7 +1,7 @@
 #include "optimizer/controlflow.hpp"
 #include "common/tables.hpp"
 #include "common/obstacle.hpp"
-#include "common/util.hpp"
+#include "optimizer/util.hpp"
 #include <iterator>
 #include <iostream>
 
@@ -119,7 +119,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             if ((op & 0xFF) == JMP) {
                 curBlock->block.pop(); // удалить LABEL
                 blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
-                newBlock(*(int*)blockId, p, curBlock);
+                newBlock(*static_cast<int*>(blockId), p, curBlock);
                 break;
             }
 
@@ -127,7 +127,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 curBlock->block.pop(); // удалить LABEL
                 int bsize = curBlock->block.getSize();
                 blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
-                newBlock(*(int*)blockId, p, curBlock, 1); // Блок True
+                newBlock(*static_cast<int*>(blockId), p, curBlock, 1); // Блок True
                 if (curBlock->block.getSize() != bsize)
                     curBlock = curBlock->next[0].first;
                 newBlock(eip + 1, p, curBlock, 2);        // Блок False
@@ -138,7 +138,7 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
                 blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
-                newBlock(*(int*)blockId, p, curBlock, 1);
+                newBlock(*static_cast<int*>(blockId), p, curBlock, 1);
                 newBlock(eip + 1, p, curBlock, 2);
                 break;
             }

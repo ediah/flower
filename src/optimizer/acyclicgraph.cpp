@@ -1,6 +1,6 @@
 #include "optimizer/acyclicgraph.hpp"
 #include "common/exprtype.hpp"
-#include "common/util.hpp"
+#include "optimizer/util.hpp"
 #include <iostream>
 
 std::vector<DAGRow *> DAGRow::created;
@@ -87,7 +87,7 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
         return;
     
     IdentTable * paramit = IT_FROM_POLIZ(p, s - 2);
-    int paramNum = * (int *) paramit->getVal();
+    int paramNum = * static_cast<int *>(paramit->getVal());
     stashed.clear();
     copyPOLIZ(p, stashed, s - paramNum - 2, s);
     for (int i = 0; i < paramNum + 2; i++)
@@ -178,7 +178,6 @@ void DAGRow::decompose(POLIZ & p, std::vector<DAGRow *> * asd) {
 type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
     type_t ltype, rtype;
     
-    int x, y;
     switch ((operation_t) (opcode & 0xFF)) {
         case LOAD:
             if ((!typeOnStack->empty()))

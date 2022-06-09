@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://github.com/ediah/mlc/blob/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="400"/>
+  <img src="https://raw.githubusercontent.com/ediah/flower/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="400"/>
 </p>
 
 
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>
   <a href="https://lgtm.com/projects/g/ediah/mlc/context:cpp"><img src="https://img.shields.io/lgtm/grade/cpp/github/ediah/mlc?style=for-the-badge" alt="Language grade: C/C++" /></a>
-  <img src="https://img.shields.io/badge/coverage-75.9%25-yellow?style=for-the-badge" alt="Coverage">
+  <img src="https://img.shields.io/badge/coverage-76.4%25-yellow?style=for-the-badge" alt="Coverage">
 </p>
 
 # Краткое описание

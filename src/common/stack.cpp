@@ -1,10 +1,11 @@
 #include <cassert>
 #include <iostream>
-#include "common/obstacle.hpp"
 #include "common/stack.hpp"
+#include "common/obstacle.hpp"
 #include "common/exprtype.hpp"
 
 void Gendarme::push(void * p, type_t type) {
+    assert(pos < MAXSTACK);
     pointers[pos] = p;
     types[pos] = type;
     pos++;
@@ -15,13 +16,13 @@ void Gendarme::burn(void) {
     while (pos >= 0) {
         switch (types[pos]) {
             case _INT_: 
-                delete (int*) pointers[pos]; break;
+                delete    static_cast<int *> ( pointers[pos] ); break;
             case _REAL_: 
-                delete (float*) pointers[pos]; break;
+                delete    static_cast<float*>( pointers[pos] ); break;
             case _STRING_:
-                delete [] (char *) pointers[pos]; break;
+                delete [] static_cast<char *>( pointers[pos] ); break;
             case _BOOLEAN_:
-                delete (bool*) pointers[pos]; break;
+                delete    static_cast<bool*> ( pointers[pos] ); break;
         }
         pos--;
     }
@@ -45,16 +46,16 @@ void Stack::push(void * x, type_t type) {
     std::cout << "PUSH " << x << '(';
     switch (type) {
         case _INT_:
-            std::cout << * (int *) x;
+            std::cout << * static_cast<int *>( x );
             break;
         case _REAL_:
-            std::cout << * (float *) x;
+            std::cout << * static_cast<float *>( x );
             break;
         case _BOOLEAN_:
-            std::cout << * (bool *) x;
+            std::cout << * static_cast<bool *>( x );
             break;
         case _STRING_:
-            std::cout << (char *) x;
+            std::cout << static_cast<char *>( x );
             break;
         default:
             std::cout << "???";
@@ -75,12 +76,12 @@ void * Stack::pop(void) {
 }
 
 void * Stack::top(void) const {
-    assert(pos >= 0);
+    assert(pos > 0);
     return elem[pos - 1];
 }
 
 void * Stack::get(int x) const {
-    assert(pos - x >= 0);
+    assert(pos - x > 0);
     return elem[pos - x - 1];
 }
 

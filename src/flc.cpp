@@ -18,7 +18,7 @@ void help(void) {
     std::cout << "-v\tВыводить сообщения\n";
 }
 
-void compile(flags_t options, std::string ifname, std::string ofname) {
+void compile(flags_t options, const std::string &ifname, const std::string &ofname) {
     auto start = std::chrono::steady_clock::now();
 
     Parser pworker;
