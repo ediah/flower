@@ -2,6 +2,13 @@
   <img src="https://raw.githubusercontent.com/ediah/flower/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="400"/>
 </p>
 
+<p align="center">
+  <a href="https://ediah.github.io/flower/doxygen/html/index.html">Документация</a>
+</p>
+
+<p align="center">
+  <a href="https://ediah.github.io/flower/coverage/index.html">Анализ покрытия</a>
+</p>
 
 <p align="center">
   <a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" /></a>

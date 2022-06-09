@@ -1,0 +1,47 @@
+name: Update Github Pages
+
+on:
+  push:
+    branches: [ stable ]
+  pull_request:
+    branches: [ stable ]
+
+  workflow_dispatch:
+
+jobs:
+  Doxygen:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install missing software
+      run: sudo apt install doxygen
+    - name: Build docs
+      run: doxygen
+    - name: Update documentation
+      run: |
+          git checkout docs
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update docs"
+          git push
+  Lcov:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install missing software
+      run: sudo apt install lcov
+    - name: Make coverage
+      run: make cov
+    - name: Update coverage
+      run: |
+          git checkout docs
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update docs"
+          git push
