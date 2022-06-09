@@ -85,13 +85,13 @@ cov: fltest
 	@rm -f ./bin/*.gcno ./bin/*.gcda
 	@rm -f *.gcno *.gcda *.info
 	-@./fltest -r -O -c ./test/A-unit/*.fl ./test/B-unit/*.fl
-	@mkdir -p ./coverage
-	@lcov -c -d . -o ./coverage/flower.info 2>/dev/null
-	@lcov -o ./coverage/flower-f.info --remove ./coverage/flower.info \
+	@mkdir -p ./coverage-new
+	@lcov -c -d . -o ./coverage-new/flower.info 2>/dev/null
+	@lcov -o ./coverage-new/flower-f.info --remove ./coverage-new/flower.info \
 					'/usr/include/*' \
-					'$(shell pwd)/test/*' 2>/dev/null | grep lines > ./coverage/lines.info
-	@genhtml -o coverage ./coverage/flower-f.info
-	@./script/updatecov.py ./coverage/lines.info
+					'$(shell pwd)/test/*' 2>/dev/null | grep lines > ./coverage-new/lines.info
+	@genhtml -o coverage-new ./coverage-new/flower-f.info
+	@./script/updatecov.py ./coverage-new/lines.info
 
 .PHONY: clean check cov report
 
@@ -102,7 +102,7 @@ clean:
 	rm -f *.gcno *.gcda *.info
 
 clean-all: clean
-	rm -rf ./cppcheck ./coverage ./doxygen/html ./doxygen/latex
+	rm -rf ./cppcheck ./coverage-new ./doxygen/html ./doxygen/latex
 
 %.o: %.cpp Makefile
 	@echo "    CC    $@"
