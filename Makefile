@@ -70,6 +70,7 @@ fldbg: $(OBJ_FLDBG) Makefile
 	@$(CC) $(LFLAGS) ${addprefix ./bin/,${notdir ${OBJ_FLDBG}}} -o $@
 
 fltest: ./test/test.cpp Makefile
+	@mkdir -p bin
 	@echo "    LD    $@"
 	@$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
 
@@ -80,10 +81,11 @@ check:
 report:
 	@cat ${REPORT} | column -t -s '|'
 
-cov: flc flvm fltest
+cov: fltest
 	@rm -f ./bin/*.gcno ./bin/*.gcda
 	@rm -f *.gcno *.gcda *.info
 	-@./fltest -r -O -c ./test/A-unit/*.fl ./test/B-unit/*.fl
+	@mkdir -p ./coverage
 	@lcov -c -d . -o ./coverage/flower.info 2>/dev/null
 	@lcov -o ./coverage/flower-f.info --remove ./coverage/flower.info \
 					'/usr/include/*' \
