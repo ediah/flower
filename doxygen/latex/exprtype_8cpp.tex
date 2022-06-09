@@ -1,0 +1,82 @@
+\hypertarget{exprtype_8cpp}{}\doxysection{Файл src/common/exprtype.cpp}
+\label{exprtype_8cpp}\index{src/common/exprtype.cpp@{src/common/exprtype.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include \char`\"{}common/obstacle.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/exprtype.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для exprtype.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{exprtype_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Функции}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{exprtype_8cpp_a0b43e0da2a94e710c935b6b4bb2a1317_a0b43e0da2a94e710c935b6b4bb2a1317}{debug\+Op}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} op)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{exprtype_8cpp_ae32bf5c9a42d5a5145c0127aa254b2f5_ae32bf5c9a42d5a5145c0127aa254b2f5}{expression\+Type}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} t1, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} t2, \mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\item 
+char $\ast$ \mbox{\hyperlink{exprtype_8cpp_af17312653a2caae4f379983d0973f8fa_af17312653a2caae4f379983d0973f8fa}{typetostr}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} t)
+\item 
+bool \mbox{\hyperlink{exprtype_8cpp_a1109a8682b3f6cfa9423ac824528ea7c_a1109a8682b3f6cfa9423ac824528ea7c}{is\+Nullary}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\item 
+bool \mbox{\hyperlink{exprtype_8cpp_a56dc3d7df6bf19edb35b29298360b6b0_a56dc3d7df6bf19edb35b29298360b6b0}{is\+Unary}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\item 
+bool \mbox{\hyperlink{exprtype_8cpp_a78e13698ad52f32de43d0744e61a1fd4_a78e13698ad52f32de43d0744e61a1fd4}{is\+Binary}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\item 
+bool \mbox{\hyperlink{exprtype_8cpp_a3c34b2846ebe287748d7b3e78050f0f4_a3c34b2846ebe287748d7b3e78050f0f4}{is\+Expr}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\item 
+int \mbox{\hyperlink{exprtype_8cpp_a2a85dcf8e1350ef0a5a66dd912cb9454_a2a85dcf8e1350ef0a5a66dd912cb9454}{operands}} (\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} o)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Функции}
+\mbox{\Hypertarget{exprtype_8cpp_a0b43e0da2a94e710c935b6b4bb2a1317_a0b43e0da2a94e710c935b6b4bb2a1317}\label{exprtype_8cpp_a0b43e0da2a94e710c935b6b4bb2a1317_a0b43e0da2a94e710c935b6b4bb2a1317}} 
+\index{exprtype.cpp@{exprtype.cpp}!debugOp@{debugOp}}
+\index{debugOp@{debugOp}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{debugOp()}{debugOp()}}
+{\footnotesize\ttfamily void debug\+Op (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{op }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_ae32bf5c9a42d5a5145c0127aa254b2f5_ae32bf5c9a42d5a5145c0127aa254b2f5}\label{exprtype_8cpp_ae32bf5c9a42d5a5145c0127aa254b2f5_ae32bf5c9a42d5a5145c0127aa254b2f5}} 
+\index{exprtype.cpp@{exprtype.cpp}!expressionType@{expressionType}}
+\index{expressionType@{expressionType}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{expressionType()}{expressionType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} expression\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{t1,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{t2,  }\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_a78e13698ad52f32de43d0744e61a1fd4_a78e13698ad52f32de43d0744e61a1fd4}\label{exprtype_8cpp_a78e13698ad52f32de43d0744e61a1fd4_a78e13698ad52f32de43d0744e61a1fd4}} 
+\index{exprtype.cpp@{exprtype.cpp}!isBinary@{isBinary}}
+\index{isBinary@{isBinary}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{isBinary()}{isBinary()}}
+{\footnotesize\ttfamily bool is\+Binary (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_a3c34b2846ebe287748d7b3e78050f0f4_a3c34b2846ebe287748d7b3e78050f0f4}\label{exprtype_8cpp_a3c34b2846ebe287748d7b3e78050f0f4_a3c34b2846ebe287748d7b3e78050f0f4}} 
+\index{exprtype.cpp@{exprtype.cpp}!isExpr@{isExpr}}
+\index{isExpr@{isExpr}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{isExpr()}{isExpr()}}
+{\footnotesize\ttfamily bool is\+Expr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_a1109a8682b3f6cfa9423ac824528ea7c_a1109a8682b3f6cfa9423ac824528ea7c}\label{exprtype_8cpp_a1109a8682b3f6cfa9423ac824528ea7c_a1109a8682b3f6cfa9423ac824528ea7c}} 
+\index{exprtype.cpp@{exprtype.cpp}!isNullary@{isNullary}}
+\index{isNullary@{isNullary}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{isNullary()}{isNullary()}}
+{\footnotesize\ttfamily bool is\+Nullary (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_a56dc3d7df6bf19edb35b29298360b6b0_a56dc3d7df6bf19edb35b29298360b6b0}\label{exprtype_8cpp_a56dc3d7df6bf19edb35b29298360b6b0_a56dc3d7df6bf19edb35b29298360b6b0}} 
+\index{exprtype.cpp@{exprtype.cpp}!isUnary@{isUnary}}
+\index{isUnary@{isUnary}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{isUnary()}{isUnary()}}
+{\footnotesize\ttfamily bool is\+Unary (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_a2a85dcf8e1350ef0a5a66dd912cb9454_a2a85dcf8e1350ef0a5a66dd912cb9454}\label{exprtype_8cpp_a2a85dcf8e1350ef0a5a66dd912cb9454_a2a85dcf8e1350ef0a5a66dd912cb9454}} 
+\index{exprtype.cpp@{exprtype.cpp}!operands@{operands}}
+\index{operands@{operands}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{operands()}{operands()}}
+{\footnotesize\ttfamily int operands (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{o }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{exprtype_8cpp_af17312653a2caae4f379983d0973f8fa_af17312653a2caae4f379983d0973f8fa}\label{exprtype_8cpp_af17312653a2caae4f379983d0973f8fa_af17312653a2caae4f379983d0973f8fa}} 
+\index{exprtype.cpp@{exprtype.cpp}!typetostr@{typetostr}}
+\index{typetostr@{typetostr}!exprtype.cpp@{exprtype.cpp}}
+\doxysubsubsection{\texorpdfstring{typetostr()}{typetostr()}}
+{\footnotesize\ttfamily char$\ast$ typetostr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{t }\end{DoxyParamCaption})}
+

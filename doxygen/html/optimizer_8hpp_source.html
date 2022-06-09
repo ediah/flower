@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Исходный файл src/optimizer/optimizer.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fef26d3633d38d4ca65fa53115b5e5dd.html">optimizer</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">optimizer.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="optimizer_8hpp.html">См. документацию.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef OPTIMIZER_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define OPTIMIZER_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tables_8hpp.html">common/tables.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="poliz_8hpp.html">common/poliz.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="controlflow_8hpp.html">optimizer/controlflow.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="acyclicgraph_8hpp.html">optimizer/acyclicgraph.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classOptimizer.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classOptimizer.html">Optimizer</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classOptimizer_a292534908e0111f16acc819e465f5e75.html#a292534908e0111f16acc819e465f5e75">   11</a></span>&#160;    <a class="code" href="classIdentTable.html">IdentTable</a> * <a class="code" href="classOptimizer_a292534908e0111f16acc819e465f5e75.html#a292534908e0111f16acc819e465f5e75">IdTable</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classOptimizer_a7e1c9f33f09c88a54c252ff43c2bc572.html#a7e1c9f33f09c88a54c252ff43c2bc572">   12</a></span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a> * <a class="code" href="classOptimizer_a7e1c9f33f09c88a54c252ff43c2bc572.html#a7e1c9f33f09c88a54c252ff43c2bc572">poliz</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classOptimizer_a50d17157b41312964bdca47c02c06d0f.html#a50d17157b41312964bdca47c02c06d0f">   13</a></span>&#160;    <a class="code" href="classControlFlowGraph.html">ControlFlowGraph</a> <a class="code" href="classOptimizer_a50d17157b41312964bdca47c02c06d0f.html#a50d17157b41312964bdca47c02c06d0f">CFG</a>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classOptimizer_a6eeb55bdc2d1045002e6c84ae762d19f.html#a6eeb55bdc2d1045002e6c84ae762d19f">   14</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classOptimizer_a6eeb55bdc2d1045002e6c84ae762d19f.html#a6eeb55bdc2d1045002e6c84ae762d19f">verbose</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classOptimizer_a7e8acc98d6051846d285994197629245.html#a7e8acc98d6051846d285994197629245">Optimizer</a>(<a class="code" href="classIdentTable.html">IdentTable</a> * IT, <a class="code" href="classPOLIZ.html">POLIZ</a> * p, <span class="keywordtype">bool</span> verb);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="classIdentTable.html">IdentTable</a> * <a class="code" href="classOptimizer_a9b2bf9fe516d4e8889f2ea2457490ab3.html#a9b2bf9fe516d4e8889f2ea2457490ab3">optimize</a>();</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classOptimizer_a3d6ee2132b4147306454bc3c2d28c826.html#a3d6ee2132b4147306454bc3c2d28c826">reduceConstants</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classOptimizer_a861ca244f3fbb3764170d15cfb4a6e09.html#a861ca244f3fbb3764170d15cfb4a6e09">   20</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classOptimizer_a861ca244f3fbb3764170d15cfb4a6e09.html#a861ca244f3fbb3764170d15cfb4a6e09">commonSubExpr</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;};</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aacyclicgraph_8hpp_html"><div class="ttname"><a href="acyclicgraph_8hpp.html">acyclicgraph.hpp</a></div></div>
+<div class="ttc" id="aclassControlFlowGraph_html"><div class="ttname"><a href="classControlFlowGraph.html">ControlFlowGraph</a></div><div class="ttdef"><b>Definition:</b> controlflow.hpp:26</div></div>
+<div class="ttc" id="aclassIdentTable_html"><div class="ttname"><a href="classIdentTable.html">IdentTable</a></div><div class="ttdef"><b>Definition:</b> tables.hpp:9</div></div>
+<div class="ttc" id="aclassOptimizer_a292534908e0111f16acc819e465f5e75_html_a292534908e0111f16acc819e465f5e75"><div class="ttname"><a href="classOptimizer_a292534908e0111f16acc819e465f5e75.html#a292534908e0111f16acc819e465f5e75">Optimizer::IdTable</a></div><div class="ttdeci">IdentTable * IdTable</div><div class="ttdef"><b>Definition:</b> optimizer.hpp:11</div></div>
+<div class="ttc" id="aclassOptimizer_a3d6ee2132b4147306454bc3c2d28c826_html_a3d6ee2132b4147306454bc3c2d28c826"><div class="ttname"><a href="classOptimizer_a3d6ee2132b4147306454bc3c2d28c826.html#a3d6ee2132b4147306454bc3c2d28c826">Optimizer::reduceConstants</a></div><div class="ttdeci">void reduceConstants(void)</div><div class="ttdef"><b>Definition:</b> optimizer.cpp:15</div></div>
+<div class="ttc" id="aclassOptimizer_a50d17157b41312964bdca47c02c06d0f_html_a50d17157b41312964bdca47c02c06d0f"><div class="ttname"><a href="classOptimizer_a50d17157b41312964bdca47c02c06d0f.html#a50d17157b41312964bdca47c02c06d0f">Optimizer::CFG</a></div><div class="ttdeci">ControlFlowGraph CFG</div><div class="ttdef"><b>Definition:</b> optimizer.hpp:13</div></div>
+<div class="ttc" id="aclassOptimizer_a6eeb55bdc2d1045002e6c84ae762d19f_html_a6eeb55bdc2d1045002e6c84ae762d19f"><div class="ttname"><a href="classOptimizer_a6eeb55bdc2d1045002e6c84ae762d19f.html#a6eeb55bdc2d1045002e6c84ae762d19f">Optimizer::verbose</a></div><div class="ttdeci">bool verbose</div><div class="ttdef"><b>Definition:</b> optimizer.hpp:14</div></div>
+<div class="ttc" id="aclassOptimizer_a7e1c9f33f09c88a54c252ff43c2bc572_html_a7e1c9f33f09c88a54c252ff43c2bc572"><div class="ttname"><a href="classOptimizer_a7e1c9f33f09c88a54c252ff43c2bc572.html#a7e1c9f33f09c88a54c252ff43c2bc572">Optimizer::poliz</a></div><div class="ttdeci">POLIZ * poliz</div><div class="ttdef"><b>Definition:</b> optimizer.hpp:12</div></div>
+<div class="ttc" id="aclassOptimizer_a7e8acc98d6051846d285994197629245_html_a7e8acc98d6051846d285994197629245"><div class="ttname"><a href="classOptimizer_a7e8acc98d6051846d285994197629245.html#a7e8acc98d6051846d285994197629245">Optimizer::Optimizer</a></div><div class="ttdeci">Optimizer(IdentTable *IT, POLIZ *p, bool verb)</div><div class="ttdef"><b>Definition:</b> optimizer.cpp:9</div></div>
+<div class="ttc" id="aclassOptimizer_a861ca244f3fbb3764170d15cfb4a6e09_html_a861ca244f3fbb3764170d15cfb4a6e09"><div class="ttname"><a href="classOptimizer_a861ca244f3fbb3764170d15cfb4a6e09.html#a861ca244f3fbb3764170d15cfb4a6e09">Optimizer::commonSubExpr</a></div><div class="ttdeci">void commonSubExpr(void)</div></div>
+<div class="ttc" id="aclassOptimizer_a9b2bf9fe516d4e8889f2ea2457490ab3_html_a9b2bf9fe516d4e8889f2ea2457490ab3"><div class="ttname"><a href="classOptimizer_a9b2bf9fe516d4e8889f2ea2457490ab3.html#a9b2bf9fe516d4e8889f2ea2457490ab3">Optimizer::optimize</a></div><div class="ttdeci">IdentTable * optimize()</div><div class="ttdef"><b>Definition:</b> optimizer.cpp:42</div></div>
+<div class="ttc" id="aclassOptimizer_html"><div class="ttname"><a href="classOptimizer.html">Optimizer</a></div><div class="ttdef"><b>Definition:</b> optimizer.hpp:10</div></div>
+<div class="ttc" id="aclassPOLIZ_html"><div class="ttname"><a href="classPOLIZ.html">POLIZ</a></div><div class="ttdef"><b>Definition:</b> poliz.hpp:14</div></div>
+<div class="ttc" id="acontrolflow_8hpp_html"><div class="ttname"><a href="controlflow_8hpp.html">controlflow.hpp</a></div></div>
+<div class="ttc" id="apoliz_8hpp_html"><div class="ttname"><a href="poliz_8hpp.html">poliz.hpp</a></div></div>
+<div class="ttc" id="atables_8hpp_html"><div class="ttname"><a href="tables_8hpp.html">tables.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

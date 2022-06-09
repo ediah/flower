@@ -1,0 +1,230 @@
+\hypertarget{classVirtualMachine}{}\doxysection{Класс Virtual\+Machine}
+\label{classVirtualMachine}\index{VirtualMachine@{VirtualMachine}}
+
+
+{\ttfamily \#include $<$vmachine.\+hpp$>$}
+
+
+
+Граф наследования\+:Virtual\+Machine\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=170pt]{classVirtualMachine__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Граф связей класса Virtual\+Machine\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classVirtualMachine__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classVirtualMachine_a7cda84048190dacf83c36c054a447c85_a7cda84048190dacf83c36c054a447c85}{Virtual\+Machine}} ()
+\item 
+void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+BIN}} (const char $\ast$filename)
+\item 
+virtual void \mbox{\hyperlink{classVirtualMachine_a5c0d5bb13224bdbabe4688d054ac6355_a5c0d5bb13224bdbabe4688d054ac6355}{run}} (void)
+\item 
+bool \mbox{\hyperlink{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}{exec}} (\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}} op, int $\ast$eip)
+\item 
+void \mbox{\hyperlink{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}{update\+Vars}} (void)
+\item 
+void \mbox{\hyperlink{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}{number\+Op}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} lval, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} rval, void $\ast$f)
+\item 
+{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} TYPE)
+\item 
+{\footnotesize template$<$class lval\+\_\+t , class rval\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}{assign}} (void)
+\item 
+virtual \mbox{\hyperlink{classVirtualMachine_af13f8ca7c1b3e862874b1e0d943f3ec9_af13f8ca7c1b3e862874b1e0d943f3ec9}{$\sim$\+Virtual\+Machine}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static char $\ast$ \mbox{\hyperlink{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}{get\+String}} (void $\ast$x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Защищенные данные}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}{base}}
+\item 
+char $\ast$ \mbox{\hyperlink{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}{cmd}}
+\item 
+int \mbox{\hyperlink{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}{cmd\+Num}}
+\item 
+bool \mbox{\hyperlink{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}{in\+Thread}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}{stack\+VM}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}{register\+VM}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}{shared\+Vars}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}{offsets}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}{params}}
+\item 
+std\+::vector$<$ pid\+\_\+t $>$ \mbox{\hyperlink{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}{threads}}
+\item 
+std\+::vector$<$ int $\ast$ $>$ \mbox{\hyperlink{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}{pipefd}}
+\item 
+\mbox{\hyperlink{classGendarme}{Gendarme}} \mbox{\hyperlink{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}{dynamic\+Strings}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{classVirtualMachine_a7cda84048190dacf83c36c054a447c85_a7cda84048190dacf83c36c054a447c85}\label{classVirtualMachine_a7cda84048190dacf83c36c054a447c85_a7cda84048190dacf83c36c054a447c85}} 
+\index{VirtualMachine@{VirtualMachine}!VirtualMachine@{VirtualMachine}}
+\index{VirtualMachine@{VirtualMachine}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{VirtualMachine()}{VirtualMachine()}}
+{\footnotesize\ttfamily Virtual\+Machine\+::\+Virtual\+Machine (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classVirtualMachine_af13f8ca7c1b3e862874b1e0d943f3ec9_af13f8ca7c1b3e862874b1e0d943f3ec9}\label{classVirtualMachine_af13f8ca7c1b3e862874b1e0d943f3ec9_af13f8ca7c1b3e862874b1e0d943f3ec9}} 
+\index{VirtualMachine@{VirtualMachine}!````~VirtualMachine@{$\sim$VirtualMachine}}
+\index{````~VirtualMachine@{$\sim$VirtualMachine}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{$\sim$VirtualMachine()}{~VirtualMachine()}}
+{\footnotesize\ttfamily Virtual\+Machine\+::$\sim$\+Virtual\+Machine (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}\label{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}} 
+\index{VirtualMachine@{VirtualMachine}!assign@{assign}}
+\index{assign@{assign}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t $>$ \\
+void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}\label{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}} 
+\index{VirtualMachine@{VirtualMachine}!exec@{exec}}
+\index{exec@{exec}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{exec()}{exec()}}
+{\footnotesize\ttfamily bool Virtual\+Machine\+::exec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}}}]{op,  }\item[{int $\ast$}]{eip }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}\label{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}} 
+\index{VirtualMachine@{VirtualMachine}!getString@{getString}}
+\index{getString@{getString}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{getString()}{getString()}}
+{\footnotesize\ttfamily char $\ast$ Virtual\+Machine\+::get\+String (\begin{DoxyParamCaption}\item[{void $\ast$}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}\label{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}} 
+\index{VirtualMachine@{VirtualMachine}!loadBIN@{loadBIN}}
+\index{loadBIN@{loadBIN}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{loadBIN()}{loadBIN()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::load\+BIN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}\label{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}} 
+\index{VirtualMachine@{VirtualMachine}!numberOp@{numberOp}}
+\index{numberOp@{numberOp}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{numberOp()}{numberOp()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::number\+Op (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{lval,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{rval,  }\item[{void $\ast$}]{f }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_a5c0d5bb13224bdbabe4688d054ac6355_a5c0d5bb13224bdbabe4688d054ac6355}\label{classVirtualMachine_a5c0d5bb13224bdbabe4688d054ac6355_a5c0d5bb13224bdbabe4688d054ac6355}} 
+\index{VirtualMachine@{VirtualMachine}!run@{run}}
+\index{run@{run}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::run (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Переопределяется в \mbox{\hyperlink{classDebugger_aa1ae540daba8d6b2b387e7f750662431_aa1ae540daba8d6b2b387e7f750662431}{Debugger}}.
+
+\mbox{\Hypertarget{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}\label{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}} 
+\index{VirtualMachine@{VirtualMachine}!tempOp@{tempOp}}
+\index{tempOp@{tempOp}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{tempOp()}{tempOp()}}
+{\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t , class res\+\_\+t $>$ \\
+void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{TYPE }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}\label{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}} 
+\index{VirtualMachine@{VirtualMachine}!updateVars@{updateVars}}
+\index{updateVars@{updateVars}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{updateVars()}{updateVars()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::update\+Vars (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}\label{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}} 
+\index{VirtualMachine@{VirtualMachine}!base@{base}}
+\index{base@{base}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{base}{base}}
+{\footnotesize\ttfamily char$\ast$ Virtual\+Machine\+::base\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}\label{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}} 
+\index{VirtualMachine@{VirtualMachine}!cmd@{cmd}}
+\index{cmd@{cmd}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{cmd}{cmd}}
+{\footnotesize\ttfamily char$\ast$ Virtual\+Machine\+::cmd\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}\label{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}} 
+\index{VirtualMachine@{VirtualMachine}!cmdNum@{cmdNum}}
+\index{cmdNum@{cmdNum}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{cmdNum}{cmdNum}}
+{\footnotesize\ttfamily int Virtual\+Machine\+::cmd\+Num\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}\label{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}} 
+\index{VirtualMachine@{VirtualMachine}!dynamicStrings@{dynamicStrings}}
+\index{dynamicStrings@{dynamicStrings}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{dynamicStrings}{dynamicStrings}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classGendarme}{Gendarme}} Virtual\+Machine\+::dynamic\+Strings\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}\label{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}} 
+\index{VirtualMachine@{VirtualMachine}!inThread@{inThread}}
+\index{inThread@{inThread}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{inThread}{inThread}}
+{\footnotesize\ttfamily bool Virtual\+Machine\+::in\+Thread\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}\label{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}} 
+\index{VirtualMachine@{VirtualMachine}!offsets@{offsets}}
+\index{offsets@{offsets}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{offsets}{offsets}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::offsets\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}\label{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}} 
+\index{VirtualMachine@{VirtualMachine}!params@{params}}
+\index{params@{params}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{params}{params}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::params\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}\label{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}} 
+\index{VirtualMachine@{VirtualMachine}!pipefd@{pipefd}}
+\index{pipefd@{pipefd}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{pipefd}{pipefd}}
+{\footnotesize\ttfamily std\+::vector$<$int $\ast$$>$ Virtual\+Machine\+::pipefd\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}\label{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}} 
+\index{VirtualMachine@{VirtualMachine}!registerVM@{registerVM}}
+\index{registerVM@{registerVM}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{registerVM}{registerVM}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::register\+VM\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}\label{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}} 
+\index{VirtualMachine@{VirtualMachine}!sharedVars@{sharedVars}}
+\index{sharedVars@{sharedVars}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{sharedVars}{sharedVars}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::shared\+Vars\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}\label{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}} 
+\index{VirtualMachine@{VirtualMachine}!stackVM@{stackVM}}
+\index{stackVM@{stackVM}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{stackVM}{stackVM}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::stack\+VM\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}\label{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}} 
+\index{VirtualMachine@{VirtualMachine}!threads@{threads}}
+\index{threads@{threads}!VirtualMachine@{VirtualMachine}}
+\doxysubsubsection{\texorpdfstring{threads}{threads}}
+{\footnotesize\ttfamily std\+::vector$<$pid\+\_\+t$>$ Virtual\+Machine\+::threads\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/runtime/\mbox{\hyperlink{vmachine_8hpp}{vmachine.\+hpp}}\item 
+src/runtime/\mbox{\hyperlink{vmachine_8cpp}{vmachine.\+cpp}}\end{DoxyCompactItemize}

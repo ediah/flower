@@ -1,0 +1,124 @@
+\hypertarget{classDirectedAcyclicGraph}{}\doxysection{Класс Directed\+Acyclic\+Graph}
+\label{classDirectedAcyclicGraph}\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+
+
+{\ttfamily \#include $<$acyclicgraph.\+hpp$>$}
+
+
+
+Граф связей класса Directed\+Acyclic\+Graph\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classDirectedAcyclicGraph__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550_a1eea7616f39def112ccb20b2dd998550}{Directed\+Acyclic\+Graph}} (bool v)
+\item 
+void \mbox{\hyperlink{classDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4_ae954755b624e30b88ccc71e3cb07dce4}{make}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} p)
+\item 
+\mbox{\hyperlink{classPOLIZ}{POLIZ}} \mbox{\hyperlink{classDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148_a863b1e1e346eb79e609af4cf132d5148}{decompose}} (std\+::vector$<$ \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $>$ $\ast$type\+On\+Stack)
+\item 
+void \mbox{\hyperlink{classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779_a6a76a1d5e66336711079a7d28f4a2779}{update\+Types}} (void)
+\item 
+void \mbox{\hyperlink{classDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68_a328c52aedfe622a9c213643c85f05f68}{common\+Sub\+Expr}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$IT)
+\item 
+void \mbox{\hyperlink{classDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455_a6a731c0f8d03c2231299b2dd153f6455}{stash}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&p)
+\item 
+std\+::pair$<$ std\+::pair$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$, \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$, int $>$ \mbox{\hyperlink{classDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba_af6496a6f0de0f16b544b4de717e53aba}{find\+Copies}} (\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$left, \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$right, int a, int b)
+\item 
+\mbox{\hyperlink{classDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab_a0be6252b4a8327efdd390f05aad7f0ab}{$\sim$\+Directed\+Acyclic\+Graph}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$ \mbox{\hyperlink{classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d_a45216b75dd488d96d85e7261dd92c31d}{rows}}
+\item 
+\mbox{\hyperlink{classPOLIZ}{POLIZ}} \mbox{\hyperlink{classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748_a3da21086e2e7a50be0eba82c5bb8f748}{stashed}}
+\item 
+bool \mbox{\hyperlink{classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd_a53809adafd69a2eab5a1ec833dc8d2cd}{verbose}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550_a1eea7616f39def112ccb20b2dd998550}\label{classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550_a1eea7616f39def112ccb20b2dd998550}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{DirectedAcyclicGraph()}{DirectedAcyclicGraph()}}
+{\footnotesize\ttfamily Directed\+Acyclic\+Graph\+::\+Directed\+Acyclic\+Graph (\begin{DoxyParamCaption}\item[{bool}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab_a0be6252b4a8327efdd390f05aad7f0ab}\label{classDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab_a0be6252b4a8327efdd390f05aad7f0ab}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!````~DirectedAcyclicGraph@{$\sim$DirectedAcyclicGraph}}
+\index{````~DirectedAcyclicGraph@{$\sim$DirectedAcyclicGraph}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{$\sim$DirectedAcyclicGraph()}{~DirectedAcyclicGraph()}}
+{\footnotesize\ttfamily Directed\+Acyclic\+Graph\+::$\sim$\+Directed\+Acyclic\+Graph (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68_a328c52aedfe622a9c213643c85f05f68}\label{classDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68_a328c52aedfe622a9c213643c85f05f68}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!commonSubExpr@{commonSubExpr}}
+\index{commonSubExpr@{commonSubExpr}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{commonSubExpr()}{commonSubExpr()}}
+{\footnotesize\ttfamily void Directed\+Acyclic\+Graph\+::common\+Sub\+Expr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{IT }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148_a863b1e1e346eb79e609af4cf132d5148}\label{classDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148_a863b1e1e346eb79e609af4cf132d5148}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!decompose@{decompose}}
+\index{decompose@{decompose}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{decompose()}{decompose()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classPOLIZ}{POLIZ}} Directed\+Acyclic\+Graph\+::decompose (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $>$ $\ast$}]{type\+On\+Stack }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba_af6496a6f0de0f16b544b4de717e53aba}\label{classDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba_af6496a6f0de0f16b544b4de717e53aba}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!findCopies@{findCopies}}
+\index{findCopies@{findCopies}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{findCopies()}{findCopies()}}
+{\footnotesize\ttfamily std\+::pair$<$ std\+::pair$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$, \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$, int $>$ Directed\+Acyclic\+Graph\+::find\+Copies (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$}]{left,  }\item[{\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$}]{right,  }\item[{int}]{a,  }\item[{int}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4_ae954755b624e30b88ccc71e3cb07dce4}\label{classDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4_ae954755b624e30b88ccc71e3cb07dce4}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!make@{make}}
+\index{make@{make}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{make()}{make()}}
+{\footnotesize\ttfamily void Directed\+Acyclic\+Graph\+::make (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}}}]{p }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455_a6a731c0f8d03c2231299b2dd153f6455}\label{classDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455_a6a731c0f8d03c2231299b2dd153f6455}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!stash@{stash}}
+\index{stash@{stash}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{stash()}{stash()}}
+{\footnotesize\ttfamily void Directed\+Acyclic\+Graph\+::stash (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&}]{p }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779_a6a76a1d5e66336711079a7d28f4a2779}\label{classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779_a6a76a1d5e66336711079a7d28f4a2779}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!updateTypes@{updateTypes}}
+\index{updateTypes@{updateTypes}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{updateTypes()}{updateTypes()}}
+{\footnotesize\ttfamily void Directed\+Acyclic\+Graph\+::update\+Types (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d_a45216b75dd488d96d85e7261dd92c31d}\label{classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d_a45216b75dd488d96d85e7261dd92c31d}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!rows@{rows}}
+\index{rows@{rows}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{rows}{rows}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$$>$ Directed\+Acyclic\+Graph\+::rows\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748_a3da21086e2e7a50be0eba82c5bb8f748}\label{classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748_a3da21086e2e7a50be0eba82c5bb8f748}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!stashed@{stashed}}
+\index{stashed@{stashed}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{stashed}{stashed}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classPOLIZ}{POLIZ}} Directed\+Acyclic\+Graph\+::stashed\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd_a53809adafd69a2eab5a1ec833dc8d2cd}\label{classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd_a53809adafd69a2eab5a1ec833dc8d2cd}} 
+\index{DirectedAcyclicGraph@{DirectedAcyclicGraph}!verbose@{verbose}}
+\index{verbose@{verbose}!DirectedAcyclicGraph@{DirectedAcyclicGraph}}
+\doxysubsubsection{\texorpdfstring{verbose}{verbose}}
+{\footnotesize\ttfamily bool Directed\+Acyclic\+Graph\+::verbose\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/optimizer/\mbox{\hyperlink{acyclicgraph_8hpp}{acyclicgraph.\+hpp}}\item 
+src/optimizer/\mbox{\hyperlink{acyclicgraph_8cpp}{acyclicgraph.\+cpp}}\end{DoxyCompactItemize}

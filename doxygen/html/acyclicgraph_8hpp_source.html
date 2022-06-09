@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Исходный файл src/optimizer/acyclicgraph.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fef26d3633d38d4ca65fa53115b5e5dd.html">optimizer</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">acyclicgraph.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="acyclicgraph_8hpp.html">См. документацию.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef DAG_HPP</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define DAG_HPP</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="exprtype_8hpp.html">common/exprtype.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tables_8hpp.html">common/tables.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="poliz_8hpp.html">common/poliz.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="structDAGRow.html">   10</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structDAGRow.html">DAGRow</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="structDAGRow_af7f224ea5c45e4aec5886be5f481589e.html#af7f224ea5c45e4aec5886be5f481589e">   11</a></span>&#160;    <a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a> <a class="code" href="structDAGRow_af7f224ea5c45e4aec5886be5f481589e.html#af7f224ea5c45e4aec5886be5f481589e">type</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="structDAGRow_a60f89b84473c067623db679c71e4e387.html#a60f89b84473c067623db679c71e4e387">   12</a></span>&#160;    <a class="code" href="classIdentTable.html">IdentTable</a> * <a class="code" href="structDAGRow_a60f89b84473c067623db679c71e4e387.html#a60f89b84473c067623db679c71e4e387">ident</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structDAGRow_a45b705b432435e2adb0043d739aecfd9.html#a45b705b432435e2adb0043d739aecfd9">   13</a></span>&#160;    <a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> <a class="code" href="structDAGRow_a45b705b432435e2adb0043d739aecfd9.html#a45b705b432435e2adb0043d739aecfd9">opcode</a>;</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="structDAGRow_aad6280a269b01c33f857b9c3e50dd387.html#aad6280a269b01c33f857b9c3e50dd387">   14</a></span>&#160;    <a class="code" href="structDAGRow.html">DAGRow</a> * <a class="code" href="structDAGRow_aad6280a269b01c33f857b9c3e50dd387.html#aad6280a269b01c33f857b9c3e50dd387">lvar</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0.html#a4c51b5b29e767cdca4b20a87af2105b0">   15</a></span>&#160;    <a class="code" href="structDAGRow.html">DAGRow</a> * <a class="code" href="structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0.html#a4c51b5b29e767cdca4b20a87af2105b0">rvar</a>;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="structDAGRow_ad32f61a8951c13a660dd7f30d015dd43.html#ad32f61a8951c13a660dd7f30d015dd43">   16</a></span>&#160;    <a class="code" href="structDAGRow.html">DAGRow</a> * <a class="code" href="structDAGRow_ad32f61a8951c13a660dd7f30d015dd43.html#ad32f61a8951c13a660dd7f30d015dd43">prev</a>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa.html#ada1923d57f63020ae8d4db2e4a0d51aa">   17</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa.html#ada1923d57f63020ae8d4db2e4a0d51aa">assigned</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structDAGRow_afea18ab1ce9b3637738ffb4230934d6c.html#afea18ab1ce9b3637738ffb4230934d6c">   19</a></span>&#160;    <span class="keyword">static</span> std::vector&lt;DAGRow *&gt; <a class="code" href="structDAGRow_afea18ab1ce9b3637738ffb4230934d6c.html#afea18ab1ce9b3637738ffb4230934d6c">created</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533.html#a88a8ce52f1c93dc9b88900dbcd719533">   21</a></span>&#160;    <a class="code" href="structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533.html#a88a8ce52f1c93dc9b88900dbcd719533">DAGRow</a>(): <a class="code" href="structDAGRow_af7f224ea5c45e4aec5886be5f481589e.html#af7f224ea5c45e4aec5886be5f481589e">type</a>(<a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4">_NONE_</a>), <a class="code" href="structDAGRow_a60f89b84473c067623db679c71e4e387.html#a60f89b84473c067623db679c71e4e387">ident</a>(nullptr), <a class="code" href="structDAGRow_a45b705b432435e2adb0043d739aecfd9.html#a45b705b432435e2adb0043d739aecfd9">opcode</a>((<a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a>) <a class="code" href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36ac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a>), <a class="code" href="structDAGRow_aad6280a269b01c33f857b9c3e50dd387.html#aad6280a269b01c33f857b9c3e50dd387">lvar</a>(nullptr), </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;              <a class="code" href="structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0.html#a4c51b5b29e767cdca4b20a87af2105b0">rvar</a>(nullptr), <a class="code" href="structDAGRow_ad32f61a8951c13a660dd7f30d015dd43.html#ad32f61a8951c13a660dd7f30d015dd43">prev</a>(nullptr), <a class="code" href="structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa.html#ada1923d57f63020ae8d4db2e4a0d51aa">assigned</a>(false) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                  <a class="code" href="structDAGRow_afea18ab1ce9b3637738ffb4230934d6c.html#afea18ab1ce9b3637738ffb4230934d6c">created</a>.push_back(<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;              };</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="structDAGRow_a7598e353da36f7d6aed3315def1dd841.html#a7598e353da36f7d6aed3315def1dd841">decompose</a>(<a class="code" href="classPOLIZ.html">POLIZ</a> &amp; p, std::vector&lt;DAGRow *&gt; * asd);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="structDAGRow_aa3050fdb852988bce04a66a6e391e88f.html#aa3050fdb852988bce04a66a6e391e88f">isLast</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a> <a class="code" href="structDAGRow_aa0ad096c63488d8007638ffc8bb31575.html#aa0ad096c63488d8007638ffc8bb31575">updateType</a>(std::vector&lt;type_t&gt; * typeOnStack = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code" href="structDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f.html#a5b0a3523269ff7c45b7bdad8cf32381f">operator==</a>(<a class="code" href="structDAGRow.html">DAGRow</a> &amp; a, <a class="code" href="structDAGRow.html">DAGRow</a> &amp; b);</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5.html#a22d5733c5f5c1fd2271b15e034c703d5">   30</a></span>&#160;    <a class="code" href="structDAGRow.html">DAGRow</a> &amp; <a class="code" href="structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5.html#a22d5733c5f5c1fd2271b15e034c703d5">operator=</a>(<span class="keyword">const</span> <a class="code" href="structDAGRow.html">DAGRow</a> &amp; dr);</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structDAGRow_ab2e2edf436dc9ca56d48026e37878d29.html#ab2e2edf436dc9ca56d48026e37878d29">   31</a></span>&#160;    <a class="code" href="structDAGRow_ab2e2edf436dc9ca56d48026e37878d29.html#ab2e2edf436dc9ca56d48026e37878d29">DAGRow</a>(<span class="keyword">const</span> <a class="code" href="structDAGRow.html">DAGRow</a> &amp; dr);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> * #N OP #1OP #2OP VAR</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDirectedAcyclicGraph.html">DirectedAcyclicGraph</a> {</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d.html#a45216b75dd488d96d85e7261dd92c31d">   39</a></span>&#160;    std::vector&lt;DAGRow *&gt; <a class="code" href="classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d.html#a45216b75dd488d96d85e7261dd92c31d">rows</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748.html#a3da21086e2e7a50be0eba82c5bb8f748">   40</a></span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a> <a class="code" href="classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748.html#a3da21086e2e7a50be0eba82c5bb8f748">stashed</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd.html#a53809adafd69a2eab5a1ec833dc8d2cd">   41</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd.html#a53809adafd69a2eab5a1ec833dc8d2cd">verbose</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550.html#a1eea7616f39def112ccb20b2dd998550">   43</a></span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550.html#a1eea7616f39def112ccb20b2dd998550">DirectedAcyclicGraph</a>(<span class="keywordtype">bool</span> v): <a class="code" href="classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd.html#a53809adafd69a2eab5a1ec833dc8d2cd">verbose</a>(v) {};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4.html#ae954755b624e30b88ccc71e3cb07dce4">make</a>(<a class="code" href="classPOLIZ.html">POLIZ</a> p);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a> <a class="code" href="classDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148.html#a863b1e1e346eb79e609af4cf132d5148">decompose</a>(std::vector&lt;type_t&gt; * typeOnStack);</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779.html#a6a76a1d5e66336711079a7d28f4a2779">   46</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779.html#a6a76a1d5e66336711079a7d28f4a2779">updateTypes</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68.html#a328c52aedfe622a9c213643c85f05f68">commonSubExpr</a>(<a class="code" href="classIdentTable.html">IdentTable</a> * IT);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455.html#a6a731c0f8d03c2231299b2dd153f6455">stash</a>(<a class="code" href="classPOLIZ.html">POLIZ</a> &amp; p);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    std::pair&lt;std::pair&lt;DAGRow *, DAGRow *&gt;, <span class="keywordtype">int</span>&gt; <a class="code" href="classDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba.html#af6496a6f0de0f16b544b4de717e53aba">findCopies</a>(</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                <a class="code" href="structDAGRow.html">DAGRow</a> * left, <a class="code" href="structDAGRow.html">DAGRow</a> * right, <span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="classDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab.html#a0be6252b4a8327efdd390f05aad7f0ab">~DirectedAcyclicGraph</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;};</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab_html_a0be6252b4a8327efdd390f05aad7f0ab"><div class="ttname"><a href="classDirectedAcyclicGraph_a0be6252b4a8327efdd390f05aad7f0ab.html#a0be6252b4a8327efdd390f05aad7f0ab">DirectedAcyclicGraph::~DirectedAcyclicGraph</a></div><div class="ttdeci">~DirectedAcyclicGraph()</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:361</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550_html_a1eea7616f39def112ccb20b2dd998550"><div class="ttname"><a href="classDirectedAcyclicGraph_a1eea7616f39def112ccb20b2dd998550.html#a1eea7616f39def112ccb20b2dd998550">DirectedAcyclicGraph::DirectedAcyclicGraph</a></div><div class="ttdeci">DirectedAcyclicGraph(bool v)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:43</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68_html_a328c52aedfe622a9c213643c85f05f68"><div class="ttname"><a href="classDirectedAcyclicGraph_a328c52aedfe622a9c213643c85f05f68.html#a328c52aedfe622a9c213643c85f05f68">DirectedAcyclicGraph::commonSubExpr</a></div><div class="ttdeci">void commonSubExpr(IdentTable *IT)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:248</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748_html_a3da21086e2e7a50be0eba82c5bb8f748"><div class="ttname"><a href="classDirectedAcyclicGraph_a3da21086e2e7a50be0eba82c5bb8f748.html#a3da21086e2e7a50be0eba82c5bb8f748">DirectedAcyclicGraph::stashed</a></div><div class="ttdeci">POLIZ stashed</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:40</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d_html_a45216b75dd488d96d85e7261dd92c31d"><div class="ttname"><a href="classDirectedAcyclicGraph_a45216b75dd488d96d85e7261dd92c31d.html#a45216b75dd488d96d85e7261dd92c31d">DirectedAcyclicGraph::rows</a></div><div class="ttdeci">std::vector&lt; DAGRow * &gt; rows</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:39</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd_html_a53809adafd69a2eab5a1ec833dc8d2cd"><div class="ttname"><a href="classDirectedAcyclicGraph_a53809adafd69a2eab5a1ec833dc8d2cd.html#a53809adafd69a2eab5a1ec833dc8d2cd">DirectedAcyclicGraph::verbose</a></div><div class="ttdeci">bool verbose</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:41</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455_html_a6a731c0f8d03c2231299b2dd153f6455"><div class="ttname"><a href="classDirectedAcyclicGraph_a6a731c0f8d03c2231299b2dd153f6455.html#a6a731c0f8d03c2231299b2dd153f6455">DirectedAcyclicGraph::stash</a></div><div class="ttdeci">void stash(POLIZ &amp;p)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:80</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779_html_a6a76a1d5e66336711079a7d28f4a2779"><div class="ttname"><a href="classDirectedAcyclicGraph_a6a76a1d5e66336711079a7d28f4a2779.html#a6a76a1d5e66336711079a7d28f4a2779">DirectedAcyclicGraph::updateTypes</a></div><div class="ttdeci">void updateTypes(void)</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148_html_a863b1e1e346eb79e609af4cf132d5148"><div class="ttname"><a href="classDirectedAcyclicGraph_a863b1e1e346eb79e609af4cf132d5148.html#a863b1e1e346eb79e609af4cf132d5148">DirectedAcyclicGraph::decompose</a></div><div class="ttdeci">POLIZ decompose(std::vector&lt; type_t &gt; *typeOnStack)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:223</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4_html_ae954755b624e30b88ccc71e3cb07dce4"><div class="ttname"><a href="classDirectedAcyclicGraph_ae954755b624e30b88ccc71e3cb07dce4.html#ae954755b624e30b88ccc71e3cb07dce4">DirectedAcyclicGraph::make</a></div><div class="ttdeci">void make(POLIZ p)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:97</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba_html_af6496a6f0de0f16b544b4de717e53aba"><div class="ttname"><a href="classDirectedAcyclicGraph_af6496a6f0de0f16b544b4de717e53aba.html#af6496a6f0de0f16b544b4de717e53aba">DirectedAcyclicGraph::findCopies</a></div><div class="ttdeci">std::pair&lt; std::pair&lt; DAGRow *, DAGRow * &gt;, int &gt; findCopies(DAGRow *left, DAGRow *right, int a, int b)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:323</div></div>
+<div class="ttc" id="aclassDirectedAcyclicGraph_html"><div class="ttname"><a href="classDirectedAcyclicGraph.html">DirectedAcyclicGraph</a></div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:38</div></div>
+<div class="ttc" id="aclassIdentTable_html"><div class="ttname"><a href="classIdentTable.html">IdentTable</a></div><div class="ttdef"><b>Definition:</b> tables.hpp:9</div></div>
+<div class="ttc" id="aclassPOLIZ_html"><div class="ttname"><a href="classPOLIZ.html">POLIZ</a></div><div class="ttdef"><b>Definition:</b> poliz.hpp:14</div></div>
+<div class="ttc" id="aexprtype_8hpp_a76a810650461f2062938ee9b82666b36_html_a76a810650461f2062938ee9b82666b36ac157bdf0b85a40d2619cbc8bc1ae5fe2"><div class="ttname"><a href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36ac157bdf0b85a40d2619cbc8bc1ae5fe2">NONE</a></div><div class="ttdeci">@ NONE</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:15</div></div>
+<div class="ttc" id="aexprtype_8hpp_adee610a3c7375031538811d29f6a4124_html_adee610a3c7375031538811d29f6a4124"><div class="ttname"><a href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a></div><div class="ttdeci">type_t</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:4</div></div>
+<div class="ttc" id="aexprtype_8hpp_adee610a3c7375031538811d29f6a4124_html_adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4"><div class="ttname"><a href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4">_NONE_</a></div><div class="ttdeci">@ _NONE_</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:5</div></div>
+<div class="ttc" id="aexprtype_8hpp_html"><div class="ttname"><a href="exprtype_8hpp.html">exprtype.hpp</a></div></div>
+<div class="ttc" id="apoliz_8hpp_af3ceb578c32897fe58138820454a3c36_html_af3ceb578c32897fe58138820454a3c36"><div class="ttname"><a href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a></div><div class="ttdeci">long long op_t</div><div class="ttdef"><b>Definition:</b> poliz.hpp:10</div></div>
+<div class="ttc" id="apoliz_8hpp_html"><div class="ttname"><a href="poliz_8hpp.html">poliz.hpp</a></div></div>
+<div class="ttc" id="astructDAGRow_a22d5733c5f5c1fd2271b15e034c703d5_html_a22d5733c5f5c1fd2271b15e034c703d5"><div class="ttname"><a href="structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5.html#a22d5733c5f5c1fd2271b15e034c703d5">DAGRow::operator=</a></div><div class="ttdeci">DAGRow &amp; operator=(const DAGRow &amp;dr)</div></div>
+<div class="ttc" id="astructDAGRow_a45b705b432435e2adb0043d739aecfd9_html_a45b705b432435e2adb0043d739aecfd9"><div class="ttname"><a href="structDAGRow_a45b705b432435e2adb0043d739aecfd9.html#a45b705b432435e2adb0043d739aecfd9">DAGRow::opcode</a></div><div class="ttdeci">op_t opcode</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:13</div></div>
+<div class="ttc" id="astructDAGRow_a4c51b5b29e767cdca4b20a87af2105b0_html_a4c51b5b29e767cdca4b20a87af2105b0"><div class="ttname"><a href="structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0.html#a4c51b5b29e767cdca4b20a87af2105b0">DAGRow::rvar</a></div><div class="ttdeci">DAGRow * rvar</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:15</div></div>
+<div class="ttc" id="astructDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f_html_a5b0a3523269ff7c45b7bdad8cf32381f"><div class="ttname"><a href="structDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f.html#a5b0a3523269ff7c45b7bdad8cf32381f">DAGRow::operator==</a></div><div class="ttdeci">friend bool operator==(DAGRow &amp;a, DAGRow &amp;b)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:54</div></div>
+<div class="ttc" id="astructDAGRow_a60f89b84473c067623db679c71e4e387_html_a60f89b84473c067623db679c71e4e387"><div class="ttname"><a href="structDAGRow_a60f89b84473c067623db679c71e4e387.html#a60f89b84473c067623db679c71e4e387">DAGRow::ident</a></div><div class="ttdeci">IdentTable * ident</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:12</div></div>
+<div class="ttc" id="astructDAGRow_a7598e353da36f7d6aed3315def1dd841_html_a7598e353da36f7d6aed3315def1dd841"><div class="ttname"><a href="structDAGRow_a7598e353da36f7d6aed3315def1dd841.html#a7598e353da36f7d6aed3315def1dd841">DAGRow::decompose</a></div><div class="ttdeci">void decompose(POLIZ &amp;p, std::vector&lt; DAGRow * &gt; *asd)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:150</div></div>
+<div class="ttc" id="astructDAGRow_a88a8ce52f1c93dc9b88900dbcd719533_html_a88a8ce52f1c93dc9b88900dbcd719533"><div class="ttname"><a href="structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533.html#a88a8ce52f1c93dc9b88900dbcd719533">DAGRow::DAGRow</a></div><div class="ttdeci">DAGRow()</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:21</div></div>
+<div class="ttc" id="astructDAGRow_aa0ad096c63488d8007638ffc8bb31575_html_aa0ad096c63488d8007638ffc8bb31575"><div class="ttname"><a href="structDAGRow_aa0ad096c63488d8007638ffc8bb31575.html#aa0ad096c63488d8007638ffc8bb31575">DAGRow::updateType</a></div><div class="ttdeci">type_t updateType(std::vector&lt; type_t &gt; *typeOnStack=nullptr)</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:178</div></div>
+<div class="ttc" id="astructDAGRow_aa3050fdb852988bce04a66a6e391e88f_html_aa3050fdb852988bce04a66a6e391e88f"><div class="ttname"><a href="structDAGRow_aa3050fdb852988bce04a66a6e391e88f.html#aa3050fdb852988bce04a66a6e391e88f">DAGRow::isLast</a></div><div class="ttdeci">bool isLast(void) const</div><div class="ttdef"><b>Definition:</b> acyclicgraph.cpp:8</div></div>
+<div class="ttc" id="astructDAGRow_aad6280a269b01c33f857b9c3e50dd387_html_aad6280a269b01c33f857b9c3e50dd387"><div class="ttname"><a href="structDAGRow_aad6280a269b01c33f857b9c3e50dd387.html#aad6280a269b01c33f857b9c3e50dd387">DAGRow::lvar</a></div><div class="ttdeci">DAGRow * lvar</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:14</div></div>
+<div class="ttc" id="astructDAGRow_ab2e2edf436dc9ca56d48026e37878d29_html_ab2e2edf436dc9ca56d48026e37878d29"><div class="ttname"><a href="structDAGRow_ab2e2edf436dc9ca56d48026e37878d29.html#ab2e2edf436dc9ca56d48026e37878d29">DAGRow::DAGRow</a></div><div class="ttdeci">DAGRow(const DAGRow &amp;dr)</div></div>
+<div class="ttc" id="astructDAGRow_ad32f61a8951c13a660dd7f30d015dd43_html_ad32f61a8951c13a660dd7f30d015dd43"><div class="ttname"><a href="structDAGRow_ad32f61a8951c13a660dd7f30d015dd43.html#ad32f61a8951c13a660dd7f30d015dd43">DAGRow::prev</a></div><div class="ttdeci">DAGRow * prev</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:16</div></div>
+<div class="ttc" id="astructDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa_html_ada1923d57f63020ae8d4db2e4a0d51aa"><div class="ttname"><a href="structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa.html#ada1923d57f63020ae8d4db2e4a0d51aa">DAGRow::assigned</a></div><div class="ttdeci">bool assigned</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:17</div></div>
+<div class="ttc" id="astructDAGRow_af7f224ea5c45e4aec5886be5f481589e_html_af7f224ea5c45e4aec5886be5f481589e"><div class="ttname"><a href="structDAGRow_af7f224ea5c45e4aec5886be5f481589e.html#af7f224ea5c45e4aec5886be5f481589e">DAGRow::type</a></div><div class="ttdeci">type_t type</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:11</div></div>
+<div class="ttc" id="astructDAGRow_afea18ab1ce9b3637738ffb4230934d6c_html_afea18ab1ce9b3637738ffb4230934d6c"><div class="ttname"><a href="structDAGRow_afea18ab1ce9b3637738ffb4230934d6c.html#afea18ab1ce9b3637738ffb4230934d6c">DAGRow::created</a></div><div class="ttdeci">static std::vector&lt; DAGRow * &gt; created</div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:19</div></div>
+<div class="ttc" id="astructDAGRow_html"><div class="ttname"><a href="structDAGRow.html">DAGRow</a></div><div class="ttdef"><b>Definition:</b> acyclicgraph.hpp:10</div></div>
+<div class="ttc" id="atables_8hpp_html"><div class="ttname"><a href="tables_8hpp.html">tables.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

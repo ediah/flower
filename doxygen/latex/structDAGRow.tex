@@ -1,0 +1,165 @@
+\hypertarget{structDAGRow}{}\doxysection{Структура DAGRow}
+\label{structDAGRow}\index{DAGRow@{DAGRow}}
+
+
+{\ttfamily \#include $<$acyclicgraph.\+hpp$>$}
+
+
+
+Граф связей класса DAGRow\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=257pt]{structDAGRow__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533_a88a8ce52f1c93dc9b88900dbcd719533}{DAGRow}} ()
+\item 
+void \mbox{\hyperlink{structDAGRow_a7598e353da36f7d6aed3315def1dd841_a7598e353da36f7d6aed3315def1dd841}{decompose}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&p, std\+::vector$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$ $\ast$asd)
+\item 
+bool \mbox{\hyperlink{structDAGRow_aa3050fdb852988bce04a66a6e391e88f_aa3050fdb852988bce04a66a6e391e88f}{is\+Last}} (void) const
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{structDAGRow_aa0ad096c63488d8007638ffc8bb31575_aa0ad096c63488d8007638ffc8bb31575}{update\+Type}} (std\+::vector$<$ \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $>$ $\ast$type\+On\+Stack=nullptr)
+\item 
+\mbox{\hyperlink{structDAGRow}{DAGRow}} \& \mbox{\hyperlink{structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5_a22d5733c5f5c1fd2271b15e034c703d5}{operator=}} (const \mbox{\hyperlink{structDAGRow}{DAGRow}} \&dr)
+\item 
+\mbox{\hyperlink{structDAGRow_ab2e2edf436dc9ca56d48026e37878d29_ab2e2edf436dc9ca56d48026e37878d29}{DAGRow}} (const \mbox{\hyperlink{structDAGRow}{DAGRow}} \&dr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Поля данных}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{structDAGRow_af7f224ea5c45e4aec5886be5f481589e_af7f224ea5c45e4aec5886be5f481589e}{type}}
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{structDAGRow_a60f89b84473c067623db679c71e4e387_a60f89b84473c067623db679c71e4e387}{ident}}
+\item 
+\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}} \mbox{\hyperlink{structDAGRow_a45b705b432435e2adb0043d739aecfd9_a45b705b432435e2adb0043d739aecfd9}{opcode}}
+\item 
+\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ \mbox{\hyperlink{structDAGRow_aad6280a269b01c33f857b9c3e50dd387_aad6280a269b01c33f857b9c3e50dd387}{lvar}}
+\item 
+\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ \mbox{\hyperlink{structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0_a4c51b5b29e767cdca4b20a87af2105b0}{rvar}}
+\item 
+\mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ \mbox{\hyperlink{structDAGRow_ad32f61a8951c13a660dd7f30d015dd43_ad32f61a8951c13a660dd7f30d015dd43}{prev}}
+\item 
+bool \mbox{\hyperlink{structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa_ada1923d57f63020ae8d4db2e4a0d51aa}{assigned}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Статические открытые данные}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$ \mbox{\hyperlink{structDAGRow_afea18ab1ce9b3637738ffb4230934d6c_afea18ab1ce9b3637738ffb4230934d6c}{created}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Друзья}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f_a5b0a3523269ff7c45b7bdad8cf32381f}{operator==}} (\mbox{\hyperlink{structDAGRow}{DAGRow}} \&a, \mbox{\hyperlink{structDAGRow}{DAGRow}} \&b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533_a88a8ce52f1c93dc9b88900dbcd719533}\label{structDAGRow_a88a8ce52f1c93dc9b88900dbcd719533_a88a8ce52f1c93dc9b88900dbcd719533}} 
+\index{DAGRow@{DAGRow}!DAGRow@{DAGRow}}
+\index{DAGRow@{DAGRow}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{DAGRow()}{DAGRow()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily DAGRow\+::\+DAGRow (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{structDAGRow_ab2e2edf436dc9ca56d48026e37878d29_ab2e2edf436dc9ca56d48026e37878d29}\label{structDAGRow_ab2e2edf436dc9ca56d48026e37878d29_ab2e2edf436dc9ca56d48026e37878d29}} 
+\index{DAGRow@{DAGRow}!DAGRow@{DAGRow}}
+\index{DAGRow@{DAGRow}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{DAGRow()}{DAGRow()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily DAGRow\+::\+DAGRow (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structDAGRow}{DAGRow}} \&}]{dr }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{structDAGRow_a7598e353da36f7d6aed3315def1dd841_a7598e353da36f7d6aed3315def1dd841}\label{structDAGRow_a7598e353da36f7d6aed3315def1dd841_a7598e353da36f7d6aed3315def1dd841}} 
+\index{DAGRow@{DAGRow}!decompose@{decompose}}
+\index{decompose@{decompose}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{decompose()}{decompose()}}
+{\footnotesize\ttfamily void DAGRow\+::decompose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&}]{p,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$ $\ast$}]{asd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structDAGRow_aa3050fdb852988bce04a66a6e391e88f_aa3050fdb852988bce04a66a6e391e88f}\label{structDAGRow_aa3050fdb852988bce04a66a6e391e88f_aa3050fdb852988bce04a66a6e391e88f}} 
+\index{DAGRow@{DAGRow}!isLast@{isLast}}
+\index{isLast@{isLast}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{isLast()}{isLast()}}
+{\footnotesize\ttfamily bool DAGRow\+::is\+Last (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5_a22d5733c5f5c1fd2271b15e034c703d5}\label{structDAGRow_a22d5733c5f5c1fd2271b15e034c703d5_a22d5733c5f5c1fd2271b15e034c703d5}} 
+\index{DAGRow@{DAGRow}!operator=@{operator=}}
+\index{operator=@{operator=}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDAGRow}{DAGRow}}\& DAGRow\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structDAGRow}{DAGRow}} \&}]{dr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structDAGRow_aa0ad096c63488d8007638ffc8bb31575_aa0ad096c63488d8007638ffc8bb31575}\label{structDAGRow_aa0ad096c63488d8007638ffc8bb31575_aa0ad096c63488d8007638ffc8bb31575}} 
+\index{DAGRow@{DAGRow}!updateType@{updateType}}
+\index{updateType@{updateType}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{updateType()}{updateType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} DAGRow\+::update\+Type (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $>$ $\ast$}]{type\+On\+Stack = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Документация по друзьям класса и функциям, относящимся к классу}
+\mbox{\Hypertarget{structDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f_a5b0a3523269ff7c45b7bdad8cf32381f}\label{structDAGRow_a5b0a3523269ff7c45b7bdad8cf32381f_a5b0a3523269ff7c45b7bdad8cf32381f}} 
+\index{DAGRow@{DAGRow}!operator==@{operator==}}
+\index{operator==@{operator==}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{operator==}{operator==}}
+{\footnotesize\ttfamily bool operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structDAGRow}{DAGRow}} \&}]{a,  }\item[{\mbox{\hyperlink{structDAGRow}{DAGRow}} \&}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa_ada1923d57f63020ae8d4db2e4a0d51aa}\label{structDAGRow_ada1923d57f63020ae8d4db2e4a0d51aa_ada1923d57f63020ae8d4db2e4a0d51aa}} 
+\index{DAGRow@{DAGRow}!assigned@{assigned}}
+\index{assigned@{assigned}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{assigned}{assigned}}
+{\footnotesize\ttfamily bool DAGRow\+::assigned}
+
+\mbox{\Hypertarget{structDAGRow_afea18ab1ce9b3637738ffb4230934d6c_afea18ab1ce9b3637738ffb4230934d6c}\label{structDAGRow_afea18ab1ce9b3637738ffb4230934d6c_afea18ab1ce9b3637738ffb4230934d6c}} 
+\index{DAGRow@{DAGRow}!created@{created}}
+\index{created@{created}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{created}{created}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{structDAGRow}{DAGRow}} $\ast$ $>$ DAGRow\+::created\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{structDAGRow_a60f89b84473c067623db679c71e4e387_a60f89b84473c067623db679c71e4e387}\label{structDAGRow_a60f89b84473c067623db679c71e4e387_a60f89b84473c067623db679c71e4e387}} 
+\index{DAGRow@{DAGRow}!ident@{ident}}
+\index{ident@{ident}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{ident}{ident}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}}$\ast$ DAGRow\+::ident}
+
+\mbox{\Hypertarget{structDAGRow_aad6280a269b01c33f857b9c3e50dd387_aad6280a269b01c33f857b9c3e50dd387}\label{structDAGRow_aad6280a269b01c33f857b9c3e50dd387_aad6280a269b01c33f857b9c3e50dd387}} 
+\index{DAGRow@{DAGRow}!lvar@{lvar}}
+\index{lvar@{lvar}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{lvar}{lvar}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDAGRow}{DAGRow}}$\ast$ DAGRow\+::lvar}
+
+\mbox{\Hypertarget{structDAGRow_a45b705b432435e2adb0043d739aecfd9_a45b705b432435e2adb0043d739aecfd9}\label{structDAGRow_a45b705b432435e2adb0043d739aecfd9_a45b705b432435e2adb0043d739aecfd9}} 
+\index{DAGRow@{DAGRow}!opcode@{opcode}}
+\index{opcode@{opcode}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{opcode}{opcode}}
+{\footnotesize\ttfamily \mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}} DAGRow\+::opcode}
+
+\mbox{\Hypertarget{structDAGRow_ad32f61a8951c13a660dd7f30d015dd43_ad32f61a8951c13a660dd7f30d015dd43}\label{structDAGRow_ad32f61a8951c13a660dd7f30d015dd43_ad32f61a8951c13a660dd7f30d015dd43}} 
+\index{DAGRow@{DAGRow}!prev@{prev}}
+\index{prev@{prev}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDAGRow}{DAGRow}}$\ast$ DAGRow\+::prev}
+
+\mbox{\Hypertarget{structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0_a4c51b5b29e767cdca4b20a87af2105b0}\label{structDAGRow_a4c51b5b29e767cdca4b20a87af2105b0_a4c51b5b29e767cdca4b20a87af2105b0}} 
+\index{DAGRow@{DAGRow}!rvar@{rvar}}
+\index{rvar@{rvar}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{rvar}{rvar}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structDAGRow}{DAGRow}}$\ast$ DAGRow\+::rvar}
+
+\mbox{\Hypertarget{structDAGRow_af7f224ea5c45e4aec5886be5f481589e_af7f224ea5c45e4aec5886be5f481589e}\label{structDAGRow_af7f224ea5c45e4aec5886be5f481589e_af7f224ea5c45e4aec5886be5f481589e}} 
+\index{DAGRow@{DAGRow}!type@{type}}
+\index{type@{type}!DAGRow@{DAGRow}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} DAGRow\+::type}
+
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/optimizer/\mbox{\hyperlink{acyclicgraph_8hpp}{acyclicgraph.\+hpp}}\item 
+src/optimizer/\mbox{\hyperlink{acyclicgraph_8cpp}{acyclicgraph.\+cpp}}\end{DoxyCompactItemize}

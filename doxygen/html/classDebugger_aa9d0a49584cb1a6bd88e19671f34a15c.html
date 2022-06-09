@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Debugger::step</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="classDebugger.html">Debugger</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="contents">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+   <td valign="top">
+      <div class="navtab">
+        <table>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_ac7463e2b0e29da73f2dc3be3d866425f.html#ac7463e2b0e29da73f2dc3be3d866425f">compare</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a2b76be38cdcef612b0f307758c5ea17a.html#a2b76be38cdcef612b0f307758c5ea17a">Debugger</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_ac360556593809195edbca27adb7e4585.html#ac360556593809195edbca27adb7e4585">help</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee.html#ad023d2b5ec2345dbfdaf6b171efa9cee">inspect</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a346020c79b32cde4ee297699f4fc2462.html#a346020c79b32cde4ee297699f4fc2462">lastcmd</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a9a8fdc946b20732cc6c3607937d5e696.html#a9a8fdc946b20732cc6c3607937d5e696">markMsg</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a80a789e25c3366af48e33c8454b834f5.html#a80a789e25c3366af48e33c8454b834f5">memory</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a5ecd5f757232b68d34033d0af2bb4f67.html#a5ecd5f757232b68d34033d0af2bb4f67">printData</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_adbb795d5ed212cfda0d41786948c1d13.html#adbb795d5ed212cfda0d41786948c1d13">prompt</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_aa1ae540daba8d6b2b387e7f750662431.html#aa1ae540daba8d6b2b387e7f750662431">run</a></td></tr>
+          <tr><td class="navtabHL"><a class="navtab" href="classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c.html#aa9d0a49584cb1a6bd88e19671f34a15c">step</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a></td></tr>
+        </table>
+      </div>
+   </td>
+   <td valign="top" class="mempage">
+<a id="aa9d0a49584cb1a6bd88e19671f34a15c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9d0a49584cb1a6bd88e19671f34a15c">&#9670;&nbsp;</a></span>step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Debugger::step </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>eip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+    </td>
+  </tr>
+</table>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

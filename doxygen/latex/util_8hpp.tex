@@ -1,0 +1,59 @@
+\hypertarget{util_8hpp}{}\doxysection{Файл src/optimizer/util.hpp}
+\label{util_8hpp}\index{src/optimizer/util.hpp@{src/optimizer/util.hpp}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}common/poliz.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для util.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8hpp__incl}
+\end{center}
+\end{figure}
+Граф файлов, в которые включается этот файл\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{util_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Функции}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\int \mbox{\hyperlink{util_8hpp_add51d5eabf835440d63cb460ec3d2a8a_add51d5eabf835440d63cb460ec3d2a8a}{find}} (std\+::vector$<$ T $>$ vec, T x)
+\item 
+{\footnotesize template$<$typename K , typename V $>$ }\\int \mbox{\hyperlink{util_8hpp_a7d01236ce3b27f410fd29cf24013b67e_a7d01236ce3b27f410fd29cf24013b67e}{find}} (std\+::vector$<$ std\+::pair$<$ K, V $>$$>$ vec, K x)
+\item 
+{\footnotesize template$<$typename K , typename V $>$ }\\int \mbox{\hyperlink{util_8hpp_ac2ae5edf3bad47351e317159aa0e1f1e_ac2ae5edf3bad47351e317159aa0e1f1e}{find}} (std\+::vector$<$ std\+::pair$<$ K, V $>$$>$ vec, V x)
+\item 
+void \mbox{\hyperlink{util_8hpp_a6a86f97d1751627a096094316fcffedf_a6a86f97d1751627a096094316fcffedf}{copy\+POLIZ}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&src, \mbox{\hyperlink{classPOLIZ}{POLIZ}} \&dst, int start, int end)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Функции}
+\mbox{\Hypertarget{util_8hpp_a6a86f97d1751627a096094316fcffedf_a6a86f97d1751627a096094316fcffedf}\label{util_8hpp_a6a86f97d1751627a096094316fcffedf_a6a86f97d1751627a096094316fcffedf}} 
+\index{util.hpp@{util.hpp}!copyPOLIZ@{copyPOLIZ}}
+\index{copyPOLIZ@{copyPOLIZ}!util.hpp@{util.hpp}}
+\doxysubsubsection{\texorpdfstring{copyPOLIZ()}{copyPOLIZ()}}
+{\footnotesize\ttfamily void copy\+POLIZ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&}]{src,  }\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} \&}]{dst,  }\item[{int}]{start,  }\item[{int}]{end }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{util_8hpp_a7d01236ce3b27f410fd29cf24013b67e_a7d01236ce3b27f410fd29cf24013b67e}\label{util_8hpp_a7d01236ce3b27f410fd29cf24013b67e_a7d01236ce3b27f410fd29cf24013b67e}} 
+\index{util.hpp@{util.hpp}!find@{find}}
+\index{find@{find}!util.hpp@{util.hpp}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$typename K , typename V $>$ \\
+int find (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ K, V $>$$>$}]{vec,  }\item[{K}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{util_8hpp_ac2ae5edf3bad47351e317159aa0e1f1e_ac2ae5edf3bad47351e317159aa0e1f1e}\label{util_8hpp_ac2ae5edf3bad47351e317159aa0e1f1e_ac2ae5edf3bad47351e317159aa0e1f1e}} 
+\index{util.hpp@{util.hpp}!find@{find}}
+\index{find@{find}!util.hpp@{util.hpp}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$typename K , typename V $>$ \\
+int find (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ K, V $>$$>$}]{vec,  }\item[{V}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{util_8hpp_add51d5eabf835440d63cb460ec3d2a8a_add51d5eabf835440d63cb460ec3d2a8a}\label{util_8hpp_add51d5eabf835440d63cb460ec3d2a8a_add51d5eabf835440d63cb460ec3d2a8a}} 
+\index{util.hpp@{util.hpp}!find@{find}}
+\index{find@{find}!util.hpp@{util.hpp}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+int find (\begin{DoxyParamCaption}\item[{std\+::vector$<$ T $>$}]{vec,  }\item[{T}]{x }\end{DoxyParamCaption})}
+

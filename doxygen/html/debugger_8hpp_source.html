@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Исходный файл src/debugger/debugger.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_3b0503ee98bf82388a1f66e962123523.html">debugger</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">debugger.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="debugger_8hpp.html">См. документацию.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef DEBUGGER_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define DEBUGGER_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="vmachine_8hpp.html">runtime/vmachine.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="classDebugger.html">    8</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDebugger.html">Debugger</a>: <span class="keyword">public</span> <a class="code" href="classVirtualMachine.html">VirtualMachine</a> {</div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">    9</a></span>&#160;    std::map&lt;std::string, std::vector&lt;std::string&gt;&gt; <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classDebugger_a346020c79b32cde4ee297699f4fc2462.html#a346020c79b32cde4ee297699f4fc2462">   10</a></span>&#160;    std::vector&lt;std::string&gt; <a class="code" href="classDebugger_a346020c79b32cde4ee297699f4fc2462.html#a346020c79b32cde4ee297699f4fc2462">lastcmd</a> = {<span class="stringliteral">&quot;help&quot;</span>};</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classDebugger_a9a8fdc946b20732cc6c3607937d5e696.html#a9a8fdc946b20732cc6c3607937d5e696">   12</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classDebugger_a9a8fdc946b20732cc6c3607937d5e696.html#a9a8fdc946b20732cc6c3607937d5e696">markMsg</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classDebugger_a5ecd5f757232b68d34033d0af2bb4f67.html#a5ecd5f757232b68d34033d0af2bb4f67">printData</a>(<a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a> type, <span class="keywordtype">void</span> * data);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classDebugger_a2b76be38cdcef612b0f307758c5ea17a.html#a2b76be38cdcef612b0f307758c5ea17a">   16</a></span>&#160;    <a class="code" href="classDebugger_a2b76be38cdcef612b0f307758c5ea17a.html#a2b76be38cdcef612b0f307758c5ea17a">Debugger</a>(): <a class="code" href="classVirtualMachine.html">VirtualMachine</a>() {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;quit&quot;</span>] = {<span class="stringliteral">&quot;quit&quot;</span>, <span class="stringliteral">&quot;q&quot;</span>};</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;step&quot;</span>] = {<span class="stringliteral">&quot;step&quot;</span>, <span class="stringliteral">&quot;s&quot;</span>};</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;help&quot;</span>] = {<span class="stringliteral">&quot;help&quot;</span>, <span class="stringliteral">&quot;h&quot;</span>};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;inspect&quot;</span>] = {<span class="stringliteral">&quot;inspect&quot;</span>, <span class="stringliteral">&quot;stack&quot;</span>, <span class="stringliteral">&quot;ins&quot;</span>, <span class="stringliteral">&quot;i&quot;</span>};</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;memory&quot;</span>] = {<span class="stringliteral">&quot;memory&quot;</span>, <span class="stringliteral">&quot;mem&quot;</span>, <span class="stringliteral">&quot;m&quot;</span>};</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">synonims</a>[<span class="stringliteral">&quot;registry&quot;</span>] = {<span class="stringliteral">&quot;registry&quot;</span>, <span class="stringliteral">&quot;reg&quot;</span>, <span class="stringliteral">&quot;r&quot;</span>};</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    };</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classDebugger_aa1ae540daba8d6b2b387e7f750662431.html#aa1ae540daba8d6b2b387e7f750662431">run</a>(<span class="keywordtype">void</span>) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c.html#aa9d0a49584cb1a6bd88e19671f34a15c">step</a>(<span class="keywordtype">int</span> * eip, <span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDebugger_ac360556593809195edbca27adb7e4585.html#ac360556593809195edbca27adb7e4585">help</a>(std::vector&lt;std::string&gt; argv);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classDebugger_adbb795d5ed212cfda0d41786948c1d13.html#adbb795d5ed212cfda0d41786948c1d13">prompt</a>(<span class="keywordtype">int</span> * eip);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee.html#ad023d2b5ec2345dbfdaf6b171efa9cee">inspect</a>(std::vector&lt;std::string&gt; argv, <span class="keyword">const</span> <a class="code" href="classStack.html">Stack</a> * stack);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDebugger_a80a789e25c3366af48e33c8454b834f5.html#a80a789e25c3366af48e33c8454b834f5">memory</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classDebugger_ac7463e2b0e29da73f2dc3be3d866425f.html#ac7463e2b0e29da73f2dc3be3d866425f">compare</a>(<span class="keyword">const</span> std::string &amp; str, std::string ref);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassDebugger_a2547a59e78689da18d4fc8ace7b1b1e5_html_a2547a59e78689da18d4fc8ace7b1b1e5"><div class="ttname"><a href="classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5.html#a2547a59e78689da18d4fc8ace7b1b1e5">Debugger::synonims</a></div><div class="ttdeci">std::map&lt; std::string, std::vector&lt; std::string &gt; &gt; synonims</div><div class="ttdef"><b>Definition:</b> debugger.hpp:9</div></div>
+<div class="ttc" id="aclassDebugger_a2b76be38cdcef612b0f307758c5ea17a_html_a2b76be38cdcef612b0f307758c5ea17a"><div class="ttname"><a href="classDebugger_a2b76be38cdcef612b0f307758c5ea17a.html#a2b76be38cdcef612b0f307758c5ea17a">Debugger::Debugger</a></div><div class="ttdeci">Debugger()</div><div class="ttdef"><b>Definition:</b> debugger.hpp:16</div></div>
+<div class="ttc" id="aclassDebugger_a346020c79b32cde4ee297699f4fc2462_html_a346020c79b32cde4ee297699f4fc2462"><div class="ttname"><a href="classDebugger_a346020c79b32cde4ee297699f4fc2462.html#a346020c79b32cde4ee297699f4fc2462">Debugger::lastcmd</a></div><div class="ttdeci">std::vector&lt; std::string &gt; lastcmd</div><div class="ttdef"><b>Definition:</b> debugger.hpp:10</div></div>
+<div class="ttc" id="aclassDebugger_a5ecd5f757232b68d34033d0af2bb4f67_html_a5ecd5f757232b68d34033d0af2bb4f67"><div class="ttname"><a href="classDebugger_a5ecd5f757232b68d34033d0af2bb4f67.html#a5ecd5f757232b68d34033d0af2bb4f67">Debugger::printData</a></div><div class="ttdeci">static void printData(type_t type, void *data)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:50</div></div>
+<div class="ttc" id="aclassDebugger_a80a789e25c3366af48e33c8454b834f5_html_a80a789e25c3366af48e33c8454b834f5"><div class="ttname"><a href="classDebugger_a80a789e25c3366af48e33c8454b834f5.html#a80a789e25c3366af48e33c8454b834f5">Debugger::memory</a></div><div class="ttdeci">void memory(void) const</div><div class="ttdef"><b>Definition:</b> debugger.cpp:105</div></div>
+<div class="ttc" id="aclassDebugger_a9a8fdc946b20732cc6c3607937d5e696_html_a9a8fdc946b20732cc6c3607937d5e696"><div class="ttname"><a href="classDebugger_a9a8fdc946b20732cc6c3607937d5e696.html#a9a8fdc946b20732cc6c3607937d5e696">Debugger::markMsg</a></div><div class="ttdeci">bool markMsg</div><div class="ttdef"><b>Definition:</b> debugger.hpp:12</div></div>
+<div class="ttc" id="aclassDebugger_aa1ae540daba8d6b2b387e7f750662431_html_aa1ae540daba8d6b2b387e7f750662431"><div class="ttname"><a href="classDebugger_aa1ae540daba8d6b2b387e7f750662431.html#aa1ae540daba8d6b2b387e7f750662431">Debugger::run</a></div><div class="ttdeci">virtual void run(void) override</div><div class="ttdef"><b>Definition:</b> debugger.cpp:167</div></div>
+<div class="ttc" id="aclassDebugger_aa9d0a49584cb1a6bd88e19671f34a15c_html_aa9d0a49584cb1a6bd88e19671f34a15c"><div class="ttname"><a href="classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c.html#aa9d0a49584cb1a6bd88e19671f34a15c">Debugger::step</a></div><div class="ttdeci">bool step(int *eip, int n)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:24</div></div>
+<div class="ttc" id="aclassDebugger_ac360556593809195edbca27adb7e4585_html_ac360556593809195edbca27adb7e4585"><div class="ttname"><a href="classDebugger_ac360556593809195edbca27adb7e4585.html#ac360556593809195edbca27adb7e4585">Debugger::help</a></div><div class="ttdeci">void help(std::vector&lt; std::string &gt; argv)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:7</div></div>
+<div class="ttc" id="aclassDebugger_ac7463e2b0e29da73f2dc3be3d866425f_html_ac7463e2b0e29da73f2dc3be3d866425f"><div class="ttname"><a href="classDebugger_ac7463e2b0e29da73f2dc3be3d866425f.html#ac7463e2b0e29da73f2dc3be3d866425f">Debugger::compare</a></div><div class="ttdeci">bool compare(const std::string &amp;str, std::string ref)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:45</div></div>
+<div class="ttc" id="aclassDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee_html_ad023d2b5ec2345dbfdaf6b171efa9cee"><div class="ttname"><a href="classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee.html#ad023d2b5ec2345dbfdaf6b171efa9cee">Debugger::inspect</a></div><div class="ttdeci">void inspect(std::vector&lt; std::string &gt; argv, const Stack *stack)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:69</div></div>
+<div class="ttc" id="aclassDebugger_adbb795d5ed212cfda0d41786948c1d13_html_adbb795d5ed212cfda0d41786948c1d13"><div class="ttname"><a href="classDebugger_adbb795d5ed212cfda0d41786948c1d13.html#adbb795d5ed212cfda0d41786948c1d13">Debugger::prompt</a></div><div class="ttdeci">bool prompt(int *eip)</div><div class="ttdef"><b>Definition:</b> debugger.cpp:115</div></div>
+<div class="ttc" id="aclassDebugger_html"><div class="ttname"><a href="classDebugger.html">Debugger</a></div><div class="ttdef"><b>Definition:</b> debugger.hpp:8</div></div>
+<div class="ttc" id="aclassStack_html"><div class="ttname"><a href="classStack.html">Stack</a></div><div class="ttdef"><b>Definition:</b> stack.hpp:40</div></div>
+<div class="ttc" id="aclassVirtualMachine_html"><div class="ttname"><a href="classVirtualMachine.html">VirtualMachine</a></div><div class="ttdef"><b>Definition:</b> vmachine.hpp:10</div></div>
+<div class="ttc" id="aexprtype_8hpp_adee610a3c7375031538811d29f6a4124_html_adee610a3c7375031538811d29f6a4124"><div class="ttname"><a href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a></div><div class="ttdeci">type_t</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:4</div></div>
+<div class="ttc" id="avmachine_8hpp_html"><div class="ttname"><a href="vmachine_8hpp.html">vmachine.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

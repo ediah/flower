@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: operation_t</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fdedb0aba14d44ce9d99bc100e026e6a.html">common</a></li><li class="navelem"><a class="el" href="exprtype_8hpp.html">exprtype.hpp</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="contents">
+<table cellspacing="0" cellpadding="0" border="0">
+  <tr>
+   <td valign="top">
+      <div class="navtab">
+        <table>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_a0b43e0da2a94e710c935b6b4bb2a1317.html#a0b43e0da2a94e710c935b6b4bb2a1317">debugOp</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_ae32bf5c9a42d5a5145c0127aa254b2f5.html#ae32bf5c9a42d5a5145c0127aa254b2f5">expressionType</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_a3c34b2846ebe287748d7b3e78050f0f4.html#a3c34b2846ebe287748d7b3e78050f0f4">isExpr</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_a56dc3d7df6bf19edb35b29298360b6b0.html#a56dc3d7df6bf19edb35b29298360b6b0">isUnary</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_a2a85dcf8e1350ef0a5a66dd912cb9454.html#a2a85dcf8e1350ef0a5a66dd912cb9454">operands</a></td></tr>
+          <tr><td class="navtabHL"><a class="navtab" href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36">operation_t</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a></td></tr>
+          <tr><td class="navtab"><a class="navtab" href="exprtype_8hpp_af17312653a2caae4f379983d0973f8fa.html#af17312653a2caae4f379983d0973f8fa">typetostr</a></td></tr>
+        </table>
+      </div>
+   </td>
+   <td valign="top" class="mempage">
+<a id="a76a810650461f2062938ee9b82666b36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76a810650461f2062938ee9b82666b36">&#9670;&nbsp;</a></span>operation_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36">operation_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Элементы перечислений</th></tr><tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36ac157bdf0b85a40d2619cbc8bc1ae5fe2"></a>NONE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a003b741848d7128e25831a8376672700"></a>INV&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a87fe59ef12c3d13dc2a4d14c9b16c1f9"></a>PLUS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36af613d73b4e7b570ffd967df4a13c4225"></a>MINUS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36afcd75ee62f1678f5e0b629cdf0c27423"></a>LOR&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a086ab1f2f4dac104b6826ebe0eaba8fd"></a>MUL&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a8565f0d60c3ba6d468661c49d86e9744"></a>DIV&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a020389bbc8308bea419f7828d9b6d6eb"></a>LAND&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a4ce8913aca57119b34d949f4bc0732fc"></a>LNOT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a140fcc89db148e5975f1486e794675ba"></a>MOD&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a95c736070f99b99eb80d1eac1f4ca60f"></a>LESS&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a1ea73fc6c5c868b1a4e5e7646d3c10fc"></a>GRTR&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36afa94d3142637b24e2edf98047cc03245"></a>LESSEQ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36aeb231a54140bdf5022f3aea2f08c7a76"></a>GRTREQ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a9efdc855f3c1477957fb50affec07f8f"></a>EQ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36ab4ab8d2a8dc61f08e3cc919787c79cd8"></a>NEQ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a52a9b031766fa116251f70e65a84c01a"></a>ASSIGN&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a972dbcdf74cff71e20bdcfb53be9c391"></a>LOAD&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36acb9be765f361bb7efb9073730aac92c6"></a>READ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a61aa7ff70b76bff0fda378cf61d6afbc"></a>WRITE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a20b569a814ad63f4d1ebcdd8ba1166e6"></a>ENDL&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36aa05bfe1d47f7a6a9c37bba401db914cf"></a>JIT&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a227d95ecea3ff1219ddb58bb03d17d5a"></a>JMP&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36ab2510768eaba5e52ba71678e19a65464"></a>RET&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36abd0ebc08c262bab82a1882256d2d66e8"></a>CALL&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a679ee5320d66c8322e310daeb2ee99b8"></a>STOP&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a3754861e8c074fb088a2ed4f64786268"></a>SHARE&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36aeb5838b12f5849b4544c2d9d10dc6548"></a>FORK&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a438b68412f24003b09e0993b62dc7b48"></a>LOCK&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a76a810650461f2062938ee9b82666b36a3fd005d20821640722053dfb0f1d7066"></a>UNPACK&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+    </td>
+  </tr>
+</table>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

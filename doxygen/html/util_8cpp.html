@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Файл src/optimizer/util.cpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fef26d3633d38d4ca65fa53115b5e5dd.html">optimizer</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Функции</a>  </div>
+  <div class="headertitle">
+<div class="title">Файл util.cpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &quot;<a class="el" href="util_8hpp_source.html">optimizer/util.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="controlflow_8hpp_source.html">optimizer/controlflow.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="acyclicgraph_8hpp_source.html">optimizer/acyclicgraph.hpp</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Граф включаемых заголовочных файлов для util.cpp:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="util_8cpp__incl.svg" width="100%" height="552"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Функции</h2></td></tr>
+<tr class="memitem:add51d5eabf835440d63cb460ec3d2a8a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:add51d5eabf835440d63cb460ec3d2a8a"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="util_8cpp_add51d5eabf835440d63cb460ec3d2a8a.html#add51d5eabf835440d63cb460ec3d2a8a">find</a> (std::vector&lt; T &gt; vec, T x)</td></tr>
+<tr class="separator:add51d5eabf835440d63cb460ec3d2a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d01236ce3b27f410fd29cf24013b67e"><td class="memTemplParams" colspan="2">template&lt;typename K , typename V &gt; </td></tr>
+<tr class="memitem:a7d01236ce3b27f410fd29cf24013b67e"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="util_8cpp_a7d01236ce3b27f410fd29cf24013b67e.html#a7d01236ce3b27f410fd29cf24013b67e">find</a> (std::vector&lt; std::pair&lt; K, V &gt;&gt; vec, K x)</td></tr>
+<tr class="separator:a7d01236ce3b27f410fd29cf24013b67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ae5edf3bad47351e317159aa0e1f1e"><td class="memTemplParams" colspan="2">template&lt;typename K , typename V &gt; </td></tr>
+<tr class="memitem:ac2ae5edf3bad47351e317159aa0e1f1e"><td class="memTemplItemLeft" align="right" valign="top">int&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="util_8cpp_ac2ae5edf3bad47351e317159aa0e1f1e.html#ac2ae5edf3bad47351e317159aa0e1f1e">find</a> (std::vector&lt; std::pair&lt; K, V &gt;&gt; vec, V x)</td></tr>
+<tr class="separator:ac2ae5edf3bad47351e317159aa0e1f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a86f97d1751627a096094316fcffedf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_a6a86f97d1751627a096094316fcffedf.html#a6a86f97d1751627a096094316fcffedf">copyPOLIZ</a> (<a class="el" href="classPOLIZ.html">POLIZ</a> &amp;src, <a class="el" href="classPOLIZ.html">POLIZ</a> &amp;dst, int start, int end)</td></tr>
+<tr class="separator:a6a86f97d1751627a096094316fcffedf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa82829b94e245c6a65c2d08bc860bc4"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_afa82829b94e245c6a65c2d08bc860bc4.html#afa82829b94e245c6a65c2d08bc860bc4">find</a> (std::vector&lt; int &gt; vec, int x)</td></tr>
+<tr class="separator:afa82829b94e245c6a65c2d08bc860bc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4590bd3182751938ecb8ab035312279"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_ae4590bd3182751938ecb8ab035312279.html#ae4590bd3182751938ecb8ab035312279">find</a> (std::vector&lt; <a class="el" href="structflowTree.html">flowTree</a> * &gt;, <a class="el" href="structflowTree.html">flowTree</a> *)</td></tr>
+<tr class="separator:ae4590bd3182751938ecb8ab035312279"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e9eb3b11708dd4c02621b1b5b048c62"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_a4e9eb3b11708dd4c02621b1b5b048c62.html#a4e9eb3b11708dd4c02621b1b5b048c62">find</a> (std::vector&lt; <a class="el" href="structDAGRow.html">DAGRow</a> * &gt;, <a class="el" href="structDAGRow.html">DAGRow</a> *)</td></tr>
+<tr class="separator:a4e9eb3b11708dd4c02621b1b5b048c62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cb6ca5928404cc5e72f8162d667ee82"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_a7cb6ca5928404cc5e72f8162d667ee82.html#a7cb6ca5928404cc5e72f8162d667ee82">find</a> (std::vector&lt; std::pair&lt; <a class="el" href="structflowTree.html">flowTree</a> *, char &gt;&gt;, <a class="el" href="structflowTree.html">flowTree</a> *)</td></tr>
+<tr class="separator:a7cb6ca5928404cc5e72f8162d667ee82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa12b2ff0e2c7efd5cdd3ba7f01df7f84"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_aa12b2ff0e2c7efd5cdd3ba7f01df7f84.html#aa12b2ff0e2c7efd5cdd3ba7f01df7f84">find</a> (std::vector&lt; std::pair&lt; <a class="el" href="structflowTree.html">flowTree</a> *, char &gt;&gt;, char)</td></tr>
+<tr class="separator:aa12b2ff0e2c7efd5cdd3ba7f01df7f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcfc5a88186d7f41d35d99d5872fdf7c"><td class="memItemLeft" align="right" valign="top">template int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8cpp_adcfc5a88186d7f41d35d99d5872fdf7c.html#adcfc5a88186d7f41d35d99d5872fdf7c">find</a> (std::vector&lt; std::pair&lt; <a class="el" href="classIdentTable.html">IdentTable</a> *, <a class="el" href="structDAGRow.html">DAGRow</a> * &gt;&gt;, <a class="el" href="classIdentTable.html">IdentTable</a> *)</td></tr>
+<tr class="separator:adcfc5a88186d7f41d35d99d5872fdf7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

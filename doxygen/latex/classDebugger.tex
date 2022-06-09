@@ -1,0 +1,308 @@
+\hypertarget{classDebugger}{}\doxysection{Класс Debugger}
+\label{classDebugger}\index{Debugger@{Debugger}}
+
+
+{\ttfamily \#include $<$debugger.\+hpp$>$}
+
+
+
+Граф наследования\+:Debugger\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=170pt]{classDebugger__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Граф связей класса Debugger\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classDebugger__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDebugger_a2b76be38cdcef612b0f307758c5ea17a_a2b76be38cdcef612b0f307758c5ea17a}{Debugger}} ()
+\item 
+virtual void \mbox{\hyperlink{classDebugger_aa1ae540daba8d6b2b387e7f750662431_aa1ae540daba8d6b2b387e7f750662431}{run}} (void) override
+\item 
+bool \mbox{\hyperlink{classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c_aa9d0a49584cb1a6bd88e19671f34a15c}{step}} (int $\ast$eip, int n)
+\item 
+void \mbox{\hyperlink{classDebugger_ac360556593809195edbca27adb7e4585_ac360556593809195edbca27adb7e4585}{help}} (std\+::vector$<$ std\+::string $>$ argv)
+\item 
+bool \mbox{\hyperlink{classDebugger_adbb795d5ed212cfda0d41786948c1d13_adbb795d5ed212cfda0d41786948c1d13}{prompt}} (int $\ast$eip)
+\item 
+void \mbox{\hyperlink{classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee_ad023d2b5ec2345dbfdaf6b171efa9cee}{inspect}} (std\+::vector$<$ std\+::string $>$ argv, const \mbox{\hyperlink{classStack}{Stack}} $\ast$stack)
+\item 
+void \mbox{\hyperlink{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25c3366af48e33c8454b834f5}{memory}} (void) const
+\item 
+bool \mbox{\hyperlink{classDebugger_ac7463e2b0e29da73f2dc3be3d866425f_ac7463e2b0e29da73f2dc3be3d866425f}{compare}} (const std\+::string \&str, std\+::string ref)
+\item 
+void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+BIN}} (const char $\ast$filename)
+\item 
+bool \mbox{\hyperlink{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}{exec}} (\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}} op, int $\ast$eip)
+\item 
+void \mbox{\hyperlink{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}{update\+Vars}} (void)
+\item 
+void \mbox{\hyperlink{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}{number\+Op}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} lval, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} rval, void $\ast$f)
+\item 
+{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} TYPE)
+\item 
+{\footnotesize template$<$class lval\+\_\+t , class rval\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}{assign}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Открытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static char $\ast$ \mbox{\hyperlink{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}{get\+String}} (void $\ast$x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Защищенные данные}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}{base}}
+\item 
+char $\ast$ \mbox{\hyperlink{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}{cmd}}
+\item 
+int \mbox{\hyperlink{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}{cmd\+Num}}
+\item 
+bool \mbox{\hyperlink{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}{in\+Thread}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}{stack\+VM}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}{register\+VM}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}{shared\+Vars}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}{offsets}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}{params}}
+\item 
+std\+::vector$<$ pid\+\_\+t $>$ \mbox{\hyperlink{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}{threads}}
+\item 
+std\+::vector$<$ int $\ast$ $>$ \mbox{\hyperlink{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}{pipefd}}
+\item 
+\mbox{\hyperlink{classGendarme}{Gendarme}} \mbox{\hyperlink{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}{dynamic\+Strings}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{classDebugger_a5ecd5f757232b68d34033d0af2bb4f67_a5ecd5f757232b68d34033d0af2bb4f67}{print\+Data}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} type, void $\ast$data)
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+std\+::map$<$ std\+::string, std\+::vector$<$ std\+::string $>$ $>$ \mbox{\hyperlink{classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5_a2547a59e78689da18d4fc8ace7b1b1e5}{synonims}}
+\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classDebugger_a346020c79b32cde4ee297699f4fc2462_a346020c79b32cde4ee297699f4fc2462}{lastcmd}} = \{\char`\"{}help\char`\"{}\}
+\item 
+bool \mbox{\hyperlink{classDebugger_a9a8fdc946b20732cc6c3607937d5e696_a9a8fdc946b20732cc6c3607937d5e696}{mark\+Msg}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{classDebugger_a2b76be38cdcef612b0f307758c5ea17a_a2b76be38cdcef612b0f307758c5ea17a}\label{classDebugger_a2b76be38cdcef612b0f307758c5ea17a_a2b76be38cdcef612b0f307758c5ea17a}} 
+\index{Debugger@{Debugger}!Debugger@{Debugger}}
+\index{Debugger@{Debugger}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{Debugger()}{Debugger()}}
+{\footnotesize\ttfamily Debugger\+::\+Debugger (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}\label{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}} 
+\index{Debugger@{Debugger}!assign@{assign}}
+\index{assign@{assign}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t $>$ \\
+void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_ac7463e2b0e29da73f2dc3be3d866425f_ac7463e2b0e29da73f2dc3be3d866425f}\label{classDebugger_ac7463e2b0e29da73f2dc3be3d866425f_ac7463e2b0e29da73f2dc3be3d866425f}} 
+\index{Debugger@{Debugger}!compare@{compare}}
+\index{compare@{compare}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{compare()}{compare()}}
+{\footnotesize\ttfamily bool Debugger\+::compare (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str,  }\item[{std\+::string}]{ref }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}\label{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}} 
+\index{Debugger@{Debugger}!exec@{exec}}
+\index{exec@{exec}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{exec()}{exec()}}
+{\footnotesize\ttfamily bool Virtual\+Machine\+::exec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}}}]{op,  }\item[{int $\ast$}]{eip }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}\label{classVirtualMachine_ab19099bd0ff3b0bf20770eb17b770f08_ab19099bd0ff3b0bf20770eb17b770f08}} 
+\index{Debugger@{Debugger}!getString@{getString}}
+\index{getString@{getString}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{getString()}{getString()}}
+{\footnotesize\ttfamily char $\ast$ Virtual\+Machine\+::get\+String (\begin{DoxyParamCaption}\item[{void $\ast$}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_ac360556593809195edbca27adb7e4585_ac360556593809195edbca27adb7e4585}\label{classDebugger_ac360556593809195edbca27adb7e4585_ac360556593809195edbca27adb7e4585}} 
+\index{Debugger@{Debugger}!help@{help}}
+\index{help@{help}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{help()}{help()}}
+{\footnotesize\ttfamily void Debugger\+::help (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::string $>$}]{argv }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee_ad023d2b5ec2345dbfdaf6b171efa9cee}\label{classDebugger_ad023d2b5ec2345dbfdaf6b171efa9cee_ad023d2b5ec2345dbfdaf6b171efa9cee}} 
+\index{Debugger@{Debugger}!inspect@{inspect}}
+\index{inspect@{inspect}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{inspect()}{inspect()}}
+{\footnotesize\ttfamily void Debugger\+::inspect (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::string $>$}]{argv,  }\item[{const \mbox{\hyperlink{classStack}{Stack}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}\label{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}} 
+\index{Debugger@{Debugger}!loadBIN@{loadBIN}}
+\index{loadBIN@{loadBIN}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{loadBIN()}{loadBIN()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::load\+BIN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25c3366af48e33c8454b834f5}\label{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25c3366af48e33c8454b834f5}} 
+\index{Debugger@{Debugger}!memory@{memory}}
+\index{memory@{memory}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{memory()}{memory()}}
+{\footnotesize\ttfamily void Debugger\+::memory (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}\label{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}} 
+\index{Debugger@{Debugger}!numberOp@{numberOp}}
+\index{numberOp@{numberOp}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{numberOp()}{numberOp()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::number\+Op (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{lval,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{rval,  }\item[{void $\ast$}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_a5ecd5f757232b68d34033d0af2bb4f67_a5ecd5f757232b68d34033d0af2bb4f67}\label{classDebugger_a5ecd5f757232b68d34033d0af2bb4f67_a5ecd5f757232b68d34033d0af2bb4f67}} 
+\index{Debugger@{Debugger}!printData@{printData}}
+\index{printData@{printData}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{printData()}{printData()}}
+{\footnotesize\ttfamily void Debugger\+::print\+Data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{type,  }\item[{void $\ast$}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classDebugger_adbb795d5ed212cfda0d41786948c1d13_adbb795d5ed212cfda0d41786948c1d13}\label{classDebugger_adbb795d5ed212cfda0d41786948c1d13_adbb795d5ed212cfda0d41786948c1d13}} 
+\index{Debugger@{Debugger}!prompt@{prompt}}
+\index{prompt@{prompt}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{prompt()}{prompt()}}
+{\footnotesize\ttfamily bool Debugger\+::prompt (\begin{DoxyParamCaption}\item[{int $\ast$}]{eip }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDebugger_aa1ae540daba8d6b2b387e7f750662431_aa1ae540daba8d6b2b387e7f750662431}\label{classDebugger_aa1ae540daba8d6b2b387e7f750662431_aa1ae540daba8d6b2b387e7f750662431}} 
+\index{Debugger@{Debugger}!run@{run}}
+\index{run@{run}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void Debugger\+::run (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Переопределяет метод предка \mbox{\hyperlink{classVirtualMachine_a5c0d5bb13224bdbabe4688d054ac6355_a5c0d5bb13224bdbabe4688d054ac6355}{Virtual\+Machine}}.
+
+\mbox{\Hypertarget{classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c_aa9d0a49584cb1a6bd88e19671f34a15c}\label{classDebugger_aa9d0a49584cb1a6bd88e19671f34a15c_aa9d0a49584cb1a6bd88e19671f34a15c}} 
+\index{Debugger@{Debugger}!step@{step}}
+\index{step@{step}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{step()}{step()}}
+{\footnotesize\ttfamily bool Debugger\+::step (\begin{DoxyParamCaption}\item[{int $\ast$}]{eip,  }\item[{int}]{n }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}\label{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}} 
+\index{Debugger@{Debugger}!tempOp@{tempOp}}
+\index{tempOp@{tempOp}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{tempOp()}{tempOp()}}
+{\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t , class res\+\_\+t $>$ \\
+void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{TYPE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}\label{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}} 
+\index{Debugger@{Debugger}!updateVars@{updateVars}}
+\index{updateVars@{updateVars}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{updateVars()}{updateVars()}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::update\+Vars (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}\label{classVirtualMachine_a6fe200f1f57f81dc3033b66ff5a1a4ab_a6fe200f1f57f81dc3033b66ff5a1a4ab}} 
+\index{Debugger@{Debugger}!base@{base}}
+\index{base@{base}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{base}{base}}
+{\footnotesize\ttfamily char$\ast$ Virtual\+Machine\+::base\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}\label{classVirtualMachine_a94e93454d7e29780e185372cd6ab77ba_a94e93454d7e29780e185372cd6ab77ba}} 
+\index{Debugger@{Debugger}!cmd@{cmd}}
+\index{cmd@{cmd}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{cmd}{cmd}}
+{\footnotesize\ttfamily char$\ast$ Virtual\+Machine\+::cmd\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}\label{classVirtualMachine_ac6670508b495392da2b92421ee7dea44_ac6670508b495392da2b92421ee7dea44}} 
+\index{Debugger@{Debugger}!cmdNum@{cmdNum}}
+\index{cmdNum@{cmdNum}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{cmdNum}{cmdNum}}
+{\footnotesize\ttfamily int Virtual\+Machine\+::cmd\+Num\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}\label{classVirtualMachine_a390fd46f180da340317330dbea1820b2_a390fd46f180da340317330dbea1820b2}} 
+\index{Debugger@{Debugger}!dynamicStrings@{dynamicStrings}}
+\index{dynamicStrings@{dynamicStrings}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{dynamicStrings}{dynamicStrings}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classGendarme}{Gendarme}} Virtual\+Machine\+::dynamic\+Strings\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}\label{classVirtualMachine_ad699f0d9c90b1452897d4d5967770592_ad699f0d9c90b1452897d4d5967770592}} 
+\index{Debugger@{Debugger}!inThread@{inThread}}
+\index{inThread@{inThread}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{inThread}{inThread}}
+{\footnotesize\ttfamily bool Virtual\+Machine\+::in\+Thread\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_a346020c79b32cde4ee297699f4fc2462_a346020c79b32cde4ee297699f4fc2462}\label{classDebugger_a346020c79b32cde4ee297699f4fc2462_a346020c79b32cde4ee297699f4fc2462}} 
+\index{Debugger@{Debugger}!lastcmd@{lastcmd}}
+\index{lastcmd@{lastcmd}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{lastcmd}{lastcmd}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ Debugger\+::lastcmd = \{\char`\"{}help\char`\"{}\}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classDebugger_a9a8fdc946b20732cc6c3607937d5e696_a9a8fdc946b20732cc6c3607937d5e696}\label{classDebugger_a9a8fdc946b20732cc6c3607937d5e696_a9a8fdc946b20732cc6c3607937d5e696}} 
+\index{Debugger@{Debugger}!markMsg@{markMsg}}
+\index{markMsg@{markMsg}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{markMsg}{markMsg}}
+{\footnotesize\ttfamily bool Debugger\+::mark\+Msg = false\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}\label{classVirtualMachine_aade05d909791ed23fabb32895a8eb173_aade05d909791ed23fabb32895a8eb173}} 
+\index{Debugger@{Debugger}!offsets@{offsets}}
+\index{offsets@{offsets}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{offsets}{offsets}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::offsets\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}\label{classVirtualMachine_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b_a5bf8cf34dbc35d9b8a1b2ab86ea8e18b}} 
+\index{Debugger@{Debugger}!params@{params}}
+\index{params@{params}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{params}{params}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::params\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}\label{classVirtualMachine_a15f1dabad3f02b62f1e98df8c48879d8_a15f1dabad3f02b62f1e98df8c48879d8}} 
+\index{Debugger@{Debugger}!pipefd@{pipefd}}
+\index{pipefd@{pipefd}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{pipefd}{pipefd}}
+{\footnotesize\ttfamily std\+::vector$<$int $\ast$$>$ Virtual\+Machine\+::pipefd\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}\label{classVirtualMachine_a2ff0176a90d760d496eba445fb075381_a2ff0176a90d760d496eba445fb075381}} 
+\index{Debugger@{Debugger}!registerVM@{registerVM}}
+\index{registerVM@{registerVM}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{registerVM}{registerVM}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::register\+VM\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}\label{classVirtualMachine_a9eca9c37f832d7ab02c891cadd0dfea1_a9eca9c37f832d7ab02c891cadd0dfea1}} 
+\index{Debugger@{Debugger}!sharedVars@{sharedVars}}
+\index{sharedVars@{sharedVars}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{sharedVars}{sharedVars}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::shared\+Vars\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}\label{classVirtualMachine_aed90cf78017003c58805527fa897c20f_aed90cf78017003c58805527fa897c20f}} 
+\index{Debugger@{Debugger}!stackVM@{stackVM}}
+\index{stackVM@{stackVM}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{stackVM}{stackVM}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Virtual\+Machine\+::stack\+VM\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+\mbox{\Hypertarget{classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5_a2547a59e78689da18d4fc8ace7b1b1e5}\label{classDebugger_a2547a59e78689da18d4fc8ace7b1b1e5_a2547a59e78689da18d4fc8ace7b1b1e5}} 
+\index{Debugger@{Debugger}!synonims@{synonims}}
+\index{synonims@{synonims}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{synonims}{synonims}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string, std\+::vector$<$std\+::string$>$ $>$ Debugger\+::synonims\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}\label{classVirtualMachine_af3103991ebd910d873c61adb25cb9dfe_af3103991ebd910d873c61adb25cb9dfe}} 
+\index{Debugger@{Debugger}!threads@{threads}}
+\index{threads@{threads}!Debugger@{Debugger}}
+\doxysubsubsection{\texorpdfstring{threads}{threads}}
+{\footnotesize\ttfamily std\+::vector$<$pid\+\_\+t$>$ Virtual\+Machine\+::threads\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [inherited]}}
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/debugger/\mbox{\hyperlink{debugger_8hpp}{debugger.\+hpp}}\item 
+src/debugger/\mbox{\hyperlink{debugger_8cpp}{debugger.\+cpp}}\end{DoxyCompactItemize}

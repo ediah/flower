@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: README</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="PageDoc"><div class="header">
+  <div class="headertitle">
+<div class="title">README </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p align="center"></p>
+<p><img src="https://raw.githubusercontent.com/ediah/flower/a526268661edea2aff21163bf82ed8be3bc5da22/flower.png" alt="Icon" width="400" class="inline"/> </p>
+<p align="center"></p>
+<p><a href="https://lgtm.com/projects/g/ediah/mlc/alerts/"><img src="https://img.shields.io/lgtm/alerts/github/ediah/mlc?style=for-the-badge" alt="Total alerts" class="inline"/></a> <a href="https://lgtm.com/projects/g/ediah/mlc/context:cpp"><img src="https://img.shields.io/lgtm/grade/cpp/github/ediah/mlc?style=for-the-badge" alt="Language grade: C/C++" class="inline"/></a> <img src="https://img.shields.io/badge/coverage-75.9%25-yellow?style=for-the-badge" alt="Coverage" class="inline"/> </p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+Краткое описание</h1>
+<p><b>Flower</b> — строго типизированный язык процедурного программирования. Языком поддерживается многопоточность, указатели заменены на концепт "общей" (или "разделяемой") переменной, есть 4 простых типа и один составной. Продвинутая работа со структурами: над ними можно проводить арифметические операции.</p>
+<p>В репозитории ведётся разработка:</p>
+<ol type="1">
+<li>Оптимизирующего байт-код компилятора (<b>flc</b>),</li>
+<li>Виртуальной стековой машины (<b>flvm</b>),</li>
+<li>Отладчика виртуальной машины (<b>fldbg</b>).</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Порядок работы</h1>
+<ol type="1">
+<li>Скомпилировать написанную программу <code>source.fl</code>: <div class="fragment"><div class="line">./flc source.fl</div>
+</div><!-- fragment --></li>
+<li>Запустить бинарный файл на виртуальной машине: <div class="fragment"><div class="line">./flvm out.bin</div>
+</div><!-- fragment --></li>
+<li>В случае ошибок или иных проблем отладить: <div class="fragment"><div class="line">./fldbg out.bin</div>
+</div><!-- fragment --></li>
+<li>Если вносятся изменения в код проекта, все изменения можно автоматически протестировать с помощью команды: <div class="fragment"><div class="line">./fltest [-O] [-m] [-r] ./test/A-unit/*.fl ./test/B-unit/*.fl</div>
+</div><!-- fragment --> </li>
+</ol>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Документация</h1>
+<p>Скоро будет доступна в разделе wiki, планируется работа с doxygen.</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Примеры</h1>
+<h3><a class="anchor" id="autotoc_md4"></a>
+Факториал</h3>
+<div class="fragment"><div class="line"> {c#}</div>
+<div class="line">def factorial(int n): int {</div>
+<div class="line">    if (n &gt; 1) </div>
+<div class="line">        return factorial(n - 1) * n;</div>
+<div class="line">    else</div>
+<div class="line">        return 1;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">program {</div>
+<div class="line">    int a;</div>
+<div class="line">    read(a);</div>
+<div class="line">    write(factorial(a));</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
+Многопоточность</h3>
+<div class="fragment"><div class="line"> {c#}</div>
+<div class="line">def iterate(shared int a): shared int {</div>
+<div class="line">    for (int i = 1; i &lt;= 5; i = i + 1) {</div>
+<div class="line">        /* write(&quot;Итерация #&quot;, i, &quot;: a = &quot;, a); */</div>
+<div class="line">        a = a / 2;</div>
+<div class="line">    }</div>
+<div class="line">    return a;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">program {</div>
+<div class="line">    shared int x, y;</div>
+<div class="line">    </div>
+<div class="line">    read(x);</div>
+<div class="line">    read(y);</div>
+<div class="line"> </div>
+<div class="line">    thread:1 { x = iterate(x); }</div>
+<div class="line">    thread:2 { y = iterate(y); }</div>
+<div class="line"> </div>
+<div class="line">    fork(1, 2);</div>
+<div class="line">    lock();</div>
+<div class="line"> </div>
+<div class="line">    write(x, &quot; &quot;, y);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Множество других примеров Вы можете найти в папке 'test'. </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

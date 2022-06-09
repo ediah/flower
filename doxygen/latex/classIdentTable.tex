@@ -1,0 +1,485 @@
+\hypertarget{classIdentTable}{}\doxysection{Класс Ident\+Table}
+\label{classIdentTable}\index{IdentTable@{IdentTable}}
+
+
+{\ttfamily \#include $<$tables.\+hpp$>$}
+
+
+
+Граф связей класса Ident\+Table\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classIdentTable__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classIdentTable_a8cf72512e075bd9c969a03cf32d0477f_a8cf72512e075bd9c969a03cf32d0477f}{Ident\+Table}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable_a7eb5a34e08d7ea89c7719e7fd81ce9b1_a7eb5a34e08d7ea89c7719e7fd81ce9b1}{Ident\+Table}} (const \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&template\+IT)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} \& \mbox{\hyperlink{classIdentTable_acc265bdd9b5e78f7f8b005ca364972f0_acc265bdd9b5e78f7f8b005ca364972f0}{operator=}} (const \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&template\+IT)
+\item 
+void \mbox{\hyperlink{classIdentTable_a97678c621f7ccfe9b7cd743628f6420a_a97678c621f7ccfe9b7cd743628f6420a}{push\+Id}} (char $\ast$ident)
+\item 
+void \mbox{\hyperlink{classIdentTable_ad8d9b7703156883f161a5e50e44891c2_ad8d9b7703156883f161a5e50e44891c2}{push\+Type}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} t)
+\item 
+void \mbox{\hyperlink{classIdentTable_a381b968dcdb2fbb365a71b22ecfe793e_a381b968dcdb2fbb365a71b22ecfe793e}{push\+Struct}} (char $\ast$\mbox{\hyperlink{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}{name}})
+\item 
+void \mbox{\hyperlink{classIdentTable_ae1573357903b8e311f19d0ac60dc3462_ae1573357903b8e311f19d0ac60dc3462}{push\+Val}} (void $\ast$v)
+\item 
+void \mbox{\hyperlink{classIdentTable_ae25fd4274ade896ec4a606481b037704_ae25fd4274ade896ec4a606481b037704}{set\+Type}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} new\+Type)
+\item 
+void \mbox{\hyperlink{classIdentTable_acded9aea7e30e7ea8759428ba53d9ab1_acded9aea7e30e7ea8759428ba53d9ab1}{set\+Func}} (void)
+\item 
+void \mbox{\hyperlink{classIdentTable_abb198823ee6056c118cd1616f63ba7e3_abb198823ee6056c118cd1616f63ba7e3}{set\+Val}} (void $\ast$\mbox{\hyperlink{classIdentTable_a947ef7bbb4ed1c5cc408a5f2fdd64f1e_a947ef7bbb4ed1c5cc408a5f2fdd64f1e}{val}})
+\item 
+void \mbox{\hyperlink{classIdentTable_a09487d4476093538792fed9260b588c7_a09487d4476093538792fed9260b588c7}{set\+Id}} (char $\ast$\mbox{\hyperlink{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}{name}})
+\item 
+void \mbox{\hyperlink{classIdentTable_a2a37121afc86b0787977853d0d44e7bd_a2a37121afc86b0787977853d0d44e7bd}{set\+Ord}} (int x)
+\item 
+void \mbox{\hyperlink{classIdentTable_ab40d0558ec7a9d5504d7ab388b4f1708_ab40d0558ec7a9d5504d7ab388b4f1708}{set\+Reg}} (bool x)
+\item 
+void \mbox{\hyperlink{classIdentTable_ade4b4df9ebd5403c6a0428ffef76b218_ade4b4df9ebd5403c6a0428ffef76b218}{set\+Params}} (int x)
+\item 
+void \mbox{\hyperlink{classIdentTable_aa36e84fe0e535681708b44e735cd47a7_aa36e84fe0e535681708b44e735cd47a7}{set\+Offset}} (int x)
+\item 
+void \mbox{\hyperlink{classIdentTable_a0add3b8f50bfd91737e3ff4b106ae50d_a0add3b8f50bfd91737e3ff4b106ae50d}{set\+Shared}} (void)
+\item 
+void \mbox{\hyperlink{classIdentTable_acdef07182fba10e26245c61c74b8ffeb_acdef07182fba10e26245c61c74b8ffeb}{set\+Main\+Table}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$table)
+\item 
+void \mbox{\hyperlink{classIdentTable_a2aa63f8890af82a6faf1e88d51789cd2_a2aa63f8890af82a6faf1e88d51789cd2}{set\+Struct}} (char $\ast$\mbox{\hyperlink{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}{name}})
+\item 
+char $\ast$ \mbox{\hyperlink{classIdentTable_ae1323ca830bab2d71fe9fdc24ac2139e_ae1323ca830bab2d71fe9fdc24ac2139e}{get\+Struct}} (void) const
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classIdentTable_a7139b69e9d32caad7ab4a36dc6a6c210_a7139b69e9d32caad7ab4a36dc6a6c210}{get\+Type}} (void) const
+\item 
+void $\ast$ \mbox{\hyperlink{classIdentTable_abe152221d9d26203cbd89d64d3b40f5b_abe152221d9d26203cbd89d64d3b40f5b}{get\+Val}} (void) const
+\item 
+char $\ast$ \mbox{\hyperlink{classIdentTable_a9011a135c181b67c145381178079ea8d_a9011a135c181b67c145381178079ea8d}{get\+Id}} (void) const
+\item 
+int \mbox{\hyperlink{classIdentTable_a95edda28e787a4d72a4edbbfe6dcea55_a95edda28e787a4d72a4edbbfe6dcea55}{get\+Ord}} (void) const
+\item 
+int \mbox{\hyperlink{classIdentTable_aa9bab2f18ccb456e1f557d3b2787f18b_aa9bab2f18ccb456e1f557d3b2787f18b}{get\+Params}} (void) const
+\item 
+int \mbox{\hyperlink{classIdentTable_a1605eb3d0eadb629b0bb640913cff897_a1605eb3d0eadb629b0bb640913cff897}{get\+Offset}} (void) const
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a568b24722fb81e79a922a6b3fdba235e_a568b24722fb81e79a922a6b3fdba235e}{get\+Main\+Table}} (void)
+\item 
+bool \mbox{\hyperlink{classIdentTable_a1a74006b1513ea030ac4234f22c0c75e_a1a74006b1513ea030ac4234f22c0c75e}{is\+Func}} (void) const
+\item 
+bool \mbox{\hyperlink{classIdentTable_a89c9ed82d478166a91b583a35c9fb8a7_a89c9ed82d478166a91b583a35c9fb8a7}{is\+Def}} (void) const
+\item 
+bool \mbox{\hyperlink{classIdentTable_ac2b90095364bfed0a2dd5d4b2e48b8c9_ac2b90095364bfed0a2dd5d4b2e48b8c9}{is\+Reg}} (void) const
+\item 
+bool \mbox{\hyperlink{classIdentTable_a73d1ba0a14b10c8a004fa92e4e003a58_a73d1ba0a14b10c8a004fa92e4e003a58}{is\+Shared}} (void) const
+\item 
+void \mbox{\hyperlink{classIdentTable_a2ef7f51438e0b6d2c4e1285a3cba81dd_a2ef7f51438e0b6d2c4e1285a3cba81dd}{whoami}} ()
+\item 
+void \mbox{\hyperlink{classIdentTable_a3bf288a135f7024c6bd05db6fe7af034_a3bf288a135f7024c6bd05db6fe7af034}{repr}} (void)
+\item 
+void \mbox{\hyperlink{classIdentTable_ab01e57bb35f1c582321a697dc6c84b3f_ab01e57bb35f1c582321a697dc6c84b3f}{fade}} (void)
+\item 
+void \mbox{\hyperlink{classIdentTable_a750a7f82e608cd5760b1d4cd8e8c578c_a750a7f82e608cd5760b1d4cd8e8c578c}{dup\+Type}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a1e86bbdd6fbc87a58d84e2dd48794706_a1e86bbdd6fbc87a58d84e2dd48794706}{last}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d}{confirm}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_af5d1001393d2f0f18d8d5a4ebb9efaad_af5d1001393d2f0f18d8d5a4ebb9efaad}{delete\+Labels}} (void)
+\item 
+void \mbox{\hyperlink{classIdentTable_a20ea2fe94a7b1c5bbd4c312758f9faea_a20ea2fe94a7b1c5bbd4c312758f9faea}{write\+Val\+To\+Stream}} (std\+::ostream \&s)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a05ac84a14b7b55aa005d86d7ae27f383_a05ac84a14b7b55aa005d86d7ae27f383}{get\+IT}} (char $\ast$\mbox{\hyperlink{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}{name}}, bool autodel=true)
+\item 
+\mbox{\hyperlink{classIdentTable_ad03c22d19e7b0815f9ce84d233b6f7fb_ad03c22d19e7b0815f9ce84d233b6f7fb}{$\sim$\+Ident\+Table}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Поля данных}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a41f9a4ae439abb1c6d1bf4fcadcd0f8d_a41f9a4ae439abb1c6d1bf4fcadcd0f8d}{next}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classIdentTable_a7ec0561da0c1d11541c4aa1b37bad5f4_a7ec0561da0c1d11541c4aa1b37bad5f4}{val\+Type}}
+\item 
+char $\ast$ \mbox{\hyperlink{classIdentTable_a981b1069226ac2c908378b1e50accc26_a981b1069226ac2c908378b1e50accc26}{struct\+Name}}
+\item 
+char $\ast$ \mbox{\hyperlink{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}{name}}
+\item 
+char $\ast$ \mbox{\hyperlink{classIdentTable_a8c2074cd7584ea98b29b3f0a697ed8cb_a8c2074cd7584ea98b29b3f0a697ed8cb}{faded\+Name}}
+\item 
+bool \mbox{\hyperlink{classIdentTable_a1fda63b2d68a275430975ae08d9ab62c_a1fda63b2d68a275430975ae08d9ab62c}{def}}
+\item 
+bool \mbox{\hyperlink{classIdentTable_a6eed7f2930474dcb18839149ef9f6a70_a6eed7f2930474dcb18839149ef9f6a70}{func}}
+\item 
+bool \mbox{\hyperlink{classIdentTable_a0d2a2f4a28dc515a65eea1ccaf6cf875_a0d2a2f4a28dc515a65eea1ccaf6cf875}{reg}}
+\item 
+void $\ast$ \mbox{\hyperlink{classIdentTable_a947ef7bbb4ed1c5cc408a5f2fdd64f1e_a947ef7bbb4ed1c5cc408a5f2fdd64f1e}{val}}
+\item 
+int \mbox{\hyperlink{classIdentTable_a15237cbcf5b6f154a73041ef75ae440d_a15237cbcf5b6f154a73041ef75ae440d}{ord}}
+\item 
+int \mbox{\hyperlink{classIdentTable_a9b247e61e1fb0e8ca408dec6b9f7a03b_a9b247e61e1fb0e8ca408dec6b9f7a03b}{params}}
+\item 
+int \mbox{\hyperlink{classIdentTable_a13b503f4571d405f1fbd61f0cb97d89a_a13b503f4571d405f1fbd61f0cb97d89a}{offset}}
+\item 
+bool \mbox{\hyperlink{classIdentTable_ababab07c8deeb15cac517cad201c1c67_ababab07c8deeb15cac517cad201c1c67}{shared}}
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classIdentTable_a1a21cf7799d8b721d064c1ed1b8a72f6_a1a21cf7799d8b721d064c1ed1b8a72f6}{main\+Table}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Друзья}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classIdentTable_acdb3548d9c8f56a61653155fe4108c53_acdb3548d9c8f56a61653155fe4108c53}{operator==}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&a, \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{classIdentTable_a8cf72512e075bd9c969a03cf32d0477f_a8cf72512e075bd9c969a03cf32d0477f}\label{classIdentTable_a8cf72512e075bd9c969a03cf32d0477f_a8cf72512e075bd9c969a03cf32d0477f}} 
+\index{IdentTable@{IdentTable}!IdentTable@{IdentTable}}
+\index{IdentTable@{IdentTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{IdentTable()}{IdentTable()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Ident\+Table\+::\+Ident\+Table (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a7eb5a34e08d7ea89c7719e7fd81ce9b1_a7eb5a34e08d7ea89c7719e7fd81ce9b1}\label{classIdentTable_a7eb5a34e08d7ea89c7719e7fd81ce9b1_a7eb5a34e08d7ea89c7719e7fd81ce9b1}} 
+\index{IdentTable@{IdentTable}!IdentTable@{IdentTable}}
+\index{IdentTable@{IdentTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{IdentTable()}{IdentTable()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Ident\+Table\+::\+Ident\+Table (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&}]{template\+IT }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ad03c22d19e7b0815f9ce84d233b6f7fb_ad03c22d19e7b0815f9ce84d233b6f7fb}\label{classIdentTable_ad03c22d19e7b0815f9ce84d233b6f7fb_ad03c22d19e7b0815f9ce84d233b6f7fb}} 
+\index{IdentTable@{IdentTable}!````~IdentTable@{$\sim$IdentTable}}
+\index{````~IdentTable@{$\sim$IdentTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{$\sim$IdentTable()}{~IdentTable()}}
+{\footnotesize\ttfamily Ident\+Table\+::$\sim$\+Ident\+Table (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{classIdentTable_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d}\label{classIdentTable_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d_a2a1c68cde6b445d5dd0b3cd2ca3d8b7d}} 
+\index{IdentTable@{IdentTable}!confirm@{confirm}}
+\index{confirm@{confirm}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{confirm()}{confirm()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Ident\+Table\+::confirm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_af5d1001393d2f0f18d8d5a4ebb9efaad_af5d1001393d2f0f18d8d5a4ebb9efaad}\label{classIdentTable_af5d1001393d2f0f18d8d5a4ebb9efaad_af5d1001393d2f0f18d8d5a4ebb9efaad}} 
+\index{IdentTable@{IdentTable}!deleteLabels@{deleteLabels}}
+\index{deleteLabels@{deleteLabels}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{deleteLabels()}{deleteLabels()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Ident\+Table\+::delete\+Labels (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a750a7f82e608cd5760b1d4cd8e8c578c_a750a7f82e608cd5760b1d4cd8e8c578c}\label{classIdentTable_a750a7f82e608cd5760b1d4cd8e8c578c_a750a7f82e608cd5760b1d4cd8e8c578c}} 
+\index{IdentTable@{IdentTable}!dupType@{dupType}}
+\index{dupType@{dupType}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{dupType()}{dupType()}}
+{\footnotesize\ttfamily void Ident\+Table\+::dup\+Type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ab01e57bb35f1c582321a697dc6c84b3f_ab01e57bb35f1c582321a697dc6c84b3f}\label{classIdentTable_ab01e57bb35f1c582321a697dc6c84b3f_ab01e57bb35f1c582321a697dc6c84b3f}} 
+\index{IdentTable@{IdentTable}!fade@{fade}}
+\index{fade@{fade}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{fade()}{fade()}}
+{\footnotesize\ttfamily void Ident\+Table\+::fade (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a9011a135c181b67c145381178079ea8d_a9011a135c181b67c145381178079ea8d}\label{classIdentTable_a9011a135c181b67c145381178079ea8d_a9011a135c181b67c145381178079ea8d}} 
+\index{IdentTable@{IdentTable}!getId@{getId}}
+\index{getId@{getId}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily char $\ast$ Ident\+Table\+::get\+Id (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a05ac84a14b7b55aa005d86d7ae27f383_a05ac84a14b7b55aa005d86d7ae27f383}\label{classIdentTable_a05ac84a14b7b55aa005d86d7ae27f383_a05ac84a14b7b55aa005d86d7ae27f383}} 
+\index{IdentTable@{IdentTable}!getIT@{getIT}}
+\index{getIT@{getIT}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getIT()}{getIT()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Ident\+Table\+::get\+IT (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{bool}]{autodel = {\ttfamily true} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a568b24722fb81e79a922a6b3fdba235e_a568b24722fb81e79a922a6b3fdba235e}\label{classIdentTable_a568b24722fb81e79a922a6b3fdba235e_a568b24722fb81e79a922a6b3fdba235e}} 
+\index{IdentTable@{IdentTable}!getMainTable@{getMainTable}}
+\index{getMainTable@{getMainTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getMainTable()}{getMainTable()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Ident\+Table\+::get\+Main\+Table (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a1605eb3d0eadb629b0bb640913cff897_a1605eb3d0eadb629b0bb640913cff897}\label{classIdentTable_a1605eb3d0eadb629b0bb640913cff897_a1605eb3d0eadb629b0bb640913cff897}} 
+\index{IdentTable@{IdentTable}!getOffset@{getOffset}}
+\index{getOffset@{getOffset}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getOffset()}{getOffset()}}
+{\footnotesize\ttfamily int Ident\+Table\+::get\+Offset (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a95edda28e787a4d72a4edbbfe6dcea55_a95edda28e787a4d72a4edbbfe6dcea55}\label{classIdentTable_a95edda28e787a4d72a4edbbfe6dcea55_a95edda28e787a4d72a4edbbfe6dcea55}} 
+\index{IdentTable@{IdentTable}!getOrd@{getOrd}}
+\index{getOrd@{getOrd}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getOrd()}{getOrd()}}
+{\footnotesize\ttfamily int Ident\+Table\+::get\+Ord (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_aa9bab2f18ccb456e1f557d3b2787f18b_aa9bab2f18ccb456e1f557d3b2787f18b}\label{classIdentTable_aa9bab2f18ccb456e1f557d3b2787f18b_aa9bab2f18ccb456e1f557d3b2787f18b}} 
+\index{IdentTable@{IdentTable}!getParams@{getParams}}
+\index{getParams@{getParams}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getParams()}{getParams()}}
+{\footnotesize\ttfamily int Ident\+Table\+::get\+Params (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_ae1323ca830bab2d71fe9fdc24ac2139e_ae1323ca830bab2d71fe9fdc24ac2139e}\label{classIdentTable_ae1323ca830bab2d71fe9fdc24ac2139e_ae1323ca830bab2d71fe9fdc24ac2139e}} 
+\index{IdentTable@{IdentTable}!getStruct@{getStruct}}
+\index{getStruct@{getStruct}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getStruct()}{getStruct()}}
+{\footnotesize\ttfamily char $\ast$ Ident\+Table\+::get\+Struct (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a7139b69e9d32caad7ab4a36dc6a6c210_a7139b69e9d32caad7ab4a36dc6a6c210}\label{classIdentTable_a7139b69e9d32caad7ab4a36dc6a6c210_a7139b69e9d32caad7ab4a36dc6a6c210}} 
+\index{IdentTable@{IdentTable}!getType@{getType}}
+\index{getType@{getType}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getType()}{getType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Ident\+Table\+::get\+Type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_abe152221d9d26203cbd89d64d3b40f5b_abe152221d9d26203cbd89d64d3b40f5b}\label{classIdentTable_abe152221d9d26203cbd89d64d3b40f5b_abe152221d9d26203cbd89d64d3b40f5b}} 
+\index{IdentTable@{IdentTable}!getVal@{getVal}}
+\index{getVal@{getVal}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{getVal()}{getVal()}}
+{\footnotesize\ttfamily void $\ast$ Ident\+Table\+::get\+Val (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a89c9ed82d478166a91b583a35c9fb8a7_a89c9ed82d478166a91b583a35c9fb8a7}\label{classIdentTable_a89c9ed82d478166a91b583a35c9fb8a7_a89c9ed82d478166a91b583a35c9fb8a7}} 
+\index{IdentTable@{IdentTable}!isDef@{isDef}}
+\index{isDef@{isDef}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{isDef()}{isDef()}}
+{\footnotesize\ttfamily bool Ident\+Table\+::is\+Def (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a1a74006b1513ea030ac4234f22c0c75e_a1a74006b1513ea030ac4234f22c0c75e}\label{classIdentTable_a1a74006b1513ea030ac4234f22c0c75e_a1a74006b1513ea030ac4234f22c0c75e}} 
+\index{IdentTable@{IdentTable}!isFunc@{isFunc}}
+\index{isFunc@{isFunc}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{isFunc()}{isFunc()}}
+{\footnotesize\ttfamily bool Ident\+Table\+::is\+Func (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_ac2b90095364bfed0a2dd5d4b2e48b8c9_ac2b90095364bfed0a2dd5d4b2e48b8c9}\label{classIdentTable_ac2b90095364bfed0a2dd5d4b2e48b8c9_ac2b90095364bfed0a2dd5d4b2e48b8c9}} 
+\index{IdentTable@{IdentTable}!isReg@{isReg}}
+\index{isReg@{isReg}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{isReg()}{isReg()}}
+{\footnotesize\ttfamily bool Ident\+Table\+::is\+Reg (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a73d1ba0a14b10c8a004fa92e4e003a58_a73d1ba0a14b10c8a004fa92e4e003a58}\label{classIdentTable_a73d1ba0a14b10c8a004fa92e4e003a58_a73d1ba0a14b10c8a004fa92e4e003a58}} 
+\index{IdentTable@{IdentTable}!isShared@{isShared}}
+\index{isShared@{isShared}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{isShared()}{isShared()}}
+{\footnotesize\ttfamily bool Ident\+Table\+::is\+Shared (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classIdentTable_a1e86bbdd6fbc87a58d84e2dd48794706_a1e86bbdd6fbc87a58d84e2dd48794706}\label{classIdentTable_a1e86bbdd6fbc87a58d84e2dd48794706_a1e86bbdd6fbc87a58d84e2dd48794706}} 
+\index{IdentTable@{IdentTable}!last@{last}}
+\index{last@{last}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{last()}{last()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Ident\+Table\+::last (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_acc265bdd9b5e78f7f8b005ca364972f0_acc265bdd9b5e78f7f8b005ca364972f0}\label{classIdentTable_acc265bdd9b5e78f7f8b005ca364972f0_acc265bdd9b5e78f7f8b005ca364972f0}} 
+\index{IdentTable@{IdentTable}!operator=@{operator=}}
+\index{operator=@{operator=}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \& Ident\+Table\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&}]{template\+IT }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a97678c621f7ccfe9b7cd743628f6420a_a97678c621f7ccfe9b7cd743628f6420a}\label{classIdentTable_a97678c621f7ccfe9b7cd743628f6420a_a97678c621f7ccfe9b7cd743628f6420a}} 
+\index{IdentTable@{IdentTable}!pushId@{pushId}}
+\index{pushId@{pushId}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{pushId()}{pushId()}}
+{\footnotesize\ttfamily void Ident\+Table\+::push\+Id (\begin{DoxyParamCaption}\item[{char $\ast$}]{ident }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a381b968dcdb2fbb365a71b22ecfe793e_a381b968dcdb2fbb365a71b22ecfe793e}\label{classIdentTable_a381b968dcdb2fbb365a71b22ecfe793e_a381b968dcdb2fbb365a71b22ecfe793e}} 
+\index{IdentTable@{IdentTable}!pushStruct@{pushStruct}}
+\index{pushStruct@{pushStruct}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{pushStruct()}{pushStruct()}}
+{\footnotesize\ttfamily void Ident\+Table\+::push\+Struct (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ad8d9b7703156883f161a5e50e44891c2_ad8d9b7703156883f161a5e50e44891c2}\label{classIdentTable_ad8d9b7703156883f161a5e50e44891c2_ad8d9b7703156883f161a5e50e44891c2}} 
+\index{IdentTable@{IdentTable}!pushType@{pushType}}
+\index{pushType@{pushType}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{pushType()}{pushType()}}
+{\footnotesize\ttfamily void Ident\+Table\+::push\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{t }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ae1573357903b8e311f19d0ac60dc3462_ae1573357903b8e311f19d0ac60dc3462}\label{classIdentTable_ae1573357903b8e311f19d0ac60dc3462_ae1573357903b8e311f19d0ac60dc3462}} 
+\index{IdentTable@{IdentTable}!pushVal@{pushVal}}
+\index{pushVal@{pushVal}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{pushVal()}{pushVal()}}
+{\footnotesize\ttfamily void Ident\+Table\+::push\+Val (\begin{DoxyParamCaption}\item[{void $\ast$}]{v }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a3bf288a135f7024c6bd05db6fe7af034_a3bf288a135f7024c6bd05db6fe7af034}\label{classIdentTable_a3bf288a135f7024c6bd05db6fe7af034_a3bf288a135f7024c6bd05db6fe7af034}} 
+\index{IdentTable@{IdentTable}!repr@{repr}}
+\index{repr@{repr}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{repr()}{repr()}}
+{\footnotesize\ttfamily void Ident\+Table\+::repr (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_acded9aea7e30e7ea8759428ba53d9ab1_acded9aea7e30e7ea8759428ba53d9ab1}\label{classIdentTable_acded9aea7e30e7ea8759428ba53d9ab1_acded9aea7e30e7ea8759428ba53d9ab1}} 
+\index{IdentTable@{IdentTable}!setFunc@{setFunc}}
+\index{setFunc@{setFunc}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setFunc()}{setFunc()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Func (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a09487d4476093538792fed9260b588c7_a09487d4476093538792fed9260b588c7}\label{classIdentTable_a09487d4476093538792fed9260b588c7_a09487d4476093538792fed9260b588c7}} 
+\index{IdentTable@{IdentTable}!setId@{setId}}
+\index{setId@{setId}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setId()}{setId()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Id (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_acdef07182fba10e26245c61c74b8ffeb_acdef07182fba10e26245c61c74b8ffeb}\label{classIdentTable_acdef07182fba10e26245c61c74b8ffeb_acdef07182fba10e26245c61c74b8ffeb}} 
+\index{IdentTable@{IdentTable}!setMainTable@{setMainTable}}
+\index{setMainTable@{setMainTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setMainTable()}{setMainTable()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Main\+Table (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{table }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_aa36e84fe0e535681708b44e735cd47a7_aa36e84fe0e535681708b44e735cd47a7}\label{classIdentTable_aa36e84fe0e535681708b44e735cd47a7_aa36e84fe0e535681708b44e735cd47a7}} 
+\index{IdentTable@{IdentTable}!setOffset@{setOffset}}
+\index{setOffset@{setOffset}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setOffset()}{setOffset()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Offset (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a2a37121afc86b0787977853d0d44e7bd_a2a37121afc86b0787977853d0d44e7bd}\label{classIdentTable_a2a37121afc86b0787977853d0d44e7bd_a2a37121afc86b0787977853d0d44e7bd}} 
+\index{IdentTable@{IdentTable}!setOrd@{setOrd}}
+\index{setOrd@{setOrd}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setOrd()}{setOrd()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Ord (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ade4b4df9ebd5403c6a0428ffef76b218_ade4b4df9ebd5403c6a0428ffef76b218}\label{classIdentTable_ade4b4df9ebd5403c6a0428ffef76b218_ade4b4df9ebd5403c6a0428ffef76b218}} 
+\index{IdentTable@{IdentTable}!setParams@{setParams}}
+\index{setParams@{setParams}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setParams()}{setParams()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Params (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ab40d0558ec7a9d5504d7ab388b4f1708_ab40d0558ec7a9d5504d7ab388b4f1708}\label{classIdentTable_ab40d0558ec7a9d5504d7ab388b4f1708_ab40d0558ec7a9d5504d7ab388b4f1708}} 
+\index{IdentTable@{IdentTable}!setReg@{setReg}}
+\index{setReg@{setReg}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setReg()}{setReg()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Reg (\begin{DoxyParamCaption}\item[{bool}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a0add3b8f50bfd91737e3ff4b106ae50d_a0add3b8f50bfd91737e3ff4b106ae50d}\label{classIdentTable_a0add3b8f50bfd91737e3ff4b106ae50d_a0add3b8f50bfd91737e3ff4b106ae50d}} 
+\index{IdentTable@{IdentTable}!setShared@{setShared}}
+\index{setShared@{setShared}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setShared()}{setShared()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Shared (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a2aa63f8890af82a6faf1e88d51789cd2_a2aa63f8890af82a6faf1e88d51789cd2}\label{classIdentTable_a2aa63f8890af82a6faf1e88d51789cd2_a2aa63f8890af82a6faf1e88d51789cd2}} 
+\index{IdentTable@{IdentTable}!setStruct@{setStruct}}
+\index{setStruct@{setStruct}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setStruct()}{setStruct()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Struct (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_ae25fd4274ade896ec4a606481b037704_ae25fd4274ade896ec4a606481b037704}\label{classIdentTable_ae25fd4274ade896ec4a606481b037704_ae25fd4274ade896ec4a606481b037704}} 
+\index{IdentTable@{IdentTable}!setType@{setType}}
+\index{setType@{setType}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setType()}{setType()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{new\+Type }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_abb198823ee6056c118cd1616f63ba7e3_abb198823ee6056c118cd1616f63ba7e3}\label{classIdentTable_abb198823ee6056c118cd1616f63ba7e3_abb198823ee6056c118cd1616f63ba7e3}} 
+\index{IdentTable@{IdentTable}!setVal@{setVal}}
+\index{setVal@{setVal}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{setVal()}{setVal()}}
+{\footnotesize\ttfamily void Ident\+Table\+::set\+Val (\begin{DoxyParamCaption}\item[{void $\ast$}]{val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a2ef7f51438e0b6d2c4e1285a3cba81dd_a2ef7f51438e0b6d2c4e1285a3cba81dd}\label{classIdentTable_a2ef7f51438e0b6d2c4e1285a3cba81dd_a2ef7f51438e0b6d2c4e1285a3cba81dd}} 
+\index{IdentTable@{IdentTable}!whoami@{whoami}}
+\index{whoami@{whoami}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{whoami()}{whoami()}}
+{\footnotesize\ttfamily void Ident\+Table\+::whoami (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classIdentTable_a20ea2fe94a7b1c5bbd4c312758f9faea_a20ea2fe94a7b1c5bbd4c312758f9faea}\label{classIdentTable_a20ea2fe94a7b1c5bbd4c312758f9faea_a20ea2fe94a7b1c5bbd4c312758f9faea}} 
+\index{IdentTable@{IdentTable}!writeValToStream@{writeValToStream}}
+\index{writeValToStream@{writeValToStream}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{writeValToStream()}{writeValToStream()}}
+{\footnotesize\ttfamily void Ident\+Table\+::write\+Val\+To\+Stream (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{s }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Документация по друзьям класса и функциям, относящимся к классу}
+\mbox{\Hypertarget{classIdentTable_acdb3548d9c8f56a61653155fe4108c53_acdb3548d9c8f56a61653155fe4108c53}\label{classIdentTable_acdb3548d9c8f56a61653155fe4108c53_acdb3548d9c8f56a61653155fe4108c53}} 
+\index{IdentTable@{IdentTable}!operator==@{operator==}}
+\index{operator==@{operator==}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{operator==}{operator==}}
+{\footnotesize\ttfamily bool operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&}]{a,  }\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} \&}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{classIdentTable_a1fda63b2d68a275430975ae08d9ab62c_a1fda63b2d68a275430975ae08d9ab62c}\label{classIdentTable_a1fda63b2d68a275430975ae08d9ab62c_a1fda63b2d68a275430975ae08d9ab62c}} 
+\index{IdentTable@{IdentTable}!def@{def}}
+\index{def@{def}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{def}{def}}
+{\footnotesize\ttfamily bool Ident\+Table\+::def\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a8c2074cd7584ea98b29b3f0a697ed8cb_a8c2074cd7584ea98b29b3f0a697ed8cb}\label{classIdentTable_a8c2074cd7584ea98b29b3f0a697ed8cb_a8c2074cd7584ea98b29b3f0a697ed8cb}} 
+\index{IdentTable@{IdentTable}!fadedName@{fadedName}}
+\index{fadedName@{fadedName}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{fadedName}{fadedName}}
+{\footnotesize\ttfamily char$\ast$ Ident\+Table\+::faded\+Name\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a6eed7f2930474dcb18839149ef9f6a70_a6eed7f2930474dcb18839149ef9f6a70}\label{classIdentTable_a6eed7f2930474dcb18839149ef9f6a70_a6eed7f2930474dcb18839149ef9f6a70}} 
+\index{IdentTable@{IdentTable}!func@{func}}
+\index{func@{func}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{func}{func}}
+{\footnotesize\ttfamily bool Ident\+Table\+::func\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a1a21cf7799d8b721d064c1ed1b8a72f6_a1a21cf7799d8b721d064c1ed1b8a72f6}\label{classIdentTable_a1a21cf7799d8b721d064c1ed1b8a72f6_a1a21cf7799d8b721d064c1ed1b8a72f6}} 
+\index{IdentTable@{IdentTable}!mainTable@{mainTable}}
+\index{mainTable@{mainTable}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{mainTable}{mainTable}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}}$\ast$ Ident\+Table\+::main\+Table\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}\label{classIdentTable_ade0d967c40ffbfecb7ed0278d9061550_ade0d967c40ffbfecb7ed0278d9061550}} 
+\index{IdentTable@{IdentTable}!name@{name}}
+\index{name@{name}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily char$\ast$ Ident\+Table\+::name\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a41f9a4ae439abb1c6d1bf4fcadcd0f8d_a41f9a4ae439abb1c6d1bf4fcadcd0f8d}\label{classIdentTable_a41f9a4ae439abb1c6d1bf4fcadcd0f8d_a41f9a4ae439abb1c6d1bf4fcadcd0f8d}} 
+\index{IdentTable@{IdentTable}!next@{next}}
+\index{next@{next}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{next}{next}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}}$\ast$ Ident\+Table\+::next}
+
+\mbox{\Hypertarget{classIdentTable_a13b503f4571d405f1fbd61f0cb97d89a_a13b503f4571d405f1fbd61f0cb97d89a}\label{classIdentTable_a13b503f4571d405f1fbd61f0cb97d89a_a13b503f4571d405f1fbd61f0cb97d89a}} 
+\index{IdentTable@{IdentTable}!offset@{offset}}
+\index{offset@{offset}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{offset}{offset}}
+{\footnotesize\ttfamily int Ident\+Table\+::offset\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a15237cbcf5b6f154a73041ef75ae440d_a15237cbcf5b6f154a73041ef75ae440d}\label{classIdentTable_a15237cbcf5b6f154a73041ef75ae440d_a15237cbcf5b6f154a73041ef75ae440d}} 
+\index{IdentTable@{IdentTable}!ord@{ord}}
+\index{ord@{ord}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{ord}{ord}}
+{\footnotesize\ttfamily int Ident\+Table\+::ord\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a9b247e61e1fb0e8ca408dec6b9f7a03b_a9b247e61e1fb0e8ca408dec6b9f7a03b}\label{classIdentTable_a9b247e61e1fb0e8ca408dec6b9f7a03b_a9b247e61e1fb0e8ca408dec6b9f7a03b}} 
+\index{IdentTable@{IdentTable}!params@{params}}
+\index{params@{params}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{params}{params}}
+{\footnotesize\ttfamily int Ident\+Table\+::params\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a0d2a2f4a28dc515a65eea1ccaf6cf875_a0d2a2f4a28dc515a65eea1ccaf6cf875}\label{classIdentTable_a0d2a2f4a28dc515a65eea1ccaf6cf875_a0d2a2f4a28dc515a65eea1ccaf6cf875}} 
+\index{IdentTable@{IdentTable}!reg@{reg}}
+\index{reg@{reg}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{reg}{reg}}
+{\footnotesize\ttfamily bool Ident\+Table\+::reg\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_ababab07c8deeb15cac517cad201c1c67_ababab07c8deeb15cac517cad201c1c67}\label{classIdentTable_ababab07c8deeb15cac517cad201c1c67_ababab07c8deeb15cac517cad201c1c67}} 
+\index{IdentTable@{IdentTable}!shared@{shared}}
+\index{shared@{shared}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{shared}{shared}}
+{\footnotesize\ttfamily bool Ident\+Table\+::shared\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a981b1069226ac2c908378b1e50accc26_a981b1069226ac2c908378b1e50accc26}\label{classIdentTable_a981b1069226ac2c908378b1e50accc26_a981b1069226ac2c908378b1e50accc26}} 
+\index{IdentTable@{IdentTable}!structName@{structName}}
+\index{structName@{structName}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{structName}{structName}}
+{\footnotesize\ttfamily char$\ast$ Ident\+Table\+::struct\+Name\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a947ef7bbb4ed1c5cc408a5f2fdd64f1e_a947ef7bbb4ed1c5cc408a5f2fdd64f1e}\label{classIdentTable_a947ef7bbb4ed1c5cc408a5f2fdd64f1e_a947ef7bbb4ed1c5cc408a5f2fdd64f1e}} 
+\index{IdentTable@{IdentTable}!val@{val}}
+\index{val@{val}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{val}{val}}
+{\footnotesize\ttfamily void$\ast$ Ident\+Table\+::val\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classIdentTable_a7ec0561da0c1d11541c4aa1b37bad5f4_a7ec0561da0c1d11541c4aa1b37bad5f4}\label{classIdentTable_a7ec0561da0c1d11541c4aa1b37bad5f4_a7ec0561da0c1d11541c4aa1b37bad5f4}} 
+\index{IdentTable@{IdentTable}!valType@{valType}}
+\index{valType@{valType}!IdentTable@{IdentTable}}
+\doxysubsubsection{\texorpdfstring{valType}{valType}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Ident\+Table\+::val\+Type\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/common/\mbox{\hyperlink{tables_8hpp}{tables.\+hpp}}\item 
+src/common/\mbox{\hyperlink{tables_8cpp}{tables.\+cpp}}\end{DoxyCompactItemize}

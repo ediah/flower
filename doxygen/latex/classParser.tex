@@ -1,0 +1,594 @@
+\hypertarget{classParser}{}\doxysection{Класс Parser}
+\label{classParser}\index{Parser@{Parser}}
+
+
+{\ttfamily \#include $<$parser.\+hpp$>$}
+
+
+
+Граф связей класса Parser\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classParser__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classParser_a12234f6cd36b61af4b50c94a179422c1_a12234f6cd36b61af4b50c94a179422c1}{Parser}} ()
+\item 
+void \mbox{\hyperlink{classParser_a89332ee2b99c928fb5700e537d8152f0_a89332ee2b99c928fb5700e537d8152f0}{load}} (std\+::string name)
+\item 
+bool \mbox{\hyperlink{classParser_a9fc3a730d173f614c18e0d51d2389990_a9fc3a730d173f614c18e0d51d2389990}{parse}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a4365f39adc3dfdbc92e396478a9add4f_a4365f39adc3dfdbc92e396478a9add4f}{include}} (void)
+\item 
+void \mbox{\hyperlink{classParser_ac461013b97860c91d8b750efb3f25d43_ac461013b97860c91d8b750efb3f25d43}{defs}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_a6fc09aea7e747dcd04836191892a0d16_a6fc09aea7e747dcd04836191892a0d16}{def}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a4227c233de9db6d8b7cb71b124021a06_a4227c233de9db6d8b7cb71b124021a06}{def\+Struct}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a699c36919472d39130688d954b7e3752_a699c36919472d39130688d954b7e3752}{def\+Function}} (void)
+\item 
+bool \mbox{\hyperlink{classParser_a87b575488fd3a0374d1a843a70970166_a87b575488fd3a0374d1a843a70970166}{type\+Modificator}} (void)
+\item 
+bool \mbox{\hyperlink{classParser_a2a7255df67e9dd7854e46671335a942d_a2a7255df67e9dd7854e46671335a942d}{type}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_a6988a0d446462d12b204ef545b840290_a6988a0d446462d12b204ef545b840290}{variable}} (void)
+\item 
+char $\ast$ \mbox{\hyperlink{classParser_ac90458cdc9f466a635b0624dc657885c_ac90458cdc9f466a635b0624dc657885c}{identificator}} (void)
+\item 
+void \mbox{\hyperlink{classParser_ad8a09366211658ffdc8558ba072af844_ad8a09366211658ffdc8558ba072af844}{const\+Val}} (void)
+\item 
+int \mbox{\hyperlink{classParser_a07351b80ae263979f28e935a54490c7d_a07351b80ae263979f28e935a54490c7d}{const\+Int}} (void)
+\item 
+char $\ast$ \mbox{\hyperlink{classParser_aecbe1a4c2137e08178b0a05d7857e17a_aecbe1a4c2137e08178b0a05d7857e17a}{const\+String}} (void)
+\item 
+float \mbox{\hyperlink{classParser_add3f60b5f5092dca7e355a88400e0e84_add3f60b5f5092dca7e355a88400e0e84}{const\+Real}} (void)
+\item 
+bool \mbox{\hyperlink{classParser_a91c182268f9c8536dba9ad5cb7b84da8_a91c182268f9c8536dba9ad5cb7b84da8}{const\+Bool}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a44b8229c6a6d14664663f912d150863d_a44b8229c6a6d14664663f912d150863d}{const\+Struct}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$fields)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_a17e7c6a62bb5d31937c598cdb3ced48c_a17e7c6a62bb5d31937c598cdb3ced48c}{get\+Field\+In\+Struct}} (void)
+\item 
+void \mbox{\hyperlink{classParser_ac5112fde57d223b7e0849645b9ce14e1_ac5112fde57d223b7e0849645b9ce14e1}{call\+Ident}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$val)
+\item 
+void \mbox{\hyperlink{classParser_a872b2b2f8008130a8f26e1ab62fe61c9_a872b2b2f8008130a8f26e1ab62fe61c9}{assign}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$lval)
+\item 
+void \mbox{\hyperlink{classParser_a3165f329a64afb3c3a67e5578407d1b7_a3165f329a64afb3c3a67e5578407d1b7}{assign\+Struct}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$lval, \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$rval)
+\item 
+int \mbox{\hyperlink{classParser_af9498c6d539d86986caea0fe847cb8aa_af9498c6d539d86986caea0fe847cb8aa}{unroll\+Struct}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$lval, int ord=-\/1)
+\item 
+void \mbox{\hyperlink{classParser_a3ebe33a4b0f9657ace57ee6a1e906c97_a3ebe33a4b0f9657ace57ee6a1e906c97}{handle\+Struct}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} lval, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} rval, \mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}} op, int $\ast$field\+Size, char $\ast$struct\+Name)
+\item 
+void \mbox{\hyperlink{classParser_afeee67d25ce6aff98262ea625c0088c0_afeee67d25ce6aff98262ea625c0088c0}{program}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a774d2f214a4977c6b3aab6cd30be7637_a774d2f214a4977c6b3aab6cd30be7637}{operations}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a5d688ebf31faf5875f2def89868fd31d_a5d688ebf31faf5875f2def89868fd31d}{operation}} (void)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_a511081ce8e29de40c11392af5015e621_a511081ce8e29de40c11392af5015e621}{save\+Label}} (char $\ast$label, int addr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_aad2275811e75541b62476ac6a6604e9f_aad2275811e75541b62476ac6a6604e9f}{expr}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_aecc58209cbbcab3ffd3b231305b86da7_aecc58209cbbcab3ffd3b231305b86da7}{and\+Expr}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_a96bdb5fc4c3601508c1a25d4a1a9b3c9_a96bdb5fc4c3601508c1a25d4a1a9b3c9}{bool\+Expr}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_a519f6b92b532b38251b7e6dd608fb74f_a519f6b92b532b38251b7e6dd608fb74f}{add}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_af0951670f84e9fb9c2c40206d3eff977_af0951670f84e9fb9c2c40206d3eff977}{mul}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classParser_a51e61454fc912a35577ed6dd45c217de_a51e61454fc912a35577ed6dd45c217de}{const\+Expr}} (int $\ast$field\+Size=nullptr, char $\ast$struct\+Name=nullptr)
+\item 
+void \mbox{\hyperlink{classParser_a7d9567d4aa634d9a0c30636de6e0fc06_a7d9567d4aa634d9a0c30636de6e0fc06}{repack}} (int field\+Size)
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_ac2f4d173570db9e56b168f24043f3eb3_ac2f4d173570db9e56b168f24043f3eb3}{cycleparam}} (void)
+\item 
+void \mbox{\hyperlink{classParser_aff0629625376e18dc7ae7de9c2ddf31a_aff0629625376e18dc7ae7de9c2ddf31a}{cond\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a0fa0421ecefbfdf6b90bba7e9806f9f3_a0fa0421ecefbfdf6b90bba7e9806f9f3}{for\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a467bb17550441fbded94b7904b4bff5b_a467bb17550441fbded94b7904b4bff5b}{while\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_aae1bfec3f86b99891d55e0e61f1ed26e_aae1bfec3f86b99891d55e0e61f1ed26e}{break\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_ae3adae24ca737f75233b398acf980c53_ae3adae24ca737f75233b398acf980c53}{write\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a7b7a118e61b13850757f630268b23cc5_a7b7a118e61b13850757f630268b23cc5}{goto\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a5ed8032321a6d291dcc76a7b3ebe6667_a5ed8032321a6d291dcc76a7b3ebe6667}{read\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_adb874eedede0ca95ba7d2360809c1edb_adb874eedede0ca95ba7d2360809c1edb}{continue\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a8d901a76044c26cd2cde4395e732449d_a8d901a76044c26cd2cde4395e732449d}{bytecode\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_aa2a34fe68077707b0ede7777b50caa00_aa2a34fe68077707b0ede7777b50caa00}{return\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a275a39963b18ac902b54b4b1e16b3ef2_a275a39963b18ac902b54b4b1e16b3ef2}{thread\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_aedcdc380514a3c7559bf4ea3420c5964_aedcdc380514a3c7559bf4ea3420c5964}{fork\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a4605e3c44e4d38c557ae394cc1b6f07e_a4605e3c44e4d38c557ae394cc1b6f07e}{lock\+Op}} (void)
+\item 
+void \mbox{\hyperlink{classParser_a5ff01c407f426fced0955f13fd58635b_a5ff01c407f426fced0955f13fd58635b}{optimize}} (bool verbose)
+\item 
+void \mbox{\hyperlink{classParser_ac04d7e0f47687cc405cada2e3fa07012_ac04d7e0f47687cc405cada2e3fa07012}{give\+BIN}} (const char $\ast$filename, bool \mbox{\hyperlink{classParser_a5ff01c407f426fced0955f13fd58635b_a5ff01c407f426fced0955f13fd58635b}{optimize}}, bool print\+Poliz, bool verbose)
+\item 
+\mbox{\hyperlink{classParser_a1e70d9a903c5d2e8166fb571de3d581c_a1e70d9a903c5d2e8166fb571de3d581c}{$\sim$\+Parser}} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые члены}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classParser_a0bf4bc2b69cfcb37af86d97c3ae2f132_a0bf4bc2b69cfcb37af86d97c3ae2f132}{read\+Word}} (const char $\ast$word)
+\item 
+void \mbox{\hyperlink{classParser_a232621fa730ef3a6ef29b7dd2ebe63f9_a232621fa730ef3a6ef29b7dd2ebe63f9}{revert}} (int x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые статические члены}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{classParser_a08c6100cd5a291b5112c505283a16bc7_a08c6100cd5a291b5112c505283a16bc7}{fast\+Pow}} (int x, int n)
+\end{DoxyCompactItemize}
+\doxysubsection*{Закрытые данные}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ifstream \mbox{\hyperlink{classParser_a543e0f0746136c7a951f11e6e84c1422_a543e0f0746136c7a951f11e6e84c1422}{code}}
+\item 
+std\+::ofstream \mbox{\hyperlink{classParser_a8269735e743abfc9842e34232b4d64b0_a8269735e743abfc9842e34232b4d64b0}{bin}}
+\item 
+\mbox{\hyperlink{classCursor}{Cursor}} \mbox{\hyperlink{classParser_a589f7bd5cc6792e3f2fedf13d55d4cbd_a589f7bd5cc6792e3f2fedf13d55d4cbd}{c}}
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} \mbox{\hyperlink{classParser_a256e60278c33bee225b1caafa61a25a6_a256e60278c33bee225b1caafa61a25a6}{Id\+Table}}
+\item 
+\mbox{\hyperlink{classPOLIZ}{POLIZ}} \mbox{\hyperlink{classParser_a5a05c90e67c2d3004cb245d3f70c01f7_a5a05c90e67c2d3004cb245d3f70c01f7}{poliz}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classParser_a1607dc084952a250b067f4576fafb2fd_a1607dc084952a250b067f4576fafb2fd}{exits}}
+\item 
+\mbox{\hyperlink{classStack}{Stack}} \mbox{\hyperlink{classParser_a753ce1dbba3d244bcbbb081e3cbff833_a753ce1dbba3d244bcbbb081e3cbff833}{steps}}
+\item 
+\mbox{\hyperlink{classStructTable}{Struct\+Table}} \mbox{\hyperlink{classParser_a94bb96e3b07107e5f5431688a2255a5d_a94bb96e3b07107e5f5431688a2255a5d}{St\+Table}}
+\item 
+bool \mbox{\hyperlink{classParser_a1e3df36f2fc9a6a3d2cb76024138c3e8_a1e3df36f2fc9a6a3d2cb76024138c3e8}{ok}}
+\item 
+bool \mbox{\hyperlink{classParser_a8dd48b78e364388c1d1a5b7c1f414008_a8dd48b78e364388c1d1a5b7c1f414008}{in\+Func}}
+\item 
+bool \mbox{\hyperlink{classParser_afbbfec110cfa169f8caa7b3cf7d8bfe9_afbbfec110cfa169f8caa7b3cf7d8bfe9}{in\+Thread}}
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}, char $\ast$ $>$ $>$ \mbox{\hyperlink{classParser_ad3607ce17b5a6e9512fd1d9a1f06da46_ad3607ce17b5a6e9512fd1d9a1f06da46}{ret\+Types}}
+\item 
+std\+::vector$<$ std\+::ifstream $\ast$ $>$ \mbox{\hyperlink{classParser_a457c7da6f1fbbe1af68e280776d4094a_a457c7da6f1fbbe1af68e280776d4094a}{file\+Queue}}
+\item 
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classParser_a481d15081a1699c516a3ecc1937b67f2_a481d15081a1699c516a3ecc1937b67f2}{threads}} \mbox{[}\mbox{\hyperlink{config_8hpp_ab9eade334fd8a98c128802aec7e9191c_ab9eade334fd8a98c128802aec7e9191c}{MAXTHREADS}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{classParser_a12234f6cd36b61af4b50c94a179422c1_a12234f6cd36b61af4b50c94a179422c1}\label{classParser_a12234f6cd36b61af4b50c94a179422c1_a12234f6cd36b61af4b50c94a179422c1}} 
+\index{Parser@{Parser}!Parser@{Parser}}
+\index{Parser@{Parser}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{Parser()}{Parser()}}
+{\footnotesize\ttfamily Parser\+::\+Parser (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classParser_a1e70d9a903c5d2e8166fb571de3d581c_a1e70d9a903c5d2e8166fb571de3d581c}\label{classParser_a1e70d9a903c5d2e8166fb571de3d581c_a1e70d9a903c5d2e8166fb571de3d581c}} 
+\index{Parser@{Parser}!````~Parser@{$\sim$Parser}}
+\index{````~Parser@{$\sim$Parser}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{$\sim$Parser()}{~Parser()}}
+{\footnotesize\ttfamily Parser\+::$\sim$\+Parser (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{classParser_a519f6b92b532b38251b7e6dd608fb74f_a519f6b92b532b38251b7e6dd608fb74f}\label{classParser_a519f6b92b532b38251b7e6dd608fb74f_a519f6b92b532b38251b7e6dd608fb74f}} 
+\index{Parser@{Parser}!add@{add}}
+\index{add@{add}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::add (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aecc58209cbbcab3ffd3b231305b86da7_aecc58209cbbcab3ffd3b231305b86da7}\label{classParser_aecc58209cbbcab3ffd3b231305b86da7_aecc58209cbbcab3ffd3b231305b86da7}} 
+\index{Parser@{Parser}!andExpr@{andExpr}}
+\index{andExpr@{andExpr}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{andExpr()}{andExpr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::and\+Expr (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a872b2b2f8008130a8f26e1ab62fe61c9_a872b2b2f8008130a8f26e1ab62fe61c9}\label{classParser_a872b2b2f8008130a8f26e1ab62fe61c9_a872b2b2f8008130a8f26e1ab62fe61c9}} 
+\index{Parser@{Parser}!assign@{assign}}
+\index{assign@{assign}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily void Parser\+::assign (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{lval }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a3165f329a64afb3c3a67e5578407d1b7_a3165f329a64afb3c3a67e5578407d1b7}\label{classParser_a3165f329a64afb3c3a67e5578407d1b7_a3165f329a64afb3c3a67e5578407d1b7}} 
+\index{Parser@{Parser}!assignStruct@{assignStruct}}
+\index{assignStruct@{assignStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{assignStruct()}{assignStruct()}}
+{\footnotesize\ttfamily void Parser\+::assign\+Struct (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{lval,  }\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{rval }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a96bdb5fc4c3601508c1a25d4a1a9b3c9_a96bdb5fc4c3601508c1a25d4a1a9b3c9}\label{classParser_a96bdb5fc4c3601508c1a25d4a1a9b3c9_a96bdb5fc4c3601508c1a25d4a1a9b3c9}} 
+\index{Parser@{Parser}!boolExpr@{boolExpr}}
+\index{boolExpr@{boolExpr}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{boolExpr()}{boolExpr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::bool\+Expr (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aae1bfec3f86b99891d55e0e61f1ed26e_aae1bfec3f86b99891d55e0e61f1ed26e}\label{classParser_aae1bfec3f86b99891d55e0e61f1ed26e_aae1bfec3f86b99891d55e0e61f1ed26e}} 
+\index{Parser@{Parser}!breakOp@{breakOp}}
+\index{breakOp@{breakOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{breakOp()}{breakOp()}}
+{\footnotesize\ttfamily void Parser\+::break\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a8d901a76044c26cd2cde4395e732449d_a8d901a76044c26cd2cde4395e732449d}\label{classParser_a8d901a76044c26cd2cde4395e732449d_a8d901a76044c26cd2cde4395e732449d}} 
+\index{Parser@{Parser}!bytecodeOp@{bytecodeOp}}
+\index{bytecodeOp@{bytecodeOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{bytecodeOp()}{bytecodeOp()}}
+{\footnotesize\ttfamily void Parser\+::bytecode\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ac5112fde57d223b7e0849645b9ce14e1_ac5112fde57d223b7e0849645b9ce14e1}\label{classParser_ac5112fde57d223b7e0849645b9ce14e1_ac5112fde57d223b7e0849645b9ce14e1}} 
+\index{Parser@{Parser}!callIdent@{callIdent}}
+\index{callIdent@{callIdent}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{callIdent()}{callIdent()}}
+{\footnotesize\ttfamily void Parser\+::call\+Ident (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aff0629625376e18dc7ae7de9c2ddf31a_aff0629625376e18dc7ae7de9c2ddf31a}\label{classParser_aff0629625376e18dc7ae7de9c2ddf31a_aff0629625376e18dc7ae7de9c2ddf31a}} 
+\index{Parser@{Parser}!condOp@{condOp}}
+\index{condOp@{condOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{condOp()}{condOp()}}
+{\footnotesize\ttfamily void Parser\+::cond\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a91c182268f9c8536dba9ad5cb7b84da8_a91c182268f9c8536dba9ad5cb7b84da8}\label{classParser_a91c182268f9c8536dba9ad5cb7b84da8_a91c182268f9c8536dba9ad5cb7b84da8}} 
+\index{Parser@{Parser}!constBool@{constBool}}
+\index{constBool@{constBool}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constBool()}{constBool()}}
+{\footnotesize\ttfamily bool Parser\+::const\+Bool (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a51e61454fc912a35577ed6dd45c217de_a51e61454fc912a35577ed6dd45c217de}\label{classParser_a51e61454fc912a35577ed6dd45c217de_a51e61454fc912a35577ed6dd45c217de}} 
+\index{Parser@{Parser}!constExpr@{constExpr}}
+\index{constExpr@{constExpr}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constExpr()}{constExpr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::const\+Expr (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a07351b80ae263979f28e935a54490c7d_a07351b80ae263979f28e935a54490c7d}\label{classParser_a07351b80ae263979f28e935a54490c7d_a07351b80ae263979f28e935a54490c7d}} 
+\index{Parser@{Parser}!constInt@{constInt}}
+\index{constInt@{constInt}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constInt()}{constInt()}}
+{\footnotesize\ttfamily int Parser\+::const\+Int (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_add3f60b5f5092dca7e355a88400e0e84_add3f60b5f5092dca7e355a88400e0e84}\label{classParser_add3f60b5f5092dca7e355a88400e0e84_add3f60b5f5092dca7e355a88400e0e84}} 
+\index{Parser@{Parser}!constReal@{constReal}}
+\index{constReal@{constReal}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constReal()}{constReal()}}
+{\footnotesize\ttfamily float Parser\+::const\+Real (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aecbe1a4c2137e08178b0a05d7857e17a_aecbe1a4c2137e08178b0a05d7857e17a}\label{classParser_aecbe1a4c2137e08178b0a05d7857e17a_aecbe1a4c2137e08178b0a05d7857e17a}} 
+\index{Parser@{Parser}!constString@{constString}}
+\index{constString@{constString}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constString()}{constString()}}
+{\footnotesize\ttfamily char $\ast$ Parser\+::const\+String (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a44b8229c6a6d14664663f912d150863d_a44b8229c6a6d14664663f912d150863d}\label{classParser_a44b8229c6a6d14664663f912d150863d_a44b8229c6a6d14664663f912d150863d}} 
+\index{Parser@{Parser}!constStruct@{constStruct}}
+\index{constStruct@{constStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constStruct()}{constStruct()}}
+{\footnotesize\ttfamily void Parser\+::const\+Struct (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{fields }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ad8a09366211658ffdc8558ba072af844_ad8a09366211658ffdc8558ba072af844}\label{classParser_ad8a09366211658ffdc8558ba072af844_ad8a09366211658ffdc8558ba072af844}} 
+\index{Parser@{Parser}!constVal@{constVal}}
+\index{constVal@{constVal}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{constVal()}{constVal()}}
+{\footnotesize\ttfamily void Parser\+::const\+Val (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_adb874eedede0ca95ba7d2360809c1edb_adb874eedede0ca95ba7d2360809c1edb}\label{classParser_adb874eedede0ca95ba7d2360809c1edb_adb874eedede0ca95ba7d2360809c1edb}} 
+\index{Parser@{Parser}!continueOp@{continueOp}}
+\index{continueOp@{continueOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{continueOp()}{continueOp()}}
+{\footnotesize\ttfamily void Parser\+::continue\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ac2f4d173570db9e56b168f24043f3eb3_ac2f4d173570db9e56b168f24043f3eb3}\label{classParser_ac2f4d173570db9e56b168f24043f3eb3_ac2f4d173570db9e56b168f24043f3eb3}} 
+\index{Parser@{Parser}!cycleparam@{cycleparam}}
+\index{cycleparam@{cycleparam}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{cycleparam()}{cycleparam()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Parser\+::cycleparam (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a6fc09aea7e747dcd04836191892a0d16_a6fc09aea7e747dcd04836191892a0d16}\label{classParser_a6fc09aea7e747dcd04836191892a0d16_a6fc09aea7e747dcd04836191892a0d16}} 
+\index{Parser@{Parser}!def@{def}}
+\index{def@{def}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{def()}{def()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Parser\+::def (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a699c36919472d39130688d954b7e3752_a699c36919472d39130688d954b7e3752}\label{classParser_a699c36919472d39130688d954b7e3752_a699c36919472d39130688d954b7e3752}} 
+\index{Parser@{Parser}!defFunction@{defFunction}}
+\index{defFunction@{defFunction}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{defFunction()}{defFunction()}}
+{\footnotesize\ttfamily void Parser\+::def\+Function (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ac461013b97860c91d8b750efb3f25d43_ac461013b97860c91d8b750efb3f25d43}\label{classParser_ac461013b97860c91d8b750efb3f25d43_ac461013b97860c91d8b750efb3f25d43}} 
+\index{Parser@{Parser}!defs@{defs}}
+\index{defs@{defs}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{defs()}{defs()}}
+{\footnotesize\ttfamily void Parser\+::defs (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a4227c233de9db6d8b7cb71b124021a06_a4227c233de9db6d8b7cb71b124021a06}\label{classParser_a4227c233de9db6d8b7cb71b124021a06_a4227c233de9db6d8b7cb71b124021a06}} 
+\index{Parser@{Parser}!defStruct@{defStruct}}
+\index{defStruct@{defStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{defStruct()}{defStruct()}}
+{\footnotesize\ttfamily void Parser\+::def\+Struct (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aad2275811e75541b62476ac6a6604e9f_aad2275811e75541b62476ac6a6604e9f}\label{classParser_aad2275811e75541b62476ac6a6604e9f_aad2275811e75541b62476ac6a6604e9f}} 
+\index{Parser@{Parser}!expr@{expr}}
+\index{expr@{expr}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{expr()}{expr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::expr (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a08c6100cd5a291b5112c505283a16bc7_a08c6100cd5a291b5112c505283a16bc7}\label{classParser_a08c6100cd5a291b5112c505283a16bc7_a08c6100cd5a291b5112c505283a16bc7}} 
+\index{Parser@{Parser}!fastPow@{fastPow}}
+\index{fastPow@{fastPow}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{fastPow()}{fastPow()}}
+{\footnotesize\ttfamily int Parser\+::fast\+Pow (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_aedcdc380514a3c7559bf4ea3420c5964_aedcdc380514a3c7559bf4ea3420c5964}\label{classParser_aedcdc380514a3c7559bf4ea3420c5964_aedcdc380514a3c7559bf4ea3420c5964}} 
+\index{Parser@{Parser}!forkOp@{forkOp}}
+\index{forkOp@{forkOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{forkOp()}{forkOp()}}
+{\footnotesize\ttfamily void Parser\+::fork\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a0fa0421ecefbfdf6b90bba7e9806f9f3_a0fa0421ecefbfdf6b90bba7e9806f9f3}\label{classParser_a0fa0421ecefbfdf6b90bba7e9806f9f3_a0fa0421ecefbfdf6b90bba7e9806f9f3}} 
+\index{Parser@{Parser}!forOp@{forOp}}
+\index{forOp@{forOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{forOp()}{forOp()}}
+{\footnotesize\ttfamily void Parser\+::for\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a17e7c6a62bb5d31937c598cdb3ced48c_a17e7c6a62bb5d31937c598cdb3ced48c}\label{classParser_a17e7c6a62bb5d31937c598cdb3ced48c_a17e7c6a62bb5d31937c598cdb3ced48c}} 
+\index{Parser@{Parser}!getFieldInStruct@{getFieldInStruct}}
+\index{getFieldInStruct@{getFieldInStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{getFieldInStruct()}{getFieldInStruct()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Parser\+::get\+Field\+In\+Struct (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ac04d7e0f47687cc405cada2e3fa07012_ac04d7e0f47687cc405cada2e3fa07012}\label{classParser_ac04d7e0f47687cc405cada2e3fa07012_ac04d7e0f47687cc405cada2e3fa07012}} 
+\index{Parser@{Parser}!giveBIN@{giveBIN}}
+\index{giveBIN@{giveBIN}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{giveBIN()}{giveBIN()}}
+{\footnotesize\ttfamily void Parser\+::give\+BIN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{bool}]{optimize,  }\item[{bool}]{print\+Poliz,  }\item[{bool}]{verbose }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a7b7a118e61b13850757f630268b23cc5_a7b7a118e61b13850757f630268b23cc5}\label{classParser_a7b7a118e61b13850757f630268b23cc5_a7b7a118e61b13850757f630268b23cc5}} 
+\index{Parser@{Parser}!gotoOp@{gotoOp}}
+\index{gotoOp@{gotoOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{gotoOp()}{gotoOp()}}
+{\footnotesize\ttfamily void Parser\+::goto\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a3ebe33a4b0f9657ace57ee6a1e906c97_a3ebe33a4b0f9657ace57ee6a1e906c97}\label{classParser_a3ebe33a4b0f9657ace57ee6a1e906c97_a3ebe33a4b0f9657ace57ee6a1e906c97}} 
+\index{Parser@{Parser}!handleStruct@{handleStruct}}
+\index{handleStruct@{handleStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{handleStruct()}{handleStruct()}}
+{\footnotesize\ttfamily void Parser\+::handle\+Struct (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{lval,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{rval,  }\item[{\mbox{\hyperlink{exprtype_8hpp_a76a810650461f2062938ee9b82666b36_a76a810650461f2062938ee9b82666b36}{operation\+\_\+t}}}]{op,  }\item[{int $\ast$}]{field\+Size,  }\item[{char $\ast$}]{struct\+Name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ac90458cdc9f466a635b0624dc657885c_ac90458cdc9f466a635b0624dc657885c}\label{classParser_ac90458cdc9f466a635b0624dc657885c_ac90458cdc9f466a635b0624dc657885c}} 
+\index{Parser@{Parser}!identificator@{identificator}}
+\index{identificator@{identificator}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{identificator()}{identificator()}}
+{\footnotesize\ttfamily char $\ast$ Parser\+::identificator (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a4365f39adc3dfdbc92e396478a9add4f_a4365f39adc3dfdbc92e396478a9add4f}\label{classParser_a4365f39adc3dfdbc92e396478a9add4f_a4365f39adc3dfdbc92e396478a9add4f}} 
+\index{Parser@{Parser}!include@{include}}
+\index{include@{include}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{include()}{include()}}
+{\footnotesize\ttfamily void Parser\+::include (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a89332ee2b99c928fb5700e537d8152f0_a89332ee2b99c928fb5700e537d8152f0}\label{classParser_a89332ee2b99c928fb5700e537d8152f0_a89332ee2b99c928fb5700e537d8152f0}} 
+\index{Parser@{Parser}!load@{load}}
+\index{load@{load}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Parser\+::load (\begin{DoxyParamCaption}\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a4605e3c44e4d38c557ae394cc1b6f07e_a4605e3c44e4d38c557ae394cc1b6f07e}\label{classParser_a4605e3c44e4d38c557ae394cc1b6f07e_a4605e3c44e4d38c557ae394cc1b6f07e}} 
+\index{Parser@{Parser}!lockOp@{lockOp}}
+\index{lockOp@{lockOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{lockOp()}{lockOp()}}
+{\footnotesize\ttfamily void Parser\+::lock\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_af0951670f84e9fb9c2c40206d3eff977_af0951670f84e9fb9c2c40206d3eff977}\label{classParser_af0951670f84e9fb9c2c40206d3eff977_af0951670f84e9fb9c2c40206d3eff977}} 
+\index{Parser@{Parser}!mul@{mul}}
+\index{mul@{mul}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{mul()}{mul()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Parser\+::mul (\begin{DoxyParamCaption}\item[{int $\ast$}]{field\+Size = {\ttfamily nullptr},  }\item[{char $\ast$}]{struct\+Name = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a5d688ebf31faf5875f2def89868fd31d_a5d688ebf31faf5875f2def89868fd31d}\label{classParser_a5d688ebf31faf5875f2def89868fd31d_a5d688ebf31faf5875f2def89868fd31d}} 
+\index{Parser@{Parser}!operation@{operation}}
+\index{operation@{operation}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{operation()}{operation()}}
+{\footnotesize\ttfamily void Parser\+::operation (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a774d2f214a4977c6b3aab6cd30be7637_a774d2f214a4977c6b3aab6cd30be7637}\label{classParser_a774d2f214a4977c6b3aab6cd30be7637_a774d2f214a4977c6b3aab6cd30be7637}} 
+\index{Parser@{Parser}!operations@{operations}}
+\index{operations@{operations}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{operations()}{operations()}}
+{\footnotesize\ttfamily void Parser\+::operations (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a5ff01c407f426fced0955f13fd58635b_a5ff01c407f426fced0955f13fd58635b}\label{classParser_a5ff01c407f426fced0955f13fd58635b_a5ff01c407f426fced0955f13fd58635b}} 
+\index{Parser@{Parser}!optimize@{optimize}}
+\index{optimize@{optimize}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{optimize()}{optimize()}}
+{\footnotesize\ttfamily void Parser\+::optimize (\begin{DoxyParamCaption}\item[{bool}]{verbose }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a9fc3a730d173f614c18e0d51d2389990_a9fc3a730d173f614c18e0d51d2389990}\label{classParser_a9fc3a730d173f614c18e0d51d2389990_a9fc3a730d173f614c18e0d51d2389990}} 
+\index{Parser@{Parser}!parse@{parse}}
+\index{parse@{parse}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{parse()}{parse()}}
+{\footnotesize\ttfamily bool Parser\+::parse (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_afeee67d25ce6aff98262ea625c0088c0_afeee67d25ce6aff98262ea625c0088c0}\label{classParser_afeee67d25ce6aff98262ea625c0088c0_afeee67d25ce6aff98262ea625c0088c0}} 
+\index{Parser@{Parser}!program@{program}}
+\index{program@{program}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{program()}{program()}}
+{\footnotesize\ttfamily void Parser\+::program (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a5ed8032321a6d291dcc76a7b3ebe6667_a5ed8032321a6d291dcc76a7b3ebe6667}\label{classParser_a5ed8032321a6d291dcc76a7b3ebe6667_a5ed8032321a6d291dcc76a7b3ebe6667}} 
+\index{Parser@{Parser}!readOp@{readOp}}
+\index{readOp@{readOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{readOp()}{readOp()}}
+{\footnotesize\ttfamily void Parser\+::read\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a0bf4bc2b69cfcb37af86d97c3ae2f132_a0bf4bc2b69cfcb37af86d97c3ae2f132}\label{classParser_a0bf4bc2b69cfcb37af86d97c3ae2f132_a0bf4bc2b69cfcb37af86d97c3ae2f132}} 
+\index{Parser@{Parser}!readWord@{readWord}}
+\index{readWord@{readWord}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{readWord()}{readWord()}}
+{\footnotesize\ttfamily bool Parser\+::read\+Word (\begin{DoxyParamCaption}\item[{const char $\ast$}]{word }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a7d9567d4aa634d9a0c30636de6e0fc06_a7d9567d4aa634d9a0c30636de6e0fc06}\label{classParser_a7d9567d4aa634d9a0c30636de6e0fc06_a7d9567d4aa634d9a0c30636de6e0fc06}} 
+\index{Parser@{Parser}!repack@{repack}}
+\index{repack@{repack}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{repack()}{repack()}}
+{\footnotesize\ttfamily void Parser\+::repack (\begin{DoxyParamCaption}\item[{int}]{field\+Size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_aa2a34fe68077707b0ede7777b50caa00_aa2a34fe68077707b0ede7777b50caa00}\label{classParser_aa2a34fe68077707b0ede7777b50caa00_aa2a34fe68077707b0ede7777b50caa00}} 
+\index{Parser@{Parser}!returnOp@{returnOp}}
+\index{returnOp@{returnOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{returnOp()}{returnOp()}}
+{\footnotesize\ttfamily void Parser\+::return\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a232621fa730ef3a6ef29b7dd2ebe63f9_a232621fa730ef3a6ef29b7dd2ebe63f9}\label{classParser_a232621fa730ef3a6ef29b7dd2ebe63f9_a232621fa730ef3a6ef29b7dd2ebe63f9}} 
+\index{Parser@{Parser}!revert@{revert}}
+\index{revert@{revert}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{revert()}{revert()}}
+{\footnotesize\ttfamily void Parser\+::revert (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a511081ce8e29de40c11392af5015e621_a511081ce8e29de40c11392af5015e621}\label{classParser_a511081ce8e29de40c11392af5015e621_a511081ce8e29de40c11392af5015e621}} 
+\index{Parser@{Parser}!saveLabel@{saveLabel}}
+\index{saveLabel@{saveLabel}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{saveLabel()}{saveLabel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Parser\+::save\+Label (\begin{DoxyParamCaption}\item[{char $\ast$}]{label,  }\item[{int}]{addr }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a275a39963b18ac902b54b4b1e16b3ef2_a275a39963b18ac902b54b4b1e16b3ef2}\label{classParser_a275a39963b18ac902b54b4b1e16b3ef2_a275a39963b18ac902b54b4b1e16b3ef2}} 
+\index{Parser@{Parser}!threadOp@{threadOp}}
+\index{threadOp@{threadOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{threadOp()}{threadOp()}}
+{\footnotesize\ttfamily void Parser\+::thread\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a2a7255df67e9dd7854e46671335a942d_a2a7255df67e9dd7854e46671335a942d}\label{classParser_a2a7255df67e9dd7854e46671335a942d_a2a7255df67e9dd7854e46671335a942d}} 
+\index{Parser@{Parser}!type@{type}}
+\index{type@{type}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily bool Parser\+::type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a87b575488fd3a0374d1a843a70970166_a87b575488fd3a0374d1a843a70970166}\label{classParser_a87b575488fd3a0374d1a843a70970166_a87b575488fd3a0374d1a843a70970166}} 
+\index{Parser@{Parser}!typeModificator@{typeModificator}}
+\index{typeModificator@{typeModificator}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{typeModificator()}{typeModificator()}}
+{\footnotesize\ttfamily bool Parser\+::type\+Modificator (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_af9498c6d539d86986caea0fe847cb8aa_af9498c6d539d86986caea0fe847cb8aa}\label{classParser_af9498c6d539d86986caea0fe847cb8aa_af9498c6d539d86986caea0fe847cb8aa}} 
+\index{Parser@{Parser}!unrollStruct@{unrollStruct}}
+\index{unrollStruct@{unrollStruct}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{unrollStruct()}{unrollStruct()}}
+{\footnotesize\ttfamily int Parser\+::unroll\+Struct (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{lval,  }\item[{int}]{ord = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a6988a0d446462d12b204ef545b840290_a6988a0d446462d12b204ef545b840290}\label{classParser_a6988a0d446462d12b204ef545b840290_a6988a0d446462d12b204ef545b840290}} 
+\index{Parser@{Parser}!variable@{variable}}
+\index{variable@{variable}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{variable()}{variable()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Parser\+::variable (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_a467bb17550441fbded94b7904b4bff5b_a467bb17550441fbded94b7904b4bff5b}\label{classParser_a467bb17550441fbded94b7904b4bff5b_a467bb17550441fbded94b7904b4bff5b}} 
+\index{Parser@{Parser}!whileOp@{whileOp}}
+\index{whileOp@{whileOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{whileOp()}{whileOp()}}
+{\footnotesize\ttfamily void Parser\+::while\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classParser_ae3adae24ca737f75233b398acf980c53_ae3adae24ca737f75233b398acf980c53}\label{classParser_ae3adae24ca737f75233b398acf980c53_ae3adae24ca737f75233b398acf980c53}} 
+\index{Parser@{Parser}!writeOp@{writeOp}}
+\index{writeOp@{writeOp}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{writeOp()}{writeOp()}}
+{\footnotesize\ttfamily void Parser\+::write\+Op (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{classParser_a8269735e743abfc9842e34232b4d64b0_a8269735e743abfc9842e34232b4d64b0}\label{classParser_a8269735e743abfc9842e34232b4d64b0_a8269735e743abfc9842e34232b4d64b0}} 
+\index{Parser@{Parser}!bin@{bin}}
+\index{bin@{bin}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{bin}{bin}}
+{\footnotesize\ttfamily std\+::ofstream Parser\+::bin\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a589f7bd5cc6792e3f2fedf13d55d4cbd_a589f7bd5cc6792e3f2fedf13d55d4cbd}\label{classParser_a589f7bd5cc6792e3f2fedf13d55d4cbd_a589f7bd5cc6792e3f2fedf13d55d4cbd}} 
+\index{Parser@{Parser}!c@{c}}
+\index{c@{c}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{c}{c}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCursor}{Cursor}} Parser\+::c\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a543e0f0746136c7a951f11e6e84c1422_a543e0f0746136c7a951f11e6e84c1422}\label{classParser_a543e0f0746136c7a951f11e6e84c1422_a543e0f0746136c7a951f11e6e84c1422}} 
+\index{Parser@{Parser}!code@{code}}
+\index{code@{code}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{code}{code}}
+{\footnotesize\ttfamily std\+::ifstream Parser\+::code\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a1607dc084952a250b067f4576fafb2fd_a1607dc084952a250b067f4576fafb2fd}\label{classParser_a1607dc084952a250b067f4576fafb2fd_a1607dc084952a250b067f4576fafb2fd}} 
+\index{Parser@{Parser}!exits@{exits}}
+\index{exits@{exits}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{exits}{exits}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Parser\+::exits\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a457c7da6f1fbbe1af68e280776d4094a_a457c7da6f1fbbe1af68e280776d4094a}\label{classParser_a457c7da6f1fbbe1af68e280776d4094a_a457c7da6f1fbbe1af68e280776d4094a}} 
+\index{Parser@{Parser}!fileQueue@{fileQueue}}
+\index{fileQueue@{fileQueue}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{fileQueue}{fileQueue}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::ifstream$\ast$$>$ Parser\+::file\+Queue\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a256e60278c33bee225b1caafa61a25a6_a256e60278c33bee225b1caafa61a25a6}\label{classParser_a256e60278c33bee225b1caafa61a25a6_a256e60278c33bee225b1caafa61a25a6}} 
+\index{Parser@{Parser}!IdTable@{IdTable}}
+\index{IdTable@{IdTable}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{IdTable}{IdTable}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} Parser\+::\+Id\+Table\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a8dd48b78e364388c1d1a5b7c1f414008_a8dd48b78e364388c1d1a5b7c1f414008}\label{classParser_a8dd48b78e364388c1d1a5b7c1f414008_a8dd48b78e364388c1d1a5b7c1f414008}} 
+\index{Parser@{Parser}!inFunc@{inFunc}}
+\index{inFunc@{inFunc}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{inFunc}{inFunc}}
+{\footnotesize\ttfamily bool Parser\+::in\+Func\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_afbbfec110cfa169f8caa7b3cf7d8bfe9_afbbfec110cfa169f8caa7b3cf7d8bfe9}\label{classParser_afbbfec110cfa169f8caa7b3cf7d8bfe9_afbbfec110cfa169f8caa7b3cf7d8bfe9}} 
+\index{Parser@{Parser}!inThread@{inThread}}
+\index{inThread@{inThread}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{inThread}{inThread}}
+{\footnotesize\ttfamily bool Parser\+::in\+Thread\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a1e3df36f2fc9a6a3d2cb76024138c3e8_a1e3df36f2fc9a6a3d2cb76024138c3e8}\label{classParser_a1e3df36f2fc9a6a3d2cb76024138c3e8_a1e3df36f2fc9a6a3d2cb76024138c3e8}} 
+\index{Parser@{Parser}!ok@{ok}}
+\index{ok@{ok}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{ok}{ok}}
+{\footnotesize\ttfamily bool Parser\+::ok\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a5a05c90e67c2d3004cb245d3f70c01f7_a5a05c90e67c2d3004cb245d3f70c01f7}\label{classParser_a5a05c90e67c2d3004cb245d3f70c01f7_a5a05c90e67c2d3004cb245d3f70c01f7}} 
+\index{Parser@{Parser}!poliz@{poliz}}
+\index{poliz@{poliz}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{poliz}{poliz}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classPOLIZ}{POLIZ}} Parser\+::poliz\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_ad3607ce17b5a6e9512fd1d9a1f06da46_ad3607ce17b5a6e9512fd1d9a1f06da46}\label{classParser_ad3607ce17b5a6e9512fd1d9a1f06da46_ad3607ce17b5a6e9512fd1d9a1f06da46}} 
+\index{Parser@{Parser}!retTypes@{retTypes}}
+\index{retTypes@{retTypes}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{retTypes}{retTypes}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}, char$\ast$$>$ $>$ Parser\+::ret\+Types\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a753ce1dbba3d244bcbbb081e3cbff833_a753ce1dbba3d244bcbbb081e3cbff833}\label{classParser_a753ce1dbba3d244bcbbb081e3cbff833_a753ce1dbba3d244bcbbb081e3cbff833}} 
+\index{Parser@{Parser}!steps@{steps}}
+\index{steps@{steps}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{steps}{steps}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStack}{Stack}} Parser\+::steps\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a94bb96e3b07107e5f5431688a2255a5d_a94bb96e3b07107e5f5431688a2255a5d}\label{classParser_a94bb96e3b07107e5f5431688a2255a5d_a94bb96e3b07107e5f5431688a2255a5d}} 
+\index{Parser@{Parser}!StTable@{StTable}}
+\index{StTable@{StTable}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{StTable}{StTable}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classStructTable}{Struct\+Table}} Parser\+::\+St\+Table\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{classParser_a481d15081a1699c516a3ecc1937b67f2_a481d15081a1699c516a3ecc1937b67f2}\label{classParser_a481d15081a1699c516a3ecc1937b67f2_a481d15081a1699c516a3ecc1937b67f2}} 
+\index{Parser@{Parser}!threads@{threads}}
+\index{threads@{threads}!Parser@{Parser}}
+\doxysubsubsection{\texorpdfstring{threads}{threads}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}}$\ast$ Parser\+::threads\mbox{[}\mbox{\hyperlink{config_8hpp_ab9eade334fd8a98c128802aec7e9191c_ab9eade334fd8a98c128802aec7e9191c}{MAXTHREADS}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Объявления и описания членов классов находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/compiler/\mbox{\hyperlink{parser_8hpp}{parser.\+hpp}}\item 
+src/compiler/\mbox{\hyperlink{parser_8cpp}{parser.\+cpp}}\end{DoxyCompactItemize}

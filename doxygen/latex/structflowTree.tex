@@ -1,0 +1,111 @@
+\hypertarget{structflowTree}{}\doxysection{Структура flow\+Tree}
+\label{structflowTree}\index{flowTree@{flowTree}}
+
+
+{\ttfamily \#include $<$controlflow.\+hpp$>$}
+
+
+
+Граф связей класса flow\+Tree\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structflowTree__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Открытые члены}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structflowTree_a2fe93575dc75984d06db985d7c1e1e6f_a2fe93575dc75984d06db985d7c1e1e6f}{flow\+Tree}} (int id)
+\item 
+\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ \mbox{\hyperlink{structflowTree_a5d8880e1b98f0c8a96ce672137d7bb05_a5d8880e1b98f0c8a96ce672137d7bb05}{get\+FT}} (int id, bool head=true)
+\item 
+\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ \mbox{\hyperlink{structflowTree_a3a34092304e5d99915f5b4935cb87069_a3a34092304e5d99915f5b4935cb87069}{split}} (int id)
+\end{DoxyCompactItemize}
+\doxysubsection*{Поля данных}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{structflowTree_a9663974c95970b7af1275b7fd2749362_a9663974c95970b7af1275b7fd2749362}{ID}}
+\item 
+\mbox{\hyperlink{classPOLIZ}{POLIZ}} \mbox{\hyperlink{structflowTree_a821c48ec769aa6940b30573c4074280e_a821c48ec769aa6940b30573c4074280e}{block}}
+\item 
+bool \mbox{\hyperlink{structflowTree_a66ae1d93e4df1799747a087194970e1f_a66ae1d93e4df1799747a087194970e1f}{splitted}}
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$, char $>$ $>$ \mbox{\hyperlink{structflowTree_a492e1907ae869f6320bdf9aadc1a0776_a492e1907ae869f6320bdf9aadc1a0776}{prev}}
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$, char $>$ $>$ \mbox{\hyperlink{structflowTree_a33b974fce7ad963f1855c6fd4bb49c61_a33b974fce7ad963f1855c6fd4bb49c61}{next}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Статические открытые данные}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::vector$<$ int $>$ \mbox{\hyperlink{structflowTree_a69824b0be692d7f15ff80fa7e7a79927_a69824b0be692d7f15ff80fa7e7a79927}{checked}} \{0\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Конструктор(ы)}
+\mbox{\Hypertarget{structflowTree_a2fe93575dc75984d06db985d7c1e1e6f_a2fe93575dc75984d06db985d7c1e1e6f}\label{structflowTree_a2fe93575dc75984d06db985d7c1e1e6f_a2fe93575dc75984d06db985d7c1e1e6f}} 
+\index{flowTree@{flowTree}!flowTree@{flowTree}}
+\index{flowTree@{flowTree}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{flowTree()}{flowTree()}}
+{\footnotesize\ttfamily flow\+Tree\+::flow\+Tree (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+\doxysubsection{Методы}
+\mbox{\Hypertarget{structflowTree_a5d8880e1b98f0c8a96ce672137d7bb05_a5d8880e1b98f0c8a96ce672137d7bb05}\label{structflowTree_a5d8880e1b98f0c8a96ce672137d7bb05_a5d8880e1b98f0c8a96ce672137d7bb05}} 
+\index{flowTree@{flowTree}!getFT@{getFT}}
+\index{getFT@{getFT}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{getFT()}{getFT()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ flow\+Tree\+::get\+FT (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{bool}]{head = {\ttfamily true} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{structflowTree_a3a34092304e5d99915f5b4935cb87069_a3a34092304e5d99915f5b4935cb87069}\label{structflowTree_a3a34092304e5d99915f5b4935cb87069_a3a34092304e5d99915f5b4935cb87069}} 
+\index{flowTree@{flowTree}!split@{split}}
+\index{split@{split}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{split()}{split()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ flow\+Tree\+::split (\begin{DoxyParamCaption}\item[{int}]{id }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Поля}
+\mbox{\Hypertarget{structflowTree_a821c48ec769aa6940b30573c4074280e_a821c48ec769aa6940b30573c4074280e}\label{structflowTree_a821c48ec769aa6940b30573c4074280e_a821c48ec769aa6940b30573c4074280e}} 
+\index{flowTree@{flowTree}!block@{block}}
+\index{block@{block}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{block}{block}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classPOLIZ}{POLIZ}} flow\+Tree\+::block}
+
+\mbox{\Hypertarget{structflowTree_a69824b0be692d7f15ff80fa7e7a79927_a69824b0be692d7f15ff80fa7e7a79927}\label{structflowTree_a69824b0be692d7f15ff80fa7e7a79927_a69824b0be692d7f15ff80fa7e7a79927}} 
+\index{flowTree@{flowTree}!checked@{checked}}
+\index{checked@{checked}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{checked}{checked}}
+{\footnotesize\ttfamily std\+::vector$<$ int $>$ flow\+Tree\+::checked \{0\}\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{structflowTree_a9663974c95970b7af1275b7fd2749362_a9663974c95970b7af1275b7fd2749362}\label{structflowTree_a9663974c95970b7af1275b7fd2749362_a9663974c95970b7af1275b7fd2749362}} 
+\index{flowTree@{flowTree}!ID@{ID}}
+\index{ID@{ID}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{ID}{ID}}
+{\footnotesize\ttfamily int flow\+Tree\+::\+ID}
+
+\mbox{\Hypertarget{structflowTree_a33b974fce7ad963f1855c6fd4bb49c61_a33b974fce7ad963f1855c6fd4bb49c61}\label{structflowTree_a33b974fce7ad963f1855c6fd4bb49c61_a33b974fce7ad963f1855c6fd4bb49c61}} 
+\index{flowTree@{flowTree}!next@{next}}
+\index{next@{next}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{next}{next}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$\mbox{\hyperlink{structflowTree}{flow\+Tree}}$\ast$, char$>$ $>$ flow\+Tree\+::next}
+
+\mbox{\Hypertarget{structflowTree_a492e1907ae869f6320bdf9aadc1a0776_a492e1907ae869f6320bdf9aadc1a0776}\label{structflowTree_a492e1907ae869f6320bdf9aadc1a0776_a492e1907ae869f6320bdf9aadc1a0776}} 
+\index{flowTree@{flowTree}!prev@{prev}}
+\index{prev@{prev}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$\mbox{\hyperlink{structflowTree}{flow\+Tree}}$\ast$, char$>$ $>$ flow\+Tree\+::prev}
+
+\mbox{\Hypertarget{structflowTree_a66ae1d93e4df1799747a087194970e1f_a66ae1d93e4df1799747a087194970e1f}\label{structflowTree_a66ae1d93e4df1799747a087194970e1f_a66ae1d93e4df1799747a087194970e1f}} 
+\index{flowTree@{flowTree}!splitted@{splitted}}
+\index{splitted@{splitted}!flowTree@{flowTree}}
+\doxysubsubsection{\texorpdfstring{splitted}{splitted}}
+{\footnotesize\ttfamily bool flow\+Tree\+::splitted}
+
+
+
+Объявления и описания членов структур находятся в файлах\+:\begin{DoxyCompactItemize}
+\item 
+src/optimizer/\mbox{\hyperlink{controlflow_8hpp}{controlflow.\+hpp}}\item 
+src/optimizer/\mbox{\hyperlink{controlflow_8cpp}{controlflow.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Flower: Исходный файл src/common/poliz.hpp</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Flower
+   &#160;<span id="projectnumber">1.2.0 (Календула)</span>
+   </div>
+   <div id="projectbrief">Оптимизирующий байт-код компилятор, виртуальная машина и отладчик.</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Поиск');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_fdedb0aba14d44ce9d99bc100e026e6a.html">common</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">poliz.hpp</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="poliz_8hpp.html">См. документацию.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef POLIZ_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define POLIZ_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
+<div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="poliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba.html#ac2c6acf3e0c14ce1210c05db36a10dba">    4</a></span>&#160;<span class="preprocessor">#define MAXCMD 1024</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tables_8hpp.html">common/tables.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="exprtype_8hpp.html">common/exprtype.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="cppcheck_8hpp.html">common/cppcheck.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">   10</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">long</span> <span class="keywordtype">long</span> <a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a>;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="poliz_8hpp_ac138fef2e4de5eef9b335157c9cc66d3.html#ac138fef2e4de5eef9b335157c9cc66d3">   12</a></span>&#160;<span class="preprocessor">#define IT_FROM_POLIZ(p, i) reinterpret_cast&lt;IdentTable *&gt;(p.getProg()[i])</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="classPOLIZ.html">   14</a></span>&#160;<span class="keyword">class </span><a class="code" href="classPOLIZ.html">POLIZ</a> {</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classPOLIZ_acec35be70558cf47df4fce0aba3213dd.html#acec35be70558cf47df4fce0aba3213dd">   15</a></span>&#160;    <a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> <a class="code" href="classPOLIZ_acec35be70558cf47df4fce0aba3213dd.html#acec35be70558cf47df4fce0aba3213dd">prog</a>[<a class="code" href="poliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba.html#ac2c6acf3e0c14ce1210c05db36a10dba">MAXCMD</a>];</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classPOLIZ_aa742f49fd08671bf5a5689631569a55b.html#aa742f49fd08671bf5a5689631569a55b">   16</a></span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classPOLIZ_aa742f49fd08671bf5a5689631569a55b.html#aa742f49fd08671bf5a5689631569a55b">execBit</a>[<a class="code" href="poliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba.html#ac2c6acf3e0c14ce1210c05db36a10dba">MAXCMD</a>];</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classPOLIZ_a348ef135a25ee0dcf232e8dab160b91d.html#a348ef135a25ee0dcf232e8dab160b91d">   17</a></span>&#160;    <a class="code" href="classPOLIZ_a348ef135a25ee0dcf232e8dab160b91d.html#a348ef135a25ee0dcf232e8dab160b91d">LOW</a>(0) <a class="code" href="cppcheck_8hpp_a8bb289550b5d1110b51166d50ab7b420.html#a8bb289550b5d1110b51166d50ab7b420">HIGH</a>(<a class="code" href="poliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba.html#ac2c6acf3e0c14ce1210c05db36a10dba">MAXCMD</a>-1) <span class="keywordtype">int</span> iter;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;public:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a>(<span class="keywordtype">int</span> s = 0);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a>&amp; operator=(const <a class="code" href="classPOLIZ.html">POLIZ</a>&amp; p);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classPOLIZ.html">POLIZ</a>(const <a class="code" href="classPOLIZ.html">POLIZ</a>&amp; p);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a56065b10aec9abe82f3b8c111185fd91.html#a56065b10aec9abe82f3b8c111185fd91">pushVal</a>(<a class="code" href="classIdentTable.html">IdentTable</a> * val);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a2ff5556a4aa566143641cb68b1815bd8.html#a2ff5556a4aa566143641cb68b1815bd8">pushOp</a>(<a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a> lval, <a class="code" href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a> rval, <a class="code" href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36">operation_t</a> op);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a9e8fa489b0f8d40f02bbbd041b3285d1.html#a9e8fa489b0f8d40f02bbbd041b3285d1">pop</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a436dd718b92decc3583b813eededed40.html#a436dd718b92decc3583b813eededed40">push</a>(<a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> op, <span class="keywordtype">bool</span> eb);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_aa88362afeed2df32e4006a332fd578dd.html#aa88362afeed2df32e4006a332fd578dd">clear</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_ac4e7513d1a1a4d90b3406fb5cf9ef4f4.html#ac4e7513d1a1a4d90b3406fb5cf9ef4f4">repr</a>(<span class="keywordtype">bool</span> dontBreak = false);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classPOLIZ_a9898a21238af22639f7ac279c33d47d9.html#a9898a21238af22639f7ac279c33d47d9">getSize</a>(<span class="keywordtype">void</span>) const;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> * <a class="code" href="classPOLIZ_a98e98d0a0340b459b3495b6018bdc4f1.html#a98e98d0a0340b459b3495b6018bdc4f1">getProg</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span> * <a class="code" href="classPOLIZ_a289e36e0672d01269dc9b4acdfe854ba.html#a289e36e0672d01269dc9b4acdfe854ba">getEB</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a35e84ad494cd3d5c62a3b7f3c0e27faa.html#a35e84ad494cd3d5c62a3b7f3c0e27faa">incIter</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_abaf413d164de0b5dc74c0886526a79c9.html#abaf413d164de0b5dc74c0886526a79c9">checkIter</a>(<span class="keywordtype">void</span>) const;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classPOLIZ_aec47d6d9ac9e74102a4c7286fb72a0ec.html#aec47d6d9ac9e74102a4c7286fb72a0ec">endsWithCall</a>(<span class="keywordtype">void</span>) const;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classPOLIZ_a13bfeda1a7f372973055b0be9bf2c0fe.html#a13bfeda1a7f372973055b0be9bf2c0fe">endsWithRet</a>(<span class="keywordtype">void</span>) const;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    static <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_a8faf47e428a2ee32426c7fc61fdd6f95.html#a8faf47e428a2ee32426c7fc61fdd6f95">interpretAsOp</a>(<a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> op);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    static <span class="keywordtype">void</span> <a class="code" href="classPOLIZ_aabcc9c3a73221417ddefe5816f3cd1a4.html#aabcc9c3a73221417ddefe5816f3cd1a4">interpretAsVal</a>(<a class="code" href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a> val);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassIdentTable_html"><div class="ttname"><a href="classIdentTable.html">IdentTable</a></div><div class="ttdef"><b>Definition:</b> tables.hpp:9</div></div>
+<div class="ttc" id="aclassPOLIZ_a13bfeda1a7f372973055b0be9bf2c0fe_html_a13bfeda1a7f372973055b0be9bf2c0fe"><div class="ttname"><a href="classPOLIZ_a13bfeda1a7f372973055b0be9bf2c0fe.html#a13bfeda1a7f372973055b0be9bf2c0fe">POLIZ::endsWithRet</a></div><div class="ttdeci">bool endsWithRet(void) const</div><div class="ttdef"><b>Definition:</b> poliz.cpp:183</div></div>
+<div class="ttc" id="aclassPOLIZ_a289e36e0672d01269dc9b4acdfe854ba_html_a289e36e0672d01269dc9b4acdfe854ba"><div class="ttname"><a href="classPOLIZ_a289e36e0672d01269dc9b4acdfe854ba.html#a289e36e0672d01269dc9b4acdfe854ba">POLIZ::getEB</a></div><div class="ttdeci">bool * getEB(void)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:132</div></div>
+<div class="ttc" id="aclassPOLIZ_a2ff5556a4aa566143641cb68b1815bd8_html_a2ff5556a4aa566143641cb68b1815bd8"><div class="ttname"><a href="classPOLIZ_a2ff5556a4aa566143641cb68b1815bd8.html#a2ff5556a4aa566143641cb68b1815bd8">POLIZ::pushOp</a></div><div class="ttdeci">void pushOp(type_t lval, type_t rval, operation_t op)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:71</div></div>
+<div class="ttc" id="aclassPOLIZ_a348ef135a25ee0dcf232e8dab160b91d_html_a348ef135a25ee0dcf232e8dab160b91d"><div class="ttname"><a href="classPOLIZ_a348ef135a25ee0dcf232e8dab160b91d.html#a348ef135a25ee0dcf232e8dab160b91d">POLIZ::LOW</a></div><div class="ttdeci">LOW(0) HIGH(MAXCMD-1) int iter</div></div>
+<div class="ttc" id="aclassPOLIZ_a35e84ad494cd3d5c62a3b7f3c0e27faa_html_a35e84ad494cd3d5c62a3b7f3c0e27faa"><div class="ttname"><a href="classPOLIZ_a35e84ad494cd3d5c62a3b7f3c0e27faa.html#a35e84ad494cd3d5c62a3b7f3c0e27faa">POLIZ::incIter</a></div><div class="ttdeci">void incIter(void)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:148</div></div>
+<div class="ttc" id="aclassPOLIZ_a436dd718b92decc3583b813eededed40_html_a436dd718b92decc3583b813eededed40"><div class="ttname"><a href="classPOLIZ_a436dd718b92decc3583b813eededed40.html#a436dd718b92decc3583b813eededed40">POLIZ::push</a></div><div class="ttdeci">void push(op_t op, bool eb)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:153</div></div>
+<div class="ttc" id="aclassPOLIZ_a56065b10aec9abe82f3b8c111185fd91_html_a56065b10aec9abe82f3b8c111185fd91"><div class="ttname"><a href="classPOLIZ_a56065b10aec9abe82f3b8c111185fd91.html#a56065b10aec9abe82f3b8c111185fd91">POLIZ::pushVal</a></div><div class="ttdeci">void pushVal(IdentTable *val)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:46</div></div>
+<div class="ttc" id="aclassPOLIZ_a8faf47e428a2ee32426c7fc61fdd6f95_html_a8faf47e428a2ee32426c7fc61fdd6f95"><div class="ttname"><a href="classPOLIZ_a8faf47e428a2ee32426c7fc61fdd6f95.html#a8faf47e428a2ee32426c7fc61fdd6f95">POLIZ::interpretAsOp</a></div><div class="ttdeci">static void interpretAsOp(op_t op)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:85</div></div>
+<div class="ttc" id="aclassPOLIZ_a9898a21238af22639f7ac279c33d47d9_html_a9898a21238af22639f7ac279c33d47d9"><div class="ttname"><a href="classPOLIZ_a9898a21238af22639f7ac279c33d47d9.html#a9898a21238af22639f7ac279c33d47d9">POLIZ::getSize</a></div><div class="ttdeci">int getSize(void) const</div><div class="ttdef"><b>Definition:</b> poliz.cpp:136</div></div>
+<div class="ttc" id="aclassPOLIZ_a98e98d0a0340b459b3495b6018bdc4f1_html_a98e98d0a0340b459b3495b6018bdc4f1"><div class="ttname"><a href="classPOLIZ_a98e98d0a0340b459b3495b6018bdc4f1.html#a98e98d0a0340b459b3495b6018bdc4f1">POLIZ::getProg</a></div><div class="ttdeci">op_t * getProg(void)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:128</div></div>
+<div class="ttc" id="aclassPOLIZ_a9e8fa489b0f8d40f02bbbd041b3285d1_html_a9e8fa489b0f8d40f02bbbd041b3285d1"><div class="ttname"><a href="classPOLIZ_a9e8fa489b0f8d40f02bbbd041b3285d1.html#a9e8fa489b0f8d40f02bbbd041b3285d1">POLIZ::pop</a></div><div class="ttdeci">void pop(void)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:140</div></div>
+<div class="ttc" id="aclassPOLIZ_aa742f49fd08671bf5a5689631569a55b_html_aa742f49fd08671bf5a5689631569a55b"><div class="ttname"><a href="classPOLIZ_aa742f49fd08671bf5a5689631569a55b.html#aa742f49fd08671bf5a5689631569a55b">POLIZ::execBit</a></div><div class="ttdeci">bool execBit[MAXCMD]</div><div class="ttdef"><b>Definition:</b> poliz.hpp:16</div></div>
+<div class="ttc" id="aclassPOLIZ_aa88362afeed2df32e4006a332fd578dd_html_aa88362afeed2df32e4006a332fd578dd"><div class="ttname"><a href="classPOLIZ_aa88362afeed2df32e4006a332fd578dd.html#aa88362afeed2df32e4006a332fd578dd">POLIZ::clear</a></div><div class="ttdeci">void clear(void)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:144</div></div>
+<div class="ttc" id="aclassPOLIZ_aabcc9c3a73221417ddefe5816f3cd1a4_html_aabcc9c3a73221417ddefe5816f3cd1a4"><div class="ttname"><a href="classPOLIZ_aabcc9c3a73221417ddefe5816f3cd1a4.html#aabcc9c3a73221417ddefe5816f3cd1a4">POLIZ::interpretAsVal</a></div><div class="ttdeci">static void interpretAsVal(op_t val)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:124</div></div>
+<div class="ttc" id="aclassPOLIZ_abaf413d164de0b5dc74c0886526a79c9_html_abaf413d164de0b5dc74c0886526a79c9"><div class="ttname"><a href="classPOLIZ_abaf413d164de0b5dc74c0886526a79c9.html#abaf413d164de0b5dc74c0886526a79c9">POLIZ::checkIter</a></div><div class="ttdeci">void checkIter(void) const</div><div class="ttdef"><b>Definition:</b> poliz.cpp:169</div></div>
+<div class="ttc" id="aclassPOLIZ_ac4e7513d1a1a4d90b3406fb5cf9ef4f4_html_ac4e7513d1a1a4d90b3406fb5cf9ef4f4"><div class="ttname"><a href="classPOLIZ_ac4e7513d1a1a4d90b3406fb5cf9ef4f4.html#ac4e7513d1a1a4d90b3406fb5cf9ef4f4">POLIZ::repr</a></div><div class="ttdeci">void repr(bool dontBreak=false)</div><div class="ttdef"><b>Definition:</b> poliz.cpp:34</div></div>
+<div class="ttc" id="aclassPOLIZ_acec35be70558cf47df4fce0aba3213dd_html_acec35be70558cf47df4fce0aba3213dd"><div class="ttname"><a href="classPOLIZ_acec35be70558cf47df4fce0aba3213dd.html#acec35be70558cf47df4fce0aba3213dd">POLIZ::prog</a></div><div class="ttdeci">op_t prog[MAXCMD]</div><div class="ttdef"><b>Definition:</b> poliz.hpp:15</div></div>
+<div class="ttc" id="aclassPOLIZ_aec47d6d9ac9e74102a4c7286fb72a0ec_html_aec47d6d9ac9e74102a4c7286fb72a0ec"><div class="ttname"><a href="classPOLIZ_aec47d6d9ac9e74102a4c7286fb72a0ec.html#aec47d6d9ac9e74102a4c7286fb72a0ec">POLIZ::endsWithCall</a></div><div class="ttdeci">bool endsWithCall(void) const</div><div class="ttdef"><b>Definition:</b> poliz.cpp:177</div></div>
+<div class="ttc" id="aclassPOLIZ_html"><div class="ttname"><a href="classPOLIZ.html">POLIZ</a></div><div class="ttdef"><b>Definition:</b> poliz.hpp:14</div></div>
+<div class="ttc" id="acppcheck_8hpp_a8bb289550b5d1110b51166d50ab7b420_html_a8bb289550b5d1110b51166d50ab7b420"><div class="ttname"><a href="cppcheck_8hpp_a8bb289550b5d1110b51166d50ab7b420.html#a8bb289550b5d1110b51166d50ab7b420">HIGH</a></div><div class="ttdeci">#define HIGH(EXPR)</div><div class="ttdef"><b>Definition:</b> cppcheck.hpp:13</div></div>
+<div class="ttc" id="acppcheck_8hpp_html"><div class="ttname"><a href="cppcheck_8hpp.html">cppcheck.hpp</a></div></div>
+<div class="ttc" id="aexprtype_8hpp_a76a810650461f2062938ee9b82666b36_html_a76a810650461f2062938ee9b82666b36"><div class="ttname"><a href="exprtype_8hpp_a76a810650461f2062938ee9b82666b36.html#a76a810650461f2062938ee9b82666b36">operation_t</a></div><div class="ttdeci">operation_t</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:14</div></div>
+<div class="ttc" id="aexprtype_8hpp_adee610a3c7375031538811d29f6a4124_html_adee610a3c7375031538811d29f6a4124"><div class="ttname"><a href="exprtype_8hpp_adee610a3c7375031538811d29f6a4124.html#adee610a3c7375031538811d29f6a4124">type_t</a></div><div class="ttdeci">type_t</div><div class="ttdef"><b>Definition:</b> exprtype.hpp:4</div></div>
+<div class="ttc" id="aexprtype_8hpp_html"><div class="ttname"><a href="exprtype_8hpp.html">exprtype.hpp</a></div></div>
+<div class="ttc" id="apoliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba_html_ac2c6acf3e0c14ce1210c05db36a10dba"><div class="ttname"><a href="poliz_8hpp_ac2c6acf3e0c14ce1210c05db36a10dba.html#ac2c6acf3e0c14ce1210c05db36a10dba">MAXCMD</a></div><div class="ttdeci">#define MAXCMD</div><div class="ttdef"><b>Definition:</b> poliz.hpp:4</div></div>
+<div class="ttc" id="apoliz_8hpp_af3ceb578c32897fe58138820454a3c36_html_af3ceb578c32897fe58138820454a3c36"><div class="ttname"><a href="poliz_8hpp_af3ceb578c32897fe58138820454a3c36.html#af3ceb578c32897fe58138820454a3c36">op_t</a></div><div class="ttdeci">long long op_t</div><div class="ttdef"><b>Definition:</b> poliz.hpp:10</div></div>
+<div class="ttc" id="atables_8hpp_html"><div class="ttname"><a href="tables_8hpp.html">tables.hpp</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

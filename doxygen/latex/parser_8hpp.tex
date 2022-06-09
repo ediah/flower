@@ -1,0 +1,84 @@
+\hypertarget{parser_8hpp}{}\doxysection{Файл src/compiler/parser.hpp}
+\label{parser_8hpp}\index{src/compiler/parser.hpp@{src/compiler/parser.hpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include \char`\"{}config.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/exprtype.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/tables.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/poliz.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/stack.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}compiler/cursor.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}optimizer/optimizer.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для parser.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{parser_8hpp__incl}
+\end{center}
+\end{figure}
+Граф файлов, в которые включается этот файл\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=296pt]{parser_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Структуры данных}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classParser}{Parser}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Макросы}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{parser_8hpp_a8082daadbdf503506c27719b4b58d21d_a8082daadbdf503506c27719b4b58d21d}{NEW\+\_\+\+IDENT}}(IT,  type,  id,  val,  fs)
+\item 
+\#define \mbox{\hyperlink{parser_8hpp_a6d6d90ecd29bebd45a59424f0946be35_a6d6d90ecd29bebd45a59424f0946be35}{BYTECODE\+\_\+\+OP\+\_\+\+BIN}}(op)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Макросы}
+\mbox{\Hypertarget{parser_8hpp_a6d6d90ecd29bebd45a59424f0946be35_a6d6d90ecd29bebd45a59424f0946be35}\label{parser_8hpp_a6d6d90ecd29bebd45a59424f0946be35_a6d6d90ecd29bebd45a59424f0946be35}} 
+\index{parser.hpp@{parser.hpp}!BYTECODE\_OP\_BIN@{BYTECODE\_OP\_BIN}}
+\index{BYTECODE\_OP\_BIN@{BYTECODE\_OP\_BIN}!parser.hpp@{parser.hpp}}
+\doxysubsubsection{\texorpdfstring{BYTECODE\_OP\_BIN}{BYTECODE\_OP\_BIN}}
+{\footnotesize\ttfamily \#define BYTECODE\+\_\+\+OP\+\_\+\+BIN(\begin{DoxyParamCaption}\item[{}]{op }\end{DoxyParamCaption})}
+
+{\bfseries Макроопределение\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \{ \(\backslash\)}
+\DoxyCodeLine{    type\_t left, right; \(\backslash\)}
+\DoxyCodeLine{    if (types.size() != 0) \{ \(\backslash\)}
+\DoxyCodeLine{        right = types.back(); \(\backslash\)}
+\DoxyCodeLine{        types.pop\_back(); \(\backslash\)}
+\DoxyCodeLine{    \} \textcolor{keywordflow}{else} right = \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4}{\_NONE\_}}; \(\backslash\)}
+\DoxyCodeLine{    if (types.size() != 0) \{ \(\backslash\)}
+\DoxyCodeLine{        left = types.back(); \(\backslash\)}
+\DoxyCodeLine{        types.pop\_back(); \(\backslash\)}
+\DoxyCodeLine{    \} \textcolor{keywordflow}{else} left = \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4}{\_NONE\_}}; \(\backslash\)}
+\DoxyCodeLine{    poliz.pushOp(left, right, op); \(\backslash\)}
+\DoxyCodeLine{    type\_t restype = \mbox{\hyperlink{exprtype_8cpp_ae32bf5c9a42d5a5145c0127aa254b2f5_ae32bf5c9a42d5a5145c0127aa254b2f5}{expressionType}}(left, right, op); \(\backslash\)}
+\DoxyCodeLine{    if (restype != \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a4ade088234ba0455602d0ebb9255f5a4}{\_NONE\_}}) types.push\_back(restype); \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{parser_8hpp_a8082daadbdf503506c27719b4b58d21d_a8082daadbdf503506c27719b4b58d21d}\label{parser_8hpp_a8082daadbdf503506c27719b4b58d21d_a8082daadbdf503506c27719b4b58d21d}} 
+\index{parser.hpp@{parser.hpp}!NEW\_IDENT@{NEW\_IDENT}}
+\index{NEW\_IDENT@{NEW\_IDENT}!parser.hpp@{parser.hpp}}
+\doxysubsubsection{\texorpdfstring{NEW\_IDENT}{NEW\_IDENT}}
+{\footnotesize\ttfamily \#define NEW\+\_\+\+IDENT(\begin{DoxyParamCaption}\item[{}]{IT,  }\item[{}]{type,  }\item[{}]{id,  }\item[{}]{val,  }\item[{}]{fs }\end{DoxyParamCaption})}
+
+{\bfseries Макроопределение\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \{ \(\backslash\)}
+\DoxyCodeLine{    IdTable.pushType(type); \(\backslash\)}
+\DoxyCodeLine{    IdTable.pushVal(val); \(\backslash\)}
+\DoxyCodeLine{    IdTable.pushId(\textcolor{keywordtype}{id}); \(\backslash\)}
+\DoxyCodeLine{    IdentTable * IT = IdTable.confirm(); \(\backslash\)}
+\DoxyCodeLine{    for (\textcolor{keywordtype}{int} i = 0; i < *fs; i++) \(\backslash\)}
+\DoxyCodeLine{        poliz.pushVal(IT); \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

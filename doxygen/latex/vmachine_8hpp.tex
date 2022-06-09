@@ -1,0 +1,77 @@
+\hypertarget{vmachine_8hpp}{}\doxysection{Файл src/runtime/vmachine.hpp}
+\label{vmachine_8hpp}\index{src/runtime/vmachine.hpp@{src/runtime/vmachine.hpp}}
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}common/tables.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/poliz.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/stack.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для vmachine.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{vmachine_8hpp__incl}
+\end{center}
+\end{figure}
+Граф файлов, в которые включается этот файл\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{vmachine_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Структуры данных}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classVirtualMachine}{Virtual\+Machine}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Макросы}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{vmachine_8hpp_a526c46694b5ead0b0bbf44afbffaa312_a526c46694b5ead0b0bbf44afbffaa312}{ARITH\+\_\+\+OPERATION}}(OP)
+\item 
+\#define \mbox{\hyperlink{vmachine_8hpp_a8bb0665c5186c4a7592ebf6070e3c118_a8bb0665c5186c4a7592ebf6070e3c118}{LOGIC\+\_\+\+OPERATION}}(OP)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Макросы}
+\mbox{\Hypertarget{vmachine_8hpp_a526c46694b5ead0b0bbf44afbffaa312_a526c46694b5ead0b0bbf44afbffaa312}\label{vmachine_8hpp_a526c46694b5ead0b0bbf44afbffaa312_a526c46694b5ead0b0bbf44afbffaa312}} 
+\index{vmachine.hpp@{vmachine.hpp}!ARITH\_OPERATION@{ARITH\_OPERATION}}
+\index{ARITH\_OPERATION@{ARITH\_OPERATION}!vmachine.hpp@{vmachine.hpp}}
+\doxysubsubsection{\texorpdfstring{ARITH\_OPERATION}{ARITH\_OPERATION}}
+{\footnotesize\ttfamily \#define ARITH\+\_\+\+OPERATION(\begin{DoxyParamCaption}\item[{}]{OP }\end{DoxyParamCaption})}
+
+{\bfseries Макроопределение\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \{ \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<int, int, int>( [] (\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<int, float, float>( [] (\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{float} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<float, int, float>( [] (\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{int} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<float, float, float>( [] (\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}); \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{vmachine_8hpp_a8bb0665c5186c4a7592ebf6070e3c118_a8bb0665c5186c4a7592ebf6070e3c118}\label{vmachine_8hpp_a8bb0665c5186c4a7592ebf6070e3c118_a8bb0665c5186c4a7592ebf6070e3c118}} 
+\index{vmachine.hpp@{vmachine.hpp}!LOGIC\_OPERATION@{LOGIC\_OPERATION}}
+\index{LOGIC\_OPERATION@{LOGIC\_OPERATION}!vmachine.hpp@{vmachine.hpp}}
+\doxysubsubsection{\texorpdfstring{LOGIC\_OPERATION}{LOGIC\_OPERATION}}
+{\footnotesize\ttfamily \#define LOGIC\+\_\+\+OPERATION(\begin{DoxyParamCaption}\item[{}]{OP }\end{DoxyParamCaption})}
+
+{\bfseries Макроопределение\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \{ \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<int, int, bool>( [] (\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{int} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a723e7cff130488b79eb03e12c37466da}{\_BOOLEAN\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<int, float, bool>( [] (\textcolor{keywordtype}{int} x, \textcolor{keywordtype}{float} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a723e7cff130488b79eb03e12c37466da}{\_BOOLEAN\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124ab8801d42f7ac852dfa5e26f7376d2edc}{\_INT\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<float, int, bool>( [] (\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{int} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a723e7cff130488b79eb03e12c37466da}{\_BOOLEAN\_}}); \(\backslash\)}
+\DoxyCodeLine{    if ((lval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}}) \&\& (rval == \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a979ea7df06ba0cc5951c593a45aa850a}{\_REAL\_}})) \(\backslash\)}
+\DoxyCodeLine{        tempOp<float, float, bool>( [] (\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y) \{ \textcolor{keywordflow}{return} x OP y; \}, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124a723e7cff130488b79eb03e12c37466da}{\_BOOLEAN\_}}); \(\backslash\)}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

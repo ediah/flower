@@ -1,0 +1,41 @@
+\hypertarget{parser_8cpp}{}\doxysection{Файл src/compiler/parser.cpp}
+\label{parser_8cpp}\index{src/compiler/parser.cpp@{src/compiler/parser.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$cassert$>$}\newline
+{\ttfamily \#include \char`\"{}common/exprtype.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/tables.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}common/obstacle.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}compiler/parser.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для parser.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{parser_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Макросы}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{parser_8cpp_a3cc59eef5a09f1fa84574cd55bed33f7_a3cc59eef5a09f1fa84574cd55bed33f7}{C\+\_\+\+IS\+\_\+\+ALPHA}}~((c $>$= \textquotesingle{}a\textquotesingle{}) \&\& (c $<$= \textquotesingle{}z\textquotesingle{}) $\vert$$\vert$ (c $>$= \textquotesingle{}A\textquotesingle{}) \&\& (c $<$= \textquotesingle{}Z\textquotesingle{}) $\vert$$\vert$ (c == \textquotesingle{}\+\_\+\textquotesingle{}))
+\item 
+\#define \mbox{\hyperlink{parser_8cpp_ac40fb178c47f07d3c4d0376dfd560563_ac40fb178c47f07d3c4d0376dfd560563}{C\+\_\+\+IS\+\_\+\+NUM}}~((c $>$= \textquotesingle{}0\textquotesingle{}) \&\& (c $<$= \textquotesingle{}9\textquotesingle{}))
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Макросы}
+\mbox{\Hypertarget{parser_8cpp_a3cc59eef5a09f1fa84574cd55bed33f7_a3cc59eef5a09f1fa84574cd55bed33f7}\label{parser_8cpp_a3cc59eef5a09f1fa84574cd55bed33f7_a3cc59eef5a09f1fa84574cd55bed33f7}} 
+\index{parser.cpp@{parser.cpp}!C\_IS\_ALPHA@{C\_IS\_ALPHA}}
+\index{C\_IS\_ALPHA@{C\_IS\_ALPHA}!parser.cpp@{parser.cpp}}
+\doxysubsubsection{\texorpdfstring{C\_IS\_ALPHA}{C\_IS\_ALPHA}}
+{\footnotesize\ttfamily \#define C\+\_\+\+IS\+\_\+\+ALPHA~((c $>$= \textquotesingle{}a\textquotesingle{}) \&\& (c $<$= \textquotesingle{}z\textquotesingle{}) $\vert$$\vert$ (c $>$= \textquotesingle{}A\textquotesingle{}) \&\& (c $<$= \textquotesingle{}Z\textquotesingle{}) $\vert$$\vert$ (c == \textquotesingle{}\+\_\+\textquotesingle{}))}
+
+\mbox{\Hypertarget{parser_8cpp_ac40fb178c47f07d3c4d0376dfd560563_ac40fb178c47f07d3c4d0376dfd560563}\label{parser_8cpp_ac40fb178c47f07d3c4d0376dfd560563_ac40fb178c47f07d3c4d0376dfd560563}} 
+\index{parser.cpp@{parser.cpp}!C\_IS\_NUM@{C\_IS\_NUM}}
+\index{C\_IS\_NUM@{C\_IS\_NUM}!parser.cpp@{parser.cpp}}
+\doxysubsubsection{\texorpdfstring{C\_IS\_NUM}{C\_IS\_NUM}}
+{\footnotesize\ttfamily \#define C\+\_\+\+IS\+\_\+\+NUM~((c $>$= \textquotesingle{}0\textquotesingle{}) \&\& (c $<$= \textquotesingle{}9\textquotesingle{}))}
+

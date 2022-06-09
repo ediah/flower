@@ -1,0 +1,101 @@
+\hypertarget{test_8cpp}{}\doxysection{Файл test/test.cpp}
+\label{test_8cpp}\index{test/test.cpp@{test/test.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$cstdio$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$fcntl.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}version.\+hpp\char`\"{}}\newline
+Граф включаемых заголовочных файлов для test.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{test_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Функции}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{test_8cpp_a36ce8fadfee1b2023dcff7b34ea70ec5_a36ce8fadfee1b2023dcff7b34ea70ec5}{gettime}} (void)
+\item 
+int \mbox{\hyperlink{test_8cpp_a2e165be03147844720f30a45efd123e7_a2e165be03147844720f30a45efd123e7}{compare}} (std\+::ifstream \&file1, std\+::ifstream \&file2)
+\item 
+int \mbox{\hyperlink{test_8cpp_ab2f2e5911576a0b5211225d9edd25501_ab2f2e5911576a0b5211225d9edd25501}{check\+Mem}} (std\+::string cmd)
+\item 
+int \mbox{\hyperlink{test_8cpp_a52464e6f1b73bb6a6878009f637d6af8_a52464e6f1b73bb6a6878009f637d6af8}{gen\+Case\+In}} (std\+::ifstream \&cases)
+\item 
+int \mbox{\hyperlink{test_8cpp_a6676efd9f8cf3fee947c9cfb560449d8_a6676efd9f8cf3fee947c9cfb560449d8}{run\+Valgrind}} (std\+::string filename, bool optimize, std\+::string input=\char`\"{}\char`\"{})
+\item 
+int \mbox{\hyperlink{test_8cpp_ad49089029a783c8b69834b3ddca098a6_ad49089029a783c8b69834b3ddca098a6}{runA}} (std\+::string filename, std\+::string input, std\+::string output, bool optimize)
+\item 
+int \mbox{\hyperlink{test_8cpp_aea9c3abe44e7a1d3f653c35d4d097538_aea9c3abe44e7a1d3f653c35d4d097538}{runB}} (std\+::string filename, std\+::string output, bool optimize)
+\item 
+void \mbox{\hyperlink{test_8cpp_aefaab3fac04d826d18c4e7ae0fbd4588_aefaab3fac04d826d18c4e7ae0fbd4588}{rebuild}} (const char $\ast$pattern, bool make=true)
+\item 
+int \mbox{\hyperlink{test_8cpp_a3c04138a5bfe5d72780bb7e82a18e627_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Функции}
+\mbox{\Hypertarget{test_8cpp_ab2f2e5911576a0b5211225d9edd25501_ab2f2e5911576a0b5211225d9edd25501}\label{test_8cpp_ab2f2e5911576a0b5211225d9edd25501_ab2f2e5911576a0b5211225d9edd25501}} 
+\index{test.cpp@{test.cpp}!checkMem@{checkMem}}
+\index{checkMem@{checkMem}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{checkMem()}{checkMem()}}
+{\footnotesize\ttfamily int check\+Mem (\begin{DoxyParamCaption}\item[{std\+::string}]{cmd }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_a2e165be03147844720f30a45efd123e7_a2e165be03147844720f30a45efd123e7}\label{test_8cpp_a2e165be03147844720f30a45efd123e7_a2e165be03147844720f30a45efd123e7}} 
+\index{test.cpp@{test.cpp}!compare@{compare}}
+\index{compare@{compare}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{compare()}{compare()}}
+{\footnotesize\ttfamily int compare (\begin{DoxyParamCaption}\item[{std\+::ifstream \&}]{file1,  }\item[{std\+::ifstream \&}]{file2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_a52464e6f1b73bb6a6878009f637d6af8_a52464e6f1b73bb6a6878009f637d6af8}\label{test_8cpp_a52464e6f1b73bb6a6878009f637d6af8_a52464e6f1b73bb6a6878009f637d6af8}} 
+\index{test.cpp@{test.cpp}!genCaseIn@{genCaseIn}}
+\index{genCaseIn@{genCaseIn}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{genCaseIn()}{genCaseIn()}}
+{\footnotesize\ttfamily int gen\+Case\+In (\begin{DoxyParamCaption}\item[{std\+::ifstream \&}]{cases }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_a36ce8fadfee1b2023dcff7b34ea70ec5_a36ce8fadfee1b2023dcff7b34ea70ec5}\label{test_8cpp_a36ce8fadfee1b2023dcff7b34ea70ec5_a36ce8fadfee1b2023dcff7b34ea70ec5}} 
+\index{test.cpp@{test.cpp}!gettime@{gettime}}
+\index{gettime@{gettime}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{gettime()}{gettime()}}
+{\footnotesize\ttfamily std\+::string gettime (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_a3c04138a5bfe5d72780bb7e82a18e627_a3c04138a5bfe5d72780bb7e82a18e627}\label{test_8cpp_a3c04138a5bfe5d72780bb7e82a18e627_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{test.cpp@{test.cpp}!main@{main}}
+\index{main@{main}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_aefaab3fac04d826d18c4e7ae0fbd4588_aefaab3fac04d826d18c4e7ae0fbd4588}\label{test_8cpp_aefaab3fac04d826d18c4e7ae0fbd4588_aefaab3fac04d826d18c4e7ae0fbd4588}} 
+\index{test.cpp@{test.cpp}!rebuild@{rebuild}}
+\index{rebuild@{rebuild}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{rebuild()}{rebuild()}}
+{\footnotesize\ttfamily void rebuild (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pattern,  }\item[{bool}]{make = {\ttfamily true} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_ad49089029a783c8b69834b3ddca098a6_ad49089029a783c8b69834b3ddca098a6}\label{test_8cpp_ad49089029a783c8b69834b3ddca098a6_ad49089029a783c8b69834b3ddca098a6}} 
+\index{test.cpp@{test.cpp}!runA@{runA}}
+\index{runA@{runA}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{runA()}{runA()}}
+{\footnotesize\ttfamily int runA (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{std\+::string}]{input,  }\item[{std\+::string}]{output,  }\item[{bool}]{optimize }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_aea9c3abe44e7a1d3f653c35d4d097538_aea9c3abe44e7a1d3f653c35d4d097538}\label{test_8cpp_aea9c3abe44e7a1d3f653c35d4d097538_aea9c3abe44e7a1d3f653c35d4d097538}} 
+\index{test.cpp@{test.cpp}!runB@{runB}}
+\index{runB@{runB}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{runB()}{runB()}}
+{\footnotesize\ttfamily int runB (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{std\+::string}]{output,  }\item[{bool}]{optimize }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{test_8cpp_a6676efd9f8cf3fee947c9cfb560449d8_a6676efd9f8cf3fee947c9cfb560449d8}\label{test_8cpp_a6676efd9f8cf3fee947c9cfb560449d8_a6676efd9f8cf3fee947c9cfb560449d8}} 
+\index{test.cpp@{test.cpp}!runValgrind@{runValgrind}}
+\index{runValgrind@{runValgrind}!test.cpp@{test.cpp}}
+\doxysubsubsection{\texorpdfstring{runValgrind()}{runValgrind()}}
+{\footnotesize\ttfamily int run\+Valgrind (\begin{DoxyParamCaption}\item[{std\+::string}]{filename,  }\item[{bool}]{optimize,  }\item[{std\+::string}]{input = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+

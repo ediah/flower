@@ -1,0 +1,94 @@
+
+
+ 
+
+
+
+\href{https://lgtm.com/projects/g/ediah/mlc/alerts/}{\texttt{ }} \href{https://lgtm.com/projects/g/ediah/mlc/context:cpp}{\texttt{ }}  \hypertarget{md_README_autotoc_md0}{}\doxysection{Краткое описание}\label{md_README_autotoc_md0}
+{\bfseries{Flower}} — строго типизированный язык процедурного программирования. Языком поддерживается многопоточность, указатели заменены на концепт \char`\"{}общей\char`\"{} (или \char`\"{}разделяемой\char`\"{}) переменной, есть 4 простых типа и один составной. Продвинутая работа со структурами\+: над ними можно проводить арифметические операции.
+
+В репозитории ведётся разработка\+:
+
+
+\begin{DoxyEnumerate}
+\item Оптимизирующего байт-\/код компилятора ({\bfseries{flc}}),
+\item Виртуальной стековой машины ({\bfseries{flvm}}),
+\item Отладчика виртуальной машины ({\bfseries{fldbg}}).
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md1}{}\doxysection{Порядок работы}\label{md_README_autotoc_md1}
+
+\begin{DoxyEnumerate}
+\item Скомпилировать написанную программу {\ttfamily source.\+fl}\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./flc source.fl}
+
+\end{DoxyCode}
+
+\item Запустить бинарный файл на виртуальной машине\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./flvm out.bin}
+
+\end{DoxyCode}
+
+\item В случае ошибок или иных проблем отладить\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./fldbg out.bin}
+
+\end{DoxyCode}
+
+\item Если вносятся изменения в код проекта, все изменения можно автоматически протестировать с помощью команды\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./fltest [-\/O] [-\/m] [-\/r] ./test/A-\/unit/*.fl ./test/B-\/unit/*.fl}
+
+\end{DoxyCode}
+ 
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md2}{}\doxysection{Документация}\label{md_README_autotoc_md2}
+Скоро будет доступна в разделе wiki, планируется работа с doxygen.\hypertarget{md_README_autotoc_md3}{}\doxysection{Примеры}\label{md_README_autotoc_md3}
+\hypertarget{md_README_autotoc_md4}{}\doxysubsubsection{Факториал}\label{md_README_autotoc_md4}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{c\#\}}
+\DoxyCodeLine{def factorial(int n): int \{}
+\DoxyCodeLine{    if (n > 1) }
+\DoxyCodeLine{        return factorial(n -\/ 1) * n;}
+\DoxyCodeLine{    else}
+\DoxyCodeLine{        return 1;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{program \{}
+\DoxyCodeLine{    int a;}
+\DoxyCodeLine{    read(a);}
+\DoxyCodeLine{    write(factorial(a));}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md5}{}\doxysubsubsection{Многопоточность}\label{md_README_autotoc_md5}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{c\#\}}
+\DoxyCodeLine{def iterate(shared int a): shared int \{}
+\DoxyCodeLine{    for (int i = 1; i <= 5; i = i + 1) \{}
+\DoxyCodeLine{        /* write("{}Итерация \#"{}, i, "{}: a = "{}, a); */}
+\DoxyCodeLine{        a = a / 2;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    return a;}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{program \{}
+\DoxyCodeLine{    shared int x, y;}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    read(x);}
+\DoxyCodeLine{    read(y);}
+\DoxyCodeLine{}
+\DoxyCodeLine{    thread:1 \{ x = iterate(x); \}}
+\DoxyCodeLine{    thread:2 \{ y = iterate(y); \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    fork(1, 2);}
+\DoxyCodeLine{    lock();}
+\DoxyCodeLine{}
+\DoxyCodeLine{    write(x, "{} "{}, y);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Множество других примеров Вы можете найти в папке \textquotesingle{}test\textquotesingle{}. 
