@@ -1,0 +1,17 @@
+exprtype.o: ./src/common/obstacle.hpp ./src/common/exprtype.hpp
+obstacle.o: ./src/common/obstacle.hpp
+poliz.o: ./src/config.hpp ./src/common/obstacle.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+stack.o: ./src/common/obstacle.hpp ./src/common/exprtype.hpp ./src/config.hpp ./src/common/stack.hpp
+tables.o: ./src/common/obstacle.hpp ./src/common/tables.hpp ./src/config.hpp ./src/common/exprtype.hpp
+cursor.o: ./src/compiler/cursor.hpp
+parser.o: ./src/config.hpp ./src/compiler/cursor.hpp ./src/optimizer/optimizer.hpp ./src/common/stack.hpp ./src/common/obstacle.hpp ./src/optimizer/acyclicgraph.hpp ./src/common/exprtype.hpp ./src/optimizer/util.hpp ./src/optimizer/controlflow.hpp ./src/common/poliz.hpp ./src/compiler/parser.hpp ./src/common/tables.hpp
+debugger.o: ./src/config.hpp ./src/common/tables.hpp ./src/common/stack.hpp ./src/runtime/vmachine.hpp ./src/common/obstacle.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/debugger/debugger.hpp
+flc.o: ./src/config.hpp ./src/compiler/cursor.hpp ./src/optimizer/optimizer.hpp ./src/version.hpp ./src/common/stack.hpp ./src/common/obstacle.hpp ./src/optimizer/acyclicgraph.hpp ./src/common/exprtype.hpp ./src/optimizer/util.hpp ./src/optimizer/controlflow.hpp ./src/common/poliz.hpp ./src/compiler/parser.hpp ./src/common/tables.hpp
+fldbg.o: ./src/config.hpp ./src/debugger/debugger.hpp ./src/version.hpp ./src/common/stack.hpp ./src/runtime/vmachine.hpp ./src/common/obstacle.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+flvm.o: ./src/config.hpp ./src/version.hpp ./src/common/stack.hpp ./src/common/obstacle.hpp ./src/runtime/vmachine.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+acyclicgraph.o: ./src/config.hpp ./src/optimizer/acyclicgraph.hpp ./src/optimizer/util.hpp ./src/optimizer/controlflow.hpp ./src/common/exprtype.hpp ./src/common/obstacle.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+controlflow.o: ./src/config.hpp ./src/optimizer/util.hpp ./src/common/obstacle.hpp ./src/optimizer/controlflow.hpp ./src/optimizer/acyclicgraph.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+optimizer.o: ./src/config.hpp ./src/optimizer/optimizer.hpp ./src/optimizer/acyclicgraph.hpp ./src/optimizer/util.hpp ./src/optimizer/controlflow.hpp ./src/common/exprtype.hpp ./src/common/obstacle.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+util.o: ./src/config.hpp ./src/optimizer/util.hpp ./src/optimizer/acyclicgraph.hpp ./src/optimizer/controlflow.hpp ./src/common/obstacle.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+vmachine.o: ./src/config.hpp ./src/common/stack.hpp ./src/common/obstacle.hpp ./src/runtime/vmachine.hpp ./src/common/exprtype.hpp ./src/common/poliz.hpp ./src/common/tables.hpp
+test.o: ./src/version.hpp
