@@ -52,4 +52,6 @@ jobs:
           mv coverage-new coverage
           git add .
           git commit -m "Обновление анализа покрытия кода"
+          git config pull.rebase true
+          git pull
           git push
