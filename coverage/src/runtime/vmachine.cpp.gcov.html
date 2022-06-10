@@ -31,13 +31,13 @@
             <td class="headerValue">flower-f.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">269</td>
-            <td class="headerCovTableEntry">299</td>
-            <td class="headerCovTableEntryHi">90.0 %</td>
+            <td class="headerCovTableEntry">265</td>
+            <td class="headerCovTableEntry">293</td>
+            <td class="headerCovTableEntryHi">90.4 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-09 01:14:55</td>
+            <td class="headerValue">2022-06-10 00:19:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">38</td>
@@ -262,7 +262,7 @@
 <a name="200"><span class="lineNum">     200 </span><span class="lineCov">          5 :                 int i = 0;</span></a>
 <a name="201"><span class="lineNum">     201 </span><span class="lineCov">         20 :                 for (; (a[i] != '\0') &amp;&amp; (b[i] != '\0'); i++) {}</span></a>
 <a name="202"><span class="lineNum">     202 </span><span class="lineCov">          5 :                 stackVM.push(new bool ((a[i] == '\0') &amp;&amp; (b[i] != '\0')), _BOOLEAN_);</span></a>
-<a name="203"><span class="lineNum">     203 </span><span class="lineCov">          5 :             } else {</span></a>
+<a name="203"><span class="lineNum">     203 </span>            :             } else {</a>
 <a name="204"><span class="lineNum">     204 </span><span class="lineCov">         58 :                 LOGIC_OPERATION(&lt;)</span></a>
 <a name="205"><span class="lineNum">     205 </span>            :             }</a>
 <a name="206"><span class="lineNum">     206 </span><span class="lineCov">         34 :             break;</span></a>
@@ -273,7 +273,7 @@
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :                 int i = 0;</span></a>
 <a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :                 for (; (a[i] != '\0') &amp;&amp; (b[i] != '\0'); i++) {}</span></a>
 <a name="213"><span class="lineNum">     213 </span><span class="lineNoCov">          0 :                 stackVM.push(new bool (b[i] == '\0'), _BOOLEAN_);</span></a>
-<a name="214"><span class="lineNum">     214 </span><span class="lineNoCov">          0 :             } else {</span></a>
+<a name="214"><span class="lineNum">     214 </span>            :             } else {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineCov">         60 :                 LOGIC_OPERATION(&gt;)</span></a>
 <a name="216"><span class="lineNum">     216 </span>            :             }</a>
 <a name="217"><span class="lineNum">     217 </span><span class="lineCov">         30 :             break;</span></a>
@@ -293,7 +293,7 @@
 <a name="231"><span class="lineNum">     231 </span>            :                 }</a>
 <a name="232"><span class="lineNum">     232 </span><span class="lineCov">          6 :                 r = r &amp;&amp; (a[i] == '\0') &amp;&amp; (b[i] == '\0');</span></a>
 <a name="233"><span class="lineNum">     233 </span><span class="lineCov">          6 :                 stackVM.push(new bool (r), _BOOLEAN_);</span></a>
-<a name="234"><span class="lineNum">     234 </span><span class="lineCov">          6 :             } else {</span></a>
+<a name="234"><span class="lineNum">     234 </span>            :             } else {</a>
 <a name="235"><span class="lineNum">     235 </span><span class="lineCov">         54 :                 LOGIC_OPERATION(==)</span></a>
 <a name="236"><span class="lineNum">     236 </span>            :             }</a>
 <a name="237"><span class="lineNum">     237 </span><span class="lineCov">         33 :             break;</span></a>
@@ -311,7 +311,7 @@
 <a name="249"><span class="lineNum">     249 </span>            :                 }</a>
 <a name="250"><span class="lineNum">     250 </span><span class="lineNoCov">          0 :                 r = r &amp;&amp; (a[i] == '\0') &amp;&amp; (b[i] == '\0');</span></a>
 <a name="251"><span class="lineNum">     251 </span><span class="lineNoCov">          0 :                 stackVM.push(new bool (!r), _BOOLEAN_);</span></a>
-<a name="252"><span class="lineNum">     252 </span><span class="lineNoCov">          0 :             } else {</span></a>
+<a name="252"><span class="lineNum">     252 </span>            :             } else {</a>
 <a name="253"><span class="lineNum">     253 </span><span class="lineCov">         92 :                 LOGIC_OPERATION(!=)</span></a>
 <a name="254"><span class="lineNum">     254 </span>            :             }</a>
 <a name="255"><span class="lineNum">     255 </span><span class="lineCov">         46 :             break;</span></a>
@@ -325,7 +325,7 @@
 <a name="263"><span class="lineNum">     263 </span><span class="lineCov">         20 :             } else if (rval == _REAL_) {</span></a>
 <a name="264"><span class="lineNum">     264 </span><span class="lineCov">          8 :                 std::cin &gt;&gt; * static_cast&lt;float *&gt;(stackVM.pop());</span></a>
 <a name="265"><span class="lineNum">     265 </span><span class="lineCov">         12 :             } else if (rval == _STRING_) {</span></a>
-<a name="266"><span class="lineNum">     266 </span><span class="lineCov">          8 :                 std::string x;</span></a>
+<a name="266"><span class="lineNum">     266 </span><span class="lineCov">         16 :                 std::string x;</span></a>
 <a name="267"><span class="lineNum">     267 </span><span class="lineCov">          8 :                 std::cin &gt;&gt; x;</span></a>
 <a name="268"><span class="lineNum">     268 </span><span class="lineCov">          8 :                 char * newString = new char[x.length() + 1];</span></a>
 <a name="269"><span class="lineNum">     269 </span><span class="lineCov">          8 :                 memcpy(newString, x.data(), x.length() + 1);</span></a>
@@ -333,12 +333,12 @@
 <a name="271"><span class="lineNum">     271 </span><span class="lineCov">          8 :                 const char * b = newString;</span></a>
 <a name="272"><span class="lineNum">     272 </span><span class="lineCov">          8 :                 memcpy(a, &amp;b, sizeof(void*));</span></a>
 <a name="273"><span class="lineNum">     273 </span><span class="lineCov">          8 :                 dynamicStrings.push(newString, _STRING_);</span></a>
-<a name="274"><span class="lineNum">     274 </span><span class="lineCov">          8 :             } else {</span></a>
+<a name="274"><span class="lineNum">     274 </span>            :             } else {</a>
 <a name="275"><span class="lineNum">     275 </span><span class="lineCov">          4 :                 std::string x;</span></a>
 <a name="276"><span class="lineNum">     276 </span><span class="lineCov">          4 :                 do { std::cin &gt;&gt; x; } </span></a>
 <a name="277"><span class="lineNum">     277 </span><span class="lineCov">          4 :                 while ((x != &quot;True&quot;) &amp;&amp; (x != &quot;true&quot;) &amp;&amp; (x != &quot;False&quot;) &amp;&amp; (x != &quot;false&quot;));</span></a>
 <a name="278"><span class="lineNum">     278 </span><span class="lineCov">          4 :                 * static_cast&lt;bool *&gt;(stackVM.pop()) = (x == &quot;True&quot;) || (x == &quot;true&quot;);</span></a>
-<a name="279"><span class="lineNum">     279 </span><span class="lineCov">          4 :             }</span></a>
+<a name="279"><span class="lineNum">     279 </span>            :             }</a>
 <a name="280"><span class="lineNum">     280 </span><span class="lineCov">         59 :             break;</span></a>
 <a name="281"><span class="lineNum">     281 </span>            : </a>
 <a name="282"><span class="lineNum">     282 </span><span class="lineCov">          4 :         case LAND: {</span></a>
@@ -402,7 +402,7 @@
 <a name="340"><span class="lineNum">     340 </span>            :             #endif</a>
 <a name="341"><span class="lineNum">     341 </span><span class="lineCov">         10 :             break;</span></a>
 <a name="342"><span class="lineNum">     342 </span>            :         }</a>
-<a name="343"><span class="lineNum">     343 </span><span class="lineCov">          2 :         case LOCK: {</span></a>
+<a name="343"><span class="lineNum">     343 </span><span class="lineCov">          6 :         case LOCK: {</span></a>
 <a name="344"><span class="lineNum">     344 </span><span class="lineCov">          6 :             while (threads.size() != 0) {</span></a>
 <a name="345"><span class="lineNum">     345 </span><span class="lineCov">          4 :                 int st, ret = 0;</span></a>
 <a name="346"><span class="lineNum">     346 </span><span class="lineCov">          4 :                 updateVars();</span></a>
@@ -435,7 +435,7 @@
 <a name="373"><span class="lineNum">     373 </span><span class="lineCov">       3352 :     return exitStatus;</span></a>
 <a name="374"><span class="lineNum">     374 </span>            : }</a>
 <a name="375"><span class="lineNum">     375 </span>            : </a>
-<a name="376"><span class="lineNum">     376 </span><span class="lineCov">          4 : void VirtualMachine::updateVars(void) {</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineCov">         56 : void VirtualMachine::updateVars(void) {</span></a>
 <a name="377"><span class="lineNum">     377 </span>            :     void * p;</a>
 <a name="378"><span class="lineNum">     378 </span>            :     int n;</a>
 <a name="379"><span class="lineNum">     379 </span><span class="lineCov">         56 :     while (pipefd.size() != 0) {</span></a>
@@ -462,7 +462,7 @@
 
   <table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.15</a></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
   </table>
   <br>
 

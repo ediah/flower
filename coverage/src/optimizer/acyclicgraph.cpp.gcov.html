@@ -31,13 +31,13 @@
             <td class="headerValue">flower-f.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">28</td>
-            <td class="headerCovTableEntry">207</td>
-            <td class="headerCovTableEntryLo">13.5 %</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">205</td>
+            <td class="headerCovTableEntryLo">13.2 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-09 01:14:55</td>
+            <td class="headerValue">2022-06-10 00:19:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">5</td>
@@ -157,9 +157,9 @@
 <a name="95"><span class="lineNum">      95 </span>            : }</a>
 <a name="96"><span class="lineNum">      96 </span>            : </a>
 <a name="97"><span class="lineNum">      97 </span><span class="lineCov">         58 : void DirectedAcyclicGraph::make(POLIZ p) {</span></a>
-<a name="98"><span class="lineNum">      98 </span><span class="lineCov">         58 :     std::vector&lt;std::pair&lt;IdentTable *, DAGRow *&gt;&gt; changed;</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">        116 :     std::vector&lt;std::pair&lt;IdentTable *, DAGRow *&gt;&gt; changed;</span></a>
 <a name="99"><span class="lineNum">      99 </span><span class="lineCov">         58 :     std::pair&lt;IdentTable *, DAGRow *&gt; rep;</span></a>
-<a name="100"><span class="lineNum">     100 </span><span class="lineCov">         58 :     std::vector&lt;DAGRow *&gt; queue;</span></a>
+<a name="100"><span class="lineNum">     100 </span><span class="lineCov">        116 :     std::vector&lt;DAGRow *&gt; queue;</span></a>
 <a name="101"><span class="lineNum">     101 </span><span class="lineCov">         58 :     stash(p);</span></a>
 <a name="102"><span class="lineNum">     102 </span><span class="lineCov">         58 :     for (int i = 0; i &lt; p.getSize(); i++) {</span></a>
 <a name="103"><span class="lineNum">     103 </span>            :         DAGRow * qrow;</a>
@@ -271,7 +271,7 @@
 <a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :                 typeOnStack-&gt;pop_back();</span></a>
 <a name="210"><span class="lineNum">     210 </span>            :             }</a>
 <a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :             type = expressionType(ltype, rtype, oper);</span></a>
-<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="212"><span class="lineNum">     212 </span>            :         }</a>
 <a name="213"><span class="lineNum">     213 </span>            :         </a>
 <a name="214"><span class="lineNum">     214 </span>            :     } else {</a>
 <a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 :         if (ident != nullptr){</span></a>
@@ -284,7 +284,7 @@
 <a name="222"><span class="lineNum">     222 </span>            : </a>
 <a name="223"><span class="lineNum">     223 </span><span class="lineCov">         58 : POLIZ DirectedAcyclicGraph::decompose(std::vector&lt;type_t&gt; * typeOnStack) {</span></a>
 <a name="224"><span class="lineNum">     224 </span><span class="lineCov">         58 :     POLIZ ret;</span></a>
-<a name="225"><span class="lineNum">     225 </span><span class="lineCov">         58 :     std::vector&lt;DAGRow *&gt; asd;</span></a>
+<a name="225"><span class="lineNum">     225 </span><span class="lineCov">        116 :     std::vector&lt;DAGRow *&gt; asd;</span></a>
 <a name="226"><span class="lineNum">     226 </span>            :     type_t t;</a>
 <a name="227"><span class="lineNum">     227 </span>            : </a>
 <a name="228"><span class="lineNum">     228 </span><span class="lineCov">         58 :     for (auto head: rows) {</span></a>
@@ -305,7 +305,7 @@
 <a name="243"><span class="lineNum">     243 </span><span class="lineCov">         58 :     copyPOLIZ(stashed, ret, 0, stashed.getSize());</span></a>
 <a name="244"><span class="lineNum">     244 </span>            :     </a>
 <a name="245"><span class="lineNum">     245 </span><span class="lineCov">        116 :     return ret;</span></a>
-<a name="246"><span class="lineNum">     246 </span><span class="lineCov">         58 : }</span></a>
+<a name="246"><span class="lineNum">     246 </span>            : }</a>
 <a name="247"><span class="lineNum">     247 </span>            : </a>
 <a name="248"><span class="lineNum">     248 </span><span class="lineCov">         58 : void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {</span></a>
 <a name="249"><span class="lineNum">     249 </span><span class="lineCov">         58 :     std::pair&lt;std::pair&lt;DAGRow *, DAGRow *&gt;, int&gt; fcret;</span></a>
@@ -433,7 +433,7 @@
 
   <table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.15</a></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
   </table>
   <br>
 

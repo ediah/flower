@@ -31,13 +31,13 @@
             <td class="headerValue">flower-f.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">59</td>
-            <td class="headerCovTableEntry">87</td>
-            <td class="headerCovTableEntryLo">67.8 %</td>
+            <td class="headerCovTableEntry">57</td>
+            <td class="headerCovTableEntry">83</td>
+            <td class="headerCovTableEntryLo">68.7 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-06-09 01:14:55</td>
+            <td class="headerValue">2022-06-10 00:19:19</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">3</td>
@@ -110,14 +110,14 @@
 <a name="48"><span class="lineNum">      48 </span>            :     #endif</a>
 <a name="49"><span class="lineNum">      49 </span><span class="lineCov">         29 :     if (verbose) CFG.info();</span></a>
 <a name="50"><span class="lineNum">      50 </span>            : </a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         29 :     std::vector&lt;flowTree *&gt; optimized = {CFG.head()};</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         29 :     std::vector&lt;flowTree *&gt; queue = {CFG.head()};</span></a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         29 :     std::vector&lt;bool&gt; afterCall = {false}; // Нужно собирать возврат</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">         58 :     std::vector&lt;flowTree *&gt; optimized = {CFG.head()};</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">         58 :     std::vector&lt;flowTree *&gt; queue = {CFG.head()};</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">         58 :     std::vector&lt;bool&gt; afterCall = {false}; // Нужно собирать возврат</span></a>
 <a name="54"><span class="lineNum">      54 </span>            : </a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         29 :     std::map&lt;int, std::vector&lt;type_t&gt;&gt; funcRets;</span></a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">         29 :     std::vector&lt;type_t&gt; typeOnStack;</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">         87 :     std::vector&lt;std::vector&lt;type_t&gt;&gt; oldStack = {{}};</span></a>
-<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         29 :     std::vector&lt;int&gt; conn; // ID вызванной функции</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         58 :     std::map&lt;int, std::vector&lt;type_t&gt;&gt; funcRets;</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">         58 :     std::vector&lt;type_t&gt; typeOnStack;</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">        116 :     std::vector&lt;std::vector&lt;type_t&gt;&gt; oldStack = {{}};</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">         58 :     std::vector&lt;int&gt; conn; // ID вызванной функции</span></a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">         29 :     std::vector&lt;int&gt; funcHead = {};</span></a>
 <a name="60"><span class="lineNum">      60 </span>            : </a>
 <a name="61"><span class="lineNum">      61 </span><span class="lineCov">         87 :     while (queue.size() != 0) {</span></a>
@@ -131,7 +131,7 @@
 <a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :             std::vector&lt;type_t&gt; tail = funcRets[conn.front()];</span></a>
 <a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :             typeOnStack.insert(typeOnStack.end(), tail.begin(), tail.begin());</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :             conn.erase(conn.begin());</span></a>
-<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="72"><span class="lineNum">      72 </span>            :         }</a>
 <a name="73"><span class="lineNum">      73 </span><span class="lineCov">         58 :         POLIZ src = DAG.decompose(&amp;typeOnStack);</span></a>
 <a name="74"><span class="lineNum">      74 </span><span class="lineCov">         58 :         src.repr();</span></a>
 <a name="75"><span class="lineNum">      75 </span><span class="lineCov">         58 :         queue.back()-&gt;block.clear();</span></a>
@@ -166,7 +166,7 @@
 <a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :                         funcHead.push_back(connID);</span></a>
 <a name="105"><span class="lineNum">     105 </span>            :                 }</a>
 <a name="106"><span class="lineNum">     106 </span>            :             }</a>
-<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :         } else {</span></a>
+<a name="107"><span class="lineNum">     107 </span>            :         } else {</a>
 <a name="108"><span class="lineNum">     108 </span><span class="lineCov">        116 :             for (auto node: queue.back()-&gt;next) {</span></a>
 <a name="109"><span class="lineNum">     109 </span><span class="lineCov">         58 :                 if (find(optimized, node.first) == -1) {</span></a>
 <a name="110"><span class="lineNum">     110 </span><span class="lineCov">         29 :                     queue.push_back(node.first);</span></a>
@@ -180,7 +180,7 @@
 <a name="118"><span class="lineNum">     118 </span><span class="lineCov">         58 :         queue.pop_back();</span></a>
 <a name="119"><span class="lineNum">     119 </span><span class="lineCov">         58 :         afterCall.erase(afterCall.begin());</span></a>
 <a name="120"><span class="lineNum">     120 </span><span class="lineCov">         58 :         oldStack.erase(oldStack.begin());</span></a>
-<a name="121"><span class="lineNum">     121 </span><span class="lineCov">         58 :     }</span></a>
+<a name="121"><span class="lineNum">     121 </span>            :     }</a>
 <a name="122"><span class="lineNum">     122 </span>            : </a>
 <a name="123"><span class="lineNum">     123 </span><span class="lineCov">         29 :     IdTable = CFG.decompose(IdTable, poliz);</span></a>
 <a name="124"><span class="lineNum">     124 </span>            : </a>
@@ -190,8 +190,8 @@
 <a name="128"><span class="lineNum">     128 </span>            :     CFG.draw(&quot;optimized&quot;);</a>
 <a name="129"><span class="lineNum">     129 </span>            :     #endif   </a>
 <a name="130"><span class="lineNum">     130 </span>            : </a>
-<a name="131"><span class="lineNum">     131 </span><span class="lineCov">         29 :     return IdTable; </span></a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineCov">         29 : }</span></a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineCov">         58 :     return IdTable; </span></a>
+<a name="132"><span class="lineNum">     132 </span>            : }</a>
 </pre>
       </td>
     </tr>
@@ -200,7 +200,7 @@
 
   <table width="100%" border=0 cellspacing=0 cellpadding=0>
     <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
-    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.15</a></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
   </table>
   <br>
 
