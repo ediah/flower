@@ -6,22 +6,12 @@
 
 
 
-Граф наследования\+:Debugger\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=170pt]{classDebugger__inherit__graph}
-\end{center}
-\end{figure}
+Граф наследования\+:Debugger\+:
+% FIG 0
 
 
-Граф связей класса Debugger\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{classDebugger__coll__graph}
-\end{center}
-\end{figure}
+Граф связей класса Debugger\+:
+% FIG 1
 \doxysubsection*{Открытые члены}
 \begin{DoxyCompactItemize}
 \item 
@@ -41,7 +31,7 @@ void \mbox{\hyperlink{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25
 \item 
 bool \mbox{\hyperlink{classDebugger_ac7463e2b0e29da73f2dc3be3d866425f_ac7463e2b0e29da73f2dc3be3d866425f}{compare}} (const std\+::string \&str, std\+::string ref)
 \item 
-void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+BIN}} (const char $\ast$filename)
+void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+B\+IN}} (const char $\ast$filename)
 \item 
 bool \mbox{\hyperlink{classVirtualMachine_a0022f93eb16cf9f7d68d32b3bd3cea9c_a0022f93eb16cf9f7d68d32b3bd3cea9c}{exec}} (\mbox{\hyperlink{poliz_8hpp_af3ceb578c32897fe58138820454a3c36_af3ceb578c32897fe58138820454a3c36}{op\+\_\+t}} op, int $\ast$eip)
 \item 
@@ -49,7 +39,7 @@ void \mbox{\hyperlink{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a464
 \item 
 void \mbox{\hyperlink{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}{number\+Op}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} lval, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} rval, void $\ast$f)
 \item 
-{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} TYPE)
+{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} T\+Y\+PE)
 \item 
 {\footnotesize template$<$class lval\+\_\+t , class rval\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}{assign}} (void)
 \end{DoxyCompactItemize}
@@ -152,7 +142,7 @@ void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{Do
 \index{Debugger@{Debugger}!loadBIN@{loadBIN}}
 \index{loadBIN@{loadBIN}!Debugger@{Debugger}}
 \doxysubsubsection{\texorpdfstring{loadBIN()}{loadBIN()}}
-{\footnotesize\ttfamily void Virtual\+Machine\+::load\+BIN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+{\footnotesize\ttfamily void Virtual\+Machine\+::load\+B\+IN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
 
 \mbox{\Hypertarget{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25c3366af48e33c8454b834f5}\label{classDebugger_a80a789e25c3366af48e33c8454b834f5_a80a789e25c3366af48e33c8454b834f5}} 
 \index{Debugger@{Debugger}!memory@{memory}}
@@ -199,7 +189,7 @@ void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{Do
 \index{tempOp@{tempOp}!Debugger@{Debugger}}
 \doxysubsubsection{\texorpdfstring{tempOp()}{tempOp()}}
 {\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t , class res\+\_\+t $>$ \\
-void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{TYPE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
+void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{T\+Y\+PE }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inherited]}}
 
 \mbox{\Hypertarget{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}\label{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}} 
 \index{Debugger@{Debugger}!updateVars@{updateVars}}

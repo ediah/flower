@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['expects_836',['Expects',['../cppcheck_8hpp_a4d114e2bbcbd5b636b36b640c3a58187.html#a4d114e2bbcbd5b636b36b640c3a58187',1,'cppcheck.hpp']]]
+  ['it_5ffrom_5fpoliz_827',['IT_FROM_POLIZ',['../poliz_8hpp_ac138fef2e4de5eef9b335157c9cc66d3.html#ac138fef2e4de5eef9b335157c9cc66d3',1,'poliz.hpp']]]
 ];

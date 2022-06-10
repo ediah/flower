@@ -6,13 +6,8 @@
 
 
 
-Граф связей класса Control\+Flow\+Graph\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{classControlFlowGraph__coll__graph}
-\end{center}
-\end{figure}
+Граф связей класса Control\+Flow\+Graph\+:
+% FIG 0
 \doxysubsection*{Открытые члены}
 \begin{DoxyCompactItemize}
 \item 
@@ -20,7 +15,7 @@
 \item 
 void \mbox{\hyperlink{classControlFlowGraph_abb93a920b5831b2e82863ebac149f4d1_abb93a920b5831b2e82863ebac149f4d1}{clear}} (void)
 \item 
-void \mbox{\hyperlink{classControlFlowGraph_a144e5d278fe03ba090919308b5e3305b_a144e5d278fe03ba090919308b5e3305b}{make}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$p)
+void \mbox{\hyperlink{classControlFlowGraph_a144e5d278fe03ba090919308b5e3305b_a144e5d278fe03ba090919308b5e3305b}{make}} (\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$p)
 \item 
 void \mbox{\hyperlink{classControlFlowGraph_ad0a36f93ba67378a71b6184b0c30e613_ad0a36f93ba67378a71b6184b0c30e613}{info}} (void) const
 \item 
@@ -32,17 +27,17 @@ void \mbox{\hyperlink{classControlFlowGraph_a9dc3db9d50cf627f202f1f7913b1ec4a_a9
 \item 
 std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ \mbox{\hyperlink{classControlFlowGraph_af3d65060f83ae2963c447f13c927c035_af3d65060f83ae2963c447f13c927c035}{tail\+Ret}} (void)
 \item 
-\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classControlFlowGraph_ad7cff5a1a361f3fce70fefa714e02e43_ad7cff5a1a361f3fce70fefa714e02e43}{decompose}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$IT, \mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$poliz)
+\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ \mbox{\hyperlink{classControlFlowGraph_ad7cff5a1a361f3fce70fefa714e02e43_ad7cff5a1a361f3fce70fefa714e02e43}{decompose}} (\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$IT, \mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$poliz)
 \item 
-void \mbox{\hyperlink{classControlFlowGraph_a098929bab190a1822de38df442ef6d70_a098929bab190a1822de38df442ef6d70}{new\+Block}} (int block\+Id, \mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$p, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, char cond=0)
+void \mbox{\hyperlink{classControlFlowGraph_a098929bab190a1822de38df442ef6d70_a098929bab190a1822de38df442ef6d70}{new\+Block}} (int block\+Id, \mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$p, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, char cond=0)
 \item 
-void \mbox{\hyperlink{classControlFlowGraph_a660e3bc39668442adcd443770437a20c_a660e3bc39668442adcd443770437a20c}{make\+Branch}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$p, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$fb, bool exists)
+void \mbox{\hyperlink{classControlFlowGraph_a660e3bc39668442adcd443770437a20c_a660e3bc39668442adcd443770437a20c}{make\+Branch}} (\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$p, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$fb, bool exists)
 \item 
 void \mbox{\hyperlink{classControlFlowGraph_afaf54c0b4d11fc7a7d3c7e92da0bb320_afaf54c0b4d11fc7a7d3c7e92da0bb320}{delete\+Branch}} (std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$, char $>$$>$ vec, std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$del)
 \item 
-void \mbox{\hyperlink{classControlFlowGraph_a82abdeb4b209b3388f75b58f1eead1e9_a82abdeb4b209b3388f75b58f1eead1e9}{new\+Conn}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$poliz, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, std\+::vector$<$ int $>$ $\ast$ls, std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$eb)
+void \mbox{\hyperlink{classControlFlowGraph_a82abdeb4b209b3388f75b58f1eead1e9_a82abdeb4b209b3388f75b58f1eead1e9}{new\+Conn}} (\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$poliz, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, std\+::vector$<$ int $>$ $\ast$ls, std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$eb)
 \item 
-void \mbox{\hyperlink{classControlFlowGraph_aa53c3b7129ea558b582f1c7688e411f3_aa53c3b7129ea558b582f1c7688e411f3}{insert\+Block}} (\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$poliz, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, std\+::vector$<$ int $>$ $\ast$ls, std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$eb)
+void \mbox{\hyperlink{classControlFlowGraph_aa53c3b7129ea558b582f1c7688e411f3_aa53c3b7129ea558b582f1c7688e411f3}{insert\+Block}} (\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$poliz, \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$cur\+Block, std\+::vector$<$ int $>$ $\ast$ls, std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$eb)
 \item 
 \mbox{\hyperlink{classControlFlowGraph_a0b9a9b19413ef362800fad34e6594e13_a0b9a9b19413ef362800fad34e6594e13}{$\sim$\+Control\+Flow\+Graph}} ()
 \end{DoxyCompactItemize}
@@ -91,7 +86,7 @@ int \mbox{\hyperlink{classControlFlowGraph_a7ee46fceb066f3ed4f4d1c6e30f8dd4c_a7e
 \index{ControlFlowGraph@{ControlFlowGraph}!decompose@{decompose}}
 \index{decompose@{decompose}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{decompose()}{decompose()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Control\+Flow\+Graph\+::decompose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{IT,  }\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{poliz }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$ Control\+Flow\+Graph\+::decompose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classIdentTable}{Ident\+Table}} $\ast$}]{IT,  }\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{poliz }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_afaf54c0b4d11fc7a7d3c7e92da0bb320_afaf54c0b4d11fc7a7d3c7e92da0bb320}\label{classControlFlowGraph_afaf54c0b4d11fc7a7d3c7e92da0bb320_afaf54c0b4d11fc7a7d3c7e92da0bb320}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!deleteBranch@{deleteBranch}}
@@ -121,31 +116,31 @@ int \mbox{\hyperlink{classControlFlowGraph_a7ee46fceb066f3ed4f4d1c6e30f8dd4c_a7e
 \index{ControlFlowGraph@{ControlFlowGraph}!insertBlock@{insertBlock}}
 \index{insertBlock@{insertBlock}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{insertBlock()}{insertBlock()}}
-{\footnotesize\ttfamily void Control\+Flow\+Graph\+::insert\+Block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{poliz,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{std\+::vector$<$ int $>$ $\ast$}]{ls,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$}]{eb }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Control\+Flow\+Graph\+::insert\+Block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{poliz,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{std\+::vector$<$ int $>$ $\ast$}]{ls,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$}]{eb }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_a144e5d278fe03ba090919308b5e3305b_a144e5d278fe03ba090919308b5e3305b}\label{classControlFlowGraph_a144e5d278fe03ba090919308b5e3305b_a144e5d278fe03ba090919308b5e3305b}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!make@{make}}
 \index{make@{make}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{make()}{make()}}
-{\footnotesize\ttfamily void Control\+Flow\+Graph\+::make (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{p }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Control\+Flow\+Graph\+::make (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{p }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_a660e3bc39668442adcd443770437a20c_a660e3bc39668442adcd443770437a20c}\label{classControlFlowGraph_a660e3bc39668442adcd443770437a20c_a660e3bc39668442adcd443770437a20c}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!makeBranch@{makeBranch}}
 \index{makeBranch@{makeBranch}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{makeBranch()}{makeBranch()}}
-{\footnotesize\ttfamily void Control\+Flow\+Graph\+::make\+Branch (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{p,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{fb,  }\item[{bool}]{exists }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Control\+Flow\+Graph\+::make\+Branch (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{p,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{fb,  }\item[{bool}]{exists }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_a098929bab190a1822de38df442ef6d70_a098929bab190a1822de38df442ef6d70}\label{classControlFlowGraph_a098929bab190a1822de38df442ef6d70_a098929bab190a1822de38df442ef6d70}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!newBlock@{newBlock}}
 \index{newBlock@{newBlock}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{newBlock()}{newBlock()}}
-{\footnotesize\ttfamily void Control\+Flow\+Graph\+::new\+Block (\begin{DoxyParamCaption}\item[{int}]{block\+Id,  }\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{p,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{char}]{cond = {\ttfamily 0} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Control\+Flow\+Graph\+::new\+Block (\begin{DoxyParamCaption}\item[{int}]{block\+Id,  }\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{p,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{char}]{cond = {\ttfamily 0} }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_a82abdeb4b209b3388f75b58f1eead1e9_a82abdeb4b209b3388f75b58f1eead1e9}\label{classControlFlowGraph_a82abdeb4b209b3388f75b58f1eead1e9_a82abdeb4b209b3388f75b58f1eead1e9}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!newConn@{newConn}}
 \index{newConn@{newConn}!ControlFlowGraph@{ControlFlowGraph}}
 \doxysubsubsection{\texorpdfstring{newConn()}{newConn()}}
-{\footnotesize\ttfamily void Control\+Flow\+Graph\+::new\+Conn (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{POLIZ}} $\ast$}]{poliz,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{std\+::vector$<$ int $>$ $\ast$}]{ls,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$}]{eb }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Control\+Flow\+Graph\+::new\+Conn (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPOLIZ}{P\+O\+L\+IZ}} $\ast$}]{poliz,  }\item[{\mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$}]{cur\+Block,  }\item[{std\+::vector$<$ int $>$ $\ast$}]{ls,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structflowTree}{flow\+Tree}} $\ast$ $>$ $\ast$}]{eb }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classControlFlowGraph_af3d65060f83ae2963c447f13c927c035_af3d65060f83ae2963c447f13c927c035}\label{classControlFlowGraph_af3d65060f83ae2963c447f13c927c035_af3d65060f83ae2963c447f13c927c035}} 
 \index{ControlFlowGraph@{ControlFlowGraph}!tailRet@{tailRet}}

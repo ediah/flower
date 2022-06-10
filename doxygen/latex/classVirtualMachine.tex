@@ -6,28 +6,18 @@
 
 
 
-Граф наследования\+:Virtual\+Machine\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=170pt]{classVirtualMachine__inherit__graph}
-\end{center}
-\end{figure}
+Граф наследования\+:Virtual\+Machine\+:
+% FIG 0
 
 
-Граф связей класса Virtual\+Machine\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{classVirtualMachine__coll__graph}
-\end{center}
-\end{figure}
+Граф связей класса Virtual\+Machine\+:
+% FIG 1
 \doxysubsection*{Открытые члены}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classVirtualMachine_a7cda84048190dacf83c36c054a447c85_a7cda84048190dacf83c36c054a447c85}{Virtual\+Machine}} ()
 \item 
-void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+BIN}} (const char $\ast$filename)
+void \mbox{\hyperlink{classVirtualMachine_abae2c95350c3d4f19cb272d6a2834efb_abae2c95350c3d4f19cb272d6a2834efb}{load\+B\+IN}} (const char $\ast$filename)
 \item 
 virtual void \mbox{\hyperlink{classVirtualMachine_a5c0d5bb13224bdbabe4688d054ac6355_a5c0d5bb13224bdbabe4688d054ac6355}{run}} (void)
 \item 
@@ -37,7 +27,7 @@ void \mbox{\hyperlink{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a464
 \item 
 void \mbox{\hyperlink{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}{number\+Op}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} lval, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} rval, void $\ast$f)
 \item 
-{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} TYPE)
+{\footnotesize template$<$typename lval\+\_\+t , typename rval\+\_\+t , typename res\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_aeca7fc2041c4845f8102160e3ff3d31a_aeca7fc2041c4845f8102160e3ff3d31a}{temp\+Op}} (res\+\_\+t($\ast$f)(lval\+\_\+t, rval\+\_\+t), \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} T\+Y\+PE)
 \item 
 {\footnotesize template$<$class lval\+\_\+t , class rval\+\_\+t $>$ }\\void \mbox{\hyperlink{classVirtualMachine_a66ea24d74638f89dfac8ba628562d3bc_a66ea24d74638f89dfac8ba628562d3bc}{assign}} (void)
 \item 
@@ -116,7 +106,7 @@ void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{Do
 \index{VirtualMachine@{VirtualMachine}!loadBIN@{loadBIN}}
 \index{loadBIN@{loadBIN}!VirtualMachine@{VirtualMachine}}
 \doxysubsubsection{\texorpdfstring{loadBIN()}{loadBIN()}}
-{\footnotesize\ttfamily void Virtual\+Machine\+::load\+BIN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Virtual\+Machine\+::load\+B\+IN (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}\label{classVirtualMachine_a46790d824bfb2826460e94bc1b4a951b_a46790d824bfb2826460e94bc1b4a951b}} 
 \index{VirtualMachine@{VirtualMachine}!numberOp@{numberOp}}
@@ -139,7 +129,7 @@ void Virtual\+Machine\+::assign (\begin{DoxyParamCaption}\item[{void}]{ }\end{Do
 \index{tempOp@{tempOp}!VirtualMachine@{VirtualMachine}}
 \doxysubsubsection{\texorpdfstring{tempOp()}{tempOp()}}
 {\footnotesize\ttfamily template$<$class lval\+\_\+t , class rval\+\_\+t , class res\+\_\+t $>$ \\
-void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{TYPE }\end{DoxyParamCaption})}
+void Virtual\+Machine\+::temp\+Op (\begin{DoxyParamCaption}\item[{res\+\_\+t($\ast$)(lval\+\_\+t, rval\+\_\+t)}]{f,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{T\+Y\+PE }\end{DoxyParamCaption})}
 
 \mbox{\Hypertarget{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}\label{classVirtualMachine_a4647f932598dc3192bf1280c9ce96a3e_a4647f932598dc3192bf1280c9ce96a3e}} 
 \index{VirtualMachine@{VirtualMachine}!updateVars@{updateVars}}

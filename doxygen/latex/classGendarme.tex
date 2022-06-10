@@ -13,25 +13,25 @@
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classGendarme_ac94044b13aa9f80b6253e3a020a5405b_ac94044b13aa9f80b6253e3a020a5405b}{Gendarme}} (void)
-\item 
+\begin{DoxyCompactList}\small\item\em Конструктор \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classGendarme_ae0dd57d7a2dc36e48c2c8c974aac4a79_ae0dd57d7a2dc36e48c2c8c974aac4a79}{push}} (void $\ast$p, \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} type)
-\item 
+\begin{DoxyCompactList}\small\item\em Добавить новый указатель в массив. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classGendarme_a960376a9d9594ff6ee4261d4157a3388_a960376a9d9594ff6ee4261d4157a3388}{burn}} (void)
-\item 
+\begin{DoxyCompactList}\small\item\em Освободить память по всем сохранённым указателям. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classGendarme_a42bf4058c63f4fe16558e5f87d4da163_a42bf4058c63f4fe16558e5f87d4da163}{top\+Type}} (void) const
-\item 
+\begin{DoxyCompactList}\small\item\em Узнать тип последнего элемента. \end{DoxyCompactList}\item 
 const \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $\ast$ \mbox{\hyperlink{classGendarme_a699695dbd39663ea0819bf488ee1e580_a699695dbd39663ea0819bf488ee1e580}{get\+Types}} (void) const
-\item 
+\begin{DoxyCompactList}\small\item\em Получить массив типов. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classGendarme_a302de748eecd0bb239c9110a02000dfd_a302de748eecd0bb239c9110a02000dfd}{update\+Type}} (\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} type)
-\item 
+\begin{DoxyCompactList}\small\item\em Изменить тип последнего элемента. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classGendarme_a36d4e5a132f7f295e7dc03a449d0bf12_a36d4e5a132f7f295e7dc03a449d0bf12}{$\sim$\+Gendarme}} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Деструктор \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Закрытые данные}
 \begin{DoxyCompactItemize}
 \item 
-void $\ast$ \mbox{\hyperlink{classGendarme_a5e6119a4e1836ba749f6759c9504f811_a5e6119a4e1836ba749f6759c9504f811}{pointers}} \mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{MAXSTACK}}\mbox{]}
+void $\ast$ \mbox{\hyperlink{classGendarme_a5e6119a4e1836ba749f6759c9504f811_a5e6119a4e1836ba749f6759c9504f811}{pointers}} \mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{M\+A\+X\+S\+T\+A\+CK}}\mbox{]}
 \begin{DoxyCompactList}\small\item\em Указатели на выделенную память. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classGendarme_afb1559436eb13dbdaea8f39c540c386e_afb1559436eb13dbdaea8f39c540c386e}{types}} \mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{MAXSTACK}}\mbox{]}
+\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} \mbox{\hyperlink{classGendarme_afb1559436eb13dbdaea8f39c540c386e_afb1559436eb13dbdaea8f39c540c386e}{types}} \mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{M\+A\+X\+S\+T\+A\+CK}}\mbox{]}
 \begin{DoxyCompactList}\small\item\em Типы хранящихся по указателям значений. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c831223678dcfa5dc32a69bc687}{pos}}
 \begin{DoxyCompactList}\small\item\em Текущая позиция в массиве. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -49,11 +49,19 @@ int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c8312
 \doxysubsubsection{\texorpdfstring{Gendarme()}{Gendarme()}}
 {\footnotesize\ttfamily Gendarme\+::\+Gendarme (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
+
+
+Конструктор 
+
 \mbox{\Hypertarget{classGendarme_a36d4e5a132f7f295e7dc03a449d0bf12_a36d4e5a132f7f295e7dc03a449d0bf12}\label{classGendarme_a36d4e5a132f7f295e7dc03a449d0bf12_a36d4e5a132f7f295e7dc03a449d0bf12}} 
 \index{Gendarme@{Gendarme}!````~Gendarme@{$\sim$Gendarme}}
 \index{````~Gendarme@{$\sim$Gendarme}!Gendarme@{Gendarme}}
 \doxysubsubsection{\texorpdfstring{$\sim$Gendarme()}{~Gendarme()}}
-{\footnotesize\ttfamily Gendarme\+::$\sim$\+Gendarme (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Gendarme\+::$\sim$\+Gendarme (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Деструктор 
 
 
 
@@ -64,11 +72,19 @@ int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c8312
 \doxysubsubsection{\texorpdfstring{burn()}{burn()}}
 {\footnotesize\ttfamily void Gendarme\+::burn (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
 
+
+
+Освободить память по всем сохранённым указателям. 
+
 \mbox{\Hypertarget{classGendarme_a699695dbd39663ea0819bf488ee1e580_a699695dbd39663ea0819bf488ee1e580}\label{classGendarme_a699695dbd39663ea0819bf488ee1e580_a699695dbd39663ea0819bf488ee1e580}} 
 \index{Gendarme@{Gendarme}!getTypes@{getTypes}}
 \index{getTypes@{getTypes}!Gendarme@{Gendarme}}
 \doxysubsubsection{\texorpdfstring{getTypes()}{getTypes()}}
 {\footnotesize\ttfamily const \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} $\ast$ Gendarme\+::get\+Types (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Получить массив типов. 
 
 \mbox{\Hypertarget{classGendarme_ae0dd57d7a2dc36e48c2c8c974aac4a79_ae0dd57d7a2dc36e48c2c8c974aac4a79}\label{classGendarme_ae0dd57d7a2dc36e48c2c8c974aac4a79_ae0dd57d7a2dc36e48c2c8c974aac4a79}} 
 \index{Gendarme@{Gendarme}!push@{push}}
@@ -76,11 +92,26 @@ int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c8312
 \doxysubsubsection{\texorpdfstring{push()}{push()}}
 {\footnotesize\ttfamily void Gendarme\+::push (\begin{DoxyParamCaption}\item[{void $\ast$}]{p,  }\item[{\mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}}}]{type }\end{DoxyParamCaption})}
 
+
+
+Добавить новый указатель в массив. 
+
+
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\texttt{ in}}  & {\em p} & Указатель на выделенную память \\
+\hline
+\mbox{\texttt{ in}}  & {\em type} & Тип хранящегося в ней значения \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classGendarme_a42bf4058c63f4fe16558e5f87d4da163_a42bf4058c63f4fe16558e5f87d4da163}\label{classGendarme_a42bf4058c63f4fe16558e5f87d4da163_a42bf4058c63f4fe16558e5f87d4da163}} 
 \index{Gendarme@{Gendarme}!topType@{topType}}
 \index{topType@{topType}!Gendarme@{Gendarme}}
 \doxysubsubsection{\texorpdfstring{topType()}{topType()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Gendarme\+::top\+Type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Узнать тип последнего элемента. 
 
 \mbox{\Hypertarget{classGendarme_a302de748eecd0bb239c9110a02000dfd_a302de748eecd0bb239c9110a02000dfd}\label{classGendarme_a302de748eecd0bb239c9110a02000dfd_a302de748eecd0bb239c9110a02000dfd}} 
 \index{Gendarme@{Gendarme}!updateType@{updateType}}
@@ -90,12 +121,21 @@ int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c8312
 
 
 
+Изменить тип последнего элемента. 
+
+
+\begin{DoxyParams}[1]{Аргументы}
+\mbox{\texttt{ in}}  & {\em type} & Новый тип элемента \\
+\hline
+\end{DoxyParams}
+
+
 \doxysubsection{Поля}
 \mbox{\Hypertarget{classGendarme_a5e6119a4e1836ba749f6759c9504f811_a5e6119a4e1836ba749f6759c9504f811}\label{classGendarme_a5e6119a4e1836ba749f6759c9504f811_a5e6119a4e1836ba749f6759c9504f811}} 
 \index{Gendarme@{Gendarme}!pointers@{pointers}}
 \index{pointers@{pointers}!Gendarme@{Gendarme}}
 \doxysubsubsection{\texorpdfstring{pointers}{pointers}}
-{\footnotesize\ttfamily void$\ast$ Gendarme\+::pointers\mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{MAXSTACK}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void$\ast$ Gendarme\+::pointers\mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{M\+A\+X\+S\+T\+A\+CK}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -115,7 +155,7 @@ int \mbox{\hyperlink{classGendarme_a51ee3c831223678dcfa5dc32a69bc687_a51ee3c8312
 \index{Gendarme@{Gendarme}!types@{types}}
 \index{types@{types}!Gendarme@{Gendarme}}
 \doxysubsubsection{\texorpdfstring{types}{types}}
-{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Gendarme\+::types\mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{MAXSTACK}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{exprtype_8hpp_adee610a3c7375031538811d29f6a4124_adee610a3c7375031538811d29f6a4124}{type\+\_\+t}} Gendarme\+::types\mbox{[}\mbox{\hyperlink{config_8hpp_aacca6649d32984be8e1aa076bf42fe46_aacca6649d32984be8e1aa076bf42fe46}{M\+A\+X\+S\+T\+A\+CK}}\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}
 
 
 

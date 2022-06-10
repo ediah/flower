@@ -1,13 +1,7 @@
 \hypertarget{obstacle_8hpp}{}\doxysection{Файл src/common/obstacle.hpp}
 \label{obstacle_8hpp}\index{src/common/obstacle.hpp@{src/common/obstacle.hpp}}
 Граф файлов, в которые включается этот файл\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{obstacle_8hpp__dep__incl}
-\end{center}
-\end{figure}
+% FIG 0
 \doxysubsection*{Структуры данных}
 \begin{DoxyCompactItemize}
 \item 
@@ -17,60 +11,60 @@ class \mbox{\hyperlink{classObstacle}{Obstacle}}
 \begin{DoxyCompactItemize}
 \item 
 enum \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766}{reason}} \{ \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7f43a3db33f9e81462140f2b734e955b}{PANIC}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a806edefbe0b21074aa9ea48e6169e78e}{PROG\+\_\+\+START}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a378c64991e1c62076c8a089e4220f923}{PROG\+\_\+\+OPENBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a67919b944bee1ac1e849161d81e87aa6}{FUNC\+\_\+\+OPENBR}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a90c9bb860d54f185544c7566ff02abe8}{FUNC\+\_\+\+CLOSEBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac7d1a670573834917b1045cd68b8bf12}{PROG\+\_\+\+CLOSEBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a64599dea7071bc28732936e0bfddff3e}{TYPE\+\_\+\+UNKNOWN}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766afeabf4f1b32a1188eab994b211267c0d}{EXPR\+\_\+\+BAD\+\_\+\+TYPE}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a936bb466da76f247b56dee0344446dd0}{EXPR\+\_\+\+CLOSEBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a3160ef115195f0fcbbaff4c28d3b168d}{WRONG\+\_\+\+SCOPE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766acc1c1014d5b699341574b525d194aae6}{BAD\+\_\+\+EXPR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7b6eb7a6a0f403bdb922a4d55cf58793}{BAD\+\_\+\+INT}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aecb45129813b4e6863dd1de048382393}{BAD\+\_\+\+REAL}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af73f8f1316434696f27a5e3b11dde8df}{BAD\+\_\+\+BOOL}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a0e7df132657636ca4c4567da8aa10020}{BAD\+\_\+\+IF}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a42b159a1d64f04b5f2a3a412405c5b01}{BAD\+\_\+\+LABEL}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a730e5c632003af087a34e22574ebd392}{BAD\+\_\+\+IDENT}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac02f01faa9c6a87d76bd3414e4b59ada}{BAD\+\_\+\+STRING}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a82342e3a00db9c5f73c9e6ae9b601500}{BAD\+\_\+\+OPERATOR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab924e8381d96de2e68b9da37b80dd06c}{BAD\+\_\+\+STRUCT}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7d4d588c71af0d7b6f969393859b7b9d}{OP\+\_\+\+CLOSEBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2ac92e062e437d8f25a19b33d42d26a3}{BAD\+\_\+\+PARAMS\+\_\+\+OPBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a6dbc4266452dbdf41a16a7c5b8d3e41d}{BAD\+\_\+\+PARAMS\+\_\+\+CLBR}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a55eebe3c7e08b49cd5969442f4f8c4ce}{SEMICOLON}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a910a284444af1a067ea8fa98d1d7f06a}{IDENT\+\_\+\+NOT\+\_\+\+DEF}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aeb7a71c127e92f1e004489da6ac92ae8}{IDENT\+\_\+\+DUP}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a23c1f4dbca14d42523f895999736b81b}{BREAK\+\_\+\+OUTSIDE\+\_\+\+CYCLE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a33d1e289296f3400aa06a78a4a799176}{CONTINUE\+\_\+\+OUTSIDE\+\_\+\+CYCLE}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a93288146368c37843b419714c30a437f}{STRUCT\+\_\+\+UNDEF}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7685e09e2038823fb66c431b6f87790}{LABEL\+\_\+\+OR\+\_\+\+IDENT}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af192d8ff24e40c39d7e7c37d0e9bf91f}{TOO\+\_\+\+MUCH\+\_\+\+PARAMS}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5bc31921eb640865433e558125e32294}{NOT\+\_\+\+CALLABLE}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2338460e260d310e131a89e1faa573d6}{CALLABLE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab5a48da60186caeefce28aa18d4c29e9}{LACK\+\_\+\+PARAMS}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad95bbb705a560daadfaa6c72329fbd61}{PROCEDURE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad2608d31504a7986a4ede250dc2c4c33}{BAD\+\_\+\+PARAMS\+\_\+\+COUNT}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aa33e2d707df6c77c32562a20262ceb0e}{NO\+\_\+\+RETURN}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7edd9ce665944b457c9862d412f80cc}{NO\+\_\+\+TYPE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5b169020681f8330d136a4fe8debe3df}{RETURN\+\_\+\+TYPE\+\_\+\+MISMATCH}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a821c909913f643f36f3f2c5d9a56507a}{MODIF\+\_\+\+WITHOUT\+\_\+\+TYPE}}
-, \newline
-\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a01c83d957b1f64dbdab5d465d9912cd4}{BAD\+\_\+\+TYPE}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ae8503da33ef8214fa49c495727c06313}{NEED\+\_\+\+THREAD\+\_\+\+NUMBER}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac8c4216d974b7ac31d5ab9b203cdd627}{NESTED\+\_\+\+THREADS}}
-, \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aee638bb4f72df20fd596c3d8ff8ebee2}{PRIVATE\+\_\+\+VAR\+\_\+\+IN\+\_\+\+THREAD}}
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7f43a3db33f9e81462140f2b734e955b}{P\+A\+N\+IC}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a806edefbe0b21074aa9ea48e6169e78e}{P\+R\+O\+G\+\_\+\+S\+T\+A\+RT}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a378c64991e1c62076c8a089e4220f923}{P\+R\+O\+G\+\_\+\+O\+P\+E\+N\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a67919b944bee1ac1e849161d81e87aa6}{F\+U\+N\+C\+\_\+\+O\+P\+E\+N\+BR}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a90c9bb860d54f185544c7566ff02abe8}{F\+U\+N\+C\+\_\+\+C\+L\+O\+S\+E\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac7d1a670573834917b1045cd68b8bf12}{P\+R\+O\+G\+\_\+\+C\+L\+O\+S\+E\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a64599dea7071bc28732936e0bfddff3e}{T\+Y\+P\+E\+\_\+\+U\+N\+K\+N\+O\+WN}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766afeabf4f1b32a1188eab994b211267c0d}{E\+X\+P\+R\+\_\+\+B\+A\+D\+\_\+\+T\+Y\+PE}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a936bb466da76f247b56dee0344446dd0}{E\+X\+P\+R\+\_\+\+C\+L\+O\+S\+E\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a3160ef115195f0fcbbaff4c28d3b168d}{W\+R\+O\+N\+G\+\_\+\+S\+C\+O\+PE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766acc1c1014d5b699341574b525d194aae6}{B\+A\+D\+\_\+\+E\+X\+PR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7b6eb7a6a0f403bdb922a4d55cf58793}{B\+A\+D\+\_\+\+I\+NT}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aecb45129813b4e6863dd1de048382393}{B\+A\+D\+\_\+\+R\+E\+AL}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af73f8f1316434696f27a5e3b11dde8df}{B\+A\+D\+\_\+\+B\+O\+OL}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a0e7df132657636ca4c4567da8aa10020}{B\+A\+D\+\_\+\+IF}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a42b159a1d64f04b5f2a3a412405c5b01}{B\+A\+D\+\_\+\+L\+A\+B\+EL}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a730e5c632003af087a34e22574ebd392}{B\+A\+D\+\_\+\+I\+D\+E\+NT}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac02f01faa9c6a87d76bd3414e4b59ada}{B\+A\+D\+\_\+\+S\+T\+R\+I\+NG}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a82342e3a00db9c5f73c9e6ae9b601500}{B\+A\+D\+\_\+\+O\+P\+E\+R\+A\+T\+OR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab924e8381d96de2e68b9da37b80dd06c}{B\+A\+D\+\_\+\+S\+T\+R\+U\+CT}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7d4d588c71af0d7b6f969393859b7b9d}{O\+P\+\_\+\+C\+L\+O\+S\+E\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2ac92e062e437d8f25a19b33d42d26a3}{B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+O\+P\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a6dbc4266452dbdf41a16a7c5b8d3e41d}{B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+C\+L\+BR}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a55eebe3c7e08b49cd5969442f4f8c4ce}{S\+E\+M\+I\+C\+O\+L\+ON}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a910a284444af1a067ea8fa98d1d7f06a}{I\+D\+E\+N\+T\+\_\+\+N\+O\+T\+\_\+\+D\+EF}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aeb7a71c127e92f1e004489da6ac92ae8}{I\+D\+E\+N\+T\+\_\+\+D\+UP}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a23c1f4dbca14d42523f895999736b81b}{B\+R\+E\+A\+K\+\_\+\+O\+U\+T\+S\+I\+D\+E\+\_\+\+C\+Y\+C\+LE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a33d1e289296f3400aa06a78a4a799176}{C\+O\+N\+T\+I\+N\+U\+E\+\_\+\+O\+U\+T\+S\+I\+D\+E\+\_\+\+C\+Y\+C\+LE}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a93288146368c37843b419714c30a437f}{S\+T\+R\+U\+C\+T\+\_\+\+U\+N\+D\+EF}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7685e09e2038823fb66c431b6f87790}{L\+A\+B\+E\+L\+\_\+\+O\+R\+\_\+\+I\+D\+E\+NT}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af192d8ff24e40c39d7e7c37d0e9bf91f}{T\+O\+O\+\_\+\+M\+U\+C\+H\+\_\+\+P\+A\+R\+A\+MS}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5bc31921eb640865433e558125e32294}{N\+O\+T\+\_\+\+C\+A\+L\+L\+A\+B\+LE}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2338460e260d310e131a89e1faa573d6}{C\+A\+L\+L\+A\+B\+LE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab5a48da60186caeefce28aa18d4c29e9}{L\+A\+C\+K\+\_\+\+P\+A\+R\+A\+MS}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad95bbb705a560daadfaa6c72329fbd61}{P\+R\+O\+C\+E\+D\+U\+RE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad2608d31504a7986a4ede250dc2c4c33}{B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+C\+O\+U\+NT}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aa33e2d707df6c77c32562a20262ceb0e}{N\+O\+\_\+\+R\+E\+T\+U\+RN}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7edd9ce665944b457c9862d412f80cc}{N\+O\+\_\+\+T\+Y\+PE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5b169020681f8330d136a4fe8debe3df}{R\+E\+T\+U\+R\+N\+\_\+\+T\+Y\+P\+E\+\_\+\+M\+I\+S\+M\+A\+T\+CH}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a821c909913f643f36f3f2c5d9a56507a}{M\+O\+D\+I\+F\+\_\+\+W\+I\+T\+H\+O\+U\+T\+\_\+\+T\+Y\+PE}}, 
+\newline
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a01c83d957b1f64dbdab5d465d9912cd4}{B\+A\+D\+\_\+\+T\+Y\+PE}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ae8503da33ef8214fa49c495727c06313}{N\+E\+E\+D\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+N\+U\+M\+B\+ER}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac8c4216d974b7ac31d5ab9b203cdd627}{N\+E\+S\+T\+E\+D\+\_\+\+T\+H\+R\+E\+A\+DS}}, 
+\mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aee638bb4f72df20fd596c3d8ff8ebee2}{P\+R\+I\+V\+A\+T\+E\+\_\+\+V\+A\+R\+\_\+\+I\+N\+\_\+\+T\+H\+R\+E\+AD}}
  \}
 \end{DoxyCompactItemize}
 
@@ -84,179 +78,179 @@ enum \mbox{\hyperlink{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab
 
 \begin{DoxyEnumFields}{Элементы перечислений}
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PANIC@{PANIC}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PANIC@{PANIC}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7f43a3db33f9e81462140f2b734e955b}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7f43a3db33f9e81462140f2b734e955b}} 
-PANIC&\\
+P\+A\+N\+IC&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PROG\_START@{PROG\_START}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PROG\_START@{PROG\_START}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a806edefbe0b21074aa9ea48e6169e78e}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a806edefbe0b21074aa9ea48e6169e78e}} 
-PROG\+\_\+\+START&\\
+P\+R\+O\+G\+\_\+\+S\+T\+A\+RT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PROG\_OPENBR@{PROG\_OPENBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PROG\_OPENBR@{PROG\_OPENBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a378c64991e1c62076c8a089e4220f923}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a378c64991e1c62076c8a089e4220f923}} 
-PROG\+\_\+\+OPENBR&\\
+P\+R\+O\+G\+\_\+\+O\+P\+E\+N\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{FUNC\_OPENBR@{FUNC\_OPENBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!FUNC\_OPENBR@{FUNC\_OPENBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a67919b944bee1ac1e849161d81e87aa6}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a67919b944bee1ac1e849161d81e87aa6}} 
-FUNC\+\_\+\+OPENBR&\\
+F\+U\+N\+C\+\_\+\+O\+P\+E\+N\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{FUNC\_CLOSEBR@{FUNC\_CLOSEBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!FUNC\_CLOSEBR@{FUNC\_CLOSEBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a90c9bb860d54f185544c7566ff02abe8}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a90c9bb860d54f185544c7566ff02abe8}} 
-FUNC\+\_\+\+CLOSEBR&\\
+F\+U\+N\+C\+\_\+\+C\+L\+O\+S\+E\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PROG\_CLOSEBR@{PROG\_CLOSEBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PROG\_CLOSEBR@{PROG\_CLOSEBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac7d1a670573834917b1045cd68b8bf12}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac7d1a670573834917b1045cd68b8bf12}} 
-PROG\+\_\+\+CLOSEBR&\\
+P\+R\+O\+G\+\_\+\+C\+L\+O\+S\+E\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{TYPE\_UNKNOWN@{TYPE\_UNKNOWN}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!TYPE\_UNKNOWN@{TYPE\_UNKNOWN}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a64599dea7071bc28732936e0bfddff3e}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a64599dea7071bc28732936e0bfddff3e}} 
-TYPE\+\_\+\+UNKNOWN&\\
+T\+Y\+P\+E\+\_\+\+U\+N\+K\+N\+O\+WN&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{EXPR\_BAD\_TYPE@{EXPR\_BAD\_TYPE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!EXPR\_BAD\_TYPE@{EXPR\_BAD\_TYPE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766afeabf4f1b32a1188eab994b211267c0d}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766afeabf4f1b32a1188eab994b211267c0d}} 
-EXPR\+\_\+\+BAD\+\_\+\+TYPE&\\
+E\+X\+P\+R\+\_\+\+B\+A\+D\+\_\+\+T\+Y\+PE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{EXPR\_CLOSEBR@{EXPR\_CLOSEBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!EXPR\_CLOSEBR@{EXPR\_CLOSEBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a936bb466da76f247b56dee0344446dd0}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a936bb466da76f247b56dee0344446dd0}} 
-EXPR\+\_\+\+CLOSEBR&\\
+E\+X\+P\+R\+\_\+\+C\+L\+O\+S\+E\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{WRONG\_SCOPE@{WRONG\_SCOPE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!WRONG\_SCOPE@{WRONG\_SCOPE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a3160ef115195f0fcbbaff4c28d3b168d}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a3160ef115195f0fcbbaff4c28d3b168d}} 
-WRONG\+\_\+\+SCOPE&\\
+W\+R\+O\+N\+G\+\_\+\+S\+C\+O\+PE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_EXPR@{BAD\_EXPR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_EXPR@{BAD\_EXPR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766acc1c1014d5b699341574b525d194aae6}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766acc1c1014d5b699341574b525d194aae6}} 
-BAD\+\_\+\+EXPR&\\
+B\+A\+D\+\_\+\+E\+X\+PR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_INT@{BAD\_INT}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_INT@{BAD\_INT}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7b6eb7a6a0f403bdb922a4d55cf58793}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7b6eb7a6a0f403bdb922a4d55cf58793}} 
-BAD\+\_\+\+INT&\\
+B\+A\+D\+\_\+\+I\+NT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_REAL@{BAD\_REAL}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_REAL@{BAD\_REAL}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aecb45129813b4e6863dd1de048382393}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aecb45129813b4e6863dd1de048382393}} 
-BAD\+\_\+\+REAL&\\
+B\+A\+D\+\_\+\+R\+E\+AL&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_BOOL@{BAD\_BOOL}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_BOOL@{BAD\_BOOL}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af73f8f1316434696f27a5e3b11dde8df}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af73f8f1316434696f27a5e3b11dde8df}} 
-BAD\+\_\+\+BOOL&\\
+B\+A\+D\+\_\+\+B\+O\+OL&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_IF@{BAD\_IF}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_IF@{BAD\_IF}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a0e7df132657636ca4c4567da8aa10020}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a0e7df132657636ca4c4567da8aa10020}} 
-BAD\+\_\+\+IF&\\
+B\+A\+D\+\_\+\+IF&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_LABEL@{BAD\_LABEL}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_LABEL@{BAD\_LABEL}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a42b159a1d64f04b5f2a3a412405c5b01}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a42b159a1d64f04b5f2a3a412405c5b01}} 
-BAD\+\_\+\+LABEL&\\
+B\+A\+D\+\_\+\+L\+A\+B\+EL&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_IDENT@{BAD\_IDENT}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_IDENT@{BAD\_IDENT}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a730e5c632003af087a34e22574ebd392}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a730e5c632003af087a34e22574ebd392}} 
-BAD\+\_\+\+IDENT&\\
+B\+A\+D\+\_\+\+I\+D\+E\+NT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_STRING@{BAD\_STRING}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_STRING@{BAD\_STRING}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac02f01faa9c6a87d76bd3414e4b59ada}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac02f01faa9c6a87d76bd3414e4b59ada}} 
-BAD\+\_\+\+STRING&\\
+B\+A\+D\+\_\+\+S\+T\+R\+I\+NG&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_OPERATOR@{BAD\_OPERATOR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_OPERATOR@{BAD\_OPERATOR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a82342e3a00db9c5f73c9e6ae9b601500}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a82342e3a00db9c5f73c9e6ae9b601500}} 
-BAD\+\_\+\+OPERATOR&\\
+B\+A\+D\+\_\+\+O\+P\+E\+R\+A\+T\+OR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_STRUCT@{BAD\_STRUCT}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_STRUCT@{BAD\_STRUCT}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab924e8381d96de2e68b9da37b80dd06c}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab924e8381d96de2e68b9da37b80dd06c}} 
-BAD\+\_\+\+STRUCT&\\
+B\+A\+D\+\_\+\+S\+T\+R\+U\+CT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{OP\_CLOSEBR@{OP\_CLOSEBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!OP\_CLOSEBR@{OP\_CLOSEBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7d4d588c71af0d7b6f969393859b7b9d}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a7d4d588c71af0d7b6f969393859b7b9d}} 
-OP\+\_\+\+CLOSEBR&\\
+O\+P\+\_\+\+C\+L\+O\+S\+E\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_PARAMS\_OPBR@{BAD\_PARAMS\_OPBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_PARAMS\_OPBR@{BAD\_PARAMS\_OPBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2ac92e062e437d8f25a19b33d42d26a3}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2ac92e062e437d8f25a19b33d42d26a3}} 
-BAD\+\_\+\+PARAMS\+\_\+\+OPBR&\\
+B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+O\+P\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_PARAMS\_CLBR@{BAD\_PARAMS\_CLBR}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_PARAMS\_CLBR@{BAD\_PARAMS\_CLBR}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a6dbc4266452dbdf41a16a7c5b8d3e41d}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a6dbc4266452dbdf41a16a7c5b8d3e41d}} 
-BAD\+\_\+\+PARAMS\+\_\+\+CLBR&\\
+B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+C\+L\+BR&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{SEMICOLON@{SEMICOLON}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!SEMICOLON@{SEMICOLON}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a55eebe3c7e08b49cd5969442f4f8c4ce}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a55eebe3c7e08b49cd5969442f4f8c4ce}} 
-SEMICOLON&\\
+S\+E\+M\+I\+C\+O\+L\+ON&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{IDENT\_NOT\_DEF@{IDENT\_NOT\_DEF}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!IDENT\_NOT\_DEF@{IDENT\_NOT\_DEF}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a910a284444af1a067ea8fa98d1d7f06a}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a910a284444af1a067ea8fa98d1d7f06a}} 
-IDENT\+\_\+\+NOT\+\_\+\+DEF&\\
+I\+D\+E\+N\+T\+\_\+\+N\+O\+T\+\_\+\+D\+EF&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{IDENT\_DUP@{IDENT\_DUP}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!IDENT\_DUP@{IDENT\_DUP}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aeb7a71c127e92f1e004489da6ac92ae8}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aeb7a71c127e92f1e004489da6ac92ae8}} 
-IDENT\+\_\+\+DUP&\\
+I\+D\+E\+N\+T\+\_\+\+D\+UP&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BREAK\_OUTSIDE\_CYCLE@{BREAK\_OUTSIDE\_CYCLE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BREAK\_OUTSIDE\_CYCLE@{BREAK\_OUTSIDE\_CYCLE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a23c1f4dbca14d42523f895999736b81b}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a23c1f4dbca14d42523f895999736b81b}} 
-BREAK\+\_\+\+OUTSIDE\+\_\+\+CYCLE&\\
+B\+R\+E\+A\+K\+\_\+\+O\+U\+T\+S\+I\+D\+E\+\_\+\+C\+Y\+C\+LE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{CONTINUE\_OUTSIDE\_CYCLE@{CONTINUE\_OUTSIDE\_CYCLE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!CONTINUE\_OUTSIDE\_CYCLE@{CONTINUE\_OUTSIDE\_CYCLE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a33d1e289296f3400aa06a78a4a799176}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a33d1e289296f3400aa06a78a4a799176}} 
-CONTINUE\+\_\+\+OUTSIDE\+\_\+\+CYCLE&\\
+C\+O\+N\+T\+I\+N\+U\+E\+\_\+\+O\+U\+T\+S\+I\+D\+E\+\_\+\+C\+Y\+C\+LE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{STRUCT\_UNDEF@{STRUCT\_UNDEF}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!STRUCT\_UNDEF@{STRUCT\_UNDEF}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a93288146368c37843b419714c30a437f}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a93288146368c37843b419714c30a437f}} 
-STRUCT\+\_\+\+UNDEF&\\
+S\+T\+R\+U\+C\+T\+\_\+\+U\+N\+D\+EF&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{LABEL\_OR\_IDENT@{LABEL\_OR\_IDENT}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!LABEL\_OR\_IDENT@{LABEL\_OR\_IDENT}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7685e09e2038823fb66c431b6f87790}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7685e09e2038823fb66c431b6f87790}} 
-LABEL\+\_\+\+OR\+\_\+\+IDENT&\\
+L\+A\+B\+E\+L\+\_\+\+O\+R\+\_\+\+I\+D\+E\+NT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{TOO\_MUCH\_PARAMS@{TOO\_MUCH\_PARAMS}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!TOO\_MUCH\_PARAMS@{TOO\_MUCH\_PARAMS}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af192d8ff24e40c39d7e7c37d0e9bf91f}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766af192d8ff24e40c39d7e7c37d0e9bf91f}} 
-TOO\+\_\+\+MUCH\+\_\+\+PARAMS&\\
+T\+O\+O\+\_\+\+M\+U\+C\+H\+\_\+\+P\+A\+R\+A\+MS&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{NOT\_CALLABLE@{NOT\_CALLABLE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!NOT\_CALLABLE@{NOT\_CALLABLE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5bc31921eb640865433e558125e32294}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5bc31921eb640865433e558125e32294}} 
-NOT\+\_\+\+CALLABLE&\\
+N\+O\+T\+\_\+\+C\+A\+L\+L\+A\+B\+LE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{CALLABLE@{CALLABLE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!CALLABLE@{CALLABLE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2338460e260d310e131a89e1faa573d6}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a2338460e260d310e131a89e1faa573d6}} 
-CALLABLE&\\
+C\+A\+L\+L\+A\+B\+LE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{LACK\_PARAMS@{LACK\_PARAMS}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!LACK\_PARAMS@{LACK\_PARAMS}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab5a48da60186caeefce28aa18d4c29e9}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab5a48da60186caeefce28aa18d4c29e9}} 
-LACK\+\_\+\+PARAMS&\\
+L\+A\+C\+K\+\_\+\+P\+A\+R\+A\+MS&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PROCEDURE@{PROCEDURE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PROCEDURE@{PROCEDURE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad95bbb705a560daadfaa6c72329fbd61}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad95bbb705a560daadfaa6c72329fbd61}} 
-PROCEDURE&\\
+P\+R\+O\+C\+E\+D\+U\+RE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_PARAMS\_COUNT@{BAD\_PARAMS\_COUNT}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_PARAMS\_COUNT@{BAD\_PARAMS\_COUNT}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad2608d31504a7986a4ede250dc2c4c33}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ad2608d31504a7986a4ede250dc2c4c33}} 
-BAD\+\_\+\+PARAMS\+\_\+\+COUNT&\\
+B\+A\+D\+\_\+\+P\+A\+R\+A\+M\+S\+\_\+\+C\+O\+U\+NT&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{NO\_RETURN@{NO\_RETURN}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!NO\_RETURN@{NO\_RETURN}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aa33e2d707df6c77c32562a20262ceb0e}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aa33e2d707df6c77c32562a20262ceb0e}} 
-NO\+\_\+\+RETURN&\\
+N\+O\+\_\+\+R\+E\+T\+U\+RN&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{NO\_TYPE@{NO\_TYPE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!NO\_TYPE@{NO\_TYPE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7edd9ce665944b457c9862d412f80cc}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ab7edd9ce665944b457c9862d412f80cc}} 
-NO\+\_\+\+TYPE&\\
+N\+O\+\_\+\+T\+Y\+PE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{RETURN\_TYPE\_MISMATCH@{RETURN\_TYPE\_MISMATCH}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!RETURN\_TYPE\_MISMATCH@{RETURN\_TYPE\_MISMATCH}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5b169020681f8330d136a4fe8debe3df}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a5b169020681f8330d136a4fe8debe3df}} 
-RETURN\+\_\+\+TYPE\+\_\+\+MISMATCH&\\
+R\+E\+T\+U\+R\+N\+\_\+\+T\+Y\+P\+E\+\_\+\+M\+I\+S\+M\+A\+T\+CH&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{MODIF\_WITHOUT\_TYPE@{MODIF\_WITHOUT\_TYPE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!MODIF\_WITHOUT\_TYPE@{MODIF\_WITHOUT\_TYPE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a821c909913f643f36f3f2c5d9a56507a}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a821c909913f643f36f3f2c5d9a56507a}} 
-MODIF\+\_\+\+WITHOUT\+\_\+\+TYPE&\\
+M\+O\+D\+I\+F\+\_\+\+W\+I\+T\+H\+O\+U\+T\+\_\+\+T\+Y\+PE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{BAD\_TYPE@{BAD\_TYPE}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!BAD\_TYPE@{BAD\_TYPE}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a01c83d957b1f64dbdab5d465d9912cd4}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766a01c83d957b1f64dbdab5d465d9912cd4}} 
-BAD\+\_\+\+TYPE&\\
+B\+A\+D\+\_\+\+T\+Y\+PE&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{NEED\_THREAD\_NUMBER@{NEED\_THREAD\_NUMBER}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!NEED\_THREAD\_NUMBER@{NEED\_THREAD\_NUMBER}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ae8503da33ef8214fa49c495727c06313}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ae8503da33ef8214fa49c495727c06313}} 
-NEED\+\_\+\+THREAD\+\_\+\+NUMBER&\\
+N\+E\+E\+D\+\_\+\+T\+H\+R\+E\+A\+D\+\_\+\+N\+U\+M\+B\+ER&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{NESTED\_THREADS@{NESTED\_THREADS}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!NESTED\_THREADS@{NESTED\_THREADS}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac8c4216d974b7ac31d5ab9b203cdd627}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766ac8c4216d974b7ac31d5ab9b203cdd627}} 
-NESTED\+\_\+\+THREADS&\\
+N\+E\+S\+T\+E\+D\+\_\+\+T\+H\+R\+E\+A\+DS&\\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{PRIVATE\_VAR\_IN\_THREAD@{PRIVATE\_VAR\_IN\_THREAD}!obstacle.hpp@{obstacle.hpp}}\index{obstacle.hpp@{obstacle.hpp}!PRIVATE\_VAR\_IN\_THREAD@{PRIVATE\_VAR\_IN\_THREAD}}}\mbox{\Hypertarget{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aee638bb4f72df20fd596c3d8ff8ebee2}\label{obstacle_8hpp_a144a3f0ab0553569e546510e66e93766_a144a3f0ab0553569e546510e66e93766aee638bb4f72df20fd596c3d8ff8ebee2}} 
-PRIVATE\+\_\+\+VAR\+\_\+\+IN\+\_\+\+THREAD&\\
+P\+R\+I\+V\+A\+T\+E\+\_\+\+V\+A\+R\+\_\+\+I\+N\+\_\+\+T\+H\+R\+E\+AD&\\
 \hline
 
 \end{DoxyEnumFields}
