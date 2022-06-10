@@ -1,1 +1,1 @@
-#define VERSION "v1.2.0 (Календула)"
+#define VERSION "v1.3.0 (Барбарис)"
