@@ -16,7 +16,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Install missing software
-      run: sudo apt install doxygen
+      run: sudo apt update; sudo apt install doxygen graphviz
     - name: Build docs
       run: doxygen
     - name: Update documentation
@@ -35,7 +35,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Install missing software
-      run: sudo apt install lcov
+      run: sudo apt update; sudo apt install lcov
     - name: Make coverage
       run: make cov
     - name: Setup credentials
