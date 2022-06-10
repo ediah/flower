@@ -22,11 +22,12 @@ jobs:
     - name: Update documentation
       run: |
           git checkout docs
+          rm -rf doxygen
+          mv doxygen-new doxygen
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "Update docs"
-          git push
+          git commit -m "Обновление документации" && git push || true
   Lcov:
     runs-on: ubuntu-latest
     steps:
@@ -43,10 +44,12 @@ jobs:
           git config user.email github-actions@github.com
     - name: Update README
       run: |
-          if [[ -n $(git status README.md --porcelain) ]]; then git add .; git commit -m "Update coverage in README"; git push; fi
+          if [[ -n $(git status README.md --porcelain) ]]; then git add README.md; git commit -m "Обновление статуса покрытия в README"; git push; fi
     - name: Update coverage
       run: |
           git checkout docs
+          rm -rf coverage
+          mv coverage-new coverage
           git add .
-          git commit -m "Update coverage"
+          git commit -m "Обновление анализа покрытия кода"
           git push
