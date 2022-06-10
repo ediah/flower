@@ -28,8 +28,9 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git config pull.rebase true
+          git commit -m "Обновление документации"
           git pull
-          git commit -m "Обновление документации" && git push || true
+          git push
   Lcov:
     runs-on: ubuntu-latest
     steps:
