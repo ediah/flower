@@ -1,6 +1,13 @@
 bin/
-mlc
+flc
+flvm
+fldbg
+fltest
+Makefile.dep
 out.bin
 .gdb_history
 .cache/
 .vscode/
+*.gcda
+*.gcno
+compile_commands.json
