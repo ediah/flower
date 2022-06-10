@@ -1,0 +1,15 @@
+<map id="Optimizer" name="Optimizer">
+<area shape="rect" id="node1" title=" " alt="" coords="207,561,293,588"/>
+<area shape="rect" id="node2" href="$classControlFlowGraph.html" title=" " alt="" coords="181,471,319,497"/>
+<area shape="rect" id="node3" title=" " alt="" coords="157,380,343,407"/>
+<area shape="rect" id="node4" href="$structflowTree.html" title=" " alt="" coords="136,283,212,310"/>
+<area shape="rect" id="node5" title=" " alt="" coords="90,157,258,199"/>
+<area shape="rect" id="node6" href="$classPOLIZ.html" title=" " alt="" coords="5,165,65,191"/>
+<area shape="rect" id="node7" title=" " alt="" coords="282,165,421,191"/>
+<area shape="rect" id="node8" title="STL class." alt="" coords="434,380,543,407"/>
+<area shape="rect" id="node9" title="STL class." alt="" coords="431,276,581,317"/>
+<area shape="rect" id="node10" title="STL class." alt="" coords="445,157,591,199"/>
+<area shape="rect" id="node11" title="STL class." alt="" coords="433,81,603,108"/>
+<area shape="rect" id="node12" title="STL class." alt="" coords="465,5,571,32"/>
+<area shape="rect" id="node13" href="$classIdentTable.html" title=" " alt="" coords="344,471,433,497"/>
+</map>
