@@ -4,7 +4,7 @@ on:
   push:
     branches: [ stable ]
   pull_request:
-    branches: [ stable, dev ]
+    branches: [ stable, salvia ]
 
   workflow_dispatch:
 

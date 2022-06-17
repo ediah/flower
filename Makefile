@@ -1,7 +1,7 @@
 vpath %.cpp ${wildcard ./src/*} ./src
 
-RELEASE=YES
-COVERAGE=YES
+RELEASE=NO
+COVERAGE=NO
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -28,7 +28,7 @@ else
 endif
 
 ifeq (${COVERAGE},YES)
-	OPTIFLAGS= -O0 -g --coverage
+	OPTIFLAGS= -O0 -g --coverage -DTCOV
 	LFLAGS=-lgcov --coverage
 else
 	LFLAGS=

@@ -1,1 +1,1 @@
-#define VERSION "v1.3.0 (Барбарис)"
+#define VERSION "v1.4.0 (Шалфей)"
