@@ -33,6 +33,7 @@ IdentTable::IdentTable(void) {
     next = nullptr;
     shared = false;
     mainTable = nullptr;
+    array = false;
 }
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
@@ -45,6 +46,7 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     params = templateIT.params;
     shared = templateIT.shared;
     mainTable = templateIT.mainTable;
+    array = templateIT.array;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -82,6 +84,7 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     params = templateIT.params;
     shared = templateIT.shared;
     mainTable = templateIT.mainTable;
+    array = templateIT.array;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -171,6 +174,8 @@ void IdentTable::dupType(void) {
         while (p->next->next != nullptr) p = p->next;
         p->next->valType = p->valType;
         p->next->shared = p->shared;
+        p->next->arraySize = p->arraySize;
+        p->next->array = p->array;
         if (p->structName != nullptr) {
             p->next->structName = new char[strnlen(p->structName, MAXIDENT) + 1];
             memccpy(p->next->structName, p->structName, '\0', strnlen(p->structName, MAXIDENT) + 1);
@@ -198,6 +203,10 @@ void IdentTable::setType(type_t newType) {
 
 char * IdentTable::getStruct(void) const {
     return structName;
+}
+
+int IdentTable::getFieldShift(void) const {
+    return 0;
 }
 
 void IdentTable::setFunc(void) {
@@ -244,6 +253,22 @@ IdentTable * IdentTable::getIT(char * name, bool autodel) {
     return p;
 }
 
+int IdentTable::typeSize(void) const {
+    if (array) return sizeof(void *);
+    if (valType == _STRUCT_) {
+            int sum = 0;
+            IdentTable * p = static_cast<IdentTable *>(val);
+            while (p != nullptr) {
+                sum += p->typeSize();
+            }
+            return sum;
+    } else return ::typeSize(valType);
+}
+
+int IdentTable::getArray(void) const {
+    return arraySize;
+}
+
 void IdentTable::whoami() {
 
     std::cout << '[' << typetostr(valType) << ' ';
@@ -260,6 +285,8 @@ void IdentTable::whoami() {
         }
         std::cout << " ]";
     } else {
+        if (array) 
+            std::cout << "ARRAY[" << (isStatic()? arraySize : '*') << "] ";
         if (func) std::cout << "FUNCTION ";
         if (name != nullptr)
             std::cout << name;
@@ -329,6 +356,10 @@ int IdentTable::getOrd(void) const {
 
 void IdentTable::writeValToStream(std::ostream & s) {
     if (func) return;
+    if (array) {
+        s.write("\0\0\0\0\0\0\0\0", sizeof(void*));
+        return;
+    }
     
     if (!def) {
         switch (valType) {
@@ -466,6 +497,23 @@ IdentTable* IdentTable::getMainTable(void) {
 
 void IdentTable::setStruct(char * name) {
     structName = name;
+}
+
+void IdentTable::setArray(int size) {
+    array = true;
+    arraySize = size;
+}
+
+bool IdentTable::isStatic(void) const {
+    return arraySize != 0;
+}
+
+bool IdentTable::isArray(void) const {
+    return array;
+}
+
+bool IdentTable::checkBounds(int index) {
+    return (index >= 0 && index < arraySize);
 }
 
 IdentTable::~IdentTable() {

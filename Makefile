@@ -1,7 +1,8 @@
 vpath %.cpp ${wildcard ./src/*} ./src
 
-RELEASE=NO
+RELEASE=YES
 COVERAGE=NO
+PROFILING=NO
 WITH_DRAWING=NO
 ALL=YES
 COMPACT=YES
@@ -32,6 +33,11 @@ ifeq (${COVERAGE},YES)
 	LFLAGS=-lgcov --coverage
 else
 	LFLAGS=
+endif
+
+ifeq (${PROFILING},YES)
+	OPTIFLAGS += -pg
+	LFLAGS += -pg
 endif
 
 ifeq (${WITH_DRAWING},YES)
@@ -93,7 +99,7 @@ cov: fltest
 	@genhtml -o coverage-new ./coverage-new/flower-f.info
 	@./script/updatecov.py ./coverage-new/lines.info
 
-.PHONY: clean check cov report
+.PHONY: clean check cov report prof
 
 clean:
 	rm -rf ./bin/* flc fltest

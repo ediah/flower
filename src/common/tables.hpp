@@ -19,6 +19,8 @@ class IdentTable {
     int params;        // Количество переменных (если функция)
     int offset;        // Позиция в байткоде
     bool shared;
+    bool array;
+    int arraySize;
     IdentTable * mainTable;
 
 public:
@@ -45,6 +47,7 @@ public:
     void setShared(void);
     void setMainTable(IdentTable* table);
     void setStruct(char * name);
+    void setArray(int size = 0);
 
     char * getStruct(void) const;
     type_t getType(void) const;
@@ -54,11 +57,15 @@ public:
     int getParams(void) const;
     int getOffset(void) const;
     IdentTable* getMainTable(void);
+    int getFieldShift(void) const;
+    int getArray(void) const;
 
     bool isFunc(void) const;
     bool isDef(void) const;
     bool isReg(void) const;
     bool isShared(void) const;
+    bool isStatic(void) const; // Статический массив
+    bool isArray(void) const;
 
     void whoami();
     void repr(void);
@@ -69,6 +76,9 @@ public:
     IdentTable * deleteLabels(void);
     void writeValToStream(std::ostream & s);
     IdentTable * getIT(char * name, bool autodel = true);
+    int typeSize(void) const;
+
+    bool checkBounds(int index);
 
     ~IdentTable();
 };

@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstring>
+#include <ostream>
+#include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -42,6 +44,12 @@ void VirtualMachine::run(void) {
     }
 
     if (inThread) {
+        for (auto var: sharedVars) {
+            write(pipefd.back()[1], &var.first, sizeof(void*));
+            write(pipefd.back()[1], &var.second, sizeof(int));
+            write(pipefd.back()[1], var.first, var.second);
+        }
+
         void * nullp = nullptr;
         write(pipefd.back()[1], &nullp, sizeof(void*));
         #ifdef DEBUG
@@ -56,6 +64,10 @@ void VirtualMachine::run(void) {
     while (pipefd.size() != 0) {
         delete[] pipefd.back();
         pipefd.pop_back();
+    }
+
+    for (auto memBlock: allocated) {
+        free(memBlock);
     }
 
     delete eip;
@@ -73,11 +85,8 @@ void VirtualMachine::assign(void) {
     if (inThread) {
         rval_t x = * static_cast<rval_t *>(stackVM.pop());
         lval_t * p = static_cast<lval_t *>(stackVM.pop());
+        sharedVars[p] = sizeof(rval_t);
         *p = x;
-        int n = sizeof(rval_t);
-        write(pipefd.back()[1], &p, sizeof(void*));
-        write(pipefd.back()[1], &n, sizeof(int));
-        write(pipefd.back()[1], &x, sizeof(rval_t));
     } else {
         rval_t x = * static_cast<rval_t *>(stackVM.pop());
         * static_cast<lval_t *>(stackVM.pop()) = x;
@@ -141,9 +150,8 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         case LOAD: {
             int x = * static_cast<int *>(stackVM.pop());
-            void * shv = sharedVars.get(x);
             void * a = registerVM.get(x);
-            stackVM.push(shv == nullptr? a : shv);
+            stackVM.push(a);
             break;
         }
         case ASSIGN:
@@ -301,11 +309,11 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             int param  = * static_cast<int *>(stackVM.pop());
             for (int i = 0; i < param; i++) {
                 registerVM.push( stackVM.pop() );
-                sharedVars.push(nullptr);
             }
             params.push(new int (param), _INT_);
             offsets.push(new int (*eip + 1), _INT_);
             *eip = offset - 1;
+            stackVM.lock();
             break;
         }
         case RET: {
@@ -313,11 +321,6 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             int param  = * static_cast<int *>(params.pop());
             while (param--) registerVM.pop();
             *eip = offset - 1;
-            break;
-        }
-        case SHARE: {
-            int x = * static_cast<int *>(stackVM.pop());
-            sharedVars.set(x, registerVM.get(x));
             break;
         }
         case FORK: {
@@ -333,22 +336,24 @@ bool VirtualMachine::exec(op_t op, int * eip) {
                 int offset = * static_cast<int *>(stackVM.pop());
                 *eip = offset - 1;
             } 
-            #ifdef DEBUG
             else {
+                //int st = 0;
+                //waitpid(pid, &st, WNOHANG);
+                #ifdef DEBUG
                 std::cout << "Запущен новый поток с PID = " << pid << std::endl;
+                #endif
             }
-            #endif
             break;
         }
         case LOCK: {
             while (threads.size() != 0) {
                 int st, ret = 0;
-                updateVars();
                 pid_t pid = threads.back();
                 ret = waitpid(pid, &st, 0);
-                if (ret == -1) throw Obstacle(PANIC);
-                else if (WIFEXITED(st)) threads.pop_back();
+                if (WIFEXITED(st)) threads.pop_back();
+                else throw Obstacle(PANIC);
             }
+            updateVars();
             break;
         }
         case UNPACK: {
@@ -363,6 +368,23 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             for (int i = 0; i < fieldSize * 2; i++) {
                 registerVM.pop();
             }
+            break;
+        }
+        case DEREF: {
+            int shift = * static_cast<int *>(stackVM.pop());
+            char * basePoint = * static_cast<char **>(stackVM.pop());
+            auto x = basePoint + typeSize(lval) * shift;
+            //std::cout << "Вычислен адрес " << static_cast<void*>(x) << std::endl;
+            stackVM.push(x);
+            break;
+        }
+        case ALLOC: {
+            int size = * static_cast<int *>(stackVM.pop());
+            void** basePoint = static_cast<void**>(stackVM.pop());
+            void * newMem = malloc(size);
+            allocated.push_back(newMem);
+            *basePoint = newMem;
+            //std::cout << "Выдлена память в " << newMem << ", запись в " << basePoint << std::endl;
             break;
         }
         default:

@@ -45,7 +45,12 @@ enum reason {
     BAD_TYPE,
     NEED_THREAD_NUMBER,
     NESTED_THREADS,
-    PRIVATE_VAR_IN_THREAD
+    PRIVATE_VAR_IN_THREAD,
+    BAD_SIZE,
+    OUT_OF_BOUNDS,
+    ARRAY_CLOSEBR,
+    BAD_INDEX,
+    NOT_ARRAY
 };
 
 class Obstacle {

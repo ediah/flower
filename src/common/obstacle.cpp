@@ -10,12 +10,15 @@ void Obstacle::describe(void) const {
         case PROG_OPENBR: expected("{"); break;
         case FUNC_OPENBR: expected("("); break;
         case FUNC_CLOSEBR: expected(")"); break;
+        case ARRAY_CLOSEBR: expected("]"); break;
         case OP_CLOSEBR:
         case PROG_CLOSEBR: expected("}"); break;
         case SEMICOLON: expected(";"); break;
         case BAD_PARAMS_OPBR: expected("("); break;
         case BAD_PARAMS_CLBR:
         case EXPR_CLOSEBR: expected(")"); break;
+        case BAD_INDEX: std::cout << "Индекс должен быть целым числом.\n"; break;
+        case NOT_ARRAY: std::cout << "Идентификатор не является массивом.\n"; break;
         case BAD_INT: expected("целое число"); break;
         case BAD_REAL: expected("вещественное число"); break;
         case BAD_BOOL: expected("true или false"); break;
@@ -106,6 +109,12 @@ void Obstacle::describe(void) const {
             break;
         case PRIVATE_VAR_IN_THREAD:
             std::cout << "В потоках можно использовать только общие переменные." << std::endl;
+            break;
+        case BAD_SIZE:
+            std::cout << "Ожидалось получить размер массива." << std::endl;
+            break;
+        case OUT_OF_BOUNDS:
+            std::cout << "Индекс выходит за границы массива." << std::endl;
             break;
         default:
             std::cout << "Неизвестная ошибка." << std::endl;

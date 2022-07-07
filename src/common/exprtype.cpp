@@ -34,6 +34,8 @@ void debugOp(operation_t op) {
         case LOCK: std::cout << "LOCK "; break;
         case NONE: std::cout << "NONE "; break;
         case UNPACK: std::cout << "UNPACK "; break;
+        case DEREF: std::cout << "DEREF "; break;
+        case ALLOC: std::cout << "ALLOC "; break;
         default: throw Obstacle(PANIC);
     }
 }
@@ -404,8 +406,14 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
                 throw Obstacle(EXPR_BAD_TYPE);
 
             break;
-
+        
+        case DEREF: case ALLOC:
+            r = t1;
+            if (t2 != _INT_)
+                throw Obstacle(EXPR_BAD_TYPE);
+            break;
         default:
+            std::cout << "exprtype ещё не знает такой операции.\n";
             throw Obstacle(PANIC);
     }
 
@@ -466,4 +474,15 @@ int operands(operation_t o) {
     if (isBinary(o))
         return 2;
     throw Obstacle(PANIC);
+}
+
+int typeSize(type_t t) {
+    switch (t) {
+        case _NONE_: return 0;
+        case _INT_: case _LABEL_: return sizeof(int);
+        case _REAL_: return sizeof(float);
+        case _BOOLEAN_: return sizeof(bool);
+        case _STRING_: return sizeof(char *);
+        default: throw Obstacle(PANIC);
+    }
 }

@@ -57,6 +57,7 @@ class Stack {
     void * elem[MAXSTACK];
     bool defined[MAXSTACK];
     int pos;
+    int minPos;
 
     Gendarme memControl;
 public:
@@ -74,6 +75,7 @@ public:
     const type_t * getTypes(void) const;
     bool isEmpty(void) const;
     bool isDefined(void);
+    void lock(void);
 };
 
 #endif

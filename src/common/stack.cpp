@@ -22,7 +22,7 @@ void Gendarme::burn(void) {
             case _STRING_:
                 delete [] static_cast<char *>( pointers[pos] ); break;
             case _BOOLEAN_:
-                delete    static_cast<bool*> ( pointers[pos] ); break;
+                delete    static_cast<bool *>( pointers[pos] ); break;
         }
         pos--;
     }
@@ -35,6 +35,7 @@ Gendarme::~Gendarme(void) {
 
 Stack::Stack(bool gendarme) {
     pos = 0;
+    minPos = 0;
     for (int i = 0; i < MAXSTACK; i++) {
         elem[i] = nullptr;
         defined[i] = false;
@@ -70,6 +71,10 @@ void Stack::push(void * x, type_t type) {
     elem[pos++] = x;
 }
 
+void Stack::lock(void) {
+    minPos = pos;
+}
+
 void * Stack::pop(void) {
     assert(pos > 0);
     return elem[--pos];
@@ -103,7 +108,7 @@ const type_t * Stack::getTypes(void) const {
 }
 
 bool Stack::isEmpty(void) const {
-    return pos == 0;
+    return pos <= minPos;
 }
 
 type_t Stack::topType(void) const {

@@ -155,13 +155,6 @@ void Parser::defFunction(void) {
                     fields = fields->next;
                 }
             } else nparamFact = 1;
-            
-            for (int k = 0; k < nparamFact; k++) {
-                IdTable.pushVal(new int (k + paramsSum));
-                IdTable.pushType(_INT_);
-                poliz.pushVal(IdTable.confirm());
-                poliz.pushOp(_NONE_, _INT_, SHARE);
-            }
 
             paramsSum += nparamFact;
         }
@@ -313,6 +306,7 @@ void Parser::defs(void) {
 
 IdentTable * Parser::def(void) {
     IdentTable * r = nullptr;
+    int vars = 0;
     try {
         do {
             code >> c;
@@ -321,7 +315,21 @@ IdentTable * Parser::def(void) {
                 r->setMainTable(&IdTable);
             } else variable()->setMainTable(&IdTable);
             if ((c == ' ') || (c == '\n')) code >> c;
+            vars++;
         } while (c == ',');
+
+        if (r->isArray()) {
+            IdentTable * p = r;
+            while (vars--) {
+                poliz.pushVal(p);
+                int fs = 1;
+                NEW_IDENT(allocSize, _INT_, nullptr, 
+                    new int (p->getArray() * IdTable.last()->typeSize()), &fs)
+                poliz.pushOp(p->getType(), _INT_, ALLOC);
+                p = p->next;
+            }
+        }
+
     } catch(Obstacle & o) {
         IdTable.last()->setId(nullptr);
         ok = false;
@@ -347,6 +355,28 @@ bool Parser::typeModificator(void) {
     return r;
 }
 
+bool Parser::typeArray(void) {
+    bool r = true;
+
+    if (c != '[') return false;
+    code >> c;
+
+    if (c == '*') {
+        // Динамический массив
+        IdTable.last()->setArray();
+    } else {
+        // Статический массив
+        int size = constInt();
+        if (size <= 0) throw Obstacle(BAD_SIZE);
+        IdTable.last()->setArray(size);
+    }
+    
+    if ((c == ' ') || (c == '\n')) code >> c;
+    if (c != ']') throw Obstacle(ARRAY_CLOSEBR);
+
+    return r;
+}
+
 bool Parser::type(void) {
     bool r = true;
     bool tmod = typeModificator();
@@ -368,10 +398,14 @@ bool Parser::type(void) {
         IdTable.pushVal(new IdentTable(templateFields));
     } else r = false;
 
+    if ((c == ' ') || (c == '\n')) code >> c;
+    bool arr = typeArray();
+    if (r && !arr) revert(1);
+
     if (tmod && (!r))
         throw Obstacle(MODIF_WITHOUT_TYPE);
 
-    return r && (c == ' ');
+    return r;
 }
 
 /* Перед выполнением:
@@ -469,7 +503,8 @@ int Parser::unrollStruct(IdentTable * lval, int ord) {
         #endif
     } else {
         fieldSize = 1;
-        poliz.pushVal(lval);
+        if (!lval->isArray())
+            poliz.pushVal(lval);
     }
     return fieldSize;
 }
@@ -484,6 +519,7 @@ IdentTable * Parser::variable(void) {
 }
 
 char * Parser::identificator(void) {
+    std::cout << c.symbol() << std::endl;
     if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
     char * ident = new char[MAXIDENT];
     int i = 0;
@@ -671,28 +707,24 @@ void Parser::operation(void) {
             throw Obstacle(OP_CLOSEBR);
         code >> c;
     } else {
+        /*
         char * name = identificator();
         if ((c == ' ') || (c == '\n')) code >> c;
-
+        */
+        IdentTable * lval = resolveIdentificator();
         if (c == ':') {
             code >> c;
-            saveLabel(name, poliz.getSize());
+            saveLabel(lval->getId(), poliz.getSize());
             operation();
-        } else {
-            IdentTable * lval = IdTable.getIT(name);
-            while (c == '.') {
-                code >> c;
-                name = identificator();
-                IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
-                lval = fields->getIT(name);
-                if ((c == ' ') || (c == '\n')) code >> c;
-            }
-            if (c != '=') throw Obstacle(BAD_OPERATOR);
+        } else if (c == '=') {
             code >> c;
             assign(lval);
+            
             if (c != ';') throw Obstacle(SEMICOLON);
             code >> c;
-        }
+        } else throw Obstacle(BAD_OPERATOR);
+
+        
     }
 
 }
@@ -1055,6 +1087,88 @@ void Parser::repack(int fieldSize) {
     }
 }
 
+IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, IdentTable * baseVal) {
+    type_t r;
+
+    IdentTable * val = getFieldInStruct(baseVal);
+    r = val->getType();
+
+    if (baseVal != nullptr) {
+        /* Это означает, то нас вызвали рекурсивно после DEREF.
+         * Следовательно, машине надо получить поле, которое вычисляется по
+         * смещению относительно начала структуры.
+         */
+        int fs = 1;
+        int fshift = val->getFieldShift();
+        if (fshift != 0) {
+            NEW_IDENT(shift, _INT_, nullptr, new int (fshift), &fs)
+            poliz.pushOp(r, _INT_, DEREF);
+        }
+    }
+    
+    if (c == '(') { // Вызов функции
+        if (! val->isFunc())
+            throw Obstacle(NOT_CALLABLE);
+        callIdent(val);
+        if (val->getStruct() != nullptr) {
+            IdentTable fields = StTable.getStruct(val->getStruct())->getFields();
+            int size = fields.last()->getOrd();
+            if (fieldSize != nullptr) {
+                *fieldSize = size;
+            }
+            // GET FROM STACK {size, fieldNum}
+            
+        }
+    } else {
+        if (val->isFunc())
+            throw Obstacle(CALLABLE);
+
+        if (c == '[') { // Массив
+            if (!val->isArray()) throw Obstacle(NOT_ARRAY);
+            poliz.pushVal(val);
+
+            code >> c;
+
+            int fs = 1;
+            type_t index = expr(&fs);
+            if (index != _INT_) throw Obstacle(BAD_INDEX);
+            poliz.pushOp(r, _INT_, DEREF);
+
+            if (c != ']') throw Obstacle(ARRAY_CLOSEBR);
+            code >> c;
+
+            val = resolveIdentificator(fieldSize, structName, val);
+
+        } else {
+            if (r == _STRUCT_) {
+                if ((structName != nullptr) && (strcmp(val->getStruct(), structName) != 0))
+                    throw Obstacle(EXPR_BAD_TYPE);
+
+                if (baseVal != nullptr) {
+                    /* TODO: UNPACK FIELDS FROM MEM
+                     * 1) адрес первого элемента уже есть на стеке
+                     * 2) надо его скопировать и прибавить (DEREF)
+                     * размер первого поля (получим адрес второго)
+                     * 3) и так далее
+                     * В результате на стеке будут в нужном порядке
+                     * лежать адреса каждого из полей.
+                     */
+
+                }
+
+                int fields = unrollStruct(val);
+                if (fieldSize != nullptr) {
+                    *fieldSize = fields;
+                }
+            } else if (baseVal == nullptr) poliz.pushVal(val);
+        }
+
+        std::cout << c.symbol() << std::endl;
+    }
+
+    return val;
+}
+
 type_t Parser::constExpr(int * fieldSize, char * structName) {
     type_t r;
 
@@ -1094,28 +1208,7 @@ type_t Parser::constExpr(int * fieldSize, char * structName) {
                     int x = constInt();
                     NEW_IDENT(val, _INT_, nullptr, new int (x), fieldSize)
                 } else {
-                    IdentTable * val = getFieldInStruct();
-                    r = val->getType();
-                    
-                    if (c == '(') { // Вызов функции
-                        if (! val->isFunc())
-                            throw Obstacle(NOT_CALLABLE);
-                        callIdent(val);
-                    } else {
-                        if (val->isFunc())
-                            throw Obstacle(CALLABLE);
-
-                        if (r == _STRUCT_) {
-                            if ((structName != nullptr) && (strcmp(val->getStruct(), structName) != 0))
-                                throw Obstacle(EXPR_BAD_TYPE);
-                        }
-                            
-                        int fields = unrollStruct(val);
-                        if (*fieldSize != 0) {
-                            *fieldSize = fields;
-                        }
-                        
-                    }
+                    r = resolveIdentificator(fieldSize, structName)->getType();
                 }
             }
         }
@@ -1126,14 +1219,18 @@ type_t Parser::constExpr(int * fieldSize, char * structName) {
     return r;
 }
 
-IdentTable * Parser::getFieldInStruct(void) {
-    char * name = identificator();
-    IdentTable * val = IdTable.getIT(name);
-    if ((c == ' ') || (c == '\n')) code >> c;
+IdentTable * Parser::getFieldInStruct(IdentTable * baseVal) {
+    if (baseVal == nullptr) {
+        char * name = identificator();
+        baseVal = IdTable.getIT(name);
+        if ((c == ' ') || (c == '\n')) code >> c;
+    }
+
+    IdentTable * val = baseVal;
 
     while (c == '.') { // Добираемся до поля структуры
         code >> c;
-        name = identificator();
+        char * name = identificator();
         IdentTable * fields = static_cast<IdentTable *>(val->getVal());
         val = fields->getIT(name);
         if ((c == ' ') || (c == '\n')) code >> c;

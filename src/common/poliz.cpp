@@ -1,4 +1,5 @@
 #include <iostream>
+#include "common/exprtype.hpp"
 #include "common/poliz.hpp"
 #include "common/obstacle.hpp"
 
@@ -69,53 +70,22 @@ void POLIZ::pushVal(IdentTable * val) {
 }
 
 void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
-    #ifdef DEBUG
-    std::cout << "POLIZ pushOp ";
-    interpretAsOp(op);
-    std::cout << std::endl;
-    #endif
     type_t rest = expressionType(lval, rval, op);
     prog[iter] = (char) rest << 24 | (char) lval << 16 | (char) rval << 8 | (char) op;
     execBit[iter] = true;
-    iter++;
 
+    #ifdef DEBUG
+    std::cout << "POLIZ pushOp ";
+    interpretAsOp(prog[iter]);
+    std::cout << std::endl;
+    #endif
+
+    iter++;
     checkIter();
 }
 
 void POLIZ::interpretAsOp(op_t op) {
-    switch (op & 0xFF) {
-        case INV: std::cout << "INV "; break;
-        case PLUS: std::cout << "PLUS "; break;
-        case MINUS: std::cout << "MINUS "; break;
-        case MUL: std::cout << "MUL "; break;
-        case DIV: std::cout << "DIV "; break;
-        case LOR: std::cout << "LOR "; break;
-        case LAND: std::cout << "LAND "; break;
-        case LNOT: std::cout << "LNOT "; break;
-        case MOD: std::cout << "MOD "; break;
-        case LESS: std::cout << "LESS "; break;
-        case GRTR: std::cout << "GRTR "; break;
-        case LESSEQ: std::cout << "LESSEQ "; break;
-        case GRTREQ: std::cout << "GRTREQ "; break;
-        case EQ: std::cout << "EQ "; break;
-        case NEQ: std::cout << "NEQ "; break;
-        case ASSIGN: std::cout << "ASSIGN "; break;
-        case STOP: std::cout << "STOP "; break;
-        case WRITE: std::cout << "WRITE "; break;
-        case ENDL: std::cout << "ENDL "; break;
-        case READ: std::cout << "READ "; break;
-        case JIT: std::cout << "JIT "; break;
-        case JMP: std::cout << "JMP "; break;
-        case RET: std::cout << "RET "; break;
-        case CALL: std::cout << "CALL "; break;
-        case LOAD: std::cout << "LOAD "; break;
-        case SHARE: std::cout << "SHARE "; break;
-        case FORK: std::cout << "FORK "; break;
-        case LOCK: std::cout << "LOCK "; break;
-        case NONE: std::cout << "NONE "; break;
-        case UNPACK: std::cout << "UNPACK "; break;
-        default: throw Obstacle(PANIC);
-    }
+    debugOp(static_cast<operation_t>(op & 0xFF));
     std::cout << "["  << typetostr((type_t)((op >>  8) & 0xFF));
     std::cout << ", " << typetostr((type_t)((op >> 16) & 0xFF));
     std::cout << "]";

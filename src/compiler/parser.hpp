@@ -73,6 +73,7 @@ public:
     void defFunction(void);      // Определение функции
     
     bool typeModificator(void); // Модификатор типа
+    bool typeArray(void);       // Массив типа
     bool type(void);            // Тип
     IdentTable * variable(void);// Переменная
     char * identificator(void); // Идентификатор
@@ -82,12 +83,15 @@ public:
     float constReal(void);      // Вещественное число
     bool constBool(void);       // Логическая константа
     void constStruct(IdentTable * fields); // Структура
-    IdentTable * getFieldInStruct(void);   // Получить элемент структуры
+    IdentTable * getFieldInStruct(IdentTable * baseVal = nullptr); // Получить элемент структуры
     void callIdent(IdentTable * val);      // Вызов объекта
     void assign(IdentTable * lval);        // Присваивание
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
     int unrollStruct(IdentTable * lval, int ord = -1);
     void handleStruct(type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName);
+    IdentTable * resolveIdentificator(
+        int * fieldSize = nullptr, char * structName = nullptr, 
+        IdentTable * baseVal = nullptr);
     void program(void);    // Программа
 
     void operations(void); // Операции

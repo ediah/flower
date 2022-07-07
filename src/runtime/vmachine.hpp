@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "common/stack.hpp"
@@ -17,11 +18,12 @@ protected:
 
     Stack stackVM;
     Stack registerVM;
-    Stack sharedVars;
     Stack offsets;
     Stack params;
+    std::unordered_map<void*, int> sharedVars;
     std::vector<pid_t> threads;
     std::vector<int *> pipefd;
+    std::vector<void *> allocated;
     Gendarme dynamicStrings;
 public:
     VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0), inThread(false) {};
