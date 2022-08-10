@@ -18,7 +18,7 @@ program {
     b = a + d;
     c = 20 * b;
     c = a + d;          /* c = b */
-    write(a, " ", b, " ", c, " ", d);
+    writeln(a, " ", b, " ", c, " ", d);
     x = somePolynome(5.0);
-    write(x);
+    writeln(x);
 }

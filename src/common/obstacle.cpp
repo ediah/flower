@@ -1,5 +1,6 @@
 #include <iostream>
 #include "common/obstacle.hpp"
+#include "config.hpp"
 
 void Obstacle::describe(void) const {
     switch (r) {
@@ -42,6 +43,9 @@ void Obstacle::describe(void) const {
             break;
         case IDENT_NOT_DEF:
             std::cout << "Идентификатор не описан." << std::endl;
+            break;
+        case TOO_BIG_IDENT:
+            std::cout << "Слишком длинный идентификатор. Максимум: " << MAXIDENT << std::endl;
             break;
         case IDENT_DUP:
             std::cout << "Повторное описание идентификатора." << std::endl;

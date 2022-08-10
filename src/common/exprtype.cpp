@@ -36,6 +36,7 @@ void debugOp(operation_t op) {
         case UNPACK: std::cout << "UNPACK "; break;
         case DEREF: std::cout << "DEREF "; break;
         case ALLOC: std::cout << "ALLOC "; break;
+        case COPY: std::cout << "COPY "; break;
         default: throw Obstacle(PANIC);
     }
 }
@@ -44,7 +45,10 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
     type_t r = _NONE_;
 
     #ifdef DEBUG
-    std::cout << "Проверка " << typetostr(t1) << " " << typetostr(t2) << std::endl;
+    std::cout << "Проверка ";
+    debugOp(o);
+    std::cout << "[" << typetostr(t1) << ", ";
+    std::cout << typetostr(t2) << "]\n";
     #endif
 
     switch (o) {
@@ -382,7 +386,7 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
         // _ STOP _ = _
         // _ LOCK _ = _
         // _ ENDL _ = _
-        case STOP: case LOCK: case ENDL:
+        case STOP: case LOCK: case ENDL: case COPY:
             r = _NONE_;
             if ((t1 != _NONE_) || (t2 != _NONE_))
                 throw Obstacle(EXPR_BAD_TYPE);
@@ -407,11 +411,14 @@ type_t expressionType(type_t t1, type_t t2, operation_t o) {
 
             break;
         
+        // * DEREF INT = *
+        // * ALLOC INT = *
         case DEREF: case ALLOC:
             r = t1;
             if (t2 != _INT_)
                 throw Obstacle(EXPR_BAD_TYPE);
             break;
+
         default:
             std::cout << "exprtype ещё не знает такой операции.\n";
             throw Obstacle(PANIC);
@@ -455,6 +462,7 @@ bool isBinary(operation_t o) {
     ret = ret || (o == LOR) || (o == MUL) || (o == DIV) || (o == LAND);
     ret = ret || (o == MOD) || (o == LESS) || (o == GRTR) || (o == LESSEQ);
     ret = ret || (o == GRTREQ) || (o == EQ) || (o == NEQ) || (o == ASSIGN);
+    ret = ret || (o == DEREF) || (o == ALLOC);
     return ret;
 }
 

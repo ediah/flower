@@ -54,7 +54,7 @@ DAGRow::DAGRow(const DAGRow & dr) {
 bool operator==(DAGRow & a, DAGRow & b) {
     if (&a == &b) return false;
 
-    bool ret = (a.opcode == b.opcode);
+    bool ret = (a.opcode.val == b.opcode.val);
 
     if (a.lvar != b.lvar) {
         if ((a.lvar == nullptr) || (b.lvar == nullptr))
@@ -83,10 +83,10 @@ void DirectedAcyclicGraph::stash(POLIZ & p) {
     if (s == 0) return;
     if (!p.getEB()[s - 1])
         return;
-    if ((operation_t)(p.getProg()[s - 1] & 0xFF) != CALL)
+    if (p.getOpcode(s - 1) != CALL)
         return;
     
-    IdentTable * paramit = IT_FROM_POLIZ(p, s - 2);
+    IdentTable * paramit = p.getVal(s - 2);
     int paramNum = * static_cast<int *>(paramit->getVal());
     stashed.clear();
     copyPOLIZ(p, stashed, s - paramNum - 2, s);
@@ -103,8 +103,8 @@ void DirectedAcyclicGraph::make(POLIZ p) {
         DAGRow * qrow;
         if (p.getEB()[i]) {
             qrow = new DAGRow;
-            operation_t op = (operation_t)(p.getProg()[i] & 0xFF);
-            type_t rettype = (type_t) ((p.getProg()[i] >> 24) & 0xFF);
+            operation_t op = p.getOpcode(i);
+            type_t rettype = p.getProg()[i].restype;
             qrow->type = rettype;
             int opnum = operands(op);
             if ((opnum != 0) && (queue.size() != 0)) {
@@ -132,12 +132,12 @@ void DirectedAcyclicGraph::make(POLIZ p) {
             }
             
         } else {
-            int idx = find(changed, IT_FROM_POLIZ(p, i));
+            int idx = find(changed, p.getVal(i));
             if (idx != -1) {
                 qrow = changed[idx].second;
             } else {
                 qrow = new DAGRow;
-                qrow->ident = IT_FROM_POLIZ(p, i);
+                qrow->ident = p.getVal(i);
             }
             queue.push_back(qrow);
         }
@@ -158,7 +158,7 @@ void DAGRow::decompose(POLIZ & p, std::vector<DAGRow *> * asd) {
             assigned = true;
         }
 
-        bool execBit = (opcode != (op_t) NONE);
+        bool execBit = opcode.execBit;
         type_t ltype = (lvar == NULL)
                                     ? _NONE_
                                     : lvar->type;
@@ -166,19 +166,26 @@ void DAGRow::decompose(POLIZ & p, std::vector<DAGRow *> * asd) {
                                     ? _NONE_
                                     : rvar->type;
 
-        op_t newOp = (char) type << 24 | (char) ltype << 16;
-        newOp |= (char) rtype << 8 | (char) (opcode & 0xFF);
-        op_t op = (execBit)
-                        ? newOp
-                        : (op_t) ident;
+        pslot newOp;
+        newOp.restype = type;
+        newOp.ltype = ltype;
+        newOp.rtype = rtype;
+        newOp.opcode = opcode.opcode;
+        pslot op;
+        if (execBit) op = newOp;
+        else op.val = ident;
         p.push(op, execBit);
-    } else p.push((op_t)ident, false);
+    } else {
+        pslot op;
+        op.val = ident;
+        p.push(op, false);
+    }
 }
 
 type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
     type_t ltype, rtype;
     
-    switch ((operation_t) (opcode & 0xFF)) {
+    switch (opcode.opcode) {
         case LOAD:
             if ((!typeOnStack->empty()))
                 typeOnStack->pop_back();
@@ -195,8 +202,8 @@ type_t DAGRow::updateType(std::vector<type_t> * typeOnStack) {
         rtype = rvar->updateType(typeOnStack);
     } else rtype = _NONE_;
 
-    if (opcode != (op_t) NONE) {
-        operation_t oper = (operation_t) (opcode & 0xFF);
+    if (opcode.val != nullptr) {
+        operation_t oper = opcode.opcode;
         try {
             type = expressionType(ltype, rtype, oper);
         } catch (...) {
@@ -258,13 +265,13 @@ void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
             if (rowc.first == nullptr)
                 continue;
 
-            if ((!isExpr((operation_t)(rowc.first->opcode & 0xFF))) ||
-                (!isExpr((operation_t)(rowc.first->prev->opcode & 0xFF))))
+            if ((!isExpr(rowc.first->opcode.opcode)) ||
+                (!isExpr(rowc.first->prev->opcode.opcode)))
                 continue;
             
             rowc.second->assigned = true;
                 
-            if ((operation_t)(rowc.first->prev->opcode & 0xFF) == ASSIGN) {
+            if (rowc.first->prev->opcode.opcode == ASSIGN) {
                 if (rowc.second->prev->lvar == rowc.second)
                     rowc.second->prev->lvar = rowc.first;
                 else
@@ -278,10 +285,12 @@ void DirectedAcyclicGraph::commonSubExpr(IdentTable * IT) {
                 continue;
             }
             
-            type_t tt = (type_t) ((rowc.first->opcode >> 24) & 0xFF);
+            type_t tt = rowc.first->opcode.restype;
             DAGRow * temprow = new DAGRow;
-            temprow->opcode = (char) tt << 16 | (char) tt << 8 | (char) tt;
-            temprow->opcode = temprow->opcode << 8  | (char) ASSIGN;
+            temprow->opcode.restype = tt;
+            temprow->opcode.ltype = tt;
+            temprow->opcode.rtype = tt;
+            temprow->opcode.opcode = temprow->opcode.opcode;
             temprow->rvar = rowc.first;
             temprow->lvar = new DAGRow;
 

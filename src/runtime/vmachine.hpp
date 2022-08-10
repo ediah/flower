@@ -4,17 +4,18 @@
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include "runtime/program.hpp"
 #include "common/tables.hpp"
 #include "common/poliz.hpp"
 #include "common/stack.hpp"
+#include "config.hpp"
 
 class VirtualMachine {
 protected:
-    char * base;
-    char * cmd;
-    int cmdNum;
+    Program program;
+    int progSize = 0;
 
-    bool inThread;
+    bool inThread = false;
 
     Stack stackVM;
     Stack registerVM;
@@ -26,13 +27,12 @@ protected:
     std::vector<void *> allocated;
     Gendarme dynamicStrings;
 public:
-    VirtualMachine(): base(nullptr), cmd(nullptr), cmdNum(0), inThread(false) {};
-
     void loadBIN(const char * filename);
 
     virtual void run(void);
+    bool execNext(Program::cell * lastOp = nullptr);
 
-    bool exec(op_t op, int * eip);
+    bool exec(Program::cell op, int * eip);
 
     void updateVars(void);
 
@@ -50,24 +50,24 @@ public:
 };
 
 #define ARITH_OPERATION(OP) { \
-    if ((lval == _INT_) && (rval == _INT_)) \
+    if ((op.ltype == _INT_) && (op.rtype == _INT_)) \
         tempOp<int, int, int>( [] (int x, int y) { return x OP y; }, _INT_); \
-    if ((lval == _INT_) && (rval == _REAL_)) \
+    if ((op.ltype == _INT_) && (op.rtype == _REAL_)) \
         tempOp<int, float, float>( [] (int x, float y) { return x OP y; }, _REAL_); \
-    if ((lval == _REAL_) && (rval == _INT_)) \
+    if ((op.ltype == _REAL_) && (op.rtype == _INT_)) \
         tempOp<float, int, float>( [] (float x, int y) { return x OP y; }, _REAL_); \
-    if ((lval == _REAL_) && (rval == _REAL_)) \
+    if ((op.ltype == _REAL_) && (op.rtype == _REAL_)) \
         tempOp<float, float, float>( [] (float x, float y) { return x OP y; }, _REAL_); \
 }
 
 #define LOGIC_OPERATION(OP) { \
-    if ((lval == _INT_) && (rval == _INT_)) \
+    if ((op.ltype == _INT_) && (op.rtype == _INT_)) \
         tempOp<int, int, bool>( [] (int x, int y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _INT_) && (rval == _REAL_)) \
+    if ((op.ltype == _INT_) && (op.rtype == _REAL_)) \
         tempOp<int, float, bool>( [] (int x, float y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _REAL_) && (rval == _INT_)) \
+    if ((op.ltype == _REAL_) && (op.rtype == _INT_)) \
         tempOp<float, int, bool>( [] (float x, int y) { return x OP y; }, _BOOLEAN_); \
-    if ((lval == _REAL_) && (rval == _REAL_)) \
+    if ((op.ltype == _REAL_) && (op.rtype == _REAL_)) \
         tempOp<float, float, bool>( [] (float x, float y) { return x OP y; }, _BOOLEAN_); \
 }
 

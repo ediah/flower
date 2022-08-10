@@ -15,7 +15,7 @@ program {
                              может отсутствовать)*/
     B = {x = 2, name = "B", y = 3};
 
-    write("Точки:");
-    write(A.name, ": ", A.x, " ", A.y);
-    write(B.name, ": ", B.x, " ", B.y);
+    writeln("Точки:");
+    writeln(A.name, ": ", A.x, " ", A.y);
+    writeln(B.name, ": ", B.x, " ", B.y);
 }

@@ -20,6 +20,7 @@ public:
         synonims["inspect"] = {"inspect", "stack", "ins", "i"};
         synonims["memory"] = {"memory", "mem", "m"};
         synonims["registry"] = {"registry", "reg", "r"};
+        synonims["eip"] = {"eip", "e"};
     };
 
     virtual void run(void) override;
@@ -28,8 +29,9 @@ public:
     void help(std::vector<std::string> argv);
     bool prompt(int * eip);
     void inspect(std::vector<std::string> argv, const Stack * stack);
-    void memory(void) const;
+    void memory(std::vector<std::string> argv) const;
     bool compare(const std::string & str, std::string ref);
+    void drawWindow(void) const;
 };
 
 #endif

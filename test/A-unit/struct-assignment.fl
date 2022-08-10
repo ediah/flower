@@ -21,7 +21,7 @@ program {
     C = A;
     C.t = B.t;
 
-    write(A.x, " ", A.y, " ", A.z, " ", A.t.h, " ", A.t.m, " ", A.t.s);
-    write(B.x, " ", B.y, " ", B.z, " ", B.t.h, " ", B.t.m, " ", B.t.s);
-    write(C.x, " ", C.y, " ", C.z, " ", C.t.h, " ", C.t.m, " ", C.t.s);
+    writeln(A.x, " ", A.y, " ", A.z, " ", A.t.h, " ", A.t.m, " ", A.t.s);
+    writeln(B.x, " ", B.y, " ", B.z, " ", B.t.h, " ", B.t.m, " ", B.t.s);
+    writeln(C.x, " ", C.y, " ", C.z, " ", C.t.h, " ", C.t.m, " ", C.t.s);
 }

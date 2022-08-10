@@ -21,24 +21,46 @@ void Debugger::help(std::vector<std::string> argv) {
     }
 }
 
-bool Debugger::step(int * eip, int n) {
-    op_t op;
+void Debugger::drawWindow(void) const {
+    int topSide = std::min(MAXWINDOW / 2, *program.eip);
+    int bottomSide = MAXWINDOW - topSide;
+    Program cursor(program);
+    *cursor.eip -= topSide;
 
-    for (int i = 0; i < n; i++) {
-        if (*reinterpret_cast<bool*>(cmd + 4 + *eip * 5)) { // ExecBit = 1
-            op = (op_t) *reinterpret_cast<int*>(cmd + *eip * 5);
-            debugOp((operation_t) (op & 0xFF));
-            std::cout << std::endl;
-            if (exec(op, eip)) return false;
-            if ((operation_t) (op & 0xFF) == READ)
-                while ((getchar()) != '\n');
-        } else { // ExecBit = 0
-            int shift = *reinterpret_cast<int*>(cmd + *eip * 5);
-            stackVM.push(static_cast<void *>(base + shift));
+    std::cout << std::dec << std::endl;
+    Program::cell op;
+    for (int i = 0; i < MAXWINDOW; i++) {
+        op = cursor.next();
+        if (*cursor.eip == *program.eip + 1)
+            std::cout << "==>  ";
+        
+        std::cout << "(" << *cursor.eip - 1 << ") ";
+        if (cursor.execBit) {
+            debugOp(op.opcode);
+        } else {
+            std::cout << "<data " << op.offset << "> --> ";
+            std::cout << "0x" << std::hex << std::setfill('0') <<
+                std::setw(8) << * reinterpret_cast<int *>(
+                op.offset + program.getBase()) << std::ends;
         }
-        *eip += 1;
+        std::cout << std::dec << std::endl;
     }
+    std::cout << std::endl;
+}
 
+bool Debugger::step(int * eip, int n) {
+    Program::cell op;
+    drawWindow();
+    for (int i = 0; i < n; i++) {
+        op = program.next();
+        if (program.execBit) {
+            if (exec(op, program.eip)) return false;
+            if (op.opcode == READ)
+                    while ((getchar()) != '\n');
+        } else {
+            stackVM.push(program.getStaticVar(op));
+        }
+    }
     return true;
 }
 
@@ -102,13 +124,15 @@ void Debugger::inspect(std::vector<std::string> argv, const Stack * stack) {
     }
 }
 
-void Debugger::memory(void) const {
-    for (char * p = base; p < cmd + 8; p = p + 4) {
-        if ((base != p) && ((p - base) % (4 * 5) == 0))
-            std::cout << std::endl;
-        std::cout << "0x" << std::hex << std::setfill('0') << std::setw(8)
-                  << * reinterpret_cast<int *>(p) << std::ends << " ";
+void Debugger::memory(std::vector<std::string> argv) const {
+    if (argv.size() == 2) {
+        std::cout << "0x" << std::hex << std::setfill('0') <<
+        std::setw(8) << * reinterpret_cast<int *>(
+            std::stoi(argv[1], 0, 16) + program.getBase()) <<
+            std::ends << "\n";
+        return;
     }
+    program.dump();
     std::cout << std::endl;
 }
 
@@ -148,7 +172,7 @@ bool Debugger::prompt(int * eip) {
     else lastcmd = argv;
 
     if (compare(argv[0], "step"))
-        return step(eip, 1);
+        return step(eip, (argv.size() == 1) ? 1 : std::stoi(argv[1]));
     else if (compare(argv[0], "help"))
         help(argv);
     else if (compare(argv[0], "inspect"))
@@ -156,7 +180,9 @@ bool Debugger::prompt(int * eip) {
     else if (compare(argv[0], "registry"))
         inspect(argv, &registerVM);
     else if (compare(argv[0], "memory"))
-        memory();
+        memory(argv);
+    else if (compare(argv[0], "eip"))
+        std::cout << "eip: " << *program.eip << std::endl;
     else if (compare(argv[0], "quit"))
         return false;
     
@@ -167,6 +193,7 @@ bool Debugger::prompt(int * eip) {
 void Debugger::run(void) {
     int * eip = new int (0);
     std::cout << std::boolalpha;
+    program.eip = eip;
 
     while (prompt(eip));
 
@@ -186,6 +213,4 @@ void Debugger::run(void) {
         delete[] pipefd.back();
         pipefd.pop_back();
     }
-
-    delete eip;
 }

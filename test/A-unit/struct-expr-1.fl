@@ -23,5 +23,5 @@ program {
         t = 10
     };
     if (step(Obj.pos))
-        write(Obj.pos.x, " ", Obj.pos.y, " ", Obj.pos.z, " ", Obj.t);
+        writeln(Obj.pos.x, " ", Obj.pos.y, " ", Obj.pos.z, " ", Obj.t);
 }

@@ -9,5 +9,5 @@ program {
     int a, b;
     read(a);
     b = factorial(a);
-    write(b);
+    writeln(b);
 }

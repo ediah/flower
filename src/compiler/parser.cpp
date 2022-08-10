@@ -7,6 +7,7 @@
 #include "common/tables.hpp"
 #include "common/obstacle.hpp"
 #include "compiler/parser.hpp"
+#include "config.hpp"
 #define C_IS_ALPHA ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z') || (c == '_'))
 #define C_IS_NUM ((c >= '0') && (c <= '9'))
 
@@ -324,7 +325,7 @@ IdentTable * Parser::def(void) {
                 poliz.pushVal(p);
                 int fs = 1;
                 NEW_IDENT(allocSize, _INT_, nullptr, 
-                    new int (p->getArray() * IdTable.last()->typeSize()), &fs)
+                    new int (p->getArray() * IdTable.secLast()->typeSize()), &fs)
                 poliz.pushOp(p->getType(), _INT_, ALLOC);
                 p = p->next;
             }
@@ -429,11 +430,16 @@ bool Parser::readWord(const char * word) {
     return r;
 }
 
-void Parser::assign(IdentTable * lval) {
+std::vector<int> Parser::assign(IdentTable * lval, bool idle, int ford) {
     type_t lvtype = lval->getType();
+    std::vector<int> pi;
 
     if ((lvtype == _STRUCT_) && (c == '{')) {
         IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
+        int size = fields->getSize();
+        int start = poliz.getSize() - size;
+        int end = poliz.getSize();
+        lval->updateFieldOrds();
         do {
             code >> c;
             char * fieldName = identificator();
@@ -451,13 +457,19 @@ void Parser::assign(IdentTable * lval) {
 
             if (c != '=') throw Obstacle(BAD_EXPR);
             code >> c;
-            assign(val);
+            if ((val->getType() != _STRUCT_) || (c != '{'))
+                pi.push_back(ford + val->getFieldOrd());
+
+            std::vector<int> pi2 = assign(val, idle, ford + val->getFieldOrd());
+            pi.insert(pi.end(), pi2.begin(), pi2.end());
         } while (c == ',');
         if (c != '}') throw Obstacle(BAD_EXPR);
         code >> c;
-        
+
+        if ((ford == 0) && !lval->isArray())
+            poliz.permutate(start, end, pi.size(), pi.data());
     } else {
-        int fieldSize = unrollStruct(lval);
+        int fieldSize = unrollStruct(lval, -1, idle);
         char * strName = nullptr;
 
         std::vector<type_t> fieldTypes;
@@ -466,9 +478,21 @@ void Parser::assign(IdentTable * lval) {
             fieldTypes = StTable.getTypes(lval->getStruct());
         }
 
-        type_t exop = expr(&fieldSize, strName);
+        /* Мы точно знаем количество полей -- fieldSize.
+         * Однако для предотвращения перепаковки resolveIdentificator
+         * устанавливает fieldSize = 0. Из-за этого пропадают
+         * инструкции ASSIGN, а UNPACK получает аргументом 0.
+         */
+        int dummyFS = fieldSize;
+        type_t exop = expr(&dummyFS, strName);
         expressionType(lvtype, exop, ASSIGN);
         
+        if (lval->isArray()) {
+            int fs = 1;
+            NEW_IDENT(nfields, _INT_, nullptr, new int (fieldSize), &fs)
+            poliz.pushOp(_NONE_, _INT_, UNPACK);
+        }
+
         if (lvtype == _STRUCT_) {
             for (int i = 0; i < fieldSize; i++) {
                 type_t t = fieldTypes[i];
@@ -485,9 +509,11 @@ void Parser::assign(IdentTable * lval) {
         
         if ((c == ' ') || (c == '\n')) code >> c;
     }
+
+    return pi;
 }
 
-int Parser::unrollStruct(IdentTable * lval, int ord) {
+int Parser::unrollStruct(IdentTable * lval, int ord, bool idle) {
     int fieldSize = 0;
     if (lval->getType() == _STRUCT_){
         IdentTable * fields = static_cast<IdentTable *>(lval->getVal());
@@ -495,7 +521,7 @@ int Parser::unrollStruct(IdentTable * lval, int ord) {
             int newOrd = -1;
             if (fields->isReg())
                 newOrd = fields->getOrd();
-            fieldSize += unrollStruct(fields, newOrd);
+            fieldSize += unrollStruct(fields, newOrd, idle);
             fields = fields->next;
         }
         #ifdef DEBUG
@@ -503,7 +529,7 @@ int Parser::unrollStruct(IdentTable * lval, int ord) {
         #endif
     } else {
         fieldSize = 1;
-        if (!lval->isArray())
+        if (!idle)
             poliz.pushVal(lval);
     }
     return fieldSize;
@@ -519,14 +545,15 @@ IdentTable * Parser::variable(void) {
 }
 
 char * Parser::identificator(void) {
-    std::cout << c.symbol() << std::endl;
     if (!C_IS_ALPHA) throw Obstacle(BAD_IDENT);
     char * ident = new char[MAXIDENT];
     int i = 0;
     do {
         ident[i++] = c.symbol();
         code >>= c;
-    } while (C_IS_ALPHA);
+    } while (C_IS_ALPHA && (i < MAXIDENT - 1));
+    if (i >=  MAXIDENT - 1)
+        throw Obstacle(TOO_BIG_IDENT);
     ident[i] = '\0';
     return ident;
 }
@@ -693,6 +720,7 @@ void Parser::operation(void) {
     else if (readWord("break")) breakOp();
     else if (readWord("continue")) continueOp();
     else if (readWord("write")) writeOp();
+    else if (readWord("writeln")) writelnOp();
     else if (readWord("goto")) gotoOp();
     else if (readWord("read")) readOp();
     else if (readWord("bytecode")) bytecodeOp();
@@ -707,23 +735,26 @@ void Parser::operation(void) {
             throw Obstacle(OP_CLOSEBR);
         code >> c;
     } else {
-        /*
+        int chpoint = c.pos;
         char * name = identificator();
         if ((c == ' ') || (c == '\n')) code >> c;
-        */
-        IdentTable * lval = resolveIdentificator();
         if (c == ':') {
             code >> c;
-            saveLabel(lval->getId(), poliz.getSize());
+            saveLabel(name, poliz.getSize());
             operation();
-        } else if (c == '=') {
-            code >> c;
-            assign(lval);
-            
-            if (c != ';') throw Obstacle(SEMICOLON);
-            code >> c;
-        } else throw Obstacle(BAD_OPERATOR);
-
+        } else {
+            delete [] name;
+            revert(c.pos - chpoint);
+            IdentTable * lval = resolveIdentificator();
+            if (c == '=') {
+                code >> c;
+                std::vector<int> pi = assign(lval, true);
+                if (lval->isArray())
+                    poliz.combine(pi);
+                if (c != ';') throw Obstacle(SEMICOLON);
+                code >> c;
+            } else throw Obstacle(BAD_OPERATOR);
+        }
         
     }
 
@@ -850,10 +881,16 @@ type_t Parser::expr(int * fieldSize, char * structName) {
             type_t rval = andExpr(fieldSize, structName);
 
             if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-                handleStruct(r, rval, LOR, fieldSize, structName);
-                repack(*fieldSize);
-            } else
-                poliz.pushOp(r, rval, LOR);
+            if (*fieldSize == 0) {
+                int rp = StTable.getStruct(structName)->getFields().getSize();
+                int fs = 1;
+                NEW_IDENT(repN, _INT_, nullptr, new int (rp), &fs)
+                poliz.pushOp(_NONE_, _INT_, UNPACK);
+            }
+            handleStruct(r, rval, LOR, fieldSize, structName);
+            repack(*fieldSize);
+        } else
+            poliz.pushOp(r, rval, LOR);
 
             r = expressionType(r, rval, LOR);
         } else break;
@@ -873,10 +910,16 @@ type_t Parser::andExpr(int * fieldSize, char * structName) {
             type_t rval = boolExpr(fieldSize, structName);
             
             if ((r == _STRUCT_) || (rval == _STRUCT_)) {
-                handleStruct(r, rval, LAND, fieldSize, structName);
-                repack(*fieldSize);
-            } else
-                poliz.pushOp(r, rval, LAND);
+            if (*fieldSize == 0) {
+                int rp = StTable.getStruct(structName)->getFields().getSize();
+                int fs = 1;
+                NEW_IDENT(repN, _INT_, nullptr, new int (rp), &fs)
+                poliz.pushOp(_NONE_, _INT_, UNPACK);
+            }
+            handleStruct(r, rval, LAND, fieldSize, structName);
+            repack(*fieldSize);
+        } else
+            poliz.pushOp(r, rval, LAND);
 
             r = expressionType(r, rval, LAND);
         } else break;
@@ -912,6 +955,12 @@ type_t Parser::boolExpr(int * fieldSize, char * structName) {
         type_t rval = add(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            if (*fieldSize == 0) {
+                int rp = StTable.getStruct(structName)->getFields().getSize();
+                int fs = 1;
+                NEW_IDENT(repN, _INT_, nullptr, new int (rp), &fs)
+                poliz.pushOp(_NONE_, _INT_, UNPACK);
+            }
             handleStruct(r, rval, op, fieldSize, structName);
             repack(*fieldSize);
         } else
@@ -946,6 +995,12 @@ type_t Parser::add(int * fieldSize, char * structName) {
         type_t rval = mul(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            if (*fieldSize == 0) {
+                int rp = StTable.getStruct(structName)->getFields().getSize();
+                int fs = 1;
+                NEW_IDENT(repN, _INT_, nullptr, new int (rp), &fs)
+                poliz.pushOp(_NONE_, _INT_, UNPACK);
+            }
             handleStruct(r, rval, op, fieldSize, structName);
             repack(*fieldSize);
         } else
@@ -964,7 +1019,7 @@ type_t Parser::add(int * fieldSize, char * structName) {
 
     return r;
 }
-
+//FIXME: fieldSize лишний??
 void Parser::handleStruct(
     type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName) {
    
@@ -1010,6 +1065,12 @@ type_t Parser::mul(int * fieldSize, char * structName) {
         type_t rval = constExpr(fieldSize, structName);
         
         if ((r == _STRUCT_) || (rval == _STRUCT_)) {
+            if (*fieldSize == 0) {
+                int rp = StTable.getStruct(structName)->getFields().getSize();
+                int fs = 1;
+                NEW_IDENT(repN, _INT_, nullptr, new int (rp), &fs)
+                poliz.pushOp(_NONE_, _INT_, UNPACK);
+            }
             handleStruct(r, rval, op, fieldSize, structName);
             repack(*fieldSize);
         } else
@@ -1023,8 +1084,8 @@ type_t Parser::mul(int * fieldSize, char * structName) {
 }
 
 void Parser::repack(int fieldSize) {
-    op_t op = poliz.getProg()[poliz.getSize() - fieldSize - 1];
-    if ((operation_t)(op & 0xFF) == UNPACK)
+    operation_t op = poliz.rgetOpcode(fieldSize);
+    if (op == UNPACK) // Костыль??
         return;
 
     int POLIZsteps[2 * fieldSize];
@@ -1040,7 +1101,7 @@ void Parser::repack(int fieldSize) {
     int temp_iter = fieldSize;
     int i;
     while (((i = poliz.getSize()) > 0) && poliz.getEB()[i - 1] && temp_iter) {
-        op_t oper = poliz.getProg()[i - 1];
+        pslot oper = poliz.getProg()[i - 1];
         opBuff[1].push(oper, poliz.getEB()[i - 1]);
         poliz.pop();
         temp_iter--;
@@ -1053,9 +1114,9 @@ void Parser::repack(int fieldSize) {
             while (fields) {
                 i = poliz.getSize();
                 bool ebit = poliz.getEB()[i - 1];
-                op_t oper = poliz.getProg()[i - 1];
+                pslot oper = poliz.getProg()[i - 1];
                 if (ebit) {
-                    int nops = operands(static_cast<operation_t>(oper & 0xFF));
+                    int nops = operands(oper.opcode);
                     fields += nops;
                 }
                 
@@ -1072,7 +1133,7 @@ void Parser::repack(int fieldSize) {
         while (POLIZsteps[step]) {
             int  bi   = buff[step % 2].getSize();
             bool ebit = buff[step % 2].getEB()[bi - 1];
-            op_t oper   = buff[step % 2].getProg()[bi - 1];
+            pslot oper   = buff[step % 2].getProg()[bi - 1];
             buff[step % 2].pop();
             poliz.push(oper, ebit);
             POLIZsteps[step] -= 1;
@@ -1080,11 +1141,23 @@ void Parser::repack(int fieldSize) {
         int  bi   = opBuff[step % 2].getSize();
         if (bi > 0) {
             bool ebit = opBuff[step % 2].getEB()[bi - 1];
-            op_t oper   = opBuff[step % 2].getProg()[bi - 1];
+            pslot oper   = opBuff[step % 2].getProg()[bi - 1];
             opBuff[step % 2].pop();
             poliz.push(oper, ebit);
         }
     }
+}
+
+int Parser::getFieldShift(IdentTable * val) {
+    int shift = 0;
+    char * name = val->getStruct();
+    if (name == nullptr) return 0;
+    IdentTable *f = &StTable.getStruct(name)->getFields();
+    while (std::strcmp(f->getId(), val->getId()) != 0) {
+        shift += f->typeSize();
+        f = f->next;
+    }
+    return shift;
 }
 
 IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, IdentTable * baseVal) {
@@ -1092,19 +1165,6 @@ IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, Id
 
     IdentTable * val = getFieldInStruct(baseVal);
     r = val->getType();
-
-    if (baseVal != nullptr) {
-        /* Это означает, то нас вызвали рекурсивно после DEREF.
-         * Следовательно, машине надо получить поле, которое вычисляется по
-         * смещению относительно начала структуры.
-         */
-        int fs = 1;
-        int fshift = val->getFieldShift();
-        if (fshift != 0) {
-            NEW_IDENT(shift, _INT_, nullptr, new int (fshift), &fs)
-            poliz.pushOp(r, _INT_, DEREF);
-        }
-    }
     
     if (c == '(') { // Вызов функции
         if (! val->isFunc())
@@ -1112,7 +1172,7 @@ IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, Id
         callIdent(val);
         if (val->getStruct() != nullptr) {
             IdentTable fields = StTable.getStruct(val->getStruct())->getFields();
-            int size = fields.last()->getOrd();
+            int size = fields.secLast()->getOrd() + 1;
             if (fieldSize != nullptr) {
                 *fieldSize = size;
             }
@@ -1132,12 +1192,33 @@ IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, Id
             int fs = 1;
             type_t index = expr(&fs);
             if (index != _INT_) throw Obstacle(BAD_INDEX);
+            NEW_IDENT(stSize, _INT_, nullptr, new int (val->typeSize()), &fs)
+            poliz.pushOp(_INT_, _INT_, MUL);
             poliz.pushOp(r, _INT_, DEREF);
 
             if (c != ']') throw Obstacle(ARRAY_CLOSEBR);
             code >> c;
 
-            val = resolveIdentificator(fieldSize, structName, val);
+            /* Это означает, что машине надо получить поле, которое 
+             * вычисляется по смещению относительно начала структуры.
+             */
+            baseVal = val;
+            while (c == '.') {
+                code >> c;
+                char * name = identificator();
+                IdentTable * fields = static_cast<IdentTable*>(baseVal->getVal());
+                baseVal = fields->getIT(name);
+
+                int fs = 1;
+                int fshift = getFieldShift(baseVal);
+                if (fshift != 0) {
+                    NEW_IDENT(shift, _INT_, nullptr, new int (fshift), &fs)
+                    poliz.pushOp(r, _INT_, DEREF);
+                }
+            }
+
+            // Теперь возможно опять () или []
+            val = resolveIdentificator(fieldSize, structName, baseVal);
 
         } else {
             if (r == _STRUCT_) {
@@ -1145,7 +1226,7 @@ IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, Id
                     throw Obstacle(EXPR_BAD_TYPE);
 
                 if (baseVal != nullptr) {
-                    /* TODO: UNPACK FIELDS FROM MEM
+                    /* Распаковка элементов из памяти
                      * 1) адрес первого элемента уже есть на стеке
                      * 2) надо его скопировать и прибавить (DEREF)
                      * размер первого поля (получим адрес второго)
@@ -1153,17 +1234,32 @@ IdentTable * Parser::resolveIdentificator(int * fieldSize, char * structName, Id
                      * В результате на стеке будут в нужном порядке
                      * лежать адреса каждого из полей.
                      */
+                    IdentTable * fields = static_cast<IdentTable *>(val->getVal());
 
-                }
+                    if (fieldSize != nullptr)
+                        *fieldSize = 0;
+                        //*fieldSize = fields->secLast()->getOrd() + 1;
+                    
+                    int fs = 1;
+                    int fshift = 0;
+                    //TODO: Структура в структуре -- нужно
+                    // раскрывать рекурсивно.
+                    while(fields->next->next != nullptr) {
+                        poliz.pushOp(_NONE_, _NONE_, COPY);
+                        fshift += fields->typeSize();
+                        NEW_IDENT(shift, _INT_, nullptr, new int (fshift), &fs)
+                        poliz.pushOp(r, _INT_, DEREF);
+                        fields = fields->next;
+                    }
 
-                int fields = unrollStruct(val);
-                if (fieldSize != nullptr) {
-                    *fieldSize = fields;
+                } else {
+                    int fields = unrollStruct(val);
+                    if (fieldSize != nullptr) {
+                        *fieldSize = fields;
+                    }
                 }
             } else if (baseVal == nullptr) poliz.pushVal(val);
         }
-
-        std::cout << c.symbol() << std::endl;
     }
 
     return val;
@@ -1691,8 +1787,6 @@ void Parser::writeOp(void) {
         poliz.pushOp(_NONE_, exop, WRITE);
     } while (c == ',');
 
-    poliz.pushOp(_NONE_, _NONE_, ENDL);
-
     if (c != ')')
         throw Obstacle(BAD_PARAMS_CLBR);
 
@@ -1702,6 +1796,11 @@ void Parser::writeOp(void) {
         throw Obstacle(SEMICOLON);
 
     code >> c;
+}
+
+void Parser::writelnOp(void) {
+    writeOp();
+    poliz.pushOp(_NONE_, _NONE_, ENDL);
 }
 
 void Parser::giveBIN(const char * filename, bool optimize, bool printPoliz, bool verbose) {
@@ -1730,15 +1829,15 @@ void Parser::giveBIN(const char * filename, bool optimize, bool printPoliz, bool
 
     int progStart = bin.tellp();
     int b = poliz.getSize();
-    op_t * prog = poliz.getProg();
+    pslot * prog = poliz.getProg();
     bool * execBit = poliz.getEB();
+
     for (int i = 0; i < b; i++) {
         if (execBit[i]) {
-            int tempint1 = (int)prog[i];
-            bin.write((char*)&tempint1, sizeof(int));
+            bin.write((const char *)(prog + i), PSLOT_PROG);
         } else {
-            int tempint2 = IT_FROM_POLIZ(poliz, i)->getOffset();
-            bin.write((char*)&tempint2, sizeof(int));
+            int offset =  poliz.getVal(i)->getOffset();
+            bin.write((char*)&offset, sizeof(int));
         }
         bin.write((char*)&execBit[i], sizeof(bool));
     }

@@ -1,7 +1,12 @@
 #ifndef EXPRTYPE_H
 #define EXPRTYPE_H
 
-enum type_t {
+#include <cstdint>
+
+/** Перечисление всех типов.
+ * Тип uint8_t выбран в целях оптимизации памяти.
+ */
+enum type_t: uint8_t {
     _NONE_,
     _INT_,
     _REAL_,
@@ -11,7 +16,11 @@ enum type_t {
     _STRUCT_
 };
 
-enum operation_t {
+/** Перечисление всех операций.
+ * Типа uint8_t должно хватить на 255 операций. Такой тип
+ * выбран в целях оптимизации памяти.
+ */
+enum operation_t: uint8_t {
     NONE,   //! Операции нет
     INV,    //! Сменить знак операнда
     PLUS,   //! Сложить
@@ -41,9 +50,10 @@ enum operation_t {
     SHARE,  //! Сделать переменную общей
     FORK,   //! Запустить поток
     LOCK,
-    UNPACK,
+    UNPACK, //! Распаковать данные и выполнить над ними инструкции
     ALLOC,
-    DEREF   //! Вычисляет адрес элемента массива
+    DEREF,  //! Вычисляет адрес элемента массива
+    COPY    //! Копирует значение на стеке
 };
 
 type_t expressionType(type_t t1, type_t t2, operation_t o);

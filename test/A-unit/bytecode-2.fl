@@ -12,5 +12,5 @@ program {
         2, 1, func, CALL,
         ASSIGN
     }
-    write(x);
+    writeln(x);
 }

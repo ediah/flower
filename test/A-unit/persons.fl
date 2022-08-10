@@ -22,6 +22,6 @@ program {
 
     A = B;
 
-    write(A.fio.firstname, " ", A.fio.lastname, 
+    writeln(A.fio.firstname, " ", A.fio.lastname, 
                           ", ", A.age, " лет.");
 }

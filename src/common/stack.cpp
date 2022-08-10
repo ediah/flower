@@ -11,9 +11,16 @@ void Gendarme::push(void * p, type_t type) {
     pos++;
 }
 
+void Gendarme::lock(void) {
+    minPos = pos;
+}
+
 void Gendarme::burn(void) {
     pos--;
-    while (pos >= 0) {
+    while (pos >= minPos) {
+        #ifdef DEBUG
+        std::cout << "Burn " << pointers[pos] << std::endl;
+        #endif
         switch (types[pos]) {
             case _INT_: 
                 delete    static_cast<int *> ( pointers[pos] ); break;
@@ -26,10 +33,11 @@ void Gendarme::burn(void) {
         }
         pos--;
     }
-    pos = 0;
+    pos = minPos;
 }
 
 Gendarme::~Gendarme(void) {
+    minPos = 0;
     burn();
 }
 
@@ -73,11 +81,14 @@ void Stack::push(void * x, type_t type) {
 
 void Stack::lock(void) {
     minPos = pos;
+    memControl.lock();
 }
 
 void * Stack::pop(void) {
     assert(pos > 0);
-    return elem[--pos];
+    pos--;
+    if (pos < minPos) lock();
+    return elem[pos];
 }
 
 void * Stack::top(void) const {
@@ -108,7 +119,10 @@ const type_t * Stack::getTypes(void) const {
 }
 
 bool Stack::isEmpty(void) const {
-    return pos <= minPos;
+    #ifdef DEBUG
+    std::cout << "isEmpty: " << pos << ", " << minPos << std::endl;
+    #endif
+    return pos == minPos;
 }
 
 type_t Stack::topType(void) const {

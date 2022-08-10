@@ -17,5 +17,5 @@ def root(int x): real {
 program {
     int x;
     read(x);
-    write(root(x));
+    writeln(root(x));
 }

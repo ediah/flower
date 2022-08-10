@@ -21,6 +21,7 @@ class IdentTable {
     bool shared;
     bool array;
     int arraySize;
+    int fieldOrd;
     IdentTable * mainTable;
 
 public:
@@ -30,6 +31,7 @@ public:
     IdentTable(const IdentTable & templateIT);
     IdentTable & operator=(const IdentTable & templateIT);
     friend bool operator==(IdentTable & a, IdentTable & b);
+    friend bool operator!=(IdentTable & a, IdentTable & b);
 
     void pushId(char * ident);
     void pushType(type_t t);
@@ -57,8 +59,8 @@ public:
     int getParams(void) const;
     int getOffset(void) const;
     IdentTable* getMainTable(void);
-    int getFieldShift(void) const;
     int getArray(void) const;
+    int getSize(void) const;
 
     bool isFunc(void) const;
     bool isDef(void) const;
@@ -67,16 +69,21 @@ public:
     bool isStatic(void) const; // Статический массив
     bool isArray(void) const;
 
-    void whoami();
+    void whoami(int level = 1);
     void repr(void);
     void fade(void);
     void dupType(void);
     IdentTable * last(void);
+    IdentTable * secLast(void);
     IdentTable * confirm(void);
     IdentTable * deleteLabels(void);
     void writeValToStream(std::ostream & s);
     IdentTable * getIT(char * name, bool autodel = true);
     int typeSize(void) const;
+    int updateFieldOrds(int baseOrd = 0, bool inStruct = false);
+    int getFieldOrd(void);
+
+    void debFO(void);
 
     bool checkBounds(int index);
 

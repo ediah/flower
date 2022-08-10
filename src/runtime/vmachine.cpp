@@ -13,35 +13,26 @@
 #include "common/obstacle.hpp"
 
 void VirtualMachine::loadBIN(const char * filename) {
-    std::ifstream bin;
-    bin.open(filename, std::ios_base::binary | std::ios_base::in);
+    program.load(filename);
+}
 
-    bin.seekg(0, std::ios::end);
-    int size = bin.tellg();
-    base = new char [size];
-    bin.seekg(0, std::ios::beg);
-    bin.read(base, size * sizeof(char));
-
-    cmd = base + *reinterpret_cast<int*>(base);
-    bin.close();
-    cmdNum = (size - *reinterpret_cast<int*>(base)) / (sizeof(int) + sizeof(bool));
+bool VirtualMachine::execNext(Program::cell * lastOp) {
+    Program::cell op = program.next();
+    if (program.execBit) {
+        if (exec(op, program.eip)) return false;
+    } else {
+        stackVM.push(program.getStaticVar(op));
+    }
+    if (lastOp != nullptr) *lastOp = op;
+    return true;
 }
 
 void VirtualMachine::run(void) {
-    op_t op;
-    int * eip = new int (0);
     std::cout << std::boolalpha;
 
-    while (true) {
-        if (*reinterpret_cast<bool*>(cmd + 4 + *eip * 5)) { // ExecBit = 1
-            op = (op_t) *reinterpret_cast<int *>(cmd + *eip * 5);
-            if (exec(op, eip)) break;
-        } else { // ExecBit = 0
-            int shift = * reinterpret_cast<int *>(cmd + *eip * 5);
-            stackVM.push(static_cast<void *>(base + shift));
-        }
-        *eip += 1;
-    }
+    program.eip = new int(0);
+
+    while (execNext()) {};
 
     if (inThread) {
         for (auto var: sharedVars) {
@@ -69,8 +60,6 @@ void VirtualMachine::run(void) {
     for (auto memBlock: allocated) {
         free(memBlock);
     }
-
-    delete eip;
 }
 
 template <class lval_t, class rval_t, class res_t>
@@ -99,18 +88,12 @@ char * VirtualMachine::getString(void * x) {
                 : * static_cast<char**>( x );
 }
 
-bool VirtualMachine::exec(op_t op, int * eip) {
+bool VirtualMachine::exec(Program::cell op, int * eip) {
     bool exitStatus = false;
-    type_t rest = (type_t) ((op >> 24) & 0xFF);
-    type_t lval = (type_t) ((op >> 16) & 0xFF);
-    type_t rval = (type_t) ((op >>  8) & 0xFF);
 
-    if ((lval == _STRUCT_) || (rval == _STRUCT_))
-        throw Obstacle(PANIC);
-
-    switch(op & 0xFF) {
+    switch(op.opcode) {
         case PLUS:
-            if (rest == _STRING_){
+            if (op.restype == _STRING_){
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
 
@@ -140,7 +123,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         }
         case INV:
-            if (rest == _INT_) {
+            if (op.restype == _INT_) {
                 int a = * static_cast<int *>(stackVM.pop());
                 stackVM.push(new int (-a), _INT_);
             } else {
@@ -155,17 +138,17 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             break;
         }
         case ASSIGN:
-            if (lval == _INT_) {
-                if (rval == _INT_) assign<int, int>();
+            if (op.ltype == _INT_) {
+                if (op.rtype == _INT_) assign<int, int>();
                 else assign<int, float>();
-            } else if (lval == _REAL_) {
-                if (rval == _INT_) assign<float, int>();
+            } else if (op.ltype == _REAL_) {
+                if (op.rtype == _INT_) assign<float, int>();
                 else assign<float, float>();
-            } else if (lval == _STRING_){
+            } else if (op.ltype == _STRING_){
                 char * b = getString(stackVM.pop());
                 char * a = static_cast<char *>(stackVM.pop());
                 memcpy(a, &b, sizeof(void*));
-            } else if (lval == _BOOLEAN_) {
+            } else if (op.ltype == _BOOLEAN_) {
                 assign<bool, bool>();
             } else throw Obstacle(PANIC);
             break;
@@ -173,16 +156,16 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             exitStatus = true;
             break;
         case WRITE:
-            if (rval == _INT_) {
+            if (op.rtype == _INT_) {
                 int x = * static_cast<int *>(stackVM.pop());
                 std::cout << x;
-            } else if (rval == _REAL_) {
+            } else if (op.rtype == _REAL_) {
                 float x = * static_cast<float *>(stackVM.pop());
                 std::cout << x;
-            } else if (rval == _STRING_) {
+            } else if (op.rtype == _STRING_) {
                 char * x = getString(stackVM.pop());
                 std::cout << x;
-            } else if (rval == _BOOLEAN_) {
+            } else if (op.rtype == _BOOLEAN_) {
                 bool x = * static_cast<bool *>(stackVM.pop());
                 std::cout << x;
             } else throw Obstacle(PANIC);
@@ -193,16 +176,16 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case JIT: {
             int offset = * static_cast<int *>(stackVM.pop());
             bool condition = * static_cast<bool *>(stackVM.pop());
-            if (condition) *eip = offset - 1;
+            if (condition) *eip = offset;
             break;
         }
         case JMP: {
             int offset = * static_cast<int *>(stackVM.pop());
-            *eip = offset - 1;
+            *eip = offset;
             break;
         }
         case LESS:
-            if ((lval == _STRING_) && (rval == _STRING_)) {
+            if ((op.ltype == _STRING_) && (op.rtype == _STRING_)) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 int i = 0;
@@ -213,7 +196,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             }
             break;
         case GRTR:
-            if ((lval == _STRING_) && (rval == _STRING_)) {
+            if ((op.ltype == _STRING_) && (op.rtype == _STRING_)) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 int i = 0;
@@ -226,7 +209,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         case LESSEQ: LOGIC_OPERATION(<=) break;
         case GRTREQ: LOGIC_OPERATION(>=) break;
         case EQ:
-            if ((lval == _STRING_) && (rval == _STRING_)) {
+            if ((op.ltype == _STRING_) && (op.rtype == _STRING_)) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 bool r = true;
@@ -244,7 +227,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             }
             break;
         case NEQ:
-            if ((lval == _STRING_) && (rval == _STRING_)) {
+            if ((op.ltype == _STRING_) && (op.rtype == _STRING_)) {
                 char * b = getString(stackVM.pop());
                 char * a = getString(stackVM.pop());
                 bool r = true;
@@ -262,15 +245,15 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             }
             break;
         case READ:
-            if (rval == _INT_) {
+            if (op.rtype == _INT_) {
                 float temp;
                 std::cin >> temp;
 
                 stackVM.updateType(_INT_);
                 * static_cast<int *>(stackVM.pop()) = (int)temp;
-            } else if (rval == _REAL_) {
+            } else if (op.rtype == _REAL_) {
                 std::cin >> * static_cast<float *>(stackVM.pop());
-            } else if (rval == _STRING_) {
+            } else if (op.rtype == _STRING_) {
                 std::string x;
                 std::cin >> x;
                 char * newString = new char[x.length() + 1];
@@ -312,7 +295,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             }
             params.push(new int (param), _INT_);
             offsets.push(new int (*eip + 1), _INT_);
-            *eip = offset - 1;
+            *eip = offset;
             stackVM.lock();
             break;
         }
@@ -334,7 +317,7 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             if (pid == 0) {
                 inThread = true;
                 int offset = * static_cast<int *>(stackVM.pop());
-                *eip = offset - 1;
+                *eip = offset;
             } 
             else {
                 //int st = 0;
@@ -358,23 +341,38 @@ bool VirtualMachine::exec(op_t op, int * eip) {
         }
         case UNPACK: {
             int fieldSize = * static_cast<int *>(stackVM.pop());
+
+            std::vector<void*> buffer;
+
             for (int i = 0; i < fieldSize * 2; i++) {
-                registerVM.push(stackVM.pop());
+                buffer.push_back(stackVM.get(i));
             }
             for (int i = 0; i < fieldSize; i++) {
-                stackVM.push(registerVM.get(i));
-                stackVM.push(registerVM.get(i + fieldSize));
+                stackVM.set(2 * i, buffer[i]);
+                stackVM.set(2 * i + 1, buffer[i + fieldSize]);
             }
-            for (int i = 0; i < fieldSize * 2; i++) {
-                registerVM.pop();
+
+            buffer.clear();
+            for (int i = 0; i < fieldSize; i++) {
+                Program::cell lastOp;
+                execNext(&lastOp);
+                if (lastOp.opcode != ASSIGN) {
+                    buffer.push_back(stackVM.pop());
+                }
+            }
+            for (int i = 0; i < buffer.size(); i++) {
+                stackVM.push(buffer[i]);
             }
             break;
         }
         case DEREF: {
             int shift = * static_cast<int *>(stackVM.pop());
-            char * basePoint = * static_cast<char **>(stackVM.pop());
-            auto x = basePoint + typeSize(lval) * shift;
-            //std::cout << "Вычислен адрес " << static_cast<void*>(x) << std::endl;
+            char* basePoint = *static_cast<char **>(stackVM.pop());
+            void * x = basePoint + shift;
+            #ifdef DEBUG
+            std::cout << shift << " " << (void*)basePoint << std::endl;
+            std::cout << "Вычислен адрес " << x << std::endl;
+            #endif
             stackVM.push(x);
             break;
         }
@@ -384,11 +382,21 @@ bool VirtualMachine::exec(op_t op, int * eip) {
             void * newMem = malloc(size);
             allocated.push_back(newMem);
             *basePoint = newMem;
-            //std::cout << "Выдлена память в " << newMem << ", запись в " << basePoint << std::endl;
+            #ifdef DEBUG
+            std::cout << "Выдлена память в " << newMem << ", запись в " << basePoint << std::endl;
+            #endif
+            break;
+        }
+        case COPY: {
+            void * x = stackVM.top();
+            stackVM.push(x);
+            #ifdef DEBUG
+            std::cout << "Скопировано значение " << x << std::endl;
+            #endif
             break;
         }
         default:
-            std::cout << "Неизвестная команда." << std::endl;
+            std::cout << "Неизвестная команда " << op.opcode << std::endl;
             exit(-1);
     }
 
@@ -411,6 +419,5 @@ void VirtualMachine::updateVars(void) {
 }
 
 VirtualMachine::~VirtualMachine(void) {
-    delete [] base;
     dynamicStrings.burn();
 }

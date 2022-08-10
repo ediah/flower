@@ -2,10 +2,10 @@ program {
     int x;
     goto BYTE;
 OK:
-    write("OK");
+    writeln("OK");
     goto END;
 ERROR:
-    write("ERROR");
+    writeln("ERROR");
     goto END;
 BYTE:
     bytecode {
@@ -14,5 +14,5 @@ BYTE:
         ERROR, JMP
     }
 END:
-    write(x);
+    writeln(x);
 }

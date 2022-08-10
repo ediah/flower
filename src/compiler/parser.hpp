@@ -85,13 +85,15 @@ public:
     void constStruct(IdentTable * fields); // Структура
     IdentTable * getFieldInStruct(IdentTable * baseVal = nullptr); // Получить элемент структуры
     void callIdent(IdentTable * val);      // Вызов объекта
-    void assign(IdentTable * lval);        // Присваивание
+    std::vector<int> assign(IdentTable * lval, bool idle = false, int ford = 0);   // Присваивание (возвращает перестановку)
     void assignStruct(IdentTable * lval, IdentTable * rval); // Присваивание структур
-    int unrollStruct(IdentTable * lval, int ord = -1);
+    int unrollStruct(IdentTable * lval, int ord = -1, bool idle = false);
     void handleStruct(type_t lval, type_t rval, operation_t op, int * fieldSize, char * structName);
     IdentTable * resolveIdentificator(
         int * fieldSize = nullptr, char * structName = nullptr, 
         IdentTable * baseVal = nullptr);
+    int getFieldShift(IdentTable * val);
+
     void program(void);    // Программа
 
     void operations(void); // Операции
@@ -111,6 +113,7 @@ public:
     void whileOp(void); // while
     void breakOp(void); // break
     void writeOp(void); // write
+    void writelnOp(void); // writeln
     void gotoOp(void);  // goto
     void readOp(void);  // read
     void continueOp(void); // continue

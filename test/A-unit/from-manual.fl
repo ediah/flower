@@ -4,16 +4,16 @@ program {
     c = (a + b) * 2;
     if ((c >= 100) or (x == z)) {
         read (y);
-        write (y);
-        write (x + y + z, c);
+        writeln (y);
+        writeln (x + y + z, c);
     }
     else
         c = 21;
     while (c > 100)
     {
         c = c - 5;
-        write (c);
+        writeln (c);
         x = x + "step";
     }
-    write (x);
+    writeln (x);
 }

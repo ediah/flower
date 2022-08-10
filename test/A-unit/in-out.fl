@@ -4,9 +4,9 @@ program {
     string s;
     bool b;
 
-    read(i); write(i);
-    read(r); write(r);
-    read(s); write(s);
-    read(b); write(b);
+    read(i); writeln(i);
+    read(r); writeln(r);
+    read(s); writeln(s);
+    read(b); writeln(b);
 
 }

@@ -114,19 +114,19 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
             break;
         }
  
-        op_t op = p->getProg()[eip];
+        pslot op = p->getProg()[eip];
         if (p->getEB()[eip]) {
-            if ((op & 0xFF) == JMP) {
+            if (op.opcode == JMP) {
                 curBlock->block.pop(); // удалить LABEL
-                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
+                blockId = p->getVal(eip - 1)->getVal();
                 newBlock(*static_cast<int*>(blockId), p, curBlock);
                 break;
             }
 
-            if ((op & 0xFF) == JIT) {
+            if (op.opcode == JIT) {
                 curBlock->block.pop(); // удалить LABEL
                 int bsize = curBlock->block.getSize();
-                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
+                blockId = p->getVal(eip - 1)->getVal();
                 newBlock(*static_cast<int*>(blockId), p, curBlock, 1); // Блок True
                 if (curBlock->block.getSize() != bsize)
                     curBlock = curBlock->next[0].first;
@@ -134,16 +134,16 @@ void ControlFlowGraph::makeBranch(POLIZ * p, flowTree * curBlock, flowTree * fb,
                 break;
             }
 
-            if (((op & 0xFF) == CALL) || ((op & 0xFF) == FORK)) {
+            if ((op.opcode == CALL) || (op.opcode == FORK)) {
                 curBlock->block.pop(); // удалить LABEL
                 curBlock->block.push(op, true);
-                blockId = IT_FROM_POLIZ((*p), eip - 1)->getVal();
+                blockId = p->getVal(eip - 1)->getVal();
                 newBlock(*static_cast<int*>(blockId), p, curBlock, 1);
                 newBlock(eip + 1, p, curBlock, 2);
                 break;
             }
 
-            if ((op & 0xFF) == RET) {
+            if (op.opcode== RET) {
                 curBlock->block.push(op, true);
                 break;
             }
@@ -163,7 +163,7 @@ void ControlFlowGraph::make(POLIZ * p) {
 void ControlFlowGraph::findTails(flowTree * ft) {
     int s = ft->block.getSize();
     if (s > 0) {
-        operation_t op = (operation_t) (ft->block.getProg()[s-1] & 0xFF);
+        operation_t op = ft->block.getOpcode(s-1);
         if ((op == STOP) || (op == RET)) {
             for (auto node: ft->next) {
                 auto vec = node.first->prev;
@@ -266,7 +266,9 @@ void ControlFlowGraph::newConn(POLIZ* poliz, flowTree * curBlock,
     } else {
         // Прыжок назад
         ls->push_back(poliz->getSize());
-        poliz->push((op_t) curBlock, false);
+        pslot v;
+        v.val = reinterpret_cast<IdentTable *>(curBlock);
+        poliz->push(v, false);
         poliz->pushOp(_NONE_, _LABEL_, JMP);
     }
 }
@@ -284,12 +286,14 @@ void ControlFlowGraph::insertBlock(POLIZ* poliz, flowTree * curBlock,
         flowTree * falseb = curBlock->next[find(curBlock->next, (char)2)].first;
         flowTree * trueb  = curBlock->next[find(curBlock->next, (char)1)].first;
 
-        op_t lastop = curBlock->block.getProg()[bsize - 1];
-        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
+        pslot lastop = curBlock->block.getProg()[bsize - 1];
+        if ((lastop.opcode  == CALL) || (lastop.opcode  == FORK))
             poliz->pop();
         ls->push_back(poliz->getSize());
-        poliz->push((op_t) trueb, false);
-        if (((lastop & 0xFF) == CALL) || ((lastop & 0xFF) == FORK))
+        pslot v;
+        v.val = reinterpret_cast<IdentTable *>(trueb);
+        poliz->push(v, false);
+        if ((lastop.opcode == CALL) || (lastop.opcode == FORK))
             poliz->push(lastop, true);
         else
             poliz->pushOp(_BOOLEAN_, _LABEL_, JIT);
@@ -305,10 +309,10 @@ IdentTable * ControlFlowGraph::decompose(IdentTable* IT, POLIZ* poliz) {
     std::vector<flowTree*> existingBlocks;
     insertBlock(poliz, &ft, &labelStorage, &existingBlocks);
     for (auto lpos: labelStorage) {
-        flowTree * block = reinterpret_cast<flowTree *>(poliz->getProg()[lpos]);
+        flowTree * block = reinterpret_cast<flowTree *>(poliz->getVal(lpos));
         IT->pushVal(new int (block->ID));
         IT->pushType(_LABEL_);
-        poliz->getProg()[lpos] = (op_t) IT->confirm();
+        poliz->getProg()[lpos].val = IT->confirm();
     }
     return IT;
 }

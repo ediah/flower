@@ -6,10 +6,10 @@ program {
     b = a % 2 == 0;
 
     if (b)
-        write("Чётное число!");
+        writeln("Чётное число!");
     else
-        write("Нечётное число!");
+        writeln("Нечётное число!");
 
-    write("a % 2 == 0 = ", b);
+    writeln("a % 2 == 0 = ", b);
 
 }

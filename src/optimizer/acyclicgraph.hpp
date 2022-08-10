@@ -10,7 +10,7 @@
 struct DAGRow {
     type_t type;
     IdentTable * ident;
-    op_t opcode;
+    pslot opcode;
     DAGRow * lvar;
     DAGRow * rvar;
     DAGRow * prev;
@@ -18,8 +18,9 @@ struct DAGRow {
 
     static std::vector<DAGRow *> created;
 
-    DAGRow(): type(_NONE_), ident(nullptr), opcode((op_t) NONE), lvar(nullptr), 
+    DAGRow(): type(_NONE_), ident(nullptr), lvar(nullptr), 
               rvar(nullptr), prev(nullptr), assigned(false) {
+                  opcode.val = nullptr;
                   created.push_back(this);
               };
     void decompose(POLIZ & p, std::vector<DAGRow *> * asd);

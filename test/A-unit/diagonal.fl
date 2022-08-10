@@ -19,5 +19,5 @@ program {
     real l;
     read(l);
     p = find_point(l);
-    write(p.x, " ", p.y);
+    writeln(p.x, " ", p.y);
 }

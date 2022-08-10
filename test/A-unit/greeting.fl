@@ -4,8 +4,8 @@ def greet(string name): string {
 
 program {
     string me, greeting;
-    write("Как тебя зовут?");
+    writeln("Как тебя зовут?");
     read(me);
     greeting = greet(me);
-    write(greeting);
+    writeln(greeting);
 }

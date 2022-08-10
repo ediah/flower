@@ -12,6 +12,6 @@ program {
     B.radius = A.radius * 2;
     B.length = 2 * 3.14 * B.radius;
 
-    write("Длина окружности с радиусом ", A.radius, " равна: ", A.length);
-    write("Длина окружности с радиусом ", B.radius, " равна: ", B.length);
+    writeln("Длина окружности с радиусом ", A.radius, " равна: ", A.length);
+    writeln("Длина окружности с радиусом ", B.radius, " равна: ", B.length);
 }

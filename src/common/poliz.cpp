@@ -1,13 +1,17 @@
+#include <cassert>
 #include <iostream>
+#include <vector>
+#include <utility>
 #include "common/exprtype.hpp"
 #include "common/poliz.hpp"
 #include "common/obstacle.hpp"
+#include "common/tables.hpp"
 
 POLIZ::POLIZ(int s) {
     iter = 0;
 
     for (int i = 0; i < MAXCMD; i++) {
-        prog[i] = (op_t) NONE;
+        prog[i].val = nullptr;
         execBit[i] = false;
     }
 
@@ -44,6 +48,14 @@ void POLIZ::repr(bool dontBreak) {
     }
 }
 
+IdentTable * POLIZ::getVal(int index) {
+    return prog[index].val;
+}
+
+IdentTable * POLIZ::rgetVal(int index) {
+    return prog[iter - index - 1].val;
+}
+
 void POLIZ::pushVal(IdentTable * val) {
     #ifdef DEBUG
     std::cout << "POLIZ pushVal";
@@ -59,9 +71,9 @@ void POLIZ::pushVal(IdentTable * val) {
         mainIT->pushVal(new int (val->getOrd()));
         pushVal(mainIT->confirm());
         pushOp(_NONE_, _INT_, LOAD);
-        prog[iter - 1] = (char) val->getType() << 24 | (prog[iter - 1] & 0xFFF);
+        prog[iter - 1].restype = val->getType();
     } else {
-        prog[iter] = (op_t) val;
+        prog[iter].val = val;
         execBit[iter] = false;
         iter++;
 
@@ -71,7 +83,10 @@ void POLIZ::pushVal(IdentTable * val) {
 
 void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     type_t rest = expressionType(lval, rval, op);
-    prog[iter] = (char) rest << 24 | (char) lval << 16 | (char) rval << 8 | (char) op;
+    prog[iter].restype = rest;
+    prog[iter].ltype = lval;
+    prog[iter].rtype = rval;
+    prog[iter].opcode = op;
     execBit[iter] = true;
 
     #ifdef DEBUG
@@ -84,19 +99,31 @@ void POLIZ::pushOp(type_t lval, type_t rval, operation_t op){
     checkIter();
 }
 
-void POLIZ::interpretAsOp(op_t op) {
-    debugOp(static_cast<operation_t>(op & 0xFF));
-    std::cout << "["  << typetostr((type_t)((op >>  8) & 0xFF));
-    std::cout << ", " << typetostr((type_t)((op >> 16) & 0xFF));
+void POLIZ::setVal(int index, IdentTable *val) {
+    prog[index].val = val;
+}
+
+void POLIZ::interpretAsOp(pslot op) {
+    debugOp(op.opcode);
+    std::cout << "["  << typetostr(op.ltype);
+    std::cout << ", " << typetostr(op.rtype);
     std::cout << "]";
 }
 
-void POLIZ::interpretAsVal(op_t val) {
-    reinterpret_cast<IdentTable *>(val)->whoami();
+void POLIZ::interpretAsVal(pslot val) {
+    val.val->whoami();
 }
 
-op_t * POLIZ::getProg(void) {
+pslot * POLIZ::getProg(void) {
     return prog;
+}
+
+operation_t POLIZ::getOpcode(int index) {
+    return prog[index].opcode;
+}
+
+operation_t POLIZ::rgetOpcode(int index) {
+    return prog[iter - index - 1].opcode;
 }
 
 bool * POLIZ::getEB(void) {
@@ -111,6 +138,74 @@ void POLIZ::pop(void) {
     iter = (iter <= 0) ? 0 : iter - 1;
 }
 
+void POLIZ::remove(int pos, int n) {
+    assert((pos >= 0) && (pos < iter));
+    assert(pos - n >= 0);
+    if (n == 0) return;
+    while (prog[pos].val != nullptr) {
+        prog[pos] = prog[pos + n];
+        execBit[pos] = execBit[pos + n];
+        pos++;
+    }
+    iter = iter - n;
+}
+
+void POLIZ::permutate(int start, int end, int n, int* pi, bool reverse) {
+    assert((start >= 0) && (start < iter));
+    assert((n > 0) && (n < iter));
+    // Блок перестановки должен поместиться
+    assert(iter - start >= n);
+
+    int index;
+    POLIZ buff;
+    for (int i = 0; i < n; i++) {
+        if (reverse)
+            index = start + pi[n - i - 1];
+        else
+            index = start + pi[i];
+        
+        buff.push(prog[index], execBit[index]);
+    }
+
+    for (int i = 0; i < n; i++) {
+        prog[start + i] = buff.prog[i];
+        execBit[start + i] = buff.execBit[i];
+    }
+
+    remove(start + n, end - start - n);
+}
+
+void POLIZ::combine(std::vector<int> pi) {
+    std::vector<std::pair<int, int>> map;
+    int pos = iter - 1, lastPos = pos;
+    int fields = pi.size();
+    int ops = 0;
+    while (fields) {
+        if (execBit[pos]) {
+            ops += operands(prog[pos].opcode);
+        } else ops--;
+        if (ops == 1) {
+            ops = 0;
+            map.insert(map.begin(), std::pair<int, int>(pos, lastPos));
+            lastPos = pos - 1;
+            fields--;
+        }
+        pos--;
+    }
+
+    POLIZ buff;
+    for (auto i: pi) {
+        for (int j = map[i].first; j <= map[i].second; j++) {
+            buff.push(prog[j], execBit[j]);
+        }
+    }
+
+    for (int i = 0; i < buff.getSize(); i++) {
+        prog[map[0].first + i] = buff.prog[i];
+        execBit[map[0].first + i] = buff.execBit[i];
+    }
+}
+
 void POLIZ::clear(void) {
     iter = 0;
 }
@@ -120,7 +215,7 @@ void POLIZ::incIter(void) {
     checkIter();
 }
 
-void POLIZ::push(op_t op, bool eb) {
+void POLIZ::push(pslot op, bool eb) {
     #ifdef DEBUG
     std::cout << "POLIZ push ";
     if (eb)
@@ -145,13 +240,13 @@ void POLIZ::checkIter(void) const {
 }
 
 bool POLIZ::endsWithCall(void) const {
-    bool call = (operation_t)(prog[iter - 1] & 0xFF) == CALL;
+    bool call = prog[iter - 1].opcode == CALL;
     bool exec = execBit[iter - 1];
     return call && exec;
 }
 
 bool POLIZ::endsWithRet(void) const {
-    bool call = (operation_t)(prog[iter - 1] & 0xFF) == RET;
+    bool call = prog[iter - 1].opcode == RET;
     bool exec = execBit[iter - 1];
     return call && exec;
 }

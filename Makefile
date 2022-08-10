@@ -44,7 +44,7 @@ ifeq (${WITH_DRAWING},YES)
 	OPTIFLAGS += -DDRAW_GRAPH
 endif
 
-CC= g++
+CC= clang++
 CFLAGS = --std=c++11 -Wno-write-strings ${OPTIFLAGS} -I ./src
 CHFLAGS=-I./src --language=c++ -j4 -l4 --max-ctu-depth=20 --std=c++11 \
         --template='${CHTEMP}' --cppcheck-build-dir=./cppcheck ${ENABLE} \

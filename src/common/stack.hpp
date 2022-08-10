@@ -19,10 +19,11 @@ class Gendarme {
     void * pointers[MAXSTACK]; //!< Указатели на выделенную память.
     type_t types[MAXSTACK];    //!< Типы хранящихся по указателям значений.
     int pos;                   //!< Текущая позиция в массиве.
+    int minPos;
 
 public:
     //! Конструктор
-    Gendarme(void): pos(0) {
+    Gendarme(void): pos(0), minPos(0) {
         for (int i = 0; i < MAXSTACK; i++) {
             pointers[i] = nullptr;
             types[i] = _NONE_;
@@ -48,6 +49,8 @@ public:
      *  @param[in] type Новый тип элемента
      */
     void updateType(type_t type);
+
+    void lock(void);
 
     //! Деструктор
     ~Gendarme();

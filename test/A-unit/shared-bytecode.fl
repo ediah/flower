@@ -29,5 +29,5 @@ program {
 
     b = bytefun(a);
 
-    write(a == b);
+    writeln(a == b);
 }

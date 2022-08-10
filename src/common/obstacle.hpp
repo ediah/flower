@@ -50,7 +50,8 @@ enum reason {
     OUT_OF_BOUNDS,
     ARRAY_CLOSEBR,
     BAD_INDEX,
-    NOT_ARRAY
+    NOT_ARRAY,
+    TOO_BIG_IDENT
 };
 
 class Obstacle {

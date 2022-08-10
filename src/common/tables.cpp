@@ -34,6 +34,8 @@ IdentTable::IdentTable(void) {
     shared = false;
     mainTable = nullptr;
     array = false;
+    arraySize = 0;
+    fieldOrd = 0;
 }
 
 IdentTable::IdentTable(const IdentTable & templateIT) {
@@ -47,6 +49,8 @@ IdentTable::IdentTable(const IdentTable & templateIT) {
     shared = templateIT.shared;
     mainTable = templateIT.mainTable;
     array = templateIT.array;
+    arraySize = templateIT.arraySize;
+    fieldOrd = templateIT.fieldOrd;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -85,6 +89,8 @@ IdentTable & IdentTable::operator=(const IdentTable & templateIT) {
     shared = templateIT.shared;
     mainTable = templateIT.mainTable;
     array = templateIT.array;
+    arraySize = templateIT.arraySize;
+    fieldOrd = templateIT.fieldOrd;
 
     if (templateIT.structName != nullptr) {
         structName = new char[strnlen(templateIT.structName, MAXIDENT) + 1];
@@ -117,6 +123,35 @@ IdentTable * IdentTable::last(void) {
     IdentTable * p = this;
     while (p->next != nullptr) p = p->next;
     return p;
+}
+
+// Возвращает предпоследний элемент, если их более 2,
+// иначе возвращает самого себя.
+IdentTable * IdentTable::secLast(void) {
+    IdentTable * p = this;
+    if (p->next == nullptr) return p;
+    while (p->next->next != nullptr) p = p->next;
+    return p;
+}
+
+int IdentTable::updateFieldOrds(int baseOrd, bool inStruct) {
+    IdentTable * p = this, *l = (inStruct? last() : next);
+    int fo = baseOrd;
+    while (p != l) {
+        p->fieldOrd = fo;
+        if (p->valType == _STRUCT_) {
+            IdentTable * fields = static_cast<IdentTable *>(p->val);
+            fo = fields->updateFieldOrds(fo, true);
+        } else {
+            fo++;
+        }
+        p = p->next;
+    }
+    return fo;
+}
+
+int IdentTable::getFieldOrd(void) {
+    return fieldOrd;
 }
 
 // Сохраняем идентификатор переменной
@@ -205,10 +240,6 @@ char * IdentTable::getStruct(void) const {
     return structName;
 }
 
-int IdentTable::getFieldShift(void) const {
-    return 0;
-}
-
 void IdentTable::setFunc(void) {
     func = true;
 }
@@ -237,6 +268,18 @@ int IdentTable::getParams(void) const {
     return params;
 }
 
+int IdentTable::getSize(void) const {
+    const IdentTable * p = this;
+    int size = 0;
+    while (p->next != nullptr) {
+        if (p->getType() == _STRUCT_)
+            size += static_cast<IdentTable *>(p->getVal())->getSize();
+        else size++;
+        p = p->next;
+    }
+    return size;
+}
+
 IdentTable * IdentTable::getIT(char * name, bool autodel) {
     IdentTable * p = this;
 
@@ -254,36 +297,45 @@ IdentTable * IdentTable::getIT(char * name, bool autodel) {
 }
 
 int IdentTable::typeSize(void) const {
-    if (array) return sizeof(void *);
     if (valType == _STRUCT_) {
-            int sum = 0;
-            IdentTable * p = static_cast<IdentTable *>(val);
-            while (p != nullptr) {
-                sum += p->typeSize();
-            }
-            return sum;
-    } else return ::typeSize(valType);
+        int sum = 0;
+        IdentTable * p = static_cast<IdentTable *>(val);
+        while (p != nullptr) {
+            sum += p->typeSize();
+            p = p->next;
+        }
+        return sum;
+    }// else if (array) return sizeof(void *);
+    //TODO: Вложенные массивы
+    return ::typeSize(valType);
 }
 
 int IdentTable::getArray(void) const {
     return arraySize;
 }
 
-void IdentTable::whoami() {
+void IdentTable::whoami(int level) {
 
     std::cout << '[' << typetostr(valType) << ' ';
     if (valType == _STRUCT_) {
         std::cout << structName << ' ';
+        if (array) 
+            std::cout << "ARRAY[" << (isStatic()? arraySize : '*') << "] ";
         if (name != nullptr) std::cout << name;
         else std::cout << "? ";
         if (func) std::cout << "FUNCTION ";
-        std::cout << " = [";
+        std::cout << " = [\n";
         IdentTable * fields = static_cast<IdentTable *>(val);
+        for (int i = 0; i < level; i++)
+                std::cout << "\t";
         while (fields->next != nullptr) {
-            fields->whoami();
+            fields->whoami(level + 1);
             fields = fields->next;
         }
-        std::cout << " ]";
+        std::cout << "\n";
+        for (int i = 0; i < level - 1; i++)
+            std::cout << "\t";
+        std::cout << "]";
     } else {
         if (array) 
             std::cout << "ARRAY[" << (isStatic()? arraySize : '*') << "] ";
@@ -309,7 +361,7 @@ void IdentTable::whoami() {
             }
         } else std::cout << "= ?";
     }
-    std::cout << ']';
+    std::cout << ", ord = " << ord << ']';
 
 }
 
@@ -317,7 +369,6 @@ void IdentTable::repr(void) {
     IdentTable * p = this;
     std::cout << "IdentTable:" << std::endl;
     while (p->next != nullptr) {
-        std::cout << p << " ";
         p->whoami();
         std::cout << std::endl;
         p = p->next;
@@ -466,6 +517,10 @@ bool operator==(IdentTable & a, IdentTable & b) {
         return charEqual(a.name, b.name);
 
     return false;
+}
+
+bool operator!=(IdentTable & a, IdentTable & b) {
+    return !(a == b);
 }
 
 void IdentTable::fade(void) {

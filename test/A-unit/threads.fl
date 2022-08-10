@@ -1,6 +1,6 @@
 def iterate(shared int a): shared int {
     for (int i = 1; i <= 1000000; i = i + 1) {
-        /* write("Итерация #", i, ": a = ", a); */
+        /* writeln("Итерация #", i, ": a = ", a); */
         a = a + 1;
     }
     return a;
@@ -18,5 +18,5 @@ program {
     fork(1, 2);
     lock();
 
-    write(x, " ", y);
+    writeln(x, " ", y);
 }

@@ -20,8 +20,8 @@ void Optimizer::reduceConstants(void) {
         while (bit->next != nullptr) {
             if ((*ait == *bit->next) && (bit->next->isDef())) {
                 for (int i = 0; i < poliz->getSize(); i++) {
-                    if ((!poliz->getEB()[i]) && (poliz->getProg()[i] == (op_t)bit->next))
-                        poliz->getProg()[i] = (op_t) ait;
+                    if ((!poliz->getEB()[i]) && (poliz->getVal(i) == bit->next))
+                        poliz->setVal(i, ait);
                 }
                 if (verbose) {
                     std::cout << "УДАЛЁН ";
